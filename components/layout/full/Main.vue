@@ -9,7 +9,13 @@ const sDrawer = ref(true);
 
 <template>
   <!------Sidebar-------->
-  <v-navigation-drawer v-model="sDrawer" left elevation="0" app class="leftSidebar">
+  <v-navigation-drawer
+    v-model="sDrawer"
+    class="leftSidebar"
+    elevation="0"
+    app
+    left
+  >
     <!---Logo part -->
     <div class="pa-5">
       <LayoutFullLogo />
@@ -23,40 +29,52 @@ const sDrawer = ref(true);
           <!---Menu Loop -->
           <template v-for="item in sidebarMenu">
             <!---Item Sub Header -->
-            <LayoutFullVerticalSidebarNavGroup v-if="item.header" :key="item.title" :item="item" />
+            <LayoutFullVerticalSidebarNavGroup
+              v-if="item.header"
+              :key="item.title"
+              :item="item"
+            />
 
             <!---Single Item-->
-            <LayoutFullVerticalSidebarNavItem v-else :key="item.to" :item="item" class="leftPadding" />
+            <LayoutFullVerticalSidebarNavItem
+              v-else
+              :key="item.to"
+              :item="item"
+              class="leftPadding"
+            />
             <!---End Single Item-->
           </template>
         </v-list>
-        <div class="pa-4">
-          <LayoutFullVerticalSidebarExtraBox />
+        <div class="pa-6 userbottom">
+          <LayoutFullVerticalSidebarProfile/>
         </div>
       </perfect-scrollbar>
     </div>
   </v-navigation-drawer>
   <!------Header-------->
-  <v-app-bar elevation="0" height="70">
+  <v-app-bar
+    height="70"
+    elevation="10"
+  >
     <div class="d-flex align-center justify-space-between w-100">
       <div>
         <v-btn
-          class="hidden-lg-and-up ms-md-3 ms-sm-5 text-muted ms-3"
-          icon
-          variant="flat"
           size="small"
+          class="hidden-lg-and-up ms-md-3 ms-sm-5 text-muted ms-3"
+          variant="flat"
+          icon
           @click="sDrawer = !sDrawer"
         >
-          <Menu2Icon size="20" stroke-width="1.5" />
+          <Menu2Icon
+            size="20"
+            stroke-width="1.5"
+          />
         </v-btn>
-        <!-- Notification -->
-        <LayoutFullVerticalHeaderNotificationDD />
       </div>
       <div>
-        <!-- Upgrade button -->
-        <v-btn class="bg-primary mr-2" href="https://adminmart.com/templates/nuxtjs/" rel="noopener noreferrer" target="_blank">
-          Download Free
-        </v-btn>
+        <LayoutFullVerticalHeaderLanguageDD/>
+        <!-- Notification -->
+        <LayoutFullVerticalHeaderNotificationDD />
         <!-- User Profile -->
         <LayoutFullVerticalHeaderProfileDD />
       </div>

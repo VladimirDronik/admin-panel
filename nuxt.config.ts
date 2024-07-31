@@ -2,6 +2,16 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 
 export default defineNuxtConfig({
   ssr: false,
+  devtools: {
+    enabled: true,
+  },
+
+  routeRules: {
+    "/": {
+      redirect: "/auth/login",
+    },
+  },
+
   build: {
     transpile: ['vuetify'],
   },
@@ -9,11 +19,10 @@ export default defineNuxtConfig({
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
-        // @ts-expect-error
-        config.plugins.push(vuetify({ autoImport: true }));
+        config?.plugins?.push(vuetify({ autoImport: true }));
       });
     },
-    // ...
+    '@pinia/nuxt',
   ],
 
   nitro: {

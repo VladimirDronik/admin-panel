@@ -4,10 +4,11 @@ module.exports = {
     node: true,
   },
   extends: [
-    '@nuxt/eslint-config',
+    'plugin:vue/vue3-essential',
     '@vue/airbnb',
     '@vue/typescript/recommended',
     'plugin:tailwindcss/recommended',
+    'plugin:@intlify/vue-i18n/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -37,10 +38,24 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
+    '@intlify/vue-i18n/no-dynamic-keys': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     'vuejs-accessibility/anchor-has-content': 'off',
     'vuejs-accessibility/form-control-has-label': 'off',
+    '@intlify/vue-i18n/no-raw-text': ['warn', {
+      ignorePattern: '^[-#:()&%x,+]+$',
+      ignoreText: ['', '*', '.'],
+    }],
+    '@intlify/vue-i18n/no-unused-keys': [
+      'error',
+      {
+        extensions: [
+          '.js',
+          '.vue',
+        ],
+      },
+    ],
   },
   settings: {
     'vue-i18n': {

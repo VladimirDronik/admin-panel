@@ -2,27 +2,21 @@ import { createVuetify } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
-import VueApexCharts from 'vue3-apexcharts';
-import VueTablerIcons from 'vue-tabler-icons';
 import '@/scss/style.scss';
-import {
-  PurpleTheme,
-} from '@/theme/LightTheme';
+import LightTheme from '@/theme/LightTheme';
+import DarkTheme from '@/theme/DarkTheme';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     components,
     directives,
     theme: {
-      defaultTheme: 'PurpleTheme',
+      defaultTheme: 'LightTheme',
       themes: {
-        PurpleTheme,
+        LightTheme,
+        DarkTheme,
       },
     },
   });
   nuxtApp.vueApp.use(vuetify);
-  nuxtApp.vueApp.use(PerfectScrollbarPlugin);
-  nuxtApp.vueApp.use(VueApexCharts);
-  nuxtApp.vueApp.use(VueTablerIcons);
 });
