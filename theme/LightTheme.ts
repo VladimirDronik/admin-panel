@@ -1,6 +1,6 @@
 import type { ThemeTypes } from '@/types/themeTypes/ThemeType';
 
-const PurpleTheme: ThemeTypes = {
+const LightTheme: ThemeTypes = {
   name: 'PurpleTheme',
   dark: false,
   variables: {
@@ -33,4 +33,4 @@ const PurpleTheme: ThemeTypes = {
     grey200: '#EAEFF4',
   },
 };
-export { PurpleTheme };
+export default LightTheme;

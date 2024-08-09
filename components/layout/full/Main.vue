@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue';
 import { Menu2Icon } from 'vue-tabler-icons';
+import { useDisplay } from 'vuetify';
 import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem';
+
+const { mdAndUp } = useDisplay();
 
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
@@ -9,10 +12,23 @@ const sDrawer = ref(true);
 
 <template>
   <!------Sidebar-------->
-  <v-navigation-drawer v-model="sDrawer" left elevation="0" app class="leftSidebar">
+  <v-navigation-drawer
+    v-model="sDrawer"
+    :mobile-breakpoint="960"
+    width="270"
+    class="leftSidebar mini-sidebar"
+    elevation="0"
+    rail-width="75"
+    app
+    :rail="mdAndUp"
+    expand-on-hover
+  >
     <!---Logo part -->
-    <div class="pa-5">
+    <div class="pa-5" v-if="!mdAndUp">
       <LayoutFullLogo />
+    </div>
+    <div class="pa-5" v-else>
+      <LayoutFullLogoRtlLogo />
     </div>
     <!-- ---------------------------------------------- -->
     <!---Navigation -->
@@ -21,42 +37,44 @@ const sDrawer = ref(true);
       <perfect-scrollbar class="scrollnavbar">
         <v-list class="pa-6">
           <!---Menu Loop -->
-          <template v-for="item in sidebarMenu">
-            <!---Item Sub Header -->
-            <LayoutFullVerticalSidebarNavGroup v-if="item.header" :key="item.title" :item="item" />
-
-            <!---Single Item-->
-            <LayoutFullVerticalSidebarNavItem v-else :key="item.to" :item="item" class="leftPadding" />
-            <!---End Single Item-->
+          <template v-for="(item, i) in sidebarMenu">
+              <!---Item Sub Header -->
+              <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" :key="item.title" />
+              <!---If Has Child -->
+              <LayoutFullVerticalSidebarNavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
+              <!---Single Item-->
+              <LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding" />
+              <!---End Single Item-->
           </template>
         </v-list>
-        <div class="pa-4">
-          <LayoutFullVerticalSidebarExtraBox />
-        </div>
       </perfect-scrollbar>
     </div>
   </v-navigation-drawer>
   <!------Header-------->
-  <v-app-bar elevation="0" height="70">
+  <v-app-bar
+    height="70"
+    elevation="10"
+  >
     <div class="d-flex align-center justify-space-between w-100">
       <div>
         <v-btn
-          class="hidden-lg-and-up ms-md-3 ms-sm-5 text-muted ms-3"
-          icon
-          variant="flat"
+          v-if="!mdAndUp"
           size="small"
+          class=" ms-md-3 ms-sm-5 text-muted ms-3"
+          variant="flat"
+          icon
           @click="sDrawer = !sDrawer"
         >
-          <Menu2Icon size="20" stroke-width="1.5" />
+          <Menu2Icon
+            size="20"
+            stroke-width="1.5"
+          />
         </v-btn>
-        <!-- Notification -->
-        <LayoutFullVerticalHeaderNotificationDD />
       </div>
       <div>
-        <!-- Upgrade button -->
-        <v-btn class="bg-primary mr-2" href="https://adminmart.com/templates/nuxtjs/" rel="noopener noreferrer" target="_blank">
-          Download Free
-        </v-btn>
+        <LayoutFullVerticalHeaderLanguageDD/>
+        <!-- Notification -->
+        <LayoutFullVerticalHeaderNotificationDD />
         <!-- User Profile -->
         <LayoutFullVerticalHeaderProfileDD />
       </div>

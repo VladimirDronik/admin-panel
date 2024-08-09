@@ -18,15 +18,6 @@ definePageMeta({
                 Your Social Campaigns
               </div>
               <AuthLoginForm />
-              <h6 class="text-h6 text-muted font-weight-medium d-flex justify-center align-center mt-3">
-                New to Modernize?
-                <NuxtLink
-                  to="/auth/register"
-                  class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium pl-2"
-                >
-                  Create an account
-                </NuxtLink>
-              </h6>
             </v-card-item>
           </v-card>
         </v-col>
