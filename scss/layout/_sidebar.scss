@@ -2,6 +2,7 @@
 .leftSidebar {
     box-shadow: none !important;
     border-right: 1px solid rgb(var(--v-theme-borderColor));
+
     .logo {
         padding-left: 7px;
     }
@@ -17,7 +18,7 @@
 
 /*This is for the Vertical sidebar*/
 .scrollnavbar {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 190px);
 
     .userbottom {
         position: fixed;
@@ -40,7 +41,7 @@
     /*General Menu css*/
     .v-list-group__items .v-list-item,
     .v-list-item {
-        border-radius: $border-radius-root + 4;
+        border-radius: $border-radius-root;
         padding-inline-start: calc(12px + var(--indent-padding) / 10) !important;
 
         margin: 0 0 2px;
@@ -65,13 +66,15 @@
             font-size: 0.875rem;
         }
     }
+
+    /*This is for the dropdown*/
     .v-list {
         color: rgb(var(--v-theme-textSecondary));
 
         > .v-list-item.v-list-item--active,
         .v-list-item--active > .v-list-item__overlay {
             background: rgb(var(--v-theme-primary));
-            color: white !important;
+            color: white;
         }
 
         > .v-list-group {
@@ -92,6 +95,18 @@
     }
 }
 
+.v-navigation-drawer--rail {
+    .scrollnavbar .v-list .v-list-group__items,
+    .hide-menu {
+        opacity: 1;
+    }
+
+
+    .leftPadding {
+        margin-left: 0px;
+    }
+}
+
 @media only screen and (min-width: 1170px) {
     .mini-sidebar {
         .logo {
@@ -102,6 +117,14 @@
 
         .mini-icon {
             display: block;
+        }
+
+        .sidebarchip.hide-menu{
+            opacity: 0;
+        }
+
+        .userbottom .hide-menu{
+            opacity:0;
         }
 
         .mini-text {
@@ -133,6 +156,22 @@
             .hide-menu {
                 opacity: 1;
             }
+            .sidebarchip.hide-menu{
+                opacity: 1;
+            }
+            .userbottom .hide-menu{
+                opacity: 1;
+            }
         }
     }
+}
+
+// scrollbar 
+.ps__rail-y {
+    z-index: 9;
+}
+
+.v-navigation-drawer{
+    box-shadow: none !important;
+    border-right: 1px solid rgb(var(--v-theme-borderColor)) !important;
 }
