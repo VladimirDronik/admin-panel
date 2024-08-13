@@ -32,4 +32,4 @@ const DarkTheme: ThemeTypes = {
   },
 };
 
-export default DarkTheme
+export default DarkTheme;

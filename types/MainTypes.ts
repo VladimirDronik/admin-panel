@@ -1,7 +1,8 @@
 export interface Filter {
   label: string,
   key: string,
-  value: number | string | (string | number | never)[] | null,
+  value: any,
+  show?: boolean
   options?: Options[]
 }
 

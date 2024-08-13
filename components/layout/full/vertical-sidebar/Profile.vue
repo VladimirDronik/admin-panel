@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import UserImage from '/images/users/avatar-1.jpg';
+import UserImage from '../../../images/users/avatar-1.jpg';
 
 const { t } = useI18n();
 const router = useRouter();

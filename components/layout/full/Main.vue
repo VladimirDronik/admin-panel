@@ -38,13 +38,13 @@ const sDrawer = ref(true);
         <v-list class="pa-6">
           <!---Menu Loop -->
           <template v-for="(item, i) in sidebarMenu">
-              <!---Item Sub Header -->
-              <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" :key="item.title" />
-              <!---If Has Child -->
-              <LayoutFullVerticalSidebarNavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
-              <!---Single Item-->
-              <LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding" />
-              <!---End Single Item-->
+            <!---Item Sub Header -->
+            <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" :key="item.title" />
+            <!---If Has Child -->
+            <LayoutFullVerticalSidebarNavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
+            <!---Single Item-->
+            <LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding" />
+            <!---End Single Item-->
           </template>
         </v-list>
       </perfect-scrollbar>
@@ -72,7 +72,7 @@ const sDrawer = ref(true);
         </v-btn>
       </div>
       <div>
-        <LayoutFullVerticalHeaderLanguageDD/>
+        <LayoutFullVerticalHeaderLanguageDD />
         <!-- Notification -->
         <LayoutFullVerticalHeaderNotificationDD />
         <!-- User Profile -->

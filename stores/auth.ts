@@ -5,10 +5,8 @@ export const useAuthStore = defineStore({
   id: 'auth',
   actions: {
     async loginApi(params = {}) {
-      const { data } = await api.post('auth/login', params, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+      const { data } = await api.get('token', {
+        params,
       });
       return data;
     },

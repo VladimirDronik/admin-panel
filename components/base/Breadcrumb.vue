@@ -8,6 +8,7 @@ import type { PropType } from 'vue';
 const { t } = useI18n();
 
 interface Breadcrumb {
+  title: string,
   text: string,
   disabled: boolean,
   href: string,

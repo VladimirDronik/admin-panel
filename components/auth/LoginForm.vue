@@ -9,12 +9,12 @@ import { useAuthStore } from '@/stores/auth';
 const router = useRouter();
 const store = useAuthStore();
 
-// const checkbox = ref(true);
+// Variables
 const loading = ref(true);
 
 const form = ref({
-  login: '',
-  password: '',
+  login: 'web',
+  password: '12345',
 });
 
 const login = async () => {
@@ -22,15 +22,15 @@ const login = async () => {
   try {
     await store.loginApi(form.value)
       .then((data) => {
+        console.log(data);
         // store.isAuthenticated = true;
         // store.user = data;
-
-        router.push({ name: 'Dashboard' });
       });
     loading.value = false;
   } catch {
     loading.value = false;
   }
+  router.push({ name: 'Dashboard' });
 };
 </script>
 
@@ -38,15 +38,15 @@ const login = async () => {
   <v-row class="d-flex mb-3">
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">
-        Username
+        Login
       </v-label>
-      <v-text-field variant="outlined" hide-details color="primary" />
+      <v-text-field v-model="form.login" variant="outlined" hide-details color="primary" />
     </v-col>
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">
         Password
       </v-label>
-      <v-text-field variant="outlined" type="password" hide-details color="primary" />
+      <v-text-field v-model="form.password" variant="outlined" type="password" hide-details color="primary" />
     </v-col>
     <!-- <v-col cols="12" class="pt-0">
       <div class="tw-flex align-center ml-n2 flex-wrap">
@@ -59,8 +59,8 @@ const login = async () => {
     </v-col> -->
     <v-col cols="12" class="pt-0">
       <v-btn
+        @click="login"
         :loading="!loading"
-        to="/dashboard"
         color="primary"
         size="large"
         block

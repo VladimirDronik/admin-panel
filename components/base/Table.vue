@@ -11,8 +11,7 @@ import _, { isArray } from 'lodash';
 import type { Header } from 'vue3-easy-data-table';
 import type { Filter } from '@/types/MainTypes';
 // Components
-import BaseLoader from '@/components/base/BaseLoader.vue';
-import TransitionHeight from '@/components/animation/TransitionHeight.vue';
+import { AnimationTransitionHeight, BaseLoader } from '#build/components';
 
 // Composables
 const route = useRoute();
@@ -67,32 +66,32 @@ const isActiveFilters = ref(false);
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
 
 // Methods
-const filter = _.debounce(() => {
+const filter = _.debounce(async () => {
   isUpdate.value = true;
 
   const params: any = {};
   filters.value.forEach((item) => {
     if (item.key === 'time' && item.value) {
-      if (isArray(item.value) && item.value.length > 2) [params.dateFrom, params.dateTo] = [moment(item.value[0]).unix(), moment(item.value[1]).unix()];
+      if (isArray(item.value)) [params.dateFrom, params.dateTo] = [moment(item.value[0]).valueOf(), moment(item.value[1]).valueOf()];
     } else if (item.value) params[item.key] = item.value;
   });
   page.value = 1;
-  emit('update', params);
+  await emit('update', params);
 
   isUpdate.value = false;
 }, 700);
 
-const pagination = () => {
+const pagination = async () => {
   isUpdate.value = true;
 
   const params: any = {};
   filters.value.forEach((item) => {
     if (item.key === 'time' && item.value) {
-      if (isArray(item.value)) [params.dateFrom, params.dateTo] = [moment(item.value[0]).unix(), moment(item.value[1]).unix()];
+      if (isArray(item.value)) [params.dateFrom, params.dateTo] = [moment(item.value[0]).valueOf(), moment(item.value[1]).valueOf()];
     } else if (item.value) params[item.key] = item.value;
   });
   if (page.value > 1) params.offset = props.perPage * (page.value - 1);
-  emit('update', params);
+  await emit('update', params);
 
   isUpdate.value = false;
 };
@@ -114,23 +113,25 @@ filters.value = filters.value.map((item) => {
   return item;
 });
 
-defineExpose({
-  filter,
-  pagination
-});
-
 // Created
 emit('created', filter);
+
+defineExpose({
+  filter,
+});
+
 </script>
 
 <template>
   <div>
     <v-row class="!tw-mb-1">
       <v-col
+        v-if="filters.length || total > perPage"
         cols="12"
         lg="6"
       >
         <v-btn
+          v-if="filters.length"
           @click="isActiveFilters = !isActiveFilters"
           icon="mdi-filter"
           color="primary"
@@ -152,7 +153,7 @@ emit('created', filter);
       </v-col>
     </v-row>
 
-    <TransitionHeight :duration="400">
+    <AnimationTransitionHeight :duration="400">
       <div
         v-if="isActiveFilters"
         class="tw-mb-3"
@@ -243,14 +244,14 @@ emit('created', filter);
           </v-row>
         </div>
       </div>
-    </TransitionHeight>
+    </AnimationTransitionHeight>
 
     <BaseLoader :isUpdate="isUpdate">
       <EasyDataTable
         @click-row="(item: any) => emit('click-row', item)"
         :items="items"
         :headers="headers"
-        class="tw-shadow"
+        class="base-table"
         table-class-name="customize-table"
         hide-footer
       >
@@ -271,5 +272,9 @@ emit('created', filter);
 <style>
 .filter-input .v-field__input {
   min-height: 56px;
+}
+
+.base-table {
+  border: 1px solid rgb(var(--v-theme-borderColor)) !important;
 }
 </style>

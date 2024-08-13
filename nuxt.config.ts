@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    "/": {
-      redirect: "/auth/login",
+    '/': {
+      redirect: '/auth/login',
     },
   },
 

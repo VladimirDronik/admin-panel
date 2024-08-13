@@ -15,7 +15,7 @@ const languages = [
   },
   {
     title: 'Русский', subtext: 'Russia', value: 'ru', avatar: Russia,
-  }
+  },
 ];
 
 // Methods

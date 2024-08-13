@@ -3,8 +3,7 @@ import ru from './ru';
 
 const messages = {
   en,
-  ru
+  ru,
 };
-
 
 export default messages;

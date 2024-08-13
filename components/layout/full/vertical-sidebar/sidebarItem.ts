@@ -1,4 +1,4 @@
-import { ApertureIcon, LayoutDashboardIcon} from 'vue-tabler-icons';
+import { ApertureIcon, LayoutDashboardIcon } from 'vue-tabler-icons';
 
 export interface menu {
     header?: string;

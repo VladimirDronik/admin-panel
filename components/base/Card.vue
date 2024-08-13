@@ -13,7 +13,7 @@ defineProps({
 <template>
   <v-card
     elevation="10"
-    class="overflow-visible"
+    class="overflow-visible !tw-p-3 md:!tw-p-6"
   >
     <!-- Title -->
     <div v-if="title">
@@ -26,10 +26,10 @@ defineProps({
     </div>
     <!--  -->
 
-    <!-- Card Body -->
-    <v-card-text class="!tw-p-3 md:!tw-p-6">
+    <!-- Body -->
+    <div>
       <slot />
-    </v-card-text>
+    </div>
     <!--  -->
   </v-card>
 </template>
