@@ -16,16 +16,53 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
-  { header: 'Home' },
+  { header: 'Оборудование' },
   {
-    title: 'Dashboard',
-    icon: LayoutDashboardIcon,
-    to: '/dashboard',
+    title: 'Контроллеры',
+    icon: ApertureIcon,
+    to: '/controllers',
   },
   {
-    title: 'Sample Page',
+    title: 'Устройства',
     icon: ApertureIcon,
-    to: '/sample-page',
+    to: '/login',
+  },
+  {
+    title: 'Датчики',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  { header: 'Визуализация' },
+  {
+    title: 'Мобильное прил.',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  {
+    title: 'Планшетная версия',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  { header: 'Функции' },
+  {
+    title: 'Сценарии',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  {
+    title: 'Графики',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  {
+    title: 'Планировщик',
+    icon: ApertureIcon,
+    to: '/login',
+  },
+  {
+    title: 'Оповещения',
+    icon: ApertureIcon,
+    to: '/login',
   },
 ];
 

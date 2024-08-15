@@ -39,7 +39,7 @@ defineProps({
             <!-- Title -->
             <h3
               v-if="title"
-              class="text-h3"
+              class="text-h3 tw-py-8"
             >
               {{ t(title) }}
             </h3>
@@ -69,10 +69,10 @@ defineProps({
         </div>
         <div class="d-none d-lg-block overflow-hidden py-0">
           <div class="mb-0 mt-3">
-            <img
+            <!-- <img
               src="@/assets/images/breadcrumb/Frame.png"
               alt="breadcrumb"
-            />
+            /> -->
           </div>
         </div>
       </div>

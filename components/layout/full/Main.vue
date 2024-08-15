@@ -16,7 +16,7 @@ const sDrawer = ref(true);
     v-model="sDrawer"
     :mobile-breakpoint="960"
     width="270"
-    class="leftSidebar mini-sidebar"
+    class="mini-sidebar leftSidebar"
     elevation="0"
     rail-width="75"
     app
@@ -24,12 +24,12 @@ const sDrawer = ref(true);
     expand-on-hover
   >
     <!---Logo part -->
-    <div class="pa-5" v-if="!mdAndUp">
+    <div class="pa-5">
       <LayoutFullLogo />
     </div>
-    <div class="pa-5" v-else>
+    <!-- <div class="pa-5" v-else>
       <LayoutFullLogoRtlLogo />
-    </div>
+    </div> -->
     <!-- ---------------------------------------------- -->
     <!---Navigation -->
     <!-- ---------------------------------------------- -->
@@ -37,11 +37,11 @@ const sDrawer = ref(true);
       <perfect-scrollbar class="scrollnavbar">
         <v-list class="pa-6">
           <!---Menu Loop -->
-          <template v-for="(item, i) in sidebarMenu">
+          <template v-for="item in sidebarMenu" :key="item.title">
             <!---Item Sub Header -->
-            <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" :key="item.title" />
+            <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" />
             <!---If Has Child -->
-            <LayoutFullVerticalSidebarNavCollapse class="leftPadding" :item="item" :level="0" v-else-if="item.children" />
+            <LayoutFullVerticalSidebarNavCollapse class="leftPadding" key="item" :item="item" :level="0" v-else-if="item.children" />
             <!---Single Item-->
             <LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding" />
             <!---End Single Item-->

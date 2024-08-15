@@ -10,8 +10,6 @@ import _, { isArray } from 'lodash';
 // Types
 import type { Header } from 'vue3-easy-data-table';
 import type { Filter } from '@/types/MainTypes';
-// Components
-import { AnimationTransitionHeight, BaseLoader } from '#build/components';
 
 // Composables
 const route = useRoute();
@@ -123,8 +121,8 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <v-row class="!tw-mb-1">
+  <div class="custom-table">
+    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage">
       <v-col
         v-if="filters.length || total > perPage"
         cols="12"
@@ -197,6 +195,7 @@ defineExpose({
                 v-model="filter.value"
                 :label="filter.label"
                 class="filter-input tw-h-full"
+                variant="outlined"
                 hide-details
               />
             </v-col>
@@ -269,12 +268,18 @@ defineExpose({
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .filter-input .v-field__input {
   min-height: 56px;
 }
 
 .base-table {
   border: 1px solid rgb(var(--v-theme-borderColor)) !important;
+}
+
+.custom-table {
+  & .v-pagination__list {
+    justify-content: end !important;
+  }
 }
 </style>

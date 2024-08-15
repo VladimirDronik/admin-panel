@@ -8,11 +8,26 @@
     }
 
     .mini-icon {
-        display: none;
+        display: block;
+        padding-left: 3px;
     }
 
     .mini-text {
-        display: block;
+        display: none;
+    }
+
+    &:hover {
+        .mini-icon {
+            display: none;
+        }
+    
+        .mini-text {
+            display: block;
+        }
+
+        .logo {
+                overflow: visible;
+        }
     }
 }
 
@@ -135,17 +150,17 @@
             padding: 14px !important;
         }
 
-        .leftSidebar:hover {
-            box-shadow: $box-shadow !important;
+        // .leftSidebar:hover {
+        //     box-shadow: $box-shadow !important;
 
-            .mini-icon {
-                display: none;
-            }
+        //     .mini-icon {
+        //         display: none !important;
+        //     }
 
-            .mini-text {
-                display: block;
-            }
-        }
+        //     .mini-text {
+        //         display: block !important;
+        //     }
+        // }
 
         .v-navigation-drawer--expand-on-hover:hover {
             .logo {

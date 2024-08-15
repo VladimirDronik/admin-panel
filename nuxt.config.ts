@@ -1,6 +1,12 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      backendApi: '',
+    },
+  },
+
   ssr: false,
   devtools: {
     enabled: true,

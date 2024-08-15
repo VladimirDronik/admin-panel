@@ -2,7 +2,7 @@
 import LogoLight from './LogoLight.vue';
 import LogoDark from './LogoDark.vue';
 
-const dark = ref(false);
+const dark = ref(true);
 
 </script>
 <template>

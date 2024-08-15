@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const runtimeConfig = useRuntimeConfig();
+
 const axiosInstance = axios.create({
-  baseURL: 'http://178.57.106.190:18091',
+  baseURL: runtimeConfig.public.backendApi,
   timeout: 20000,
   withCredentials: true,
   headers: {

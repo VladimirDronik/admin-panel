@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
+    "build": "nuxt build --dotenv .env.dev",
+    "dev": "nuxt dev --dotenv .env.local",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "generate": "nuxt generate --dotenv .env.dev",
+    "preview": "nuxt preview --dotenv .env.dev",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
