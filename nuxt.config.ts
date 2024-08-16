@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       backendApi: '',
+      mqttPort: '',
+      translatorPort: '',
+      objectManagetPort: '',
+      actionRouterPort: '',
+      websocketsPort: '',
+      cctvPort: '',
     },
   },
 

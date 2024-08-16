@@ -5,6 +5,8 @@ import { useDisplay } from 'vuetify';
 import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem';
 
 const { mdAndUp } = useDisplay();
+const config = useRuntimeConfig();
+console.log(config.public);
 
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
