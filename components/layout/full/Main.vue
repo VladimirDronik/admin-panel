@@ -4,15 +4,68 @@ import { Menu2Icon } from 'vue-tabler-icons';
 import { useDisplay } from 'vuetify';
 import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem';
 
-const { mdAndUp } = useDisplay();
-const config = useRuntimeConfig();
-console.log(config.public);
+const { mdAndUp, width } = useDisplay();
 
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
+
+const bar = ref(true);
 </script>
 
 <template>
+
+  <v-navigation-drawer
+    v-model="bar"
+    location="right"
+    app
+    temporary
+    elevation="10"
+    :width="width / 3"
+  >
+    <v-card elevation="0">
+      <v-card-title class="bg-primary">
+        Редактировать Mega 1
+      </v-card-title>
+      <v-card-item>
+        <p>
+          Название
+        </p>
+        <v-text-field variant="outlined" />
+      </v-card-item>
+      <v-card-item>
+        <p>
+          Тип
+        </p>
+        <v-select variant="outlined" />
+      </v-card-item>
+      <v-card-item>
+        <p>
+          Протокол
+        </p>
+        <v-select variant="outlined" />
+      </v-card-item>
+      <v-card-item>
+        <p>
+          Акт
+        </p>
+        <v-select variant="outlined" />
+      </v-card-item>
+      <v-card-item>
+        <p>
+          Доп. модуль
+        </p>
+        <v-select />
+      </v-card-item>
+      <v-card-actions>
+        <v-btn color="success" variant="flat">
+          Сохранить
+        </v-btn>
+        <v-btn color="error" variant="outlined">
+          Закрыть
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-navigation-drawer>
   <!------Sidebar-------->
   <v-navigation-drawer
     v-model="sDrawer"
@@ -30,8 +83,8 @@ const sDrawer = ref(true);
       <LayoutFullLogo />
     </div>
     <!-- <div class="pa-5" v-else>
-      <LayoutFullLogoRtlLogo />
-    </div> -->
+        <LayoutFullLogoRtlLogo />
+      </div> -->
     <!-- ---------------------------------------------- -->
     <!---Navigation -->
     <!-- ---------------------------------------------- -->

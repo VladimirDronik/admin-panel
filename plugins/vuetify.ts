@@ -17,6 +17,32 @@ export default defineNuxtPlugin((nuxtApp) => {
         DarkTheme,
       },
     },
+    defaults: {
+      VCard: {
+        rounded: 'md',
+      },
+      VTextField: {
+        variant: 'outlined',
+        density: 'comfortable',
+        color: 'primary',
+      },
+      VTextarea: {
+        variant: 'outlined',
+        density: 'comfortable',
+        color: 'primary',
+      },
+      VSelect: {
+        variant: 'outlined',
+        density: 'comfortable',
+        color: 'primary',
+      },
+      VListItem: {
+        minHeight: '45px',
+      },
+      VTooltip: {
+        location: 'top',
+      },
+    },
   });
   nuxtApp.vueApp.use(vuetify);
 });
