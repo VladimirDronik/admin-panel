@@ -9,7 +9,7 @@ const { mdAndUp, width } = useDisplay();
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
 
-const bar = ref(true);
+const bar = ref(false);
 </script>
 
 <template>

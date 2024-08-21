@@ -8,7 +8,6 @@ import type { PropType } from 'vue';
 const { t } = useI18n();
 
 interface Breadcrumb {
-  title: string,
   text: string,
   disabled: boolean,
   href: string,
@@ -18,7 +17,7 @@ interface Breadcrumb {
 defineProps({
   title: {
     type: String,
-    required: true,
+    default: 'sidebar.page',
   },
   breadcrumbs: {
     type: Object as PropType<Breadcrumb[]>,
@@ -48,7 +47,7 @@ defineProps({
             <!-- Breadcrumbs -->
             <v-breadcrumbs
               :items="breadcrumbs"
-              class="text-h6 font-weight-medium pa-0 ml-n1 "
+              class="text-h6 font-weight-medium ml-n1 "
             >
               <template v-slot:divider>
                 <div class="d-flex align-center text-h3 mt-n4">

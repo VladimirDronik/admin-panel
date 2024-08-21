@@ -25,6 +25,7 @@ defineProps({
       >
         <div
           v-if="isUpdate"
+          data-test="loader"
           class="tw-absolute tw-inset-0 tw-z-40 tw-overflow-hidden tw-bg-white tw-opacity-80"
         >
           <div class="tw-flex tw-h-full tw-items-center tw-justify-center">

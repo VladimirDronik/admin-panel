@@ -122,7 +122,7 @@ defineExpose({
 
 <template>
   <div class="custom-table">
-    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage">
+    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage" data-test="filters">
       <v-col
         v-if="filters.length || total > perPage"
         cols="12"
@@ -134,6 +134,7 @@ defineExpose({
           icon="mdi-filter"
           color="primary"
           variant="outlined"
+          data-test="filter-btn"
         />
       </v-col>
       <v-col
@@ -147,6 +148,7 @@ defineExpose({
           color="primary"
           class="tw-w-full"
           rounded="circle"
+          data-test="pagination"
         />
       </v-col>
     </v-row>
@@ -168,6 +170,7 @@ defineExpose({
               lg="4"
               cols="12"
               class="!tw-pb-0 !tw-pr-0"
+              data-test="filter"
             >
               <VueEasyDatePicker
                 v-if="filter.key === 'time'"
