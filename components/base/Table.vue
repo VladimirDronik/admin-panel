@@ -122,7 +122,7 @@ defineExpose({
 
 <template>
   <div class="custom-table">
-    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage" data-test="filters">
+    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage" data-test="bar">
       <v-col
         v-if="filters.length || total > perPage"
         cols="12"
@@ -157,6 +157,7 @@ defineExpose({
       <div
         v-if="isActiveFilters"
         class="tw-mb-3"
+        data-test="filters"
       >
         <v-card
           class="tw-relative !tw-z-40 !tw-hidden !tw-overflow-visible !tw-p-3 md:!tw-block"

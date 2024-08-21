@@ -18,8 +18,10 @@ defineProps({
     <!-- Title -->
     <div v-if="title">
       <v-card-item class="px-6 py-4">
-        <v-card-title class="text-h5">
-          {{ title }}
+        <v-card-title>
+          <p class="text-h5" data-test="title">
+            {{ title }}
+          </p>
         </v-card-title>
       </v-card-item>
       <v-divider />

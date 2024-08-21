@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mountSuspended } from '@nuxt/test-utils/runtime';
 import BaseBreadcrumb from '../Breadcrumb.vue';
 import { plugins } from '@/test/unit.setup';
 
-describe.skip('BaseBreadcrumb.vue', () => {
-  it('Default title page English version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+describe('BaseBreadcrumb.vue', () => {
+  it('Default title page English version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       global: {
         plugins: plugins(),
       },
@@ -13,8 +13,8 @@ describe.skip('BaseBreadcrumb.vue', () => {
 
     expect(wrapper.text()).toContain('Page');
   });
-  it('Default title page Russian version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+  it('Default title page Russian version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       global: {
         plugins: plugins('ru'),
       },
@@ -23,10 +23,10 @@ describe.skip('BaseBreadcrumb.vue', () => {
     expect(wrapper.text()).toContain('Страница');
   });
 
-  it('Displaying the Title English version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+  it('Displaying the Title English version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       props: {
-        title: 'sidebar.controllers',
+        title: 'pages.controllers',
       },
       global: {
         plugins: plugins(),
@@ -36,10 +36,10 @@ describe.skip('BaseBreadcrumb.vue', () => {
     expect(wrapper.text()).toContain('Controllers');
   });
 
-  it('Displaying the Title Russian version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+  it('Displaying the Title Russian version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       props: {
-        title: 'sidebar.controllers',
+        title: 'pages.controllers',
       },
       global: {
         plugins: plugins('ru'),
@@ -49,18 +49,18 @@ describe.skip('BaseBreadcrumb.vue', () => {
     expect(wrapper.text()).toContain('Контроллеры');
   });
 
-  it('Displaying breadcrumbs English version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+  it('Displaying breadcrumbs English version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       props: {
-        title: 'sidebar.controllers',
+        title: 'pages.controllers',
         breadcrumbs: [
           {
-            text: 'sidebar.controllers',
+            text: 'pages.controllers',
             disabled: true,
             href: '#',
           },
           {
-            text: 'sidebar.controllerDetails',
+            text: 'pages.controllerDetails',
             disabled: false,
             href: '#',
           },
@@ -75,18 +75,18 @@ describe.skip('BaseBreadcrumb.vue', () => {
     expect(wrapper.text()).toContain('Controller Details');
   });
 
-  it('Displaying breadcrumbs Russian version', () => {
-    const wrapper = mount(BaseBreadcrumb, {
+  it('Displaying breadcrumbs Russian version', async () => {
+    const wrapper = await mountSuspended(BaseBreadcrumb, {
       props: {
-        title: 'sidebar.controllers',
+        title: 'pages.controllers',
         breadcrumbs: [
           {
-            text: 'sidebar.controllers',
+            text: 'pages.controllers',
             disabled: true,
             href: '#',
           },
           {
-            text: 'sidebar.controllerDetails',
+            text: 'pages.controllerDetails',
             disabled: false,
             href: '#',
           },

@@ -17,7 +17,7 @@ interface Breadcrumb {
 defineProps({
   title: {
     type: String,
-    default: 'sidebar.page',
+    default: 'pages.page',
   },
   breadcrumbs: {
     type: Object as PropType<Breadcrumb[]>,

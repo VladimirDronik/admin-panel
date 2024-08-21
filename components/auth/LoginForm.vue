@@ -30,7 +30,7 @@ const login = async () => {
   } catch {
     loading.value = false;
   }
-  router.push({ name: 'Controllers' });
+  // router.push({ name: 'Controllers' });
 };
 </script>
 
