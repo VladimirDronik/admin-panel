@@ -46,6 +46,7 @@ defineProps({
 
             <!-- Breadcrumbs -->
             <v-breadcrumbs
+              v-if="breadcrumbs.length"
               :items="breadcrumbs"
               class="text-h6 font-weight-medium ml-n1 "
             >

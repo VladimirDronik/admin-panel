@@ -3,14 +3,17 @@
 import { useI18n } from 'vue-i18n';
 // Types
 import type { Filter } from '@/types/MainTypes';
+import { useControllersStore } from '@/stores/controllers';
 
 // Composables
 const { t } = useI18n();
+const storeControllers = useControllersStore();
 
 // Variables
 const perPage = 10;
 
 const page = ref(1);
+const isUpdate = ref(true);
 
 const filters = ref<Filter[]>([
   {
@@ -23,18 +26,26 @@ const filters = ref<Filter[]>([
 // Computed Properties
 const headers = computed(() => [
   { text: t('Название'), value: 'name' },
-  { text: t('Тип'), value: 'tags' },
-  { text: t('Протокол'), value: 'phone' },
-  { text: t('Акт'), value: 'act' },
-  { text: t('Доп. модуль'), value: 'module' },
-  { text: t('Действия'), value: 'Actions' },
+  { text: t('Тип'), value: 'type' },
+  { text: t('Протокол'), value: 'protocol' },
+  { text: t('IP адрес устройства'), value: 'address' },
+  { text: t('Статус'), value: 'state' },
 ]);
 
 // Methods
-const update = () => {};
-const created = () => {};
+const update = async () => {
+  isUpdate.value = true;
+  await storeControllers.getControllersApi();
+  isUpdate.value = false;
+};
+
+const created = async () => {
+  await storeControllers.getControllersApi();
+  isUpdate.value = false;
+};
 
 </script>
+
 <template>
   <BaseBreadcrumb title="Контроллеры" />
   <BaseCard>
@@ -43,8 +54,8 @@ const created = () => {};
       @created="created"
       v-model:page="page"
       v-model:filters="filters"
-      :total="22"
-      :items="[]"
+      :total="storeControllers.total"
+      :items="storeControllers.list"
       :perPage="perPage"
       :headers="headers"
     />

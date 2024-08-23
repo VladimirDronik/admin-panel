@@ -1,4 +1,5 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -11,6 +12,17 @@ export default defineNuxtConfig({
       websocketsPort: '',
       cctvPort: '',
     },
+  },
+
+  vite: {
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
+    },
+    plugins: [
+      nodePolyfills(),
+    ],
   },
 
   ssr: false,
@@ -40,14 +52,6 @@ export default defineNuxtConfig({
 
   nitro: {
     serveStatic: true,
-  },
-
-  vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
   },
 
   postcss: {

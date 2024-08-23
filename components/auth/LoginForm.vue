@@ -26,11 +26,11 @@ const login = async () => {
         // store.isAuthenticated = true;
         // store.user = data;
       });
-    loading.value = false;
   } catch {
     loading.value = false;
   }
-  // router.push({ name: 'Controllers' });
+  loading.value = false;
+  router.push({ name: 'Controllers' });
 };
 </script>
 
