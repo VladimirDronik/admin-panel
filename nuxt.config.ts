@@ -1,5 +1,7 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import Noir from './utils/themePrimeVue';
 
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -23,9 +25,20 @@ export default defineNuxtConfig({
     plugins: [
       nodePolyfills(),
     ],
+    server: {
+      fs: {
+        allow: [
+          // search up for workspace root
+          searchForWorkspaceRoot(process.cwd()),
+          // your custom rules
+          '/path/to/custom/allow',
+        ],
+      },
+    },
   },
 
   ssr: false,
+
   devtools: {
     enabled: true,
   },
@@ -47,11 +60,21 @@ export default defineNuxtConfig({
       });
     },
     '@pinia/nuxt',
+    '@primevue/nuxt-module',
     '@nuxt/test-utils/module',
   ],
 
-  nitro: {
-    serveStatic: true,
+  primevue: {
+    options: {
+      theme: {
+        preset: Noir,
+        options: {
+          prefix: 'p',
+          darkModeSelector: '.p-dark',
+          cssLayer: false,
+        },
+      },
+    },
   },
 
   postcss: {

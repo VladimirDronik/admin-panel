@@ -1,5 +1,26 @@
 <script setup lang="ts">
-import { UserIcon, MailIcon, ListCheckIcon } from 'vue-tabler-icons';
+import { MailIcon } from 'vue-tabler-icons';
+import { useAuthStore } from '@/stores/auth';
+import proUser1 from '~/assets/images/icon-account.svg';
+import proUser3 from '~/assets/images/icon-tasks.svg';
+
+const authStore = useAuthStore();
+
+const profileDD = [
+  {
+    avatar: proUser1,
+    title: 'Мой Аккаунт',
+    subtitle: 'Настройка личных данных',
+    href: '/apps/user/profile',
+  },
+  {
+    avatar: proUser3,
+    title: 'Настройки',
+    subtitle: 'Сеть, пользователи, MRTT, VPN',
+    href: '/',
+  },
+];
+
 </script>
 
 <template>
@@ -7,44 +28,52 @@ import { UserIcon, MailIcon, ListCheckIcon } from 'vue-tabler-icons';
   <!-- notifications DD -->
   <!-- ---------------------------------------------- -->
   <v-menu :close-on-content-click="false">
-    <template #activator="{ props }">
-      <v-btn class="profileBtn custom-hover-primary" variant="text" v-bind="props" icon>
+    <template v-slot:activator="{ props }">
+      <v-btn class="custom-hover-primary" variant="text" v-bind="props" icon>
         <v-avatar size="35">
-          <img src="/images/users/avatar-1.jpg" height="35" alt="user" />
+          <img src="~/assets/images/user-1.jpg" width="35" alt="Profile" />
         </v-avatar>
       </v-btn>
     </template>
-    <v-sheet rounded="md" width="200" elevation="10" class="mt-2">
-      <v-list class="py-0" lines="one" density="compact">
-        <v-list-item value="item1" active-color="primary">
-          <template #prepend>
-            <UserIcon stroke-width="1.5" size="20" />
-          </template>
-          <v-list-item-title class="pl-4 text-body-1">
-            My Profile
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item value="item2" active-color="primary">
-          <template #prepend>
-            <MailIcon stroke-width="1.5" size="20" />
-          </template>
-          <v-list-item-title class="pl-4 text-body-1">
-            My Account
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item value="item3" active-color="primary">
-          <template #prepend>
-            <ListCheckIcon stroke-width="1.5" size="20" />
-          </template>
-          <v-list-item-title class="pl-4 text-body-1">
-            My Task
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-      <div class="pt-4 pb-4 px-5 text-center">
-        <v-btn to="/auth/login" color="primary" variant="outlined" block>
-          Logout
-        </v-btn>
+    <v-sheet rounded="md" width="360" elevation="10">
+      <div class="px-8 pt-6">
+        <h6 class="text-h5 font-weight-medium">Профиль пользователя</h6>
+        <div class="d-flex align-center mt-4 pb-6">
+          <v-avatar size="80">
+            <img src="~/assets/images/user-1.jpg" width="80" alt="Profile" />
+          </v-avatar>
+          <div class="ml-3">
+            <h6 class="text-h6 mb-n1">Mathew Anderson</h6>
+            <span class="text-subtitle-1 font-weight-regular textSecondary">
+              ул. Гоголя, 09
+            </span>
+            <div class="d-flex align-center mt-1">
+              <MailIcon size="18" stroke-width="1.5" />
+              <span class="text-subtitle-1 font-weight-regular textSecondary ml-2">
+                ID: 00000000
+              </span>
+            </div>
+          </div>
+        </div>
+        <v-divider />
+      </div>
+      <perfect-scrollbar style="height: calc(100vh - 240px); max-height: 160px">
+        <v-list class="py-0 theme-list" lines="two">
+          <v-list-item v-for="item in profileDD" :key="item.title" class="py-4 px-8 custom-text-primary" :to="item.href">
+            <template v-slot:prepend>
+              <v-avatar size="48" color="lightprimary" class="mr-3" rounded="md">
+                <v-img :src="item.avatar" width="24" height="24" :alt="item.avatar" class="tw-max-w-6" />
+              </v-avatar>
+            </template>
+            <div>
+              <h6 class="text-subtitle-1 font-weight-bold mb-2 custom-title">{{ item.title }}</h6>
+            </div>
+            <p class="text-subtitle-1 font-weight-regular textSecondary">{{ item.subtitle }}</p>
+          </v-list-item>
+        </v-list>
+      </perfect-scrollbar>
+      <div class="pt-4 pb-6 px-8 text-center">
+        <v-btn color="primary" variant="outlined" block @click="authStore.logoutApi()">Logout</v-btn>
       </div>
     </v-sheet>
   </v-menu>

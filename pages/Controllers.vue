@@ -49,7 +49,7 @@ const created = async () => {
 <template>
   <BaseBreadcrumb title="Контроллеры" />
   <BaseCard>
-    <BaseTable
+    <BaseTreeTable
       @update="update"
       @created="created"
       v-model:page="page"
