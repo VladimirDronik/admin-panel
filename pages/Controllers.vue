@@ -1,18 +1,22 @@
 <script setup lang="ts">
 // Builtin modules
+import { useDisplay } from 'vuetify';
 import { useI18n } from 'vue-i18n';
 // Types
 import type { Filter } from '@/types/MainTypes';
-import { useControllersStore } from '@/stores/controllers';
 
 // Composables
 const { t } = useI18n();
+const storeUser = useAuthStore();
 const storeControllers = useControllersStore();
+
+const { width } = useDisplay();
 
 // Variables
 const perPage = 10;
 
 const page = ref(1);
+const tab = ref(true);
 const isUpdate = ref(true);
 
 const filters = ref<Filter[]>([
@@ -39,6 +43,10 @@ const update = async () => {
   isUpdate.value = false;
 };
 
+const openRoom = async () => {
+  storeUser.isActiveRightSidebar = true;
+};
+
 const created = async () => {
   await storeControllers.getControllersApi();
   isUpdate.value = false;
@@ -58,6 +66,140 @@ const created = async () => {
       :items="storeControllers.list"
       :perPage="perPage"
       :headers="headers"
-    />
+    >
+      <Column style="min-width: 10rem">
+        <template #body>
+          <div class="flex flex-wrap gap-2">
+            <v-btn
+              @click="openRoom()"
+              class="tw-mr-3"
+              color="primary"
+              variant="tonal"
+              icon
+            >
+              <PencilIcon
+                class="text-primary"
+                size="20"
+                stroke-width="1.5"
+              />
+            </v-btn>
+          </div>
+        </template>
+      </Column>
+    </BaseTreeTable>
   </BaseCard>
+
+  <v-navigation-drawer
+    v-model="storeUser.isActiveRightSidebar"
+    location="right"
+    app
+    temporary
+    elevation="10"
+    :width="width / 3"
+  >
+    <v-card elevation="0">
+      <v-card-title class="bg-primary">
+        <div class="tw-flex tw-items-center tw-justify-between">
+          <p>
+            Редактировать Mega 1
+          </p>
+          <p class="tw-text-base">
+            Контроллер
+          </p>
+        </div>
+      </v-card-title>
+
+      <v-card-text class="!tw-px-0">
+
+        <v-tabs
+          v-model="tab"
+          bg-color="lightprimary"
+        >
+          <v-tab value="one">Свойства</v-tab>
+          <v-tab value="two">События</v-tab>
+        </v-tabs>
+        <v-tabs-window v-model="tab">
+          <div class="tw-px-4 tw-pt-4">
+            <v-tabs-window-item value="one">
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Название
+                </p>
+                <v-text-field />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Тип
+                </p>
+                <v-text-field />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Адрес
+                </p>
+                <v-text-field />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Пароль
+                </p>
+                <v-text-field />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Режим
+                </p>
+                <v-text-field />
+              </div>
+              <div class="tw-mb-2">
+                <v-btn color="primary" block>
+                  Настройка Портов
+                </v-btn>
+              </div>
+              <div class="tw-mb-2">
+                <v-btn color="primary" block>
+                  Скачать Конфиг
+                </v-btn>
+              </div>
+              <div class="tw-mb-2">
+                <v-btn color="primary" block>
+                  Загрузить Конфиг
+                </v-btn>
+              </div>
+              <div class="tw-flex tw-justify-end">
+                <v-btn color="success" variant="flat" class="tw-mr-2">
+                  Сохранить
+                </v-btn>
+                <v-btn color="error" variant="outlined">
+                  Закрыть
+                </v-btn>
+              </div>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="two">
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Изменение статуса объекта
+                </p>
+                <v-checkbox label="вызов метода объекта 2" />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Изменение конфига устройства
+                </p>
+                <v-checkbox label="вызов метода объекта 2" />
+              </div>
+              <div>
+                <p class="tw-text-lg tw-font-semibold">
+                  Загрузка устройства после включения
+                </p>
+                <v-checkbox label="вызов метода объекта 2" />
+              </div>
+            </v-tabs-window-item>
+          </div>
+        </v-tabs-window>
+
+      </v-card-text>
+    </v-card>
+  </v-navigation-drawer>
 </template>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
@@ -28,7 +29,7 @@ export const useControllersStore = defineStore({
   }),
   actions: {
     async getControllersApi(params = {}) {
-      const { data }: RequestData = await api.get('controllers-list', {
+      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects/controllers?offset=0&limit=20', {
         params,
       });
       return data;

@@ -2,13 +2,15 @@ import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
 interface State {
-  user: null | object
+  user: null | object,
+  isActiveRightSidebar: boolean,
 }
 
 export const useAuthStore = defineStore({
   id: 'auth',
   state: (): State => ({
     user: null,
+    isActiveRightSidebar: false,
   }),
   actions: {
     async loginApi(params = {}) {

@@ -262,6 +262,7 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
         <Column field="name" header="Name" expander style="width: 34%" />
         <Column field="size" header="Size" style="width: 33%" />
         <Column field="type" header="Type" style="width: 33%" />
+        <slot />
       </TreeTable>
     </BaseLoader>
   </div>
