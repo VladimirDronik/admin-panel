@@ -16,23 +16,23 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
-  { header: 'Оборудование' },
+  { header: 'pages.equipment' },
   {
-    title: 'Контроллеры',
+    title: 'pages.controllers',
     icon: ApertureIcon,
     to: '/controllers',
   },
   {
-    title: 'Устройства',
+    title: 'pages.devices',
     icon: ApertureIcon,
     to: '/login',
   },
   {
-    title: 'Датчики',
+    title: 'pages.sensors',
     icon: ApertureIcon,
     to: '/login',
   },
-  { header: 'Визуализация' },
+  { header: 'pages.visualization' },
   {
     title: 'Мобильное прил.',
     icon: ApertureIcon,

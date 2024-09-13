@@ -18,6 +18,7 @@ const perPage = 10;
 const page = ref(1);
 const tab = ref(true);
 const isUpdate = ref(true);
+const selectedKey = ref(null);
 
 const filters = ref<Filter[]>([
   {
@@ -43,8 +44,9 @@ const update = async () => {
   isUpdate.value = false;
 };
 
-const openRoom = async () => {
-  storeUser.isActiveRightSidebar = true;
+const clickRow = async (item: any) => {
+  console.log(item.key.length);
+  if (item.key.length > 1) storeUser.isActiveRightSidebar = true;
 };
 
 const created = async () => {
@@ -55,37 +57,25 @@ const created = async () => {
 </script>
 
 <template>
-  <BaseBreadcrumb title="Контроллеры" />
+  <BaseBreadcrumb title="pages.controllers" />
   <BaseCard>
     <BaseTreeTable
       @update="update"
       @created="created"
+      @click-row="clickRow"
       v-model:page="page"
       v-model:filters="filters"
       :total="storeControllers.total"
-      :items="storeControllers.list"
+      :items="storeControllers.getControllers"
       :perPage="perPage"
       :headers="headers"
     >
-      <Column style="min-width: 10rem">
-        <template #body>
-          <div class="flex flex-wrap gap-2">
-            <v-btn
-              @click="openRoom()"
-              class="tw-mr-3"
-              color="primary"
-              variant="tonal"
-              icon
-            >
-              <PencilIcon
-                class="text-primary"
-                size="20"
-                stroke-width="1.5"
-              />
-            </v-btn>
-          </div>
-        </template>
-      </Column>
+      <Column field="id" header="ID" expander />
+      <Column field="category" header="Категория" />
+      <Column field="name" header="Название" />
+      <Column field="type" header="Тип" />
+      <Column field="address" header="Помещение" />
+      <Column field="status" header="Статус" />
     </BaseTreeTable>
   </BaseCard>
 

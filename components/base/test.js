@@ -96,6 +96,7 @@ export const NodeService = {
           name: 'Applications',
           size: '100kb',
           type: 'Folder',
+          status: 'Fail',
         },
         children: [
           {

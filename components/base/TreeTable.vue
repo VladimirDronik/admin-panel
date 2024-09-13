@@ -23,6 +23,10 @@ const page = defineModel<number>('page', {
   required: true,
 });
 
+const selectedKey = defineModel('selectedKey', {
+  default: null,
+});
+
 const filters = defineModel<Filter[]>('filters', {
   required: true,
 });
@@ -258,10 +262,7 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
     </AnimationTransitionHeight>
 
     <BaseLoader :isUpdate="isUpdate">
-      <TreeTable :value="nodes" tableStyle="min-width: 50rem">
-        <Column field="name" header="Name" expander style="width: 34%" />
-        <Column field="size" header="Size" style="width: 33%" />
-        <Column field="type" header="Type" style="width: 33%" />
+      <TreeTable @nodeSelect="(item) => emit('click-row', item)" v-model:selectionKeys="selectedKey" selectionMode="single" :value="items" tableStyle="min-width: 50rem">
         <slot />
       </TreeTable>
     </BaseLoader>
