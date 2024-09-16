@@ -106,7 +106,9 @@ const pagination = async () => {
 
 // Watchers
 watch(page, pagination);
-watch(filterValueList, filter);
+watch(filterValueList, (newValue, oldValue) => {
+  if (!_.isEqual(newValue, oldValue)) filter();
+});
 
 // Created
 const paramsKeys = Object.keys(route.query);

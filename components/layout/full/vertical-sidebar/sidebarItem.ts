@@ -18,14 +18,9 @@ export interface menu {
 const sidebarItem: menu[] = [
   { header: 'pages.equipment' },
   {
-    title: 'pages.controllers',
-    icon: ApertureIcon,
-    to: '/controllers',
-  },
-  {
     title: 'pages.devices',
     icon: ApertureIcon,
-    to: '/login',
+    to: '/Devices',
   },
   {
     title: 'pages.sensors',

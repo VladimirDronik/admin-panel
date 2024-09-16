@@ -14,9 +14,15 @@ export const useAuthStore = defineStore({
   }),
   actions: {
     async loginApi(params = {}) {
-      const { data } = await api.get('token', {
-        params,
-      });
+      const { data } = await api.get(
+        'token',
+        {
+          params,
+          headers: {
+            'api-key': 'c041d36e381a835afce48c91686370c8',
+          },
+        },
+      );
       return data;
     },
 

@@ -30,7 +30,7 @@ const login = async () => {
     loading.value = false;
   }
   loading.value = false;
-  router.push({ name: 'Controllers' });
+  router.push({ name: 'Devices' });
 };
 </script>
 

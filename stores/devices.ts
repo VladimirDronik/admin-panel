@@ -2,7 +2,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
-interface Controllers {
+interface Devices {
   id: number,
   type: number,
   protocol: number,
@@ -11,33 +11,37 @@ interface Controllers {
   address: number,
   module: number,
   category: string,
-  props: {
-    address: {
-      value: boolean
-    },
-    status: {
-      value: boolean
-    },
-  },
-  children?: Controllers[]
+  zone_id: number
+  status: string
+  children?: Devices[]
+  props?: {
+    code: string,
+    data_type: string,
+    editable: number,
+    name: string,
+    required: true,
+    value: string,
+    visible: number,
+  }
 }
 
 interface RequestData {
   data: {
     data: {
-      list: Controllers[]
+      list: Devices[]
       total: number
     }
   }
 }
 
 interface State {
-  list: Controllers[],
+  list: Devices[],
+  item: Devices | null,
   total: number,
 }
 
-function filterControllers(controllers: Controllers[], level: number, key: string): any {
-  return controllers.map((item, index) => {
+function filterDevices(devices: Devices[], level: number, key: string): any {
+  return devices.map((item, index) => {
     if (item.children) {
       return {
         key: level === 0 ? String(index) : `${key}-${index}}`,
@@ -46,10 +50,10 @@ function filterControllers(controllers: Controllers[], level: number, key: strin
           category: item.category,
           name: item.name,
           type: item.type,
-          address: item.props?.address?.value ?? '-',
-          status: item.props?.status?.value ?? '-',
+          address: item?.zone_id ?? '-',
+          status: item?.status ?? '-',
         },
-        children: filterControllers(item.children, level + 1, level === 0 ? String(index) : `0${`-${index}`.repeat(level)}`),
+        children: filterDevices(item.children, level + 1, level === 0 ? String(index) : `0${`-${index}`.repeat(level)}`),
       };
     }
     return {
@@ -59,32 +63,40 @@ function filterControllers(controllers: Controllers[], level: number, key: strin
         category: item.category,
         name: item.name,
         type: item.type,
-        address: item.props?.address?.value ?? '-',
-        status: item.props?.status?.value ?? '-',
+        address: item?.zone_id ?? '-',
+        status: item?.status ?? '-',
       },
     };
   });
 }
 
-export const useControllersStore = defineStore({
+export const useDevicesStore = defineStore({
   id: 'Controllers',
   state: (): State => ({
     list: [],
     total: 0,
+    item: null,
   }),
   getters: {
-    getControllers(): any {
-      return filterControllers(this.list, 0);
+    getDevices(): any {
+      return filterDevices(this.list, 0, '');
     },
   },
   actions: {
-    async getControllersApi(params = {}) {
-      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects?limit=20&offset=0', {
+    async getDevicesApi(params = {}) {
+      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects', {
         params,
       });
 
       this.list = data.data.list;
       this.total = data.data.total;
+      return data;
+    },
+
+    async getControllerDetailsApi(id: number) {
+      const { data }: { data: {data: Devices}} = await axios.get(`http://10.35.16.1:8088/objects/${id}`);
+
+      this.item = data.data;
       return data;
     },
 
