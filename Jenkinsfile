@@ -1,5 +1,6 @@
 pipeline {
     checkout scmGit(branches: [[name: '*/develop']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-ssh-key', url: 'git@github.com:VladimirDronik/admin-panel.git']])
+    
     agent any
 
     stages {
