@@ -7,22 +7,26 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
             }
         }
-        stage('Test') {
+        stage('Pull') {
             steps {
-                echo 'Testing..'
-                echo 'Running pytest..'
+                sh 'git -C /opt/adm_panel_cicd/admin-panel/ pull'
             }
         }
         stage('Build') {
             steps {
-                echo 'Building..'
-                echo 'Running docker build -t sntshk/cotu .'
+                sh 'docker buildx build -f /opt/adm_panel_cicd/admin-panel/Dockerfile -t 178.57.106.190:5000/admin-panel:develop --platform linux/arm64 --push /opt/adm_panel_cicd/admin-panel'
             }
         }
         stage('Publish') {
             steps {
-                echo 'Publishing..'
-                echo 'Running docker push..'
+                sh """
+                    ssh touchon@10.35.16.1 << EOF
+                    cd /opt/touchon/adm
+                    docker-compose pull adm
+                    docker-compose up --force-recreate --build -d adm
+                    docker system prune -af
+                    EOF
+                """
             }
         }
         stage('Cleanup') {
