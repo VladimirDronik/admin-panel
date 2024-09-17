@@ -94,7 +94,6 @@ const created = async () => {
     v-model="storeUser.isActiveRightSidebar"
     location="right"
     app
-    temporary
     elevation="10"
     :width="width / 3"
   >
@@ -105,9 +104,14 @@ const created = async () => {
             <p>
               {{ storeDevices.item?.name }}
             </p>
-            <p class="tw-text-base">
-              {{ storeDevices.item?.category }}
-            </p>
+            <div class="tw-flex tw-items-center">
+              <p class="tw-text-base">
+                {{ storeDevices.item?.category }}
+              </p>
+              <v-btn @click="storeUser.isActiveRightSidebar = false" icon size="small" variant="text">
+                <XIcon class="white" />
+              </v-btn>
+            </div>
           </div>
         </v-card-title>
 
@@ -118,16 +122,35 @@ const created = async () => {
             bg-color="lightprimary"
           >
             <v-tab value="one">Свойства</v-tab>
-          <!-- <v-tab value="two">События</v-tab> -->
+            <v-tab value="two">События</v-tab>
+            <v-tab value="ports">Порты</v-tab>
+            <v-tab value="four">Статистика</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
             <div class="tw-px-4 tw-pt-4">
               <v-tabs-window-item value="one">
-                <div v-for="item in storeDevices.item?.props" :key="item.id">
-                  <p class="tw-text-lg tw-font-semibold">
-                    {{ item.name }}
-                  </p>
-                  <v-text-field :value="item.value" />
+                <div v-for="item in storeDevices.item?.props" :key="item.code">
+                  <div v-if="item.data_type === 'bool'">
+                    <v-switch :label="item.name" color="primary">
+                      <template v-slot:label>
+                        <p class="tw-text-lg tw-font-semibold">
+                          {{item.name}}
+                        </p>
+                      </template>
+                    </v-switch>
+                  </div>
+                  <div v-else-if="item.data_type === 'enum'">
+                    <p class="tw-text-lg tw-font-semibold">
+                      {{ item.name }}
+                    </p>
+                    <v-select :value="item.value" :items="Object.keys(item.values)" />
+                  </div>
+                  <div v-else>
+                    <p class="tw-text-lg tw-font-semibold">
+                      {{ item.name }}
+                    </p>
+                    <v-text-field :value="item.value" />
+                  </div>
                 </div>
                 <!-- <div class="tw-mb-2">
                 <v-btn color="primary" block>
@@ -148,13 +171,10 @@ const created = async () => {
                   <v-btn color="success" variant="flat" class="tw-mr-2">
                     Сохранить
                   </v-btn>
-                  <v-btn color="error" variant="outlined">
-                    Закрыть
-                  </v-btn>
                 </div>
               </v-tabs-window-item>
 
-              <v-tabs-window-item value="two">
+              <!-- <v-tabs-window-item value="two">
                 <div>
                   <p class="tw-text-lg tw-font-semibold">
                     Изменение статуса объекта
@@ -172,6 +192,24 @@ const created = async () => {
                     Загрузка устройства после включения
                   </p>
                   <v-checkbox label="вызов метода объекта 2" />
+                </div>
+              </v-tabs-window-item> -->
+
+              <v-tabs-window-item value="ports">
+                <div v-if="storeDevices.item?.category === 'sensor'">
+                  <div class="tw-mb-4" v-for="port in storeDevices.item?.children" :key="port.id">
+                    <p class="tw-mb-2 tw-text-xl tw-font-semibold">
+                      {{port.name}}
+                    </p>
+                    <div class="tw-mb-1 tw-flex tw-items-center tw-justify-between" v-for="item in port.props" :key="item.code">
+                      <p class="tw-text-lg">
+                        {{item.name}}
+                      </p>
+                      <p class="tw-text-xl tw-font-semibold">
+                        {{ item.value ?? '-' }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </v-tabs-window-item>
             </div>

@@ -21,8 +21,9 @@ interface Devices {
     name: string,
     required: true,
     value: string,
+    values: string[]
     visible: number,
-  }
+  }[]
 }
 
 interface RequestData {
