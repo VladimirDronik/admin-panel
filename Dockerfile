@@ -2,7 +2,7 @@ FROM --platform=$BUILDPLATFORM node:18.20-alpine AS builder
 
 WORKDIR /opt/app
 
-COPY ./admin-panel/. .
+COPY . ./
 
 RUN npm ci && npm cache clean --force
 RUN npm run build
