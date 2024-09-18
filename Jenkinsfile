@@ -9,7 +9,6 @@ def func_telegram_sendMessage(message, token, chatid) {
         currentBuild.result = 'SUCCESS'
     }
 }
-    
 
 pipeline {
     agent any
