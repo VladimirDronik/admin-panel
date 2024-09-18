@@ -1,9 +1,4 @@
-// -----------------------------------------------
-// func_telegram_sendMessage_message
-// -----------------------------------------------
 def func_telegram_sendMessage(message, token, chatid) {
-    echo "### func_telegram_sendMessage, message=${message}, token=${token}, chatid=${chatid}"
-
     try {
         sh """
             curl -s -X POST https://api.telegram.org/bot${token}/sendMessage \
@@ -25,8 +20,18 @@ pipeline {
         SERVICE = 'Admin-panel'
         CHAT = credentials('telegram_chat_id')
         TOKEN = credentials('telegram_bot_token')
+        MESSAGE_BASE = "\\[CI/CD] *${env.SERVICE}*: "
+        INIT_MESSAGE = "${env.MESSAGE_BASE}STARTED"
+        SUCCESS_MESSAGE = "${env.MESSAGE_BASE}SUCSESS%0ACommit ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}"
+        FAIL_MESSAGE = "${env.MESSAGE_BASE}FAILURE"
+        ABORT_MESSAGE = "${env.MESSAGE_BASE}ABORTED"
     }
     stages {
+        stage('Notification') {
+            steps {
+                func_telegram_sendMessage("${env.INIT_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
+            }
+        }
         stage('Pull') {
             steps {
                 sh 'git -C /opt/adm_panel_cicd/admin-panel/ pull'
@@ -60,44 +65,20 @@ pipeline {
     
     post {
         success {
-            // sh  """
-            //     curl -s -X POST https://api.telegram.org/bot${env.TOKEN}/sendMessage \
-            //     -d chat_id=${env.CHAT} -d parse_mode=markdown \
-            //     -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
-            // """
-            def token = ${env.TOKEN}
-            def chatid = ${env.CHAT}
-            def message = '\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
-            func_telegram_sendMessage_message("im message", token, chatid)
+            script {
+                func_telegram_sendMessage("${env.SUCCESS_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
+            }
         }
 
         aborted {
-            withCredentials(
-                [
-                    string(credentialsId: 'telegram_chat_id', variable: 'CHAT'),
-                    string(credentialsId: 'telegram_bot_token', variable: 'TOKEN')
-                ]
-            ) {
-                sh """
-                    curl -s -X POST https://api.telegram.org/bot${env.TOKEN}/sendMessage \
-                    -d chat_id=${env.CHAT} -d parse_mode=markdown \
-                    -d text='\\[CI/CD] *${env.SERVICE}*: ABORTED'
-                """
+            script {
+                func_telegram_sendMessage("${env.ABORT_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
             }
         }
      
         failure {
-            withCredentials(
-                [
-                    string(credentialsId: 'telegram_chat_id', variable: 'CHAT'),
-                    string(credentialsId: 'telegram_bot_token', variable: 'TOKEN')
-                ]
-            ) {
-                sh  """
-                    curl -s -X POST https://api.telegram.org/bot${env.TOKEN}/sendMessage \
-                    -d chat_id=${env.CHAT} -d parse_mode=markdown \
-                    -d text='\\[CI/CD] *${env.SERVICE}*: FAILURE'
-                """
+            script {
+                func_telegram_sendMessage("${env.FAIL_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
             }
         }
     }
