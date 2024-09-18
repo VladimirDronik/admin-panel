@@ -61,20 +61,17 @@ pipeline {
             }
         }
     }
-    
     post {
         success {
             script {
                 func_telegram_sendMessage("${env.SUCCESS_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
             }
         }
-
         aborted {
             script {
                 func_telegram_sendMessage("${env.ABORT_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
             }
         }
-     
         failure {
             script {
                 func_telegram_sendMessage("${env.FAIL_MESSAGE}", "${env.TOKEN}", "${env.CHAT}")
