@@ -1,3 +1,21 @@
+// -----------------------------------------------
+// func_telegram_sendMessage_message
+// -----------------------------------------------
+def func_telegram_sendMessage(message, token, chatid) {
+    echo "### func_telegram_sendMessage, message=${message}, token=${token}, chatid=${chatid}"
+
+    try {
+        sh """
+            curl -s -X POST https://api.telegram.org/bot${token}/sendMessage \
+            -d chat_id=${chatid} -d parse_mode=markdown \
+            -d text='${message}'
+        """
+    } catch(Exception e) {
+        currentBuild.result = 'SUCCESS'
+    }
+}
+    
+
 pipeline {
     agent any
     environment {
@@ -42,11 +60,15 @@ pipeline {
     
     post {
         success {
-            sh  """
-                curl -s -X POST https://api.telegram.org/bot${env.TOKEN}/sendMessage \
-                -d chat_id=${env.CHAT} -d parse_mode=markdown \
-                -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
-            """
+            // sh  """
+            //     curl -s -X POST https://api.telegram.org/bot${env.TOKEN}/sendMessage \
+            //     -d chat_id=${env.CHAT} -d parse_mode=markdown \
+            //     -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
+            // """
+            def token = ${env.TOKEN}
+            def chatid = ${env.CHAT}
+            def message = '\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
+            func_telegram_sendMessage_message("im message", token, chatid)
         }
 
         aborted {
