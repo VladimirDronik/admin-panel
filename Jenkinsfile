@@ -49,7 +49,7 @@ pipeline {
                 sh  """
                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage \
                     -d chat_id=${CHAT} -d parse_mode=markdown \
-                    -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}%0A${env.GIT_COMMIT_COMMENT}'
+                    -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}${env.GIT_COMMIT_COMMENT}'
                 """
             }
         }
