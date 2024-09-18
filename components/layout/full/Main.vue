@@ -9,6 +9,10 @@ const { mdAndUp } = useDisplay();
 
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
+
+const storeRooms = useRoomsStore();
+
+storeRooms.getRoomsApi();
 </script>
 
 <template>

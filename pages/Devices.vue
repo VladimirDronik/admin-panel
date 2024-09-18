@@ -122,9 +122,9 @@ const created = async () => {
             bg-color="lightprimary"
           >
             <v-tab value="one">Свойства</v-tab>
-            <v-tab value="two">События</v-tab>
-            <v-tab value="ports">Порты</v-tab>
-            <v-tab value="four">Статистика</v-tab>
+            <v-tab value="two" v-if="storeDevices.item?.category === 'controller'">События</v-tab>
+            <v-tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</v-tab>
+            <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">Статистика</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
             <div class="tw-px-4 tw-pt-4">
@@ -140,33 +140,48 @@ const created = async () => {
                     </v-switch>
                   </div>
                   <div v-else-if="item.data_type === 'enum'">
-                    <p class="tw-text-lg tw-font-semibold">
+                    <p class="tw-text-xl tw-font-semibold">
                       {{ item.name }}
                     </p>
                     <v-select :value="item.value" :items="Object.keys(item.values)" />
                   </div>
                   <div v-else>
-                    <p class="tw-text-lg tw-font-semibold">
+                    <p class="tw-text-xl tw-font-semibold">
                       {{ item.name }}
                     </p>
                     <v-text-field :value="item.value" />
                   </div>
                 </div>
-                <!-- <div class="tw-mb-2">
-                <v-btn color="primary" block>
-                  Настройка Портов
-                </v-btn>
-              </div>
-              <div class="tw-mb-2">
-                <v-btn color="primary" block>
-                  Скачать Конфиг
-                </v-btn>
-              </div>
-              <div class="tw-mb-2">
-                <v-btn color="primary" block>
-                  Загрузить Конфиг
-                </v-btn>
-              </div> -->
+                <div v-if="storeDevices.item?.category === 'sensor'">
+                  <div class="tw-mb-4" v-for="port in storeDevices.item?.children" :key="port.id">
+                    <p class="tw-mb-2 tw-text-xl tw-font-semibold">
+                      {{port.name}}
+                    </p>
+                    <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
+                      <div v-if="item.data_type === 'bool'">
+                        <v-switch v-model="item.value" :label="item.name" color="primary">
+                          <template v-slot:label>
+                            <p class="tw-text-lg tw-font-semibold">
+                              {{item.name}}
+                            </p>
+                          </template>
+                        </v-switch>
+                      </div>
+                      <div v-else-if="item.data_type === 'enum'">
+                        <p class="tw-text-lg tw-font-semibold">
+                          {{ item.name }}
+                        </p>
+                        <v-select v-model="item.value" :items="Object.keys(item.values)" />
+                      </div>
+                      <div v-else>
+                        <p class="tw-text-lg tw-font-semibold">
+                          {{ item.name }}
+                        </p>
+                        <v-text-field v-model="item.value" :type="item.data_type === 'int' || item.data_type === 'float' ? 'number' : 'text'" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="tw-flex tw-justify-end">
                   <v-btn color="success" variant="flat" class="tw-mr-2">
                     Сохранить
@@ -194,24 +209,6 @@ const created = async () => {
                   <v-checkbox label="вызов метода объекта 2" />
                 </div>
               </v-tabs-window-item> -->
-
-              <v-tabs-window-item value="ports">
-                <div v-if="storeDevices.item?.category === 'sensor'">
-                  <div class="tw-mb-4" v-for="port in storeDevices.item?.children" :key="port.id">
-                    <p class="tw-mb-2 tw-text-xl tw-font-semibold">
-                      {{port.name}}
-                    </p>
-                    <div class="tw-mb-1 tw-flex tw-items-center tw-justify-between" v-for="item in port.props" :key="item.code">
-                      <p class="tw-text-lg">
-                        {{item.name}}
-                      </p>
-                      <p class="tw-text-xl tw-font-semibold">
-                        {{ item.value ?? '-' }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </v-tabs-window-item>
             </div>
           </v-tabs-window>
 

@@ -20,12 +20,12 @@ const sidebarItem: menu[] = [
   {
     title: 'pages.devices',
     icon: ApertureIcon,
-    to: '/Devices',
+    to: '/devices',
   },
   {
-    title: 'pages.sensors',
+    title: 'pages.rooms',
     icon: ApertureIcon,
-    to: '/login',
+    to: '/rooms',
   },
   { header: 'pages.visualization' },
   {
