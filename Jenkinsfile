@@ -35,12 +35,6 @@ pipeline {
                 """
             }
         }
-        stage('Cleanup') {
-            steps {
-                echo 'Cleaning..'
-                echo 'Running docker rmi..'
-            }
-        }
     }
     
     post {
@@ -51,11 +45,11 @@ pipeline {
                     string(credentialsId: 'telegram_bot_token', variable: 'TOKEN')
                 ]
             ) {
-                sh  ("""
+                sh  """
                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage \
                     -d chat_id=${CHAT} -d parse_mode=markdown \
                     -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}'
-        """)
+                """
             }
         }
 
