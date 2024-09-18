@@ -14,7 +14,14 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'docker buildx build -f /opt/adm_panel_cicd/admin-panel/Dockerfile -t 178.57.106.190:5000/admin-panel:develop --platform linux/arm64 --push /opt/adm_panel_cicd/admin-panel'
+                sh """
+                    docker buildx build
+                    -f /opt/adm_panel_cicd/admin-panel/Dockerfile
+                    -t 178.57.106.190:5000/admin-panel:develop
+                    --platform linux/arm64
+                    --push 
+                    /opt/adm_panel_cicd/admin-panel
+                """
             }
         }
         stage('Publish') {
