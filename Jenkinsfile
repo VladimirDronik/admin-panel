@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         GIT_COMMIT = sh (script: "git log -n 1 --pretty=format:'%h'", returnStdout: true)
-        GIT_COMMIT_MESSAGE = sh (script: "git log --format=%B -n 1 $GIT_COMMIT", returnStdout: true)
+        GIT_COMMIT_COMMENT = sh (script: "git show --pretty=format:'%B' --no-patch -n 1 $GIT_COMMIT", returnStdout: true)
         GIT_COMMITER = sh (script: "git show -s --pretty=%an", returnStdout: true)
         SERVICE = 'Admin-panel'
     }
@@ -49,7 +49,7 @@ pipeline {
                 sh  """
                     curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage \
                     -d chat_id=${CHAT} -d parse_mode=markdown \
-                    -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}%0A${env.GIT_COMMIT_MESSAGE}'
+                    -d text='\\[CI/CD] *${env.SERVICE}*: SUCSESS%0ACommit: ${env.GIT_COMMIT} by ${env.GIT_COMMITER}%0A${env.GIT_COMMIT_COMMENT}'
                 """
             }
         }
