@@ -33,7 +33,7 @@ pipeline {
         }
         stage('Pull') {
             steps {
-                sh 'git -C /opt/adm_panel_cicd/admin-panel/ pull'
+                sh 'git -C /opt/adm_panel_cicd/admin-panel pull'
             }
         }
         stage('Build') {
