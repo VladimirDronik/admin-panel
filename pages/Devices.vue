@@ -10,6 +10,10 @@ const { t } = useI18n();
 const storeUser = useAuthStore();
 const storeDevices = useDevicesStore();
 
+definePageMeta({
+  middleware: ['auth'],
+});
+
 const { width } = useDisplay();
 
 // Variables

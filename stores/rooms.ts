@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
@@ -50,7 +49,7 @@ export const useRoomsStore = defineStore({
   }),
   actions: {
     async getRoomsApi(params = {}) {
-      const { data }: RequestData = await axios.get('http://178.57.106.190:8091/private/rooms-list', {
+      const { data }: RequestData = await api.get('http://10.35.16.1:8091/private/rooms-list-all', {
         params,
       });
 

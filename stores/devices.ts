@@ -94,7 +94,7 @@ export const useDevicesStore = defineStore({
   },
   actions: {
     async getDevicesApi(params = {}) {
-      const { data }: { data: any} = await axios.get('http://10.35.16.1:8088/objects', {
+      const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
         params,
       });
 
@@ -104,7 +104,7 @@ export const useDevicesStore = defineStore({
     },
 
     async getTypesApi(params = {}) {
-      const { data }: { data: { data: Type[] } } = await axios.get('http://10.35.16.1:8088/objects/types', {
+      const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
         params,
       });
 
@@ -113,7 +113,7 @@ export const useDevicesStore = defineStore({
     },
 
     async getControllerDetailsApi(id: number) {
-      const { data }: { data: {data: Devices}} = await axios.get(`http://10.35.16.1:8088/objects/${id}`);
+      const { data }: { data: {data: Devices}} = await api.get(`http://10.35.16.1:8088/objects/${id}`);
 
       this.item = data.data;
       return data;
