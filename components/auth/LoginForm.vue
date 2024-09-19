@@ -25,12 +25,12 @@ const login = async () => {
         console.log(data);
         // store.isAuthenticated = true;
         // store.user = data;
+        router.push({ name: 'Devices' });
       });
   } catch {
     loading.value = false;
   }
   loading.value = false;
-  router.push({ name: 'Devices' });
 };
 </script>
 
