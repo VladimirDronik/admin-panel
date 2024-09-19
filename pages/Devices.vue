@@ -111,7 +111,6 @@ const created = async () => {
 
 <template>
   <BaseBreadcrumb title="pages.devices" />
-  {{ getTypes }}
   <BaseCard>
     <BaseTreeTable
       @update="update"
