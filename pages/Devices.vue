@@ -24,9 +24,37 @@ const selectedItemId = ref(null);
 
 const filters = ref<Filter[]>([
   {
-    label: 'Название',
-    key: 'name',
+    label: 'ID обьекта',
+    key: 'filter_by_id',
     value: null,
+  },
+  {
+    label: 'ID родительского объекта',
+    key: 'filter_by_parent_id',
+    value: null,
+  },
+  {
+    label: 'Название',
+    key: 'filter_by_name',
+    value: null,
+  },
+  {
+    label: 'Категории',
+    key: 'filter_by_category',
+    value: ['controller', 'sensor'],
+    options: ['controller', 'sensor'],
+  },
+  {
+    label: 'Тип',
+    key: 'filter_by_type',
+    value: null,
+    options: ['mega_d_2561', 'bh1750'],
+  },
+  {
+    label: 'Помещения',
+    key: 'id',
+    value: null,
+    options: ['Гостинная', 'Двор'],
   },
 ]);
 
@@ -38,6 +66,40 @@ const headers = computed(() => [
   { text: t('IP адрес устройства'), value: 'address' },
   { text: t('Статус'), value: 'state' },
 ]);
+
+// const categoryOptions = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value);
+
+const getTypes = computed(() => {
+  if (!storeDevices.types) return [];
+  return Object.entries(storeDevices.types).map(([key, item]: any[]) => {
+    const filterValue = filters.value.find((item) => item.key === 'filter_by_category')?.value;
+    if (filterValue?.includes(key)) {
+      return Object.entries(item).map(([key, item]) => ({
+        title: item,
+        props: {
+          value: key,
+        },
+      })) ?? [];
+    }
+  });
+});
+
+// const filt = ref();
+
+// watch(() => filters.value.find((item) => item.key === 'filter_by_category')?.options, () => {
+//   if (!storeDevices.types) return [];
+//   filt.value = Object.entries(storeDevices.types).map(([key, item]: any[]) => {
+//     const filterValue = filters.value.find((item) => item.key === 'filter_by_category')?.options;
+//     if (filterValue?.includes(key)) {
+//       return Object.entries(item).map(([key, item]) => ({
+//         title: item,
+//         props: {
+//           value: key,
+//         },
+//       }));
+//     }
+//   });
+// });
 
 // Methods
 const update = async (params: any = {}) => {
@@ -59,10 +121,13 @@ const clickRow = async (item: any) => {
 };
 
 const created = async () => {
-  await storeDevices.getDevicesApi({
-    limit: perPage,
-    offset: 0,
-  });
+  await Promise.all([
+    storeDevices.getTypesApi(),
+    storeDevices.getDevicesApi({
+      limit: perPage,
+      offset: 0,
+    }),
+  ]);
   isUpdate.value = false;
 };
 </script>

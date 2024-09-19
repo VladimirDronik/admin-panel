@@ -54,6 +54,7 @@ ywOeBqS4Qw==
 const axiosInstance = axios.create({
   baseURL: runtimeConfig.public.backendApi,
   timeout: 20000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -3,12 +3,12 @@ export interface Filter {
   key: string,
   value: any,
   show?: boolean
-  options?: Options[]
+  options?: (Options | string)[]
 }
 
 export interface Options {
   title: string,
   props: {
-    value: number | string
+    value: any
   }
 }

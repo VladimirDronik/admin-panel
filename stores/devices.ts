@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
+import { Title } from '#build/components';
 import api from '~/utils/api';
 
 interface Devices {
@@ -39,6 +40,7 @@ interface State {
   list: Devices[],
   item: Devices | null,
   total: number,
+  types: any | null,
 }
 
 function filterDevices(devices: Devices[], level: number, key: string): any {
@@ -77,6 +79,7 @@ export const useDevicesStore = defineStore({
     list: [],
     total: 0,
     item: null,
+    types: null,
   }),
   getters: {
     getDevices(): any {
@@ -85,12 +88,21 @@ export const useDevicesStore = defineStore({
   },
   actions: {
     async getDevicesApi(params = {}) {
-      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects', {
+      const { data }: { data: any} = await axios.get('http://10.35.16.1:8088/objects', {
         params,
       });
 
       this.list = data.data.list;
       this.total = data.data.total;
+      return data;
+    },
+
+    async getTypesApi(params = {}) {
+      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects/types', {
+        params,
+      });
+
+      this.types = data.data;
       return data;
     },
 
