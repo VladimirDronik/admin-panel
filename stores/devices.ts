@@ -40,7 +40,13 @@ interface State {
   list: Devices[],
   item: Devices | null,
   total: number,
-  types: any | null,
+  types: Type[],
+}
+
+interface Type {
+  category: string
+  name: string
+  type: string
 }
 
 function filterDevices(devices: Devices[], level: number, key: string): any {
@@ -79,7 +85,7 @@ export const useDevicesStore = defineStore({
     list: [],
     total: 0,
     item: null,
-    types: null,
+    types: [],
   }),
   getters: {
     getDevices(): any {
@@ -98,7 +104,7 @@ export const useDevicesStore = defineStore({
     },
 
     async getTypesApi(params = {}) {
-      const { data }: RequestData = await axios.get('http://10.35.16.1:8088/objects/types', {
+      const { data }: { data: { data: Type[] } } = await axios.get('http://10.35.16.1:8088/objects/types', {
         params,
       });
 

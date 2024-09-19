@@ -3,7 +3,7 @@
 import { useDisplay } from 'vuetify';
 import { useI18n } from 'vue-i18n';
 // Types
-import type { Filter } from '@/types/MainTypes';
+import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
 const { t } = useI18n();
@@ -21,6 +21,24 @@ const isUpdate = ref(true);
 const isUpdateRightBar = ref(false);
 
 const selectedItemId = ref(null);
+
+// Computed Properties
+const headers = computed(() => [
+  { text: t('Название'), value: 'name' },
+  { text: t('Тип'), value: 'type' },
+  { text: t('Протокол'), value: 'protocol' },
+  { text: t('IP адрес устройства'), value: 'address' },
+  { text: t('Статус'), value: 'state' },
+]);
+
+const getTypes = computed<Options>(() => storeDevices.types
+  .filter((item) => getCategoriesOption.value.includes(item.category))
+  .map((item) => ({
+    title: item.name,
+    props: {
+      value: item.type,
+    },
+  })));
 
 const filters = ref<Filter[]>([
   {
@@ -48,7 +66,7 @@ const filters = ref<Filter[]>([
     label: 'Тип',
     key: 'filter_by_type',
     value: null,
-    options: ['mega_d_2561', 'bh1750'],
+    options: getTypes,
   },
   {
     label: 'Помещения',
@@ -58,48 +76,7 @@ const filters = ref<Filter[]>([
   },
 ]);
 
-// Computed Properties
-const headers = computed(() => [
-  { text: t('Название'), value: 'name' },
-  { text: t('Тип'), value: 'type' },
-  { text: t('Протокол'), value: 'protocol' },
-  { text: t('IP адрес устройства'), value: 'address' },
-  { text: t('Статус'), value: 'state' },
-]);
-
-// const categoryOptions = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value);
-
-const getTypes = computed(() => {
-  if (!storeDevices.types) return [];
-  return Object.entries(storeDevices.types).map(([key, item]: any[]) => {
-    const filterValue = filters.value.find((item) => item.key === 'filter_by_category')?.value;
-    if (filterValue?.includes(key)) {
-      return Object.entries(item).map(([key, item]) => ({
-        title: item,
-        props: {
-          value: key,
-        },
-      })) ?? [];
-    }
-  });
-});
-
-// const filt = ref();
-
-// watch(() => filters.value.find((item) => item.key === 'filter_by_category')?.options, () => {
-//   if (!storeDevices.types) return [];
-//   filt.value = Object.entries(storeDevices.types).map(([key, item]: any[]) => {
-//     const filterValue = filters.value.find((item) => item.key === 'filter_by_category')?.options;
-//     if (filterValue?.includes(key)) {
-//       return Object.entries(item).map(([key, item]) => ({
-//         title: item,
-//         props: {
-//           value: key,
-//         },
-//       }));
-//     }
-//   });
-// });
+const getCategoriesOption = computed<any[]>(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
 const update = async (params: any = {}) => {
@@ -134,6 +111,7 @@ const created = async () => {
 
 <template>
   <BaseBreadcrumb title="pages.devices" />
+  {{ getTypes }}
   <BaseCard>
     <BaseTreeTable
       @update="update"
