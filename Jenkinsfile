@@ -49,13 +49,13 @@ pipeline {
         stage('Publish') {
             steps {
                 sh """
+                    set -e
                     ssh ${env.DEV_SRV} << EOF
                     cd /opt/touchon/gobin
                     docker-compose pull ${env.SERVICE}
                     docker-compose up --force-recreate --build -d ${env.SERVICE}
                     docker system prune -af
-                    exit 0
-                    EOF
+                    << EOF
                 """
             }
         }
