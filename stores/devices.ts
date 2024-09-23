@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { defineStore } from 'pinia';
-import { Title } from '#build/components';
 import api from '~/utils/api';
+
+const storeAuth = useAuthStore();
 
 interface Devices {
   id: number,
@@ -96,6 +96,9 @@ export const useDevicesStore = defineStore({
     async getDevicesApi(params = {}) {
       const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
         params,
+        headers: {
+          token: storeAuth.token,
+        },
       });
 
       this.list = data.data.list;
@@ -106,6 +109,9 @@ export const useDevicesStore = defineStore({
     async getTypesApi(params = {}) {
       const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
         params,
+        headers: {
+          token: storeAuth.token,
+        },
       });
 
       this.types = data.data;
@@ -113,7 +119,14 @@ export const useDevicesStore = defineStore({
     },
 
     async getControllerDetailsApi(id: number) {
-      const { data }: { data: {data: Devices}} = await api.get(`http://10.35.16.1:8088/objects/${id}`);
+      const { data }: { data: {data: Devices}} = await api.get(
+        `http://10.35.16.1:8088/objects/${id}`,
+        {
+          headers: {
+            token: storeAuth.token,
+          },
+        },
+      );
 
       this.item = data.data;
       return data;
