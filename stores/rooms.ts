@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
+const storeAuth = useAuthStore();
+
 interface Devices {
   id: number,
   type: number,
@@ -25,17 +27,23 @@ interface Devices {
   }[]
 }
 
+interface Room {
+  id: number
+  is_group: boolean
+  rooms_in_group?: Room[]
+  sort: number
+  style: string
+  name: string
+}
+
 interface RequestData {
   data: {
-    data: {
-      list: Devices[]
-      total: number
-    }
+    response: Room[]
   }
 }
 
 interface State {
-  list: Devices[],
+  list: Room[],
   item: Devices | null,
   total: number,
 }
@@ -51,10 +59,13 @@ export const useRoomsStore = defineStore({
     async getRoomsApi(params = {}) {
       const { data }: RequestData = await api.get('http://10.35.16.1:8091/private/rooms-list-all', {
         params,
+        headers: {
+          token: storeAuth.token,
+        },
       });
-
-      this.list = data.data.list;
-      this.total = data.data.total;
+      console.log(data);
+      this.list = data.response;
+      this.total = data.response.length;
       return data;
     },
   },

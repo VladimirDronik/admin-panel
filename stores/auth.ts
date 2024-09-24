@@ -3,6 +3,7 @@ import api from '~/utils/api';
 
 interface State {
   user: null | object,
+  token: string | null,
   isActiveRightSidebar: boolean,
 }
 
@@ -10,6 +11,7 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: (): State => ({
     user: null,
+    token: localStorage.getItem('token') ?? null,
     isActiveRightSidebar: false,
   }),
   actions: {

@@ -5,44 +5,26 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-const data = ref([
-  {
-    title: 'Этаж 1',
-    items: [
-      'Кухня',
-      'Гостинная',
-      'Туалет',
-    ],
-  },
-  {
-    title: 'Этаж 2',
-    items: [
-      'Спальня',
-      'Десткая',
-      'Кабинет',
-    ],
-  },
-  {
-    title: 'Этаж 3',
-  },
-]);
+const storeRooms = useRoomsStore();
+
+const data = ref(storeRooms.list);
 </script>
 
 <template>
   <BaseBreadcrumb title="pages.rooms" />
-  <VueDraggableNext>
-    <div v-for="place in data" :key="place.title">
-      <v-expansion-panels v-if="place.items" class="tw-mb-2">
+  <VueDraggableNext v-model="data">
+    <div v-for="place in data" :key="place.id">
+      <v-expansion-panels v-if="place.rooms_in_group" class="tw-mb-2">
         <v-expansion-panel>
           <v-expansion-panel-title>
             <p class="tw-text-lg">
-              {{ place.title }}
+              {{ place.name }}
             </p>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <VueDraggableNext>
-              <div class="tw-cursor-pointer tw-py-2 tw-pl-2 tw-text-base" v-for="room in place.items" :key="room">
-                {{ room }}
+            <VueDraggableNext v-model="place.rooms_in_group">
+              <div class="tw-cursor-pointer tw-py-2 tw-pl-2 tw-text-base" v-for="room in place.rooms_in_group" :key="room.id">
+                {{ room.name }}
                 <v-divider />
               </div>
             </VueDraggableNext>
@@ -50,7 +32,7 @@ const data = ref([
         </v-expansion-panel>
       </v-expansion-panels>
       <v-card v-else class="tw-mb-2 tw-py-4 tw-pl-6 tw-text-lg">
-        {{ place.title }}
+        {{ place.name }}
       </v-card>
     </div>
   </VueDraggableNext>
