@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
-const storeAuth = useAuthStore();
-
 interface Devices {
   id: number,
   type: number,
@@ -79,62 +77,129 @@ function filterDevices(devices: Devices[], level: number, key: string): any {
   });
 }
 
-export const useDevicesStore = defineStore({
-  id: 'Controllers',
-  state: (): State => ({
-    list: [],
-    total: 0,
-    item: null,
-    types: [],
-  }),
-  getters: {
-    getDevices(): any {
-      return filterDevices(this.list, 0, '');
-    },
-  },
-  actions: {
-    async getDevicesApi(params = {}) {
-      const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
-        params,
+export const useDevicesStore = defineStore('Devices', () => {
+  const list = ref<Devices[]>([]);
+  const total = ref<number>(0);
+  const item = ref<Devices | null>(null);
+  const types = ref<Type[]>([]);
+
+  const storeAuth = useAuthStore();
+
+  const getDevices = computed(() => filterDevices(list.value, 0, ''));
+
+  const getDevicesApi = async (params = {}) => {
+    const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    list.value = data.data.list;
+    total.value = data.data.total;
+    return data;
+  };
+
+  const getTypesApi = async (params = {}) => {
+    const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    types.value = data.data;
+    return data;
+  };
+
+  const getControllerDetailsApi = async (id: number) => {
+    const { data }: { data: {data: Devices}} = await api.get(
+      `http://10.35.16.1:8088/objects/${id}`,
+      {
         headers: {
           token: storeAuth.token,
         },
-      });
+      },
+    );
 
-      this.list = data.data.list;
-      this.total = data.data.total;
-      return data;
-    },
+    item.value = data.data;
+    return data;
+  };
 
-    async getTypesApi(params = {}) {
-      const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
-        params,
-        headers: {
-          token: storeAuth.token,
-        },
-      });
+  const logoutApi = async () => {
+    const { data } = await api.post('api/public/user/logout');
+    return data;
+  };
 
-      this.types = data.data;
-      return data;
-    },
-
-    async getControllerDetailsApi(id: number) {
-      const { data }: { data: {data: Devices}} = await api.get(
-        `http://10.35.16.1:8088/objects/${id}`,
-        {
-          headers: {
-            token: storeAuth.token,
-          },
-        },
-      );
-
-      this.item = data.data;
-      return data;
-    },
-
-    async logoutApi() {
-      const { data } = await api.post('api/public/user/logout');
-      return data;
-    },
-  },
+  return {
+    list,
+    total,
+    item,
+    types,
+    getDevices,
+    getDevicesApi,
+    getTypesApi,
+    getControllerDetailsApi,
+    logoutApi,
+  };
 });
+
+// export const useDevicesStore = defineStore({
+//   id: 'Controllers',
+//   state: (): State => ({
+//     list: [],
+//     total: 0,
+//     item: null,
+//     types: [],
+//   }),
+//   getters: {
+//     getDevices(): any {
+//       return filterDevices(this.list, 0, '');
+//     },
+//   },
+//   actions: {
+//     async getDevicesApi(params = {}) {
+//       const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
+//         params,
+//         headers: {
+//           token: storeAuth.token,
+//         },
+//       });
+
+//       this.list = data.data.list;
+//       this.total = data.data.total;
+//       return data;
+//     },
+
+//     async getTypesApi(params = {}) {
+//       const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
+//         params,
+//         headers: {
+//           token: storeAuth.token,
+//         },
+//       });
+
+//       this.types = data.data;
+//       return data;
+//     },
+
+//     async getControllerDetailsApi(id: number) {
+//       const { data }: { data: {data: Devices}} = await api.get(
+//         `http://10.35.16.1:8088/objects/${id}`,
+//         {
+//           headers: {
+//             token: storeAuth.token,
+//           },
+//         },
+//       );
+
+//       this.item = data.data;
+//       return data;
+//     },
+
+//     async logoutApi() {
+//       const { data } = await api.post('api/public/user/logout');
+//       return data;
+//     },
+//   },
+// });
