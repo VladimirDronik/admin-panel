@@ -136,7 +136,7 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
 
 <template>
   <div class="custom-table">
-    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage" data-test="bar">
+    <v-row class="!tw-mb-1" v-if="false" data-test="bar">
       <v-col
         v-if="filters.length || total > perPage"
         cols="12"
@@ -264,7 +264,14 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
     </AnimationTransitionHeight>
 
     <BaseLoader :isUpdate="isUpdate">
-      <TreeTable @nodeSelect="(item) => emit('click-row', item)" v-model:selectionKeys="selectedKey" selectionMode="single" :value="items" tableStyle="min-width: 50rem">
+      <TreeTable
+        @nodeSelect="(item) => emit('click-row', item)"
+        v-model:selectionKeys="selectedKey"
+        :value="items"
+        class="tree-table"
+        selectionMode="single"
+        tableStyle="min-width: 50rem"
+      >
         <slot />
       </TreeTable>
     </BaseLoader>
@@ -284,5 +291,28 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
   & .v-pagination__list {
     justify-content: end !important;
   }
+}
+
+.tree-table {
+  border: 1px solid var(--p-treetable-body-cell-border-color);
+  border-bottom: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.p-treetable-header-cell {
+  &:not(:last-child) {
+    border-right: 1px solid var(--p-treetable-body-cell-border-color);
+  }
+  background-color: #F2F6FA !important;
+}
+
+.p-treetable-row-selected {
+  background-color: rgb(var(--v-theme-lightprimary)) !important;
+  color: black !important;
+}
+
+.p-treetable-tbody tr {
+  cursor: pointer;
 }
 </style>

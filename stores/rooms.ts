@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '~/utils/api';
 
-const storeAuth = useAuthStore();
-
 interface Devices {
   id: number,
   type: number,
@@ -42,31 +40,47 @@ interface RequestData {
   }
 }
 
-interface State {
-  list: Room[],
-  item: Devices | null,
-  total: number,
-}
+export const useRoomsStore = defineStore('Rooms', () => {
+  const list = ref<Room[]>([]);
+  const total = ref<number>(0);
+  const item = ref<Devices | null>(null);
 
-export const useRoomsStore = defineStore({
-  id: 'Rooms',
-  state: (): State => ({
-    list: [],
-    total: 0,
-    item: null,
-  }),
-  actions: {
-    async getRoomsApi(params = {}) {
-      const { data }: RequestData = await api.get('http://10.35.16.1:8091/private/rooms-list-all', {
-        params,
-        headers: {
-          token: storeAuth.token,
-        },
-      });
-      console.log(data);
-      this.list = data.response;
-      this.total = data.response.length;
-      return data;
-    },
-  },
+  const storeAuth = useAuthStore();
+
+  const getRoomsApi = async (params = {}) => {
+    const { data }: RequestData = await api.get('http://10.35.16.1:8091/private/rooms-list-all', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    list.value = data.response;
+    total.value = data.response.length;
+    return data;
+  };
+  const findRoom = (list: Room[], id: number) => {
+    let result = list.find((item) => item.id === id);
+    console.log(result, id);
+    if (result) return result;
+    list.forEach((item) => {
+      if (item.rooms_in_group) {
+        console.log(item.rooms_in_group, id);
+        const resultGroups = findRoom(item.rooms_in_group, id);
+        console.log(resultGroups);
+        if (resultGroups) {
+          result = resultGroups;
+        }
+      }
+    });
+    if (result) return result;
+  };
+
+  return {
+    list,
+    total,
+    item,
+    getRoomsApi,
+    findRoom,
+  };
 });

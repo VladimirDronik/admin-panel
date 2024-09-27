@@ -3,12 +3,23 @@
 import { useDisplay } from 'vuetify';
 import { useI18n } from 'vue-i18n';
 // Types
+import { IconFilterFilled } from '@tabler/icons-vue';
 import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
 const { t } = useI18n();
 const storeUser = useAuthStore();
+const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
+
+interface Room {
+  id: number
+  is_group: boolean
+  rooms_in_group?: Room[]
+  sort: number
+  style: string
+  name: string
+}
 
 definePageMeta({
   middleware: ['auth'],
@@ -80,6 +91,11 @@ const filters = ref<Filter[]>([
   },
 ]);
 
+const checkRoom = (item: Room | undefined) => {
+  if (item) return item.name;
+  return '-';
+};
+
 const getCategoriesOption = computed<any[]>(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
@@ -114,27 +130,107 @@ const created = async () => {
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.devices" />
-  <BaseCard>
-    <BaseTreeTable
-      @update="update"
-      @created="created"
-      @click-row="clickRow"
-      v-model:page="page"
-      v-model:filters="filters"
-      :total="storeDevices.total"
-      :items="storeDevices.getDevices"
-      :perPage="perPage"
-      :headers="headers"
-    >
-      <Column field="id" header="ID" expander />
-      <Column field="category" header="Категория" />
-      <Column field="name" header="Название" />
-      <Column field="type" header="Тип" />
-      <Column field="address" header="Помещение" />
-      <Column field="status" header="Статус" />
-    </BaseTreeTable>
-  </BaseCard>
+  <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
+    <div>
+      <v-btn color="primary" class="text-capitalize">
+        Добавить устройство
+      </v-btn>
+    </div>
+  </BaseBreadcrumb>
+  <BaseTreeTable
+    @update="update"
+    @created="created"
+    @click-row="clickRow"
+    v-model:page="page"
+    v-model:filters="filters"
+    :total="storeDevices.total"
+    :items="storeDevices.getDevices"
+    :perPage="perPage"
+    :headers="headers"
+  >
+    <Column field="category" expander style="width: 200px">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            Категория
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+    </Column>
+    <Column field="id" style="width: 100px">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            ID
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+    </Column>
+    <Column field="name">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            Название
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+    </Column>
+    <Column field="type">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            Тип
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+    </Column>
+    <Column field="address">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            Помещение
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+      <template #body="{ node }">
+        {{ checkRoom(storeRooms.findRoom(storeRooms.list, node.data.address)) }}
+      </template>
+    </Column>
+    <Column field="status">
+      <template #header>
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+          <p class="tw-font-semibold">
+            Статус
+          </p>
+          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          </button>
+        </div>
+      </template>
+      <template #body="{ node }">
+        <div
+          class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
+          :class="{ 'bg-success': node.data.status === 'ON', 'bg-error': node.data.status !== 'ON' }"
+        />
+        {{ node.data.status === 'ON' ? 'Вкл' : 'Выкл'}}
+      </template>
+    </Column>
+  </BaseTreeTable>
 
   <v-navigation-drawer
     v-model="storeUser.isActiveRightSidebar"
@@ -144,28 +240,38 @@ const created = async () => {
     :width="width / 3"
   >
     <BaseLoader :isUpdate="isUpdateRightBar">
-      <v-card elevation="0" class="tw-min-h-80">
-        <v-card-title class="bg-primary">
-          <div class="tw-flex tw-items-center tw-justify-between">
-            <p>
-              {{ storeDevices.item?.name }}
+      <v-card elevation="0" class="tw-min-h-80 tw-p-7">
+        <div class="tw-flex tw-items-center tw-justify-between">
+          <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
+            {{ storeDevices.item?.name }}
+          </h3>
+          <v-btn @click="storeUser.isActiveRightSidebar = false" icon size="small" variant="text">
+            <XIcon class="white" />
+          </v-btn>
+        </div>
+        <v-chip
+          class="ma-2 !tw-rounded-lg !tw-px-2 !tw-py-1"
+          label
+          variant="outlined"
+          :color="storeDevices.item?.status === 'ON' ? 'success' : 'error'"
+          :class="{ 'bg-lightsuccess': storeDevices.item?.status === 'ON', 'bg-lighterror': storeDevices.item?.status !== 'ON' }"
+        >
+          <div class="tw-flex tw-items-center">
+            <div
+              class="tw-mr-4 tw-h-2.5 tw-w-2.5 tw-rounded-full"
+              :class="{ 'bg-success': storeDevices.item?.status === 'ON', 'bg-error': storeDevices.item?.status !== 'ON' }"
+            />
+            <p class="tw-text-black">
+              Вкл
             </p>
-            <div class="tw-flex tw-items-center">
-              <p class="tw-text-base">
-                {{ storeDevices.item?.category }}
-              </p>
-              <v-btn @click="storeUser.isActiveRightSidebar = false" icon size="small" variant="text">
-                <XIcon class="white" />
-              </v-btn>
-            </div>
           </div>
-        </v-card-title>
+        </v-chip>
 
         <v-card-text class="!tw-px-0">
 
           <v-tabs
             v-model="tab"
-            bg-color="lightprimary"
+            color="primary"
           >
             <v-tab value="one">Свойства</v-tab>
             <v-tab value="two" v-if="storeDevices.item?.category === 'controller'">События</v-tab>
@@ -173,54 +279,60 @@ const created = async () => {
             <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">Статистика</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
-            <div class="tw-px-4 tw-pt-4">
+            <div class="tw-pt-4">
               <v-tabs-window-item value="one">
                 <div v-for="item in storeDevices.item?.props" :key="item.code">
                   <div v-if="item.data_type === 'bool'">
-                    <v-switch :label="item.name" color="primary">
-                      <template v-slot:label>
-                        <p class="tw-text-lg tw-font-semibold">
-                          {{item.name}}
-                        </p>
-                      </template>
-                    </v-switch>
+                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                      {{ item.name }}
+                    </p>
+                    <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
+                      <p class="tw-py-3 tw-text-base">
+                        {{ item.value ? 'Включено' : 'Выключено'}}
+                      </p>
+                      <!-- <ToggleSwitch v-model="item.value" /> -->
+                      <v-switch v-model="item.value" color="primary" hide-details />
+                    </div>
                   </div>
                   <div v-else-if="item.data_type === 'enum'">
-                    <p class="tw-text-xl tw-font-semibold">
+                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                       {{ item.name }}
                     </p>
-                    <v-select :value="item.value" :items="Object.keys(item.values)" />
+                    <v-select v-model="item.value" :items="Object.keys(item.values)" />
                   </div>
                   <div v-else>
-                    <p class="tw-text-xl tw-font-semibold">
+                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                       {{ item.name }}
                     </p>
-                    <v-text-field :value="item.value" />
+                    <v-text-field v-model="item.value" />
                   </div>
                 </div>
                 <div v-if="storeDevices.item?.category === 'sensor'">
                   <div class="tw-mb-4" v-for="port in storeDevices.item?.children" :key="port.id">
-                    <p class="tw-mb-2 tw-text-xl tw-font-semibold">
+                    <p class="text-primary tw-mb-2 tw-pt-3 tw-text-2xl tw-font-semibold">
                       {{port.name}}
                     </p>
                     <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
                       <div v-if="item.data_type === 'bool'">
-                        <v-switch v-model="item.value" :label="item.name" color="primary">
-                          <template v-slot:label>
-                            <p class="tw-text-lg tw-font-semibold">
-                              {{item.name}}
-                            </p>
-                          </template>
-                        </v-switch>
+                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                          {{ item.name }}
+                        </p>
+                        <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
+                          <p class="tw-py-3 tw-text-base">
+                            {{ item.value ? 'Включено' : 'Выключено'}}
+                          </p>
+                          <!-- <ToggleSwitch v-model="item.value" /> -->
+                          <v-switch v-model="item.value" color="primary" hide-details />
+                        </div>
                       </div>
                       <div v-else-if="item.data_type === 'enum'">
-                        <p class="tw-text-lg tw-font-semibold">
+                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                           {{ item.name }}
                         </p>
                         <v-select v-model="item.value" :items="Object.keys(item.values)" />
                       </div>
                       <div v-else>
-                        <p class="tw-text-lg tw-font-semibold">
+                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                           {{ item.name }}
                         </p>
                         <v-text-field v-model="item.value" :type="item.data_type === 'int' || item.data_type === 'float' ? 'number' : 'text'" />
