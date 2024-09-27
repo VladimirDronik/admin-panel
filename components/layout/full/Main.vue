@@ -59,7 +59,8 @@ storeRooms.getRoomsApi();
   <!------Header-------->
   <v-app-bar
     height="70"
-    elevation="10"
+    elevation="0"
+    class="header__app"
   >
     <div class="d-flex align-center justify-space-between w-100">
       <div>
@@ -87,3 +88,10 @@ storeRooms.getRoomsApi();
     </div>
   </v-app-bar>
 </template>
+
+<style>
+.header__app {
+  box-shadow: none !important;
+  border-bottom: 1px solid rgb(var(--v-theme-borderColor));
+}
+</style>

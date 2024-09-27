@@ -60,20 +60,13 @@ export default defineNuxtConfig({
       });
     },
     '@pinia/nuxt',
-    // '@nuxtjs/proxy',
     '@primevue/nuxt-module',
     '@nuxt/test-utils/module',
   ],
 
-  // proxy: {
-  //   '/api': {
-  //     target: 'https://api.example.com',
-  //     pathRewrite: {
-  //       '^/api': '/',
-  //     },
-  //     changeOrigin: true,
-  //   },
-  // },
+  pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
 
   primevue: {
     options: {
