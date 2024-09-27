@@ -35,6 +35,13 @@ const tab = ref(true);
 const isUpdate = ref(true);
 const isUpdateRightBar = ref(false);
 
+const popoverCategory = ref();
+const popoverId = ref();
+const popoverName = ref();
+const popoverType = ref();
+const popoverRoom = ref();
+const popoverStatus = ref();
+
 const selectedItemId = ref(null);
 
 // Computed Properties
@@ -57,6 +64,12 @@ const getTypes = computed<Options>(() => storeDevices.types
 
 const filters = ref<Filter[]>([
   {
+    label: 'Категории',
+    key: 'filter_by_category',
+    value: ['controller', 'sensor'],
+    options: ['controller', 'sensor'],
+  },
+  {
     label: 'ID обьекта',
     key: 'filter_by_id',
     value: null,
@@ -70,12 +83,6 @@ const filters = ref<Filter[]>([
     label: 'Название',
     key: 'filter_by_name',
     value: null,
-  },
-  {
-    label: 'Категории',
-    key: 'filter_by_category',
-    value: ['controller', 'sensor'],
-    options: ['controller', 'sensor'],
   },
   {
     label: 'Тип',
@@ -94,6 +101,22 @@ const filters = ref<Filter[]>([
 const checkRoom = (item: Room | undefined) => {
   if (item) return item.name;
   return '-';
+};
+
+const toggleCategory = (event: any) => {
+  popoverCategory.value.toggle(event);
+};
+const toggleId = (event: any) => {
+  popoverId.value.toggle(event);
+};
+const toggleName = (event: any) => {
+  popoverName.value.toggle(event);
+};
+const toggleType = (event: any) => {
+  popoverType.value.toggle(event);
+};
+const toggleRoom = (event: any) => {
+  popoverRoom.value.toggle(event);
 };
 
 const getCategoriesOption = computed<any[]>(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
@@ -154,9 +177,27 @@ const created = async () => {
           <p class="tw-font-semibold">
             Категория
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-slate-200">
+            <IconFilterFilled class="tw-h-4 tw-w-4" />
           </button>
+          <Popover ref="popoverCategory">
+            <div class="flex flex-col gap-4 category tw-pr-3">
+              <v-checkbox
+                v-model="filters[0].value"
+                label="Controller"
+                value="controller"
+                color="primary"
+                hide-details
+              />
+              <v-checkbox
+                v-model="filters[0].value"
+                label="Sensor"
+                value="sensor"
+                color="primary"
+                hide-details
+              />
+            </div>
+          </Popover>
         </div>
       </template>
     </Column>
@@ -166,9 +207,32 @@ const created = async () => {
           <p class="tw-font-semibold">
             ID
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+          <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-slate-200">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
+          <Popover ref="popoverId">
+            <div class="flex flex-col gap-4 category tw-p-2">
+              <v-text-field
+                v-model.number="filters[1].value"
+                :label="filters[1].label"
+                hide-details
+                class="tw-mb-1 tw-min-w-80"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                compact
+                type="number"
+              />
+              <v-text-field
+                v-model.number="filters[2].value"
+                :label="filters[2].label"
+                hide-details
+                class="tw-min-w-80"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                type="number"
+              />
+            </div>
+          </Popover>
         </div>
       </template>
     </Column>
@@ -178,9 +242,24 @@ const created = async () => {
           <p class="tw-font-semibold">
             Название
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+          <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-slate-200">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
+
+          <Popover ref="popoverName">
+            <div class="flex flex-col gap-4 category tw-p-2">
+              <v-text-field
+                v-model.number="filters[3].value"
+                :label="filters[3].label"
+                hide-details
+                class="tw-min-w-96"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                compact
+                type="number"
+              />
+            </div>
+          </Popover>
         </div>
       </template>
     </Column>
@@ -190,9 +269,24 @@ const created = async () => {
           <p class="tw-font-semibold">
             Тип
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+          <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-slate-200">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
+
+          <Popover ref="popoverType">
+            <div class="flex flex-col gap-4 category tw-p-2">
+              <v-text-field
+                v-model.number="filters[4].value"
+                :label="filters[4].label"
+                hide-details
+                class="tw-min-w-80"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                compact
+                type="number"
+              />
+            </div>
+          </Popover>
         </div>
       </template>
     </Column>
@@ -202,9 +296,25 @@ const created = async () => {
           <p class="tw-font-semibold">
             Помещение
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+          <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-slate-200">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
+
+          <Popover ref="popoverRoom">
+            <div class="flex flex-col gap-4 category tw-p-2">
+              <v-select
+                v-model.number="filters[5].value"
+                :label="filters[5].label"
+                :items="filters[5].options"
+                hide-details
+                class="tw-min-w-80"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                compact
+                type="number"
+              />
+            </div>
+          </Popover>
         </div>
       </template>
       <template #body="{ node }">
@@ -217,9 +327,9 @@ const created = async () => {
           <p class="tw-font-semibold">
             Статус
           </p>
-          <button type="button" class="tw-flex tw-h-5 tw-w-5 tw-items-center tw-justify-center tw-rounded tw-bg-slate-200">
+          <!-- <button type="button" class="tree-table__header-filter tw-bg-slate-200">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button>
+          </button> -->
         </div>
       </template>
       <template #body="{ node }">
@@ -375,3 +485,40 @@ const created = async () => {
     </BaseLoader>
   </v-navigation-drawer>
 </template>
+
+<style>
+.tree-table__header-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .1s linear;
+  & svg {
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+    --tw-text-opacity: 1;
+    transition: color .1s linear;
+  }
+
+  &:hover, &:focus {
+    background-color: rgb(var(--v-theme-primary));
+    color: white;
+
+    svg {
+      color: white;
+    }
+  }
+}
+
+.p-popover-content {
+  padding: 2px !important;
+}
+
+.category .v-checkbox-btn {
+  max-height: 32px !important;
+  min-height: 32px !important;
+}
+
+</style>
