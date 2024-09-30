@@ -70,6 +70,8 @@ const nodes = ref(null);
 const isUpdate = ref(false);
 const isActiveFilters = ref(false);
 
+const expandedKeys = ref<any>({});
+
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
 
@@ -131,6 +133,10 @@ defineExpose({
 });
 
 NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
+
+watchEffect(() => {
+  Array.from(Array(props.total).keys()).forEach((key) => expandedKeys.value[key] = true);
+});
 
 </script>
 
@@ -267,6 +273,7 @@ NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
       <TreeTable
         @nodeSelect="(item) => emit('click-row', item)"
         v-model:selectionKeys="selectedKey"
+        v-model:expandedKeys="expandedKeys"
         :value="items"
         class="tree-table"
         selectionMode="single"

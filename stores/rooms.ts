@@ -61,13 +61,10 @@ export const useRoomsStore = defineStore('Rooms', () => {
   };
   const findRoom = (list: Room[], id: number) => {
     let result = list.find((item) => item.id === id);
-    console.log(result, id);
     if (result) return result;
     list.forEach((item) => {
       if (item.rooms_in_group) {
-        console.log(item.rooms_in_group, id);
         const resultGroups = findRoom(item.rooms_in_group, id);
-        console.log(resultGroups);
         if (resultGroups) {
           result = resultGroups;
         }

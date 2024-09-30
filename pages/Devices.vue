@@ -150,6 +150,7 @@ const created = async () => {
   ]);
   isUpdate.value = false;
 };
+
 </script>
 
 <template>
@@ -255,8 +256,6 @@ const created = async () => {
                 class="tw-min-w-96"
                 prepend-inner-icon="mdi-magnify"
                 clearable
-                compact
-                type="number"
               />
             </div>
           </Popover>
@@ -282,8 +281,6 @@ const created = async () => {
                 class="tw-min-w-80"
                 prepend-inner-icon="mdi-magnify"
                 clearable
-                compact
-                type="number"
               />
             </div>
           </Popover>
@@ -310,8 +307,6 @@ const created = async () => {
                 class="tw-min-w-80"
                 prepend-inner-icon="mdi-magnify"
                 clearable
-                compact
-                type="number"
               />
             </div>
           </Popover>
@@ -351,7 +346,7 @@ const created = async () => {
   >
     <BaseLoader :isUpdate="isUpdateRightBar">
       <v-card elevation="0" class="tw-min-h-80 tw-p-7">
-        <div class="tw-flex tw-items-center tw-justify-between">
+        <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
             {{ storeDevices.item?.name }}
           </h3>
@@ -360,7 +355,7 @@ const created = async () => {
           </v-btn>
         </div>
         <v-chip
-          class="ma-2 !tw-rounded-lg !tw-px-2 !tw-py-1"
+          class="!tw-rounded-lg !tw-px-2 !tw-py-1"
           label
           variant="outlined"
           :color="storeDevices.item?.status === 'ON' ? 'success' : 'error'"
@@ -377,7 +372,7 @@ const created = async () => {
           </div>
         </v-chip>
 
-        <v-card-text class="!tw-px-0">
+        <v-card-text class="!tw-px-0 !tw-pt-1">
 
           <v-tabs
             v-model="tab"

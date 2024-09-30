@@ -34,11 +34,11 @@ defineProps({
 </script>
 
 <template>
-  <div class="tw-flex tw-items-center tw-justify-between">
+  <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between">
     <!-- Title -->
     <h3
       v-if="title"
-      class="text-h3 tw-py-8"
+      class="text-h3"
     >
       {{ t(title) }}
       <!-- Total -->
