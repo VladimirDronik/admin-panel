@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next';
+import { IconArrowsVertical } from '@tabler/icons-vue';
 
 definePageMeta({
   middleware: ['auth'],
@@ -8,16 +9,21 @@ definePageMeta({
 const storeRooms = useRoomsStore();
 
 const data = ref(storeRooms.list);
+
+watchEffect(() => {
+  data.value = storeRooms.list;
+});
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.rooms" />
+  <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total" />
   <VueDraggableNext v-model="data">
     <div v-for="place in data" :key="place.id">
       <v-expansion-panels v-if="place.rooms_in_group" class="tw-mb-2">
         <v-expansion-panel>
           <v-expansion-panel-title>
-            <p class="tw-text-lg">
+            <p class="tw-flex tw-text-lg">
+              <!-- <IconArrowsVertical stroke={2} class="handle" /> -->
               {{ place.name }}
             </p>
           </v-expansion-panel-title>
