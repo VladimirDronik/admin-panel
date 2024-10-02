@@ -16,7 +16,9 @@ watchEffect(() => {
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total" />
+  <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
+    <DialogsRoomCreateDialog />
+  </BaseBreadcrumb>
   <VueDraggableNext v-model="data">
     <div v-for="place in data" :key="place.id">
       <v-expansion-panels v-if="place.rooms_in_group" class="tw-mb-2">
