@@ -22,14 +22,13 @@ const login = async () => {
   try {
     await store.loginApi(form.value)
       .then((data) => {
-        console.log(data);
         // store.isAuthenticated = true;
         // store.user = data;
-        router.push({ name: 'Devices' });
       });
   } catch {
     loading.value = false;
   }
+  router.push({ name: 'Devices' });
   loading.value = false;
 };
 </script>

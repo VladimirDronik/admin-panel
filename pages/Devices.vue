@@ -100,6 +100,18 @@ const checkRoom = (item: Room | undefined) => {
   return '-';
 };
 
+const checkStatusText = (item: string) => {
+  if (item === 'ON') return 'Включено';
+  if (item === 'OFF') return 'Выключено';
+  return 'Неопределён';
+};
+
+const checkStatusColor = (item: string) => {
+  if (item === 'ON') return 'bg-success';
+  if (item === 'OFF') return 'bg-error';
+  return 'bg-warning';
+};
+
 const toggleCategory = (event: any) => {
   popoverCategory.value.toggle(event);
 };
@@ -323,9 +335,9 @@ const created = async () => {
       <template #body="{ node }">
         <div
           class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
-          :class="{ 'bg-success': node.data.status === 'ON', 'bg-error': node.data.status !== 'ON' }"
+          :class="checkStatusColor(node.data.status)"
         />
-        {{ node.data.status === 'ON' ? 'Вкл' : 'Выкл'}}
+        {{ checkStatusText(node.data.status)}}
       </template>
     </Column>
   </BaseTreeTable>
