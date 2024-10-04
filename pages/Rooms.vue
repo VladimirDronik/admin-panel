@@ -1,18 +1,31 @@
 <script setup lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconArrowsVertical } from '@tabler/icons-vue';
+import _ from 'lodash';
 
 definePageMeta({
   middleware: ['auth'],
 });
 
+// Composables
 const storeRooms = useRoomsStore();
 
+// Variables
 const data = ref(storeRooms.list);
+const loading = ref(false);
 
+// Watchers
 watchEffect(() => {
   data.value = storeRooms.list;
 });
+
+const save = _.debounce(async () => {
+  loading.value = true;
+  await storeRooms.changeRooms(data.value);
+  loading.value = false;
+});
+
+watch(data, () => save);
 </script>
 
 <template>
@@ -44,4 +57,29 @@ watchEffect(() => {
       </v-card>
     </div>
   </VueDraggableNext>
+  <!-- <VueDraggableNext v-model="data">
+    <Accordion :value="[]" multiple>
+      <AccordionPanel :value="index" v-for="(place, index) in data" :key="place.id">
+        <AccordionHeader>
+          {{ place.name }}
+        </AccordionHeader>
+        <AccordionContent>
+          <VueDraggableNext>
+            <Accordion :value="[]" multiple>
+              <AccordionPanel :value="index" v-for="(room, index) in place.rooms_in_group" :key="room.id">
+                <AccordionHeader>
+                  <div class="tw-cursor-pointer tw-py-2 tw-pl-2 tw-text-base">
+                    {{ room.name }}
+                  </div>
+                </AccordionHeader>
+                <AccordionContent>
+                  <VueDraggableNext />
+                </AccordionContent>
+              </AccordionPanel>
+            </Accordion>
+          </VueDraggableNext>
+        </AccordionContent>
+      </AccordionPanel>
+    </Accordion>
+  </VueDraggableNext> -->
 </template>

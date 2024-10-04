@@ -18,6 +18,7 @@ module.exports = {
     'no-console': 'off',
     'no-continue': 'off',
     'vue/max-len': 'off',
+    'no-new-func': 'off',
     'valid-typeof': 'off',
     'dot-notation': 'off',
     'guard-for-in': 'off',

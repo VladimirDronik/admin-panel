@@ -13,6 +13,31 @@ const isUpdate = defineModel<boolean>('isUpdate', {
 
 const tab = ref(true);
 
+const checkStatusText = (item: string | undefined) => {
+  if (!item) return;
+  if (item === 'ON') return 'Вкл';
+  if (item === 'OFF') return 'Выкл';
+  return 'Неоп';
+};
+
+const checkStatusColor = (item: string | undefined, background: boolean = false, light: boolean = false) => {
+  if (!item) return;
+
+  if (background) {
+    if (item === 'ON') return 'bg-success';
+    if (item === 'OFF') return 'bg-error';
+    return 'bg-warning';
+  }
+  if (light) {
+    if (item === 'ON') return 'bg-lightsuccess';
+    if (item === 'OFF') return 'bg-lighterror';
+    return 'bg-lightwarning';
+  }
+  if (item === 'ON') return 'success';
+  if (item === 'OFF') return 'error';
+  return 'warning';
+};
+
 </script>
 
 <template>
@@ -37,16 +62,17 @@ const tab = ref(true);
           class="!tw-rounded-lg !tw-px-2 !tw-py-1"
           label
           variant="outlined"
-          :color="storeDevices.item?.status === 'ON' ? 'success' : 'error'"
-          :class="{ 'bg-lightsuccess': storeDevices.item?.status === 'ON', 'bg-lighterror': storeDevices.item?.status !== 'ON' }"
+          :color="checkStatusColor(storeDevices.item?.status)"
+          :class="checkStatusColor(storeDevices.item?.status, false, true)"
         >
+
           <div class="tw-flex tw-items-center">
             <div
-              class="tw-mr-4 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-              :class="{ 'bg-success': storeDevices.item?.status === 'ON', 'bg-error': storeDevices.item?.status !== 'ON' }"
+              class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
+              :class="checkStatusColor(storeDevices.item?.status, true, false)"
             />
             <p class="tw-text-black">
-              Вкл
+              {{ checkStatusText(storeDevices.item?.status) }}
             </p>
           </div>
         </v-chip>

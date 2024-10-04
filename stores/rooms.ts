@@ -59,6 +59,19 @@ export const useRoomsStore = defineStore('Rooms', () => {
     total.value = data.response.length;
     return data;
   };
+
+  const changeRooms = async (params = {}) => {
+    const { data }: RequestData = await api.put('http://178.57.106.190:18091/private/rooms-list-all', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    await getRoomsApi();
+    return data;
+  };
+
   const findRoom = (list: Room[], id: number) => {
     let result = list.find((item) => item.id === id);
     if (result) return result;
@@ -77,7 +90,8 @@ export const useRoomsStore = defineStore('Rooms', () => {
     list,
     total,
     item,
-    getRoomsApi,
     findRoom,
+    changeRooms,
+    getRoomsApi,
   };
 });
