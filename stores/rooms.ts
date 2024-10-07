@@ -1,5 +1,7 @@
+import { method } from 'lodash';
 import { defineStore } from 'pinia';
-import api from '~/utils/api';
+import { useApiInstant } from '~/composables/api/apiInstant';
+// import api from '~/utils/api';
 
 interface Devices {
   id: number,
@@ -35,20 +37,19 @@ interface Room {
 }
 
 interface RequestData {
-  data: {
-    response: Room[]
-  }
+  response: Room[]
 }
 
 export const useRoomsStore = defineStore('Rooms', () => {
+  const storeAuth = useAuthStore();
+  const { api } = useApiInstant();
+
   const list = ref<Room[]>([]);
   const total = ref<number>(0);
   const item = ref<Devices | null>(null);
 
-  const storeAuth = useAuthStore();
-
   const getRoomsApi = async (params = {}) => {
-    const { data }: RequestData = await api.get('http://10.35.16.1:8091/private/rooms-list-all', {
+    const data: RequestData = await api('http://10.35.16.1:8091/private/rooms-list-all', {
       params,
       headers: {
         token: storeAuth.token,
@@ -61,7 +62,8 @@ export const useRoomsStore = defineStore('Rooms', () => {
   };
 
   const changeRooms = async (params = {}) => {
-    const { data }: RequestData = await api.put('http://178.57.106.190:18091/private/rooms-list-all', {
+    const data: RequestData = await api('http://178.57.106.190:18091/private/rooms-list-all', {
+      method: 'PUT',
       params,
       headers: {
         token: storeAuth.token,

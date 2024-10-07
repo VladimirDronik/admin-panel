@@ -311,7 +311,7 @@ watchEffect(() => {
   &:not(:last-child) {
     border-right: 1px solid var(--p-treetable-body-cell-border-color);
   }
-  background-color: #F2F6FA !important;
+  background-color: #E0ECE9 !important;
 }
 
 .p-treetable-row-selected {

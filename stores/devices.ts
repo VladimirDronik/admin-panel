@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api from '~/utils/api';
+import { useApiInstant } from '~/composables/api/apiInstant';
 
 interface Devices {
   id: number,
@@ -13,18 +13,38 @@ interface Devices {
   zone_id: number
   status: string
   children?: Devices[]
-  props?: ModelProps[]
+  props: ModelProps[]
+}
+interface requsetDevices {
+  id: number,
+  type: number,
+  protocol: number,
+  state: number,
+  name: number,
+  address: number,
+  module: number,
+  category: string,
+  zone_id: number
+  status: string
+  children?: requsetDevices[]
+  props: ModelProps
+}
+
+interface GenerateFunction {
+  func: () => void,
+  funcText: string,
+  value: boolean,
 }
 
 interface ModelProps {
   code: string,
-  data_type: string,
-  editable: number,
+  type: string,
+  editable: GenerateFunction,
   name: string,
-  required: true,
-  value: string,
+  required: GenerateFunction,
+  value: any,
   values: string[]
-  visible: number,
+  visible: GenerateFunction,
 }
 
 interface RequestData {
@@ -81,86 +101,97 @@ function filterDevices(devices: Devices[], level: number, key: string): any {
 
 export const useDevicesStore = defineStore('Devices', () => {
   function createFunction(functionBody: string, props = {}) {
-    const funcBody = functionBody.replace('function', 'function f');
-    console.log(funcBody, eval(funcBody));
-    eval(funcBody);
-    console.log(f);
-    const result = computed(f());
-    return result.value;
+    const func = new Function('userAccessLevel', 'props', functionBody);
+    return {
+      func,
+      funcText: String(func),
+      value: func(userAccessLevel.value, props),
+    };
   }
 
-  function propsModel(props: ModelProps | undefined, level: number): ModelProps[] {
+  function propsModel(props: ModelProps | undefined): ModelProps[] {
     if (!props) return [];
     const result = Object.values(props).map((item) => ({
-      required: item.required ? createFunction(item.required, level) : false,
-      editable: item.editable ? createFunction(item.editable, level) : false,
-      visible: item.visible ? createFunction(item.visible, level) : false,
+      ...item,
+      required: item.required ? createFunction(item.required, props) : false,
+      editable: item.editable ? createFunction(item.editable, props) : false,
+      visible: item.visible ? createFunction(item.visible, props) : false,
     }));
-    console.log(result);
     return result;
   }
 
   const storeAuth = useAuthStore();
+  const { api } = useApiInstant();
 
   const list = ref<Devices[]>([]);
   const total = ref<number>(0);
-  const item = ref<Devices | null>(null);
+  const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
-  const model = ref<any>(null);
+  const model = ref<Devices | null>();
   const userAccessLevel = ref<any>(5);
 
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
   const getDevicesApi = async (params = {}) => {
-    const { data }: { data: any} = await api.get('http://10.35.16.1:8088/objects', {
+    const { data }: { data: any} = await api('http://10.35.16.1:8088/objects', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    list.value = data.data.list;
-    total.value = data.data.total;
+    list.value = data?.list;
+    total.value = data?.total;
     return data;
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/types', {
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects/types', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    types.value = data.data;
+    types.value = data;
     return data;
   };
   const getModelApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8088/objects/model', {
+    const data: { data: requsetDevices } = await api('http://10.35.16.1:8088/objects/model', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    model.value = data.data;
+    const result = {
+      ...data.data,
+      props: propsModel(data.data.props),
+      children: data.data.children?.map((item) => ({
+        ...item,
+        props: propsModel(item.props) ?? [],
+      })),
+    } as Devices;
+
+    console.log(result);
+
+    model.value = result;
     return data;
   };
 
   const createDeviceApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api.post('http://10.35.16.1:8088/objects/model', {
+    const { data }: { data: { data: Type[] } } = await api('http://10.35.16.1:8088/objects/model', {
+      methods: 'POST',
       params,
       headers: {
         token: storeAuth.token,
       },
     });
-
-    model.value = data.data;
     return data;
   };
 
   const getControllerDetailsApi = async (id: number) => {
-    const { data }: { data: {data: Devices}} = await api.get(
+    const data: {data: requsetDevices} = await api(
       `http://10.35.16.1:8088/objects/${id}`,
       {
         headers: {
@@ -168,17 +199,24 @@ export const useDevicesStore = defineStore('Devices', () => {
         },
       },
     );
-    // const result = {
-    //   ...data.data,
-    //   props: propsModel(data.data.props, userAccessLevel.value),
-    // };
-    // console.log(result);
-    item.value = data.data;
+
+    const result = {
+      ...data.data,
+      props: propsModel(data.data.props),
+      children: data.data.children?.map((item) => ({
+        ...item,
+        props: propsModel(item.props) ?? [],
+      })),
+    } as Devices;
+
+    item.value = result;
     return data;
   };
 
   const logoutApi = async () => {
-    const { data } = await api.post('api/public/user/logout');
+    const { data } = await api('api/public/user/logout', {
+      methods: 'POST',
+    });
     return data;
   };
 
@@ -189,11 +227,14 @@ export const useDevicesStore = defineStore('Devices', () => {
     types,
     model,
     getDevices,
+    userAccessLevel,
     getDevicesApi,
     getTypesApi,
     getModelApi,
     logoutApi,
+    propsModel,
     createDeviceApi,
+    createFunction,
     getControllerDetailsApi,
   };
 });

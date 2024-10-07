@@ -20,12 +20,13 @@ watchEffect(() => {
 });
 
 const save = _.debounce(async () => {
+  console.log('dwad');
   loading.value = true;
   await storeRooms.changeRooms(data.value);
   loading.value = false;
-});
+}, 1000);
 
-watch(data, () => save);
+watch(data, save);
 </script>
 
 <template>

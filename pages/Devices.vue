@@ -1,8 +1,8 @@
 <script setup lang="ts">
-
+import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Types
-import { IconFilterFilled } from '@tabler/icons-vue';
+import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
@@ -58,6 +58,17 @@ const getTypes = computed<Options>(() => storeDevices.types
       value: item.type,
     },
   })));
+
+const props = computed(() => {
+  if (storeDevices.item?.props) {
+    return storeDevices.item.props.map((item) => item.value);
+  }
+});
+const childrenProps = computed(() => {
+  if (storeDevices.item?.children) {
+    return storeDevices.item?.children.map((item) => item?.props.map((item) => item.value))[0];
+  }
+});
 
 const filters = ref<Filter[]>([
   {
@@ -160,6 +171,49 @@ const created = async () => {
   isUpdate.value = false;
 };
 
+const propsModel = (props: any[] | undefined) => {
+  if (!props) return [];
+  const result = props.map((item) => ({
+    ...item,
+    required: {
+      func: item.required.func,
+      funcText: String(item.required.func),
+      value: item.required.func(storeDevices.userAccessLevel, props),
+    },
+    editable: {
+      func: item.editable.func,
+      funcText: String(item.editable.func),
+      value: item.editable.func(storeDevices.userAccessLevel, props),
+    },
+    visible: {
+      func: item.visible.func,
+      funcText: String(item.visible.func),
+      value: item.visible.func(storeDevices.userAccessLevel, props),
+    },
+  }));
+  return result;
+};
+
+const updateFields = () => {
+  if (storeDevices.item) {
+    storeDevices.item = {
+      ...storeDevices.item,
+      props: propsModel(storeDevices.item.props),
+      children: storeDevices.item.children?.map((item) => ({
+        ...item,
+        props: propsModel(item.props) ?? [],
+      })),
+    };
+  }
+};
+
+// Watchers
+watch([props, childrenProps], (newValue, oldValue) => {
+  if (!_.isEqual(newValue, oldValue)) {
+    updateFields();
+  }
+});
+
 </script>
 
 <template>
@@ -183,7 +237,7 @@ const created = async () => {
           <p class="tw-font-semibold">
             Категория
           </p>
-          <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-slate-200">
+          <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4" />
           </button>
           <Popover ref="popoverCategory">
@@ -213,8 +267,8 @@ const created = async () => {
           <p class="tw-font-semibold">
             ID
           </p>
-          <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-slate-200">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-white">
+            <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
           <Popover ref="popoverId">
             <div class="flex flex-col gap-4 category tw-p-2">
@@ -248,8 +302,8 @@ const created = async () => {
           <p class="tw-font-semibold">
             Название
           </p>
-          <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-slate-200">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+          <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
+            <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
 
           <Popover ref="popoverName">
@@ -273,7 +327,7 @@ const created = async () => {
           <p class="tw-font-semibold">
             Тип
           </p>
-          <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-slate-200">
+          <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
 
@@ -298,7 +352,7 @@ const created = async () => {
           <p class="tw-font-semibold">
             Помещение
           </p>
-          <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-slate-200">
+          <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button>
 
@@ -327,7 +381,7 @@ const created = async () => {
           <p class="tw-font-semibold">
             Статус
           </p>
-          <!-- <button type="button" class="tree-table__header-filter tw-bg-slate-200">
+          <!-- <button type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
           </button> -->
         </div>

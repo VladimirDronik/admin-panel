@@ -27,38 +27,38 @@ const sidebarItem: menu[] = [
     icon: ApertureIcon,
     to: '/rooms',
   },
-  { header: 'pages.visualization' },
-  {
-    title: 'Мобильное прил.',
-    icon: ApertureIcon,
-    to: '/login',
-  },
-  {
-    title: 'Планшетная версия',
-    icon: ApertureIcon,
-    to: '/login',
-  },
-  { header: 'Функции' },
-  {
-    title: 'Сценарии',
-    icon: ApertureIcon,
-    to: '/login',
-  },
-  {
-    title: 'Графики',
-    icon: ApertureIcon,
-    to: '/login',
-  },
-  {
-    title: 'Планировщик',
-    icon: ApertureIcon,
-    to: '/login',
-  },
-  {
-    title: 'Оповещения',
-    icon: ApertureIcon,
-    to: '/login',
-  },
+  // { header: 'pages.visualization' },
+  // {
+  //   title: 'Мобильное прил.',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
+  // {
+  //   title: 'Планшетная версия',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
+  // { header: 'Функции' },
+  // {
+  //   title: 'Сценарии',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
+  // {
+  //   title: 'Графики',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
+  // {
+  //   title: 'Планировщик',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
+  // {
+  //   title: 'Оповещения',
+  //   icon: ApertureIcon,
+  //   to: '/login',
+  // },
 ];
 
 export default sidebarItem;
