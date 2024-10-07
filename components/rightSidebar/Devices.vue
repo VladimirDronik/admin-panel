@@ -92,29 +92,43 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
             <div class="tw-pt-4">
               <v-tabs-window-item value="one">
                 <div v-for="item in storeDevices.item?.props" :key="item.code">
-                  <div v-if="item.data_type === 'bool'">
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }}
-                    </p>
-                    <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                      <p class="tw-py-3 tw-text-base">
-                        {{ item.value ? 'Включено' : 'Выключено'}}
+                  <div v-if="item.visible.value">
+                    <div v-if="item.type === 'bool'">
+                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
                       </p>
-                      <!-- <ToggleSwitch v-model="item.value" /> -->
-                      <v-switch v-model="item.value" color="primary" hide-details />
+                      <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
+                        <p class="tw-py-3 tw-text-base">
+                          {{ item.value ? 'Включено' : 'Выключено'}}
+                        </p>
+                        <!-- <ToggleSwitch v-model="item.value" /> -->
+                        <v-switch
+                          v-model="item.value"
+                          color="primary"
+                          hide-details
+                          :disabled="!item.editable.value"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div v-else-if="item.data_type === 'enum'">
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }}
-                    </p>
-                    <v-select v-model="item.value" :items="Object.keys(item.values)" />
-                  </div>
-                  <div v-else>
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }}
-                    </p>
-                    <v-text-field v-model="item.value" />
+                    <div v-else-if="item.type === 'enum'">
+                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
+                      </p>
+                      <v-select
+                        v-model="item.value"
+                        :items="Object.keys(item.values)"
+                        :disabled="!item.editable.value"
+                      />
+                    </div>
+                    <div v-else>
+                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
+                      </p>
+                      <v-text-field
+                        v-model="item.value"
+                        :disabled="!item.editable.value"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div v-if="storeDevices.item?.category === 'sensor'">
@@ -123,38 +137,51 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
                       {{port.name}}
                     </p>
                     <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
-                      <div v-if="item.data_type === 'bool'">
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }}
-                        </p>
-                        <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                          <p class="tw-py-3 tw-text-base">
-                            {{ item.value ? 'Включено' : 'Выключено'}}
+                      <div v-if="item.visible.value">
+                        <div v-if="item.type === 'bool'">
+                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
                           </p>
-                          <!-- <ToggleSwitch v-model="item.value" /> -->
-                          <v-switch v-model="item.value" color="primary" hide-details />
+                          <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
+                            <p class="tw-py-3 tw-text-base">
+                              {{ item.value ? 'Включено' : 'Выключено'}}
+                            </p>
+                            <!-- <ToggleSwitch v-model="item.value" /> -->
+                            <v-switch
+                              :disabled="!item.editable.value"
+                              v-model="item.value"
+                              color="primary"
+                              hide-details
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div v-else-if="item.data_type === 'enum'">
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }}
-                        </p>
-                        <v-select v-model="item.value" :items="Object.keys(item.values)" />
-                      </div>
-                      <div v-else>
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }}
-                        </p>
-                        <v-text-field v-model="item.value" :type="item.data_type === 'int' || item.data_type === 'float' ? 'number' : 'text'" />
+                        <div v-else-if="item.type === 'enum'">
+                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
+                          </p>
+                          <v-select
+                            v-model="item.value"
+                            :disabled="!item.editable.value"
+                            :items="Object.keys(item.values)"
+                          />
+                        </div>
+                        <div v-else>
+                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
+                          </p>
+                          <v-text-field
+                            v-model="item.value"
+                            :disabled="!item.editable.value"
+                            :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="tw-flex tw-justify-end">
-                  <!-- <v-btn color="error" variant="flat" class="tw-mr-2">
-                    Удалить
-                  </v-btn> -->
-                  <DialogsDeleteDialog class="tw-mr-2" />
+                  <DialogsDeleteDialog title="Удалить категорию" :subtitle="`Вы уверены, что хотите удалить «${storeDevices.item?.name}»`" class="tw-mr-2" />
+
                   <v-btn color="success" variant="flat" class="tw-mr-2">
                     Сохранить
                   </v-btn>

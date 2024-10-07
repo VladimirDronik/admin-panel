@@ -28,6 +28,7 @@ module.exports = {
     'func-call-spacing': 'off',
     'import/extensions': 'off',
     'consistent-return': 'off',
+    'default-param-last': 'off',
     'prefer-object-spread': 'off',
     'no-restricted-syntax': 'off',
     'import/no-unresolved': 'off',

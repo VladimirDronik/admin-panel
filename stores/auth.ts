@@ -26,6 +26,7 @@ export const useAuthStore = defineStore({
         },
       );
       localStorage.setItem('token', data.response.api_access_token);
+      this.token = data.response.api_access_token;
       this.user = data;
       return data;
     },

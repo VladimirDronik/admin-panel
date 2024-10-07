@@ -12,7 +12,7 @@ defineProps({
 <template>
   <slot name="button" />
   <v-dialog v-model="dialog" :max-width="width">
-    <perfect-scrollbar class="tw-max-h-80">
+    <perfect-scrollbar class="max-h-80 tw-max-h-full">
       <div class="tw-rounded tw-bg-white tw-p-3">
         <slot />
       </div>
@@ -21,7 +21,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-.tw-max-h-80 {
-  min-height: 80vh;
+.max-h-80 {
+  max-height: 80vh;
 }
 </style>
