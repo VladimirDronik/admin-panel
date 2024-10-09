@@ -7,7 +7,13 @@ const { width } = useDisplay();
 const storeUser = useAuthStore();
 const storeDevices = useDevicesStore();
 
+const loadingDelete = ref(false);
+
 const isUpdate = defineModel<boolean>('isUpdate', {
+  required: true,
+});
+
+const isActiveRightSidebar = defineModel<boolean>('isOpen', {
   required: true,
 });
 
@@ -38,11 +44,17 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
   return 'warning';
 };
 
+const confirmDelete = async () => {
+  loadingDelete.value = true;
+  if (storeDevices.item?.id) await storeDevices.deleteDeviceApi(storeDevices.item?.id);
+  loadingDelete.value = false;
+};
+
 </script>
 
 <template>
   <v-navigation-drawer
-    v-model="storeUser.isActiveRightSidebar"
+    v-model="isActiveRightSidebar"
     location="right"
     app
     elevation="10"
@@ -54,7 +66,7 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
           <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
             {{ storeDevices.item?.name }}
           </h3>
-          <v-btn @click="storeUser.isActiveRightSidebar = false" icon size="small" variant="text">
+          <v-btn @click="isActiveRightSidebar = false" icon size="small" variant="text">
             <XIcon class="white" />
           </v-btn>
         </div>
@@ -180,7 +192,13 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
                   </div>
                 </div>
                 <div class="tw-flex tw-justify-end">
-                  <DialogsDeleteDialog title="Удалить категорию" :subtitle="`Вы уверены, что хотите удалить «${storeDevices.item?.name}»`" class="tw-mr-2" />
+                  <DialogsDeleteDialog
+                    @delete="confirmDelete"
+                    :subtitle="`Вы уверены, что хотите удалить «${storeDevices.item?.name}»`"
+                    class="tw-mr-2"
+                    title="Удалить категорию"
+                    :id="storeDevices.item?.id ?? -1"
+                  />
 
                   <v-btn color="success" variant="flat" class="tw-mr-2">
                     Сохранить

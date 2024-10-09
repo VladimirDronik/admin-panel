@@ -134,8 +134,10 @@ defineExpose({
 
 NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
 
-watchEffect(() => {
+watch(() => props.total, () => {
   Array.from(Array(props.total).keys()).forEach((key) => expandedKeys.value[key] = true);
+}, {
+  immediate: true,
 });
 
 </script>

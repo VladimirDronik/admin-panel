@@ -212,6 +212,20 @@ export const useDevicesStore = defineStore('Devices', () => {
     item.value = result;
     return data;
   };
+  const deleteDeviceApi = async (id: number) => {
+    console.log(id);
+    const data: {data: requsetDevices} = await api(
+      `http://10.35.16.1:8088/objects/${id}`,
+      {
+        methods: 'DELETE',
+        headers: {
+          token: storeAuth.token,
+        },
+      },
+    );
+
+    return data;
+  };
 
   const logoutApi = async () => {
     const { data } = await api('api/public/user/logout', {
@@ -235,6 +249,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     propsModel,
     createDeviceApi,
     createFunction,
+    deleteDeviceApi,
     getControllerDetailsApi,
   };
 });
