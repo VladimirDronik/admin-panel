@@ -2,7 +2,11 @@
 
 const dialog = ref(false);
 
-defineProps({
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
   title: {
     type: String,
     default: 'Удаление',
@@ -12,6 +16,15 @@ defineProps({
     default: '',
   },
 });
+
+const emit = defineEmits<{
+  (e: 'delete', id: number): void
+}>();
+
+const deleteItem = () => {
+  emit('delete', props.id);
+  dialog.value = false;
+};
 </script>
 
 <template>
@@ -30,7 +43,7 @@ defineProps({
           {{ subtitle }}
         </p>
         <div>
-          <v-btn color="primary" class="tw-mr-2">
+          <v-btn @click="deleteItem" color="primary" class="tw-mr-2">
             Удалить
           </v-btn>
           <v-btn color="primary" variant="text" @click="dialog = false">

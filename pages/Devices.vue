@@ -31,6 +31,7 @@ const page = ref(1);
 
 const isUpdate = ref(true);
 const isUpdateRightBar = ref(false);
+const isActiveRightSidebar = ref(false);
 
 const popoverCategory = ref();
 const popoverId = ref();
@@ -154,7 +155,7 @@ const update = async (params: any = {}) => {
 
 const clickRow = async (item: any) => {
   isUpdateRightBar.value = true;
-  storeUser.isActiveRightSidebar = true;
+  isActiveRightSidebar.value = true;
   selectedItemId.value = item.data.id;
   await storeDevices.getControllerDetailsApi(item.data.id);
   isUpdateRightBar.value = false;
@@ -396,7 +397,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
     </Column>
   </BaseTreeTable>
 
-  <RightSidebarDevices v-model:is-update="isUpdateRightBar" />
+  <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
 </template>
 
 <style>

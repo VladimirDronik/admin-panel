@@ -11,6 +11,11 @@ export default {
   prefix: 'tw-',
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ['Manrope', 'sans-serif'],
+      display: ['Manrope', 'sans-serif'],
+      body: ['Manrope', 'sans-serif'],
+    },
   },
   plugins: [],
 };

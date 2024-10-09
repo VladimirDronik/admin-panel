@@ -60,9 +60,17 @@ export default defineNuxtConfig({
       });
     },
     '@pinia/nuxt',
+    '@nuxtjs/google-fonts',
     '@primevue/nuxt-module',
     '@nuxt/test-utils/module',
   ],
+
+  googleFonts: {
+    download: true,
+    families: {
+      Manrope: true,
+    },
+  },
 
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next';
-import { IconArrowsVertical } from '@tabler/icons-vue';
+import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
 import _ from 'lodash';
 
 definePageMeta({
@@ -12,75 +12,191 @@ const storeRooms = useRoomsStore();
 
 // Variables
 const data = ref(storeRooms.list);
-const loading = ref(false);
+const isLoading = ref(false);
+
+const isUpdateRightBar = ref(false);
+const form = ref(null);
 
 // Watchers
 watchEffect(() => {
   data.value = storeRooms.list;
 });
 
+const openRightBar = (item: any) => {
+  isUpdateRightBar.value = true;
+  form.value = item;
+};
+
+const roomColor = (color: string) => {
+  if (color === 'blue') return '#5398FF';
+  if (color === 'yellow') return '#FFD058';
+  if (color === 'orange') return '#FF9E58';
+  if (color === 'green') return '#19B58F';
+  return '#EAEFF4';
+};
+
 const save = _.debounce(async () => {
   console.log('dwad');
-  loading.value = true;
+  isLoading.value = true;
   await storeRooms.changeRooms(data.value);
-  loading.value = false;
+  isLoading.value = false;
 }, 1000);
 
-watch(data, save);
+// watch(data, save);
 </script>
 
 <template>
   <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
     <DialogsRoomCreateDialog />
   </BaseBreadcrumb>
-  <VueDraggableNext v-model="data">
+  <VueDraggableNext v-model="data" handle=".handle-list" :animation="300">
     <div v-for="place in data" :key="place.id">
-      <v-expansion-panels v-if="place.rooms_in_group" class="tw-mb-2">
-        <v-expansion-panel>
-          <v-expansion-panel-title>
-            <p class="tw-flex tw-text-lg">
-              <!-- <IconArrowsVertical stroke={2} class="handle" /> -->
-              {{ place.name }}
-            </p>
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <VueDraggableNext v-model="place.rooms_in_group">
-              <div class="tw-cursor-pointer tw-py-2 tw-pl-2 tw-text-base" v-for="room in place.rooms_in_group" :key="room.id">
-                {{ room.name }}
-                <v-divider />
+      <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
+        <AccordionPanel :value="place.id">
+          <AccordionHeader>
+            <div class="header__arrow">
+              <IconChevronUp stroke={2} class="header__arrow-up tw-w-6" />
+              <IconChevronDown stroke={2} class="header__arrow-down tw-w-6" />
+            </div>
+            <div
+              @click.stop="openRightBar(place)"
+              @keydown.stop="openRightBar(place)"
+              class="header-list tw-flex tw-w-full tw-justify-between"
+            >
+              <div class=" tw-flex tw-items-center">
+                <div :style="{ backgroundColor: roomColor(place.style) }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                <p class=" tw-text-lg tw-font-normal tw-text-black">
+                  {{ place.name }}
+                </p>
+              </div>
+              <IconGripVertical class="handle-list tw-w-5 tw-text-black" />
+            </div>
+          </AccordionHeader>
+          <AccordionContent>
+            <VueDraggableNext v-model="place.rooms_in_group" handle=".handle-item" :animation="300">
+              <div
+                @click="openRightBar(room)"
+                @keydown="openRightBar(room)"
+                v-for="room in place.rooms_in_group"
+                :key="room.id"
+                class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
+              >
+                <div class="tw-flex tw-w-full tw-justify-between">
+                  <p class="tw-pl-5 tw-text-lg tw-font-normal tw-text-black">
+                    {{ room.name }}
+                  </p>
+                  <IconGripVertical class="handle-item tw-w-5" />
+                </div>
               </div>
             </VueDraggableNext>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      <v-card v-else class="tw-mb-2 tw-py-4 tw-pl-6 tw-text-lg">
-        {{ place.name }}
-      </v-card>
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
+      <div
+        v-else
+        @click="openRightBar(place)"
+        @keydown="openRightBar(place)"
+        class="room-item tw-mb-2 tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-9 tw-text-lg"
+      >
+        <div
+          :style="{ backgroundColor: roomColor(place.style) } "
+          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+        />
+        <div class="tw-flex tw-w-full tw-justify-between">
+          <p class=" tw-text-lg tw-font-normal tw-text-black">
+            {{ place.name }}
+          </p>
+          <IconGripVertical class="handle-list tw-w-5" />
+        </div>
+      </div>
     </div>
   </VueDraggableNext>
-  <!-- <VueDraggableNext v-model="data">
-    <Accordion :value="[]" multiple>
-      <AccordionPanel :value="index" v-for="(place, index) in data" :key="place.id">
-        <AccordionHeader>
-          {{ place.name }}
-        </AccordionHeader>
-        <AccordionContent>
-          <VueDraggableNext>
-            <Accordion :value="[]" multiple>
-              <AccordionPanel :value="index" v-for="(room, index) in place.rooms_in_group" :key="room.id">
-                <AccordionHeader>
-                  <div class="tw-cursor-pointer tw-py-2 tw-pl-2 tw-text-base">
-                    {{ room.name }}
-                  </div>
-                </AccordionHeader>
-                <AccordionContent>
-                  <VueDraggableNext />
-                </AccordionContent>
-              </AccordionPanel>
-            </Accordion>
-          </VueDraggableNext>
-        </AccordionContent>
-      </AccordionPanel>
-    </Accordion>
-  </VueDraggableNext> -->
+  <RightSidebarRoom
+    v-model:is-update="isLoading"
+    v-model:form="form"
+    v-model:is-show="isUpdateRightBar"
+  />
 </template>
+
+<style lang="scss">
+.room-item {
+  border: 1px solid #E0ECE9 !important;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: background-color .15s linear;
+  &:hover {
+    background-color: rgb(var(--v-theme-lightprimary)) !important;
+  }
+}
+
+.p-accordioncontent-content .room-item {
+  padding: 12px 18px !important;
+  cursor: pointer;
+  background-color: #F3F6F5 !important;
+  &:not(:last-child):not(:first-child) {
+    border-radius: 0 !important;
+    border-top: none !important;
+    border-bottom: 1px solid #E0ECE9 !important;
+  }
+  &:last-child {
+    border-top: none !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+  &:first-child {
+    border-bottom: 1px solid #E0ECE9 !important;
+    border-top: none !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  &:hover {
+    background-color: rgb(var(--v-theme-lightprimary)) !important;
+  }
+}
+
+.p-accordionpanel-active .p-accordionheader {
+  background-color: #F3F6F5 !important;
+}
+
+.p-accordionheader {
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  border: 1px solid #E0ECE9 !important;
+  padding: 0 !important;
+
+  &:hover {
+    background-color: rgb(var(--v-theme-lightprimary)) !important;
+  }
+}
+
+.header-list {
+  padding: 12px 18px;
+  padding-left: 0;
+}
+
+.header__arrow {
+  padding: 12px 8px;
+  padding-right: 0;
+  margin-right: 4px;
+}
+
+.header__arrow-up {
+  display: none;
+}
+
+.p-accordionpanel-active .header__arrow-up {
+  display: block;
+}
+
+.p-accordionpanel-active .header__arrow-down {
+  display: none;
+}
+
+.p-accordionpanel {
+  border: none !important;
+}
+
+.p-accordioncontent-content {
+  padding: 0 !important;
+}
+</style>
