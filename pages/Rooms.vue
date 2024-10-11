@@ -36,13 +36,12 @@ const roomColor = (color: string) => {
 };
 
 const save = _.debounce(async () => {
-  console.log('dwad');
   isLoading.value = true;
   await storeRooms.changeRooms(data.value);
   isLoading.value = false;
 }, 1000);
 
-// watch(data, save);
+watch(data, save);
 </script>
 
 <template>
@@ -82,9 +81,12 @@ const save = _.debounce(async () => {
                 class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
               >
                 <div class="tw-flex tw-w-full tw-justify-between">
-                  <p class="tw-pl-5 tw-text-lg tw-font-normal tw-text-black">
-                    {{ room.name }}
-                  </p>
+                  <div class="tw-flex tw-items-center">
+                    <div :style="{ backgroundColor: roomColor(room.style) }" class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                    <p class="tw-text-lg tw-font-normal tw-text-black">
+                      {{ room.name }}
+                    </p>
+                  </div>
                   <IconGripVertical class="handle-item tw-w-5" />
                 </div>
               </div>

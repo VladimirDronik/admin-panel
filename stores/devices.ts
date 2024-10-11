@@ -128,7 +128,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
   const model = ref<Devices | null>();
-  const userAccessLevel = ref<any>(5);
+  const userAccessLevel = ref<any>(3);
 
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
@@ -180,10 +180,11 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const createDeviceApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api('http://10.35.16.1:8088/objects/model', {
-      methods: 'POST',
-      params,
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects', {
+      method: 'POST',
+      body: params,
       headers: {
+        'api-key': 'c041d36e381a835afce48c91686370c8',
         token: storeAuth.token,
       },
     });
@@ -217,7 +218,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const data: {data: requsetDevices} = await api(
       `http://10.35.16.1:8088/objects/${id}`,
       {
-        methods: 'DELETE',
+        method: 'DELETE',
         headers: {
           token: storeAuth.token,
         },

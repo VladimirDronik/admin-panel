@@ -7,6 +7,7 @@ const { width } = useDisplay();
 const storeUser = useAuthStore();
 const storeDevices = useDevicesStore();
 
+const dialog = ref(false);
 const loadingDelete = ref(false);
 
 const isUpdate = defineModel<boolean>('isUpdate', {
@@ -47,6 +48,12 @@ const checkStatusColor = (item: string | undefined, background: boolean = false,
 const confirmDelete = async () => {
   loadingDelete.value = true;
   if (storeDevices.item?.id) await storeDevices.deleteDeviceApi(storeDevices.item?.id);
+  await storeDevices.getDevicesApi({
+    limit: 10000,
+    offset: 0,
+  });
+  dialog.value = false;
+  isActiveRightSidebar.value = false;
   loadingDelete.value = false;
 };
 
@@ -194,6 +201,8 @@ const confirmDelete = async () => {
                 <div class="tw-flex tw-justify-end">
                   <DialogsDeleteDialog
                     @delete="confirmDelete"
+                    v-model="dialog"
+                    :loading="loadingDelete"
                     :subtitle="`Вы уверены, что хотите удалить «${storeDevices.item?.name}»`"
                     class="tw-mr-2"
                     title="Удалить категорию"

@@ -43,8 +43,8 @@ const childrenProps = computed(() => {
 // Methods
 const createDevice = async () => {
   loading.value = true;
-  const props: any = {};
-  await storeDevices.model?.props.forEach((item) => props[item.code] = {
+  const newProps: any = {};
+  await storeDevices.model?.props.forEach((item) => newProps[item.code] = {
     code: item.code,
     name: item.name,
     type: item.type,
@@ -52,11 +52,11 @@ const createDevice = async () => {
   });
   console.log({
     ...form.value,
-    props,
+    props: newProps,
   });
   await storeDevices.createDeviceApi({
     ...form.value,
-    props,
+    props: newProps,
   });
   await storeDevices.getDevicesApi({
     limit: 10000,
