@@ -64,12 +64,13 @@ export const useRoomsStore = defineStore('Rooms', () => {
   const changeRooms = async (params = {}) => {
     const data: RequestData = await api('http://178.57.106.190:18091/private/rooms-list-all', {
       method: 'PATCH',
-      params,
+      body: params,
       // params: {
       //   list: params,
       //   total: total.value,
       // },
       headers: {
+        // 'api-key': 'c041d36e381a835afce48c91686370c8',
         token: storeAuth.token,
       },
     });
