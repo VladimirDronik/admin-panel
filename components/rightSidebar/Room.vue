@@ -4,7 +4,7 @@ import { useDisplay } from 'vuetify';
 
 const { width } = useDisplay();
 
-const storeUser = useAuthStore();
+const storeRoom = useRoomsStore();
 const storeDevices = useDevicesStore();
 
 const form = defineModel<any>('form', {
@@ -18,6 +18,56 @@ const isUpdate = defineModel<boolean>('isUpdate', {
 const isActiveRightSidebar = defineModel<boolean>('isShow', {
   required: true,
 });
+
+const colors = [
+  {
+    title: 'Красный',
+    props: {
+      value: 'red',
+    },
+  },
+  {
+    title: 'Синий',
+    props: {
+      value: 'blue',
+    },
+  },
+  {
+    title: 'Желтый',
+    props: {
+      value: 'yellow',
+    },
+  },
+  {
+    title: 'Зеленый',
+    props: {
+      value: 'green',
+    },
+  },
+];
+
+const dialog = ref(false);
+
+const loading = ref(false);
+const loadingDelete = ref(false);
+
+const confirmDelete = async () => {
+  loadingDelete.value = true;
+  if (storeDevices.item?.id) await storeDevices.deleteDeviceApi(storeDevices.item?.id);
+  await storeDevices.getDevicesApi({
+    limit: 10000,
+    offset: 0,
+  });
+  dialog.value = false;
+  isActiveRightSidebar.value = false;
+  loadingDelete.value = false;
+};
+
+const changeDevice = () => {
+  loading.value = true;
+  storeRoom.changeRoomApi();
+  loading.value = false;
+};
 
 </script>
 
@@ -47,21 +97,31 @@ const isActiveRightSidebar = defineModel<boolean>('isShow', {
             </p>
             <v-text-field v-model="form.name" />
           </div>
-          <div v-if="form.is_group">
+          <div>
             <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
               Цвет категории <span class="text-primary">*</span>
             </p>
-            <v-select v-model="form.style" />
+            <v-select v-model="form.style" :items="colors" />
           </div>
         </v-card-text>
         <div class="tw-flex tw-justify-end">
           <DialogsDeleteDialog
+            @delete="confirmDelete"
+            v-model="dialog"
+            :loading="loadingDelete"
             :title="form.is_group ? 'Удалить категорию' : 'Удалить помещение'"
             :subtitle="`Вы уверены, что хотите удалить «${form.name}»`"
             class="tw-mr-2"
+            :id="form.item?.id ?? -1"
           />
 
-          <v-btn color="success" variant="flat" class="tw-mr-2">
+          <v-btn
+            color="success"
+            variant="flat"
+            class="tw-mr-2"
+            :loading="loading"
+            @click="changeDevice"
+          >
             Сохранить
           </v-btn>
         </div>
