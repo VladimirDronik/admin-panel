@@ -4,10 +4,11 @@ import { useDisplay } from 'vuetify';
 
 const { width } = useDisplay();
 
-const storeUser = useAuthStore();
 const storeDevices = useDevicesStore();
 
 const dialog = ref(false);
+
+const loading = ref(false);
 const loadingDelete = ref(false);
 
 const isUpdate = defineModel<boolean>('isUpdate', {
@@ -21,15 +22,13 @@ const isActiveRightSidebar = defineModel<boolean>('isOpen', {
 const tab = ref(true);
 
 const checkStatusText = (item: string | undefined) => {
-  if (!item) return;
+  if (!item) return 'Неоп';
   if (item === 'ON') return 'Вкл';
   if (item === 'OFF') return 'Выкл';
   return 'Неоп';
 };
 
 const checkStatusColor = (item: string | undefined, background: boolean = false, light: boolean = false) => {
-  if (!item) return;
-
   if (background) {
     if (item === 'ON') return 'bg-success';
     if (item === 'OFF') return 'bg-error';
@@ -55,6 +54,12 @@ const confirmDelete = async () => {
   dialog.value = false;
   isActiveRightSidebar.value = false;
   loadingDelete.value = false;
+};
+
+const changeDevice = () => {
+  loading.value = true;
+  storeDevices.changeDeviceApi();
+  loading.value = false;
 };
 
 </script>
@@ -209,7 +214,13 @@ const confirmDelete = async () => {
                     :id="storeDevices.item?.id ?? -1"
                   />
 
-                  <v-btn color="success" variant="flat" class="tw-mr-2">
+                  <v-btn
+                    :loading="loading"
+                    color="success"
+                    variant="flat"
+                    class="tw-mr-2"
+                    @click="changeDevice"
+                  >
                     Сохранить
                   </v-btn>
                 </div>

@@ -44,16 +44,24 @@ const childrenProps = computed(() => {
 const createDevice = async () => {
   loading.value = true;
   const newProps: any = {};
-  await storeDevices.model?.props.forEach((item) => newProps[item.code] = {
-    code: item.code,
-    name: item.name,
-    type: item.type,
-    value: item.value,
+  storeDevices.model?.props.forEach((item) => {
+    newProps[item.code] = {
+      code: item.code,
+      name: item.name,
+      type: item.type,
+      value: item.value,
+    };
   });
-  console.log({
-    ...form.value,
-    props: newProps,
-  });
+  // if (storeDevices.model?.children) {
+  //   storeDevices.model?.children[0]?.props.forEach((item) => {
+  //     newProps[item.code] = {
+  //       code: item.code,
+  //       name: item.name,
+  //       type: item.type,
+  //       value: item.value,
+  //     };
+  //   });
+  // }
   await storeDevices.createDeviceApi({
     ...form.value,
     props: newProps,
@@ -157,7 +165,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             </p>
             <v-text-field v-model="form.name" required :rules="emptyRules" />
           </div>
-          <div class="tw-flex tw-w-full tw-items-center">
+          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
             <div class="tw-mr-2 tw-w-full">
               <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                 Категория <span class="text-primary">*</span>
@@ -271,6 +279,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
               color="primary"
               class="tw-mr-2"
               :disabled="!valid"
+              :loading="loading"
               @click="createDevice"
             >
               Создать

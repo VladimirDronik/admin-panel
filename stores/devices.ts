@@ -191,6 +191,18 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
+  const changeDeviceApi = async (params = {}) => {
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects', {
+      method: 'PUT',
+      body: params,
+      headers: {
+        'api-key': 'c041d36e381a835afce48c91686370c8',
+        token: storeAuth.token,
+      },
+    });
+    return data;
+  };
+
   const getControllerDetailsApi = async (id: number) => {
     const data: {data: requsetDevices} = await api(
       `http://10.35.16.1:8088/objects/${id}`,
@@ -249,6 +261,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     logoutApi,
     propsModel,
     createDeviceApi,
+    changeDeviceApi,
     createFunction,
     deleteDeviceApi,
     getControllerDetailsApi,
