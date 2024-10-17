@@ -17,7 +17,7 @@ export const useAuthStore = defineStore({
   actions: {
     async loginApi(params = {}) {
       const { data } = await api.get(
-        'http://10.35.16.1:8091/token',
+        'http://178.57.106.190:18081/token',
         {
           params,
           headers: {

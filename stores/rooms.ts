@@ -49,7 +49,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
   const item = ref<Devices | null>(null);
 
   const getRoomsApi = async (params = {}) => {
-    const data: RequestData = await api('http://10.35.16.1:8091/private/rooms-list-all', {
+    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
       params,
       headers: {
         token: storeAuth.token,
@@ -62,7 +62,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
   };
 
   const changeRooms = async (params = {}) => {
-    const data: RequestData = await api('http://178.57.106.190:18091/private/rooms-list-all', {
+    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
       method: 'PATCH',
       body: params,
       // params: {
@@ -79,7 +79,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
     return data;
   };
   const changeRoomApi = async (params = {}) => {
-    const data: RequestData = await api('http://178.57.106.190:18091/private/rooms-list-all', {
+    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
       method: 'PATCH',
       body: params,
       headers: {

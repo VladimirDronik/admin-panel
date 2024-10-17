@@ -20,15 +20,11 @@ const form = ref({
 const login = async () => {
   loading.value = true;
   try {
-    await store.loginApi(form.value)
-      .then((data) => {
-        // store.isAuthenticated = true;
-        // store.user = data;
-      });
-  } catch {
-    loading.value = false;
+    await store.loginApi(form.value);
+    router.push({ name: 'Devices' });
+  } catch (error: any) {
+    console.log(error);
   }
-  router.push({ name: 'Devices' });
   loading.value = false;
 };
 </script>
