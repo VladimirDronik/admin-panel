@@ -56,13 +56,6 @@ interface RequestData {
   }
 }
 
-interface State {
-  list: Devices[],
-  item: Devices | null,
-  total: number,
-  types: Type[],
-}
-
 interface Type {
   category: string
   name: string
@@ -128,7 +121,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
   const model = ref<Devices | null>();
-  const userAccessLevel = ref<any>(3);
+  const userAccessLevel = ref<any>(4);
 
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
