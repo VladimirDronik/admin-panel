@@ -87,6 +87,8 @@ storeRooms.getRoomsApi();
       </div>
     </div>
   </v-app-bar>
+
+  <Toast :baseZIndex="99999" />
 </template>
 
 <style>

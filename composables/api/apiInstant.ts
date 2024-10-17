@@ -7,12 +7,11 @@ export const useApiInstant = () => {
     try {
       const data = await $fetch(path, params);
       return data;
-    } catch (err: any) {
-      if (err?.statusCode) {
-        console.log(err?.statusCode);
-        if (err?.statusCode === 401)router.push({ name: 'auth-Login' });
+    } catch (error: any) {
+      if (error?.statusCode) {
+        if (error?.statusCode === 401)router.push({ name: 'auth-Login' });
       }
-      return err;
+      throw new Error(error.data);
     }
   };
 
