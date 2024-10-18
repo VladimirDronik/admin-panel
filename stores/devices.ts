@@ -121,7 +121,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
   const model = ref<Devices | null>();
-  const userAccessLevel = ref<any>(4);
+  const userAccessLevel = ref<any>(3);
 
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
