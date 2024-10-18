@@ -52,6 +52,7 @@ const childrenProps = computed(() => {
 const createDevice = async () => {
   loading.value = true;
   const newProps: any = {};
+  const newChildren: any = [];
   storeDevices.model?.props.forEach((item) => {
     newProps[item.code] = {
       code: item.code,
@@ -60,20 +61,34 @@ const createDevice = async () => {
       value: item.value,
     };
   });
-  // if (storeDevices.model?.children) {
-  //   storeDevices.model?.children[0]?.props.forEach((item) => {
-  //     newProps[item.code] = {
-  //       code: item.code,
-  //       name: item.name,
-  //       type: item.type,
-  //       value: item.value,
-  //     };
-  //   });
-  // }
+  if (storeDevices.model?.children) {
+    storeDevices.model?.children.forEach((item) => {
+      console.log(item);
+      newChildren.push({
+        ...item,
+        props: item.props.map((item) => ({
+          code: item.code,
+          name: item.name,
+          type: item.type,
+          value: item.value,
+        })),
+      });
+    });
+    storeDevices.model?.children[0]?.props.forEach((item) => {
+      newChildren[item.code] = {
+        code: item.code,
+        name: item.name,
+        type: item.type,
+        value: item.value,
+      };
+    });
+  }
+  console.log(newChildren);
   try {
     await storeDevices.createDeviceApi({
       ...form.value,
       props: newProps,
+      children: newChildren,
     });
     await storeDevices.getDevicesApi({
       limit: 10000,
@@ -260,7 +275,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
                       </div>
                     </div>
                   </div>
-                  <!-- <div v-if="storeDevices.model?.category === 'sensor'">
+                  <div v-if="storeDevices.model?.category === 'sensor'">
                     <div class="tw-mb-4" v-for="port in storeDevices.model?.children" :key="port.id">
                       <p class="text-primary tw-mb-2 tw-pt-3 tw-text-2xl tw-font-semibold">
                         {{port.name}}
@@ -280,7 +295,8 @@ watch([props, childrenProps], (newValue, oldValue) => {
                                 v-model="item.value"
                                 color="primary"
                                 hide-details
-                                :required="item.required"
+                                :rules="!item.required ? emptyRules : undefined"
+                                required
                               />
                             </div>
                           </div>
@@ -292,8 +308,8 @@ watch([props, childrenProps], (newValue, oldValue) => {
                               v-model="item.value"
                               :disabled="!item.editable.value"
                               :items="Object.keys(item.values)"
-                              :required="item.required"
-                              :rules="emptyRules"
+                              :rules="!item.required ? emptyRules : undefined"
+                              required
                             />
                           </div>
                           <div v-else>
@@ -304,14 +320,14 @@ watch([props, childrenProps], (newValue, oldValue) => {
                               v-model="item.value"
                               :disabled="!item.editable.value"
                               :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
-                              :required="item.required"
-                              :rules="emptyRules"
+                              :rules="!item.required ? emptyRules : undefined"
+                              required
                             />
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
                 </div>
                 <div v-else>
                   <p v-if="!loadingModel" class="tw-text-center tw-text-xl">
