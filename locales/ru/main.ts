@@ -3,6 +3,7 @@ export default {
   edit: 'Редактировать',
   save: 'Сохранить',
   name: 'Имя',
+  next: 'Далее',
   email: 'Email',
   close: 'Закрыть',
   goBack: 'Назад',
@@ -13,4 +14,6 @@ export default {
   update: 'Улучшить',
   refuse: 'Отказываться',
   confirm: 'Подтверждать',
+  enabled: 'Включено',
+  disabled: 'Выключено',
 };

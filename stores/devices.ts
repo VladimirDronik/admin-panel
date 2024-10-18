@@ -126,7 +126,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
   const getDevicesApi = async (params = {}) => {
-    const { data }: { data: any} = await api('http://10.35.16.1:8088/objects', {
+    const { data }: { data: any} = await api('http://10.35.16.1:8082/objects', {
       params,
       headers: {
         token: storeAuth.token,
@@ -139,7 +139,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects/types', {
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects/types', {
       params,
       headers: {
         token: storeAuth.token,
@@ -150,7 +150,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
   const getModelApi = async (params = {}) => {
-    const data: { data: requsetDevices } = await api('http://10.35.16.1:8088/objects/model', {
+    const data: { data: requsetDevices } = await api('http://10.35.16.1:8082/objects/model', {
       params,
       headers: {
         token: storeAuth.token,
@@ -173,7 +173,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const createDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects', {
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects', {
       method: 'POST',
       body: params,
       headers: {
@@ -185,7 +185,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const changeDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8088/objects', {
+    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects', {
       method: 'PUT',
       body: params,
       headers: {
@@ -198,7 +198,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const getControllerDetailsApi = async (id: number) => {
     const data: {data: requsetDevices} = await api(
-      `http://10.35.16.1:8088/objects/${id}`,
+      `http://10.35.16.1:8082/objects/${id}`,
       {
         headers: {
           token: storeAuth.token,

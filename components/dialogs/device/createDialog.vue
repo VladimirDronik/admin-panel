@@ -2,6 +2,7 @@
 import _ from 'lodash';
 
 import { useToast } from 'primevue/usetoast';
+import { useI18n } from 'vue-i18n';
 
 const toast = useToast();
 
@@ -14,6 +15,8 @@ const storeDevices = useDevicesStore();
 const {
   emptyRules,
 } = useValidation();
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
   (e: 'created'): void
@@ -169,18 +172,24 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <BaseDialog v-model="dialog" :width="1200">
       <template v-slot:button>
         <v-btn color="primary" class="text-capitalize" @click="dialog = true">
-          Добавить устройство
+          {{ t('devices.addDevice') }}
         </v-btn>
       </template>
 
-      <p class="tw-mb-4 tw-pl-2 tw-text-2xl tw-font-semibold">
-        Добавление нового устройства
-      </p>
+      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <p class="tw-mb-4 tw-pl-2 tw-text-2xl tw-font-semibold">
+          {{ t('devices.addTitleDevice') }}
+        </p>
+        <v-btn @click="dialog = false" icon size="small" variant="text">
+          <XIcon class="white" />
+        </v-btn>
+      </div>
+
       <Stepper value="1" class="basis-[50rem]">
         <StepList>
-          <Step value="1">Свойства</Step>
-          <Step value="2">События</Step>
-          <Step value="3">Управление</Step>
+          <Step value="1">{{ t('devices.features') }}</Step>
+          <Step value="2">{{ t('devices.events') }}</Step>
+          <Step value="3">{{ t('devices.management') }}</Step>
         </StepList>
         <StepPanels>
           <StepPanel value="1">
@@ -188,25 +197,25 @@ watch([props, childrenProps], (newValue, oldValue) => {
               <div>
                 <div>
                   <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                    Название <span class="text-primary">*</span>
+                    {{ t('devices.title') }} <span class="text-primary">*</span>
                   </p>
                   <v-text-field v-model="form.name" required :rules="emptyRules" />
                 </div>
                 <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
                   <div class="tw-mr-2 tw-w-full">
                     <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      Категория <span class="text-primary">*</span>
+                      {{ t('devices.category') }} <span class="text-primary">*</span>
                     </p>
                     <v-select :items="categories" v-model="form.category" required :rules="emptyRules" />
                   </div>
                   <div class="tw-w-full">
                     <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      Тип <span class="text-primary">*</span>
+                      {{ t('devices.type') }} <span class="text-primary">*</span>
                     </p>
                     <v-select :items="types" v-model="form.type" required :rules="emptyRules" />
                   </div>
                 </div>
-                <v-divider class="border-opacity-100 tw-mb-3 !tw-border-black" />
+                <v-divider class=" tw-mb-3 !tw-border-black" />
                 <div v-if="storeDevices.model">
                   <div v-for="item in storeDevices.model?.props" :key="item.code">
                     <div v-if="item.visible.value">
@@ -216,7 +225,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
                         </p>
                         <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                           <p class="tw-py-3 tw-text-base">
-                            {{ item.value ? 'Включено' : 'Выключено'}}
+                            {{ item.value ? t('enabled') : t('disabled')}}
                           </p>
                           <v-switch
                             v-model="item.value"
@@ -234,6 +243,8 @@ watch([props, childrenProps], (newValue, oldValue) => {
                           v-model="item.value"
                           :items="Object.keys(item.values)"
                           :disabled="!item.editable.value"
+                          :rules="item.required ? emptyRules : undefined"
+                          required
                         />
                       </div>
                       <div v-else>
@@ -243,11 +254,13 @@ watch([props, childrenProps], (newValue, oldValue) => {
                         <v-text-field
                           v-model="item.value"
                           :disabled="!item.editable.value"
+                          :rules="!item.required ? emptyRules : undefined"
+                          required
                         />
                       </div>
                     </div>
                   </div>
-                  <div v-if="storeDevices.model?.category === 'sensor'">
+                  <!-- <div v-if="storeDevices.model?.category === 'sensor'">
                     <div class="tw-mb-4" v-for="port in storeDevices.model?.children" :key="port.id">
                       <p class="text-primary tw-mb-2 tw-pt-3 tw-text-2xl tw-font-semibold">
                         {{port.name}}
@@ -262,12 +275,12 @@ watch([props, childrenProps], (newValue, oldValue) => {
                               <p class="tw-py-3 tw-text-base">
                                 {{ item.value ? 'Включено' : 'Выключено'}}
                               </p>
-                              <!-- <ToggleSwitch v-model="item.value" /> -->
                               <v-switch
                                 :disabled="!item.editable.value"
                                 v-model="item.value"
                                 color="primary"
                                 hide-details
+                                :required="item.required"
                               />
                             </div>
                           </div>
@@ -279,6 +292,8 @@ watch([props, childrenProps], (newValue, oldValue) => {
                               v-model="item.value"
                               :disabled="!item.editable.value"
                               :items="Object.keys(item.values)"
+                              :required="item.required"
+                              :rules="emptyRules"
                             />
                           </div>
                           <div v-else>
@@ -289,16 +304,18 @@ watch([props, childrenProps], (newValue, oldValue) => {
                               v-model="item.value"
                               :disabled="!item.editable.value"
                               :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
+                              :required="item.required"
+                              :rules="emptyRules"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
                 <div v-else>
                   <p v-if="!loadingModel" class="tw-text-center tw-text-xl">
-                    Выберите Категорию и Тип
+                    {{ t('devices.preloadTitle') }}
                   </p>
                   <div v-else class="tw-flex tw-justify-center">
                     <v-progress-circular
@@ -310,28 +327,80 @@ watch([props, childrenProps], (newValue, oldValue) => {
                     />
                   </div>
                 </div>
-                <div class="tw-flex">
+                <div class="tw-flex tw-justify-end">
+                  <v-btn
+                    class="tw-mr-2"
+                    color="primary"
+                    variant="outlined"
+                    @click="dialog = false"
+                  >
+                    {{ t('cancel') }}
+                  </v-btn>
                   <v-btn
                     color="primary"
-                    class="tw-mr-2"
                     :disabled="!valid"
                     :loading="loading"
                     @click="createDevice"
                   >
-                    Создать
-                  </v-btn>
-                  <v-btn color="primary" variant="outlined" @click="dialog = false">
-                    Отмена
+                    {{ t('next') }}
                   </v-btn>
                 </div>
               </div>
             </v-form>
           </StepPanel>
           <StepPanel value="2">
-            <div class="tw-flex tw-w-full tw-justify-between" />
+            <div class="tw-flex tw-justify-between">
+              <v-btn
+                color="primary"
+                :disabled="!valid"
+                :loading="loading"
+              >
+                {{ t('goBack') }}
+              </v-btn>
+              <div>
+                <v-btn
+                  class="tw-mr-2"
+                  color="primary"
+                  variant="outlined"
+                >
+                  {{ t('cancel') }}
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  :disabled="!valid"
+                  :loading="loading"
+                >
+                  {{ t('next') }}
+                </v-btn>
+              </div>
+            </div>
           </StepPanel>
           <StepPanel value="3">
-            <div class="tw-flex tw-w-full" />
+            <div class="tw-flex tw-justify-between">
+              <v-btn
+                color="primary"
+                :disabled="!valid"
+                :loading="loading"
+              >
+                {{ t('goBack') }}
+              </v-btn>
+              <div>
+                <v-btn
+                  class="tw-mr-2"
+                  color="primary"
+                  variant="outlined"
+                >
+                  {{ t('cancel') }}
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  :disabled="!valid"
+                  :loading="loading"
+                >
+                  {{ t('save') }}
+                </v-btn>
+              </div>
+            </div>
           </StepPanel>
         </StepPanels>
       </Stepper>

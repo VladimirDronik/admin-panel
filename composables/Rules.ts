@@ -7,7 +7,7 @@ export function useValidation() {
 
   // Methods
   const emptyRules = ref([
-    (v: string) => !!v || t('validation.empty'),
+    (v: string | boolean) => !!v || t('validation.empty'),
   ]);
 
   const nameRules = ref([
@@ -21,6 +21,10 @@ export function useValidation() {
   const emailRules = ref([
     (v: string) => !!v || t('validation.emailEmpty'),
     (v: string) => /.+@.+\..+/.test(v) || t('validation.email'),
+  ]);
+  const ipRules = ref([
+    (v: string) => !!v || t('validation.emailEmpty'),
+    (v: string) => /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v) || t('validation.ip'),
   ]);
 
   const passwordRules = ref([
