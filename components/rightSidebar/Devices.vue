@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 // Builtin modules
+import { useI18n } from 'vue-i18n';
 import { useDisplay } from 'vuetify';
 
 const { width } = useDisplay();
 
 const storeDevices = useDevicesStore();
+const { t } = useI18n();
 
 const dialog = ref(false);
 
@@ -107,10 +109,10 @@ const changeDevice = () => {
             v-model="tab"
             color="primary"
           >
-            <v-tab value="one">Свойства</v-tab>
-            <v-tab value="two" v-if="storeDevices.item?.category === 'controller'">События</v-tab>
+            <v-tab value="one">{{ t('devices.features') }}</v-tab>
+            <v-tab value="two" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab>
             <v-tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</v-tab>
-            <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">Статистика</v-tab>
+            <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.management') }}</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
             <div class="tw-pt-4">
@@ -123,7 +125,7 @@ const changeDevice = () => {
                       </p>
                       <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                         <p class="tw-py-3 tw-text-base">
-                          {{ item.value ? 'Включено' : 'Выключено'}}
+                          {{ item.value ? t('enabled') : t('disabled')}}
                         </p>
                         <!-- <ToggleSwitch v-model="item.value" /> -->
                         <v-switch
@@ -168,7 +170,7 @@ const changeDevice = () => {
                           </p>
                           <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                             <p class="tw-py-3 tw-text-base">
-                              {{ item.value ? 'Включено' : 'Выключено'}}
+                              {{ item.value ? t('enabled') : t('disabled')}}
                             </p>
                             <!-- <ToggleSwitch v-model="item.value" /> -->
                             <v-switch
@@ -221,7 +223,7 @@ const changeDevice = () => {
                     class="tw-mr-2"
                     @click="changeDevice"
                   >
-                    Сохранить
+                    {{ t('save') }}
                   </v-btn>
                 </div>
               </v-tabs-window-item>

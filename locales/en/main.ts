@@ -3,6 +3,7 @@ export default {
   name: 'Name',
   edit: 'Edit',
   save: 'Save',
+  next: 'Next',
   close: 'Close',
   email: 'Email',
   cancel: 'Cancel',
@@ -13,4 +14,6 @@ export default {
   logout: 'Logout',
   refuse: 'Refuse',
   confirm: 'Confirm',
+  enabled: 'Enabled',
+  disabled: 'Disabled',
 };

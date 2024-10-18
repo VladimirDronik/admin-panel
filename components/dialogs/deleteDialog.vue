@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 
 const dialog = ref(false);
+
+const { t } = useI18n();
 
 const props = defineProps({
   id: {
@@ -32,7 +35,7 @@ const deleteItem = () => {
     <BaseDialog v-model="dialog" :width="800">
       <template v-slot:button>
         <v-btn color="error" @click="dialog = true">
-          Удалить
+          {{ t('delete')}}
         </v-btn>
       </template>
       <div class="tw-p-3">
@@ -44,10 +47,10 @@ const deleteItem = () => {
         </p>
         <div>
           <v-btn @click="deleteItem" color="primary" class="tw-mr-2">
-            Удалить
+            {{ t('delete')}}
           </v-btn>
           <v-btn color="primary" variant="text" @click="dialog = false">
-            Отмена
+            {{ t('cancel')}}
           </v-btn>
         </div>
       </div>
