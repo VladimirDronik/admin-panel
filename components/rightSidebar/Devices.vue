@@ -109,14 +109,14 @@ const changeDevice = () => {
             v-model="tab"
             color="primary"
           >
-            <v-tab value="one">{{ t('devices.features') }}</v-tab>
-            <v-tab value="two" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab>
+            <v-tab value="features">{{ t('devices.features') }}</v-tab>
+            <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab>
             <v-tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</v-tab>
             <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.management') }}</v-tab>
           </v-tabs>
           <v-tabs-window v-model="tab">
             <div class="tw-pt-4">
-              <v-tabs-window-item value="one">
+              <v-tabs-window-item value="features">
                 <div v-for="item in storeDevices.item?.props" :key="item.code">
                   <div v-if="item.visible.value">
                     <div v-if="item.type === 'bool'">
@@ -228,26 +228,56 @@ const changeDevice = () => {
                 </div>
               </v-tabs-window-item>
 
-              <!-- <v-tabs-window-item value="two">
-                <div>
-                  <p class="tw-text-lg tw-font-semibold">
-                    Изменение статуса объекта
+              <v-tabs-window-item value="events">
+                <div class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-px-4 tw-py-2">
+                  <div class="tw-flex tw-items-center tw-justify-between">
+                    <p class="tw-text-lg tw-font-semibold">
+                      ON
+                    </p>
+                    <div class="tw-flex tw-items-center tw-justify-end">
+                      <v-btn class="tw-mr-2" variant="text" size="small" prepend-icon="mdi-cog">
+                        Настройка
+                      </v-btn>
+                      <v-switch hide-details color="primary" />
+                    </div>
+                  </div>
+                  <p class="tw-mb-2">
+                    Событие при включении
                   </p>
-                  <v-checkbox label="вызов метода объекта 2" />
-                </div>
-                <div>
-                  <p class="tw-text-lg tw-font-semibold">
-                    Изменение конфига устройства
+                  <p>
+                    <span class="text-primary tw-mr-2">
+                      Метод 1
+                    </span>
+                    <span class="text-warning tw-mr-2">
+                      Пауза 1
+                    </span>
+                    <span class="text-info tw-mr-2">
+                      Скрипт 1
+                    </span>
+                    <span class="text-error">
+                      Уведомление 1
+                    </span>
                   </p>
-                  <v-checkbox label="вызов метода объекта 2" />
                 </div>
-                <div>
-                  <p class="tw-text-lg tw-font-semibold">
-                    Загрузка устройства после включения
+                <div class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
+                  <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between">
+                    <p class="tw-text-lg tw-font-semibold">
+                      Toggle
+                    </p>
+                    <div class="tw-flex tw-items-center tw-justify-end">
+                      <v-btn color="primary" size="small" prepend-icon="mdi-plus">
+                        Добавить
+                      </v-btn>
+                    </div>
+                  </div>
+                  <p class="tw-mb-2">
+                    Событие при переключении
                   </p>
-                  <v-checkbox label="вызов метода объекта 2" />
+                  <p>
+                    Нет действий
+                  </p>
                 </div>
-              </v-tabs-window-item> -->
+              </v-tabs-window-item>
             </div>
           </v-tabs-window>
 
