@@ -63,7 +63,6 @@ const createDevice = async () => {
   });
   if (storeDevices.model?.children) {
     storeDevices.model?.children.forEach((item) => {
-      console.log(item);
       newChildren.push({
         ...item,
         props: item.props.map((item) => ({
@@ -83,13 +82,19 @@ const createDevice = async () => {
       };
     });
   }
-  console.log(newChildren);
   try {
-    await storeDevices.createDeviceApi({
-      ...form.value,
-      props: newProps,
-      children: newChildren,
-    });
+    if (storeDevices.model?.category === 'sensor') {
+      await storeDevices.createDeviceApi({
+        ...form.value,
+        props: newProps,
+        children: newChildren,
+      });
+    } else {
+      await storeDevices.createDeviceApi({
+        ...form.value,
+        props: newProps,
+      });
+    }
     await storeDevices.getDevicesApi({
       limit: 10000,
       offset: 0,
@@ -170,6 +175,7 @@ watch(() => form.value.type, getModel);
 
 watch(() => form.value.category, async () => {
   form.value.type = '';
+  storeDevices.model = null;
   getModel();
 });
 
@@ -365,6 +371,54 @@ watch([props, childrenProps], (newValue, oldValue) => {
             </v-form>
           </StepPanel>
           <StepPanel value="2">
+            <div class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-px-4 tw-py-2">
+              <div class="tw-flex tw-items-center tw-justify-between">
+                <p class="tw-text-lg tw-font-semibold">
+                  ON
+                </p>
+                <div class="tw-flex tw-items-center tw-justify-end">
+                  <v-btn class="tw-mr-2" variant="text" size="small" prepend-icon="mdi-cog">
+                    Настройка
+                  </v-btn>
+                  <v-switch hide-details color="primary" />
+                </div>
+              </div>
+              <p class="tw-mb-2">
+                Событие при включении
+              </p>
+              <p>
+                <span class="text-primary tw-mr-2">
+                  Метод 1
+                </span>
+                <span class="text-warning tw-mr-2">
+                  Пауза 1
+                </span>
+                <span class="text-info tw-mr-2">
+                  Скрипт 1
+                </span>
+                <span class="text-error">
+                  Уведомление 1
+                </span>
+              </p>
+            </div>
+            <div class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
+              <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between">
+                <p class="tw-text-lg tw-font-semibold">
+                  Toggle
+                </p>
+                <div class="tw-flex tw-items-center tw-justify-end">
+                  <v-btn color="primary" size="small" prepend-icon="mdi-plus">
+                    Добавить
+                  </v-btn>
+                </div>
+              </div>
+              <p class="tw-mb-2">
+                Событие при переключении
+              </p>
+              <p>
+                Нет действий
+              </p>
+            </div>
             <div class="tw-flex tw-justify-between">
               <v-btn
                 color="primary"

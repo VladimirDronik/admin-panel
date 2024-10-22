@@ -10,7 +10,7 @@ const LightTheme: ThemeTypes = {
   colors: {
     primary: '#19B58F',
     secondary: '#8ED078',
-    info: '#FF634E',
+    info: '#5398FF',
     success: '#1EDAAB',
     warning: '#FFAE1F',
     error: '#FF634E',
