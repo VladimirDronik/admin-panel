@@ -1,19 +1,23 @@
+import axios from 'axios';
+
 export const useApiInstant = () => {
   const runtimeConfig = useRuntimeConfig();
 
   const router = useRouter();
 
-  const api = async (path: string = runtimeConfig.public.backendApi, params: any) => {
-    try {
-      const data = await $fetch(path, params);
-      return data;
-    } catch (error: any) {
-      if (error?.statusCode) {
-        if (error?.statusCode === 401)router.push({ name: 'auth-Login' });
-      }
-      throw new Error(error.data);
-    }
-  };
+  const api = axios.create({
+    baseURL: runtimeConfig.public.backendApi,
+    timeout: 10000,
+  });
+
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      console.error('Ошибка', error);
+      if (error.response.status === 401)router.push({ name: 'auth-Login' });
+      return Promise.reject(error);
+    },
+  );
 
   return {
     api,

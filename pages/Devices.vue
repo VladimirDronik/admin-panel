@@ -51,7 +51,7 @@ const headers = computed(() => [
   { text: t('Статус'), value: 'state' },
 ]);
 
-const getTypes = computed<Options>(() => storeDevices.types
+const getTypes = computed(() => storeDevices.types
   .filter((item) => getCategoriesOption.value.includes(item.category))
   .map((item) => ({
     title: item.name,
@@ -71,7 +71,7 @@ const childrenProps = computed(() => {
   }
 });
 
-const filters = ref<Filter[]>([
+const filters = ref<any[]>([
   {
     label: 'Категории',
     key: 'filter_by_category',
@@ -140,7 +140,7 @@ const toggleRoom = (event: any) => {
   popoverRoom.value.toggle(event);
 };
 
-const getCategoriesOption = computed<any[]>(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
+const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
 const update = async (params: any = {}) => {

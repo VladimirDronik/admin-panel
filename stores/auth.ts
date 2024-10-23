@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api from '~/utils/api';
+import { useApiInstant } from '~/composables/api/apiInstant';
 
 interface State {
   user: null | object,
@@ -7,33 +7,46 @@ interface State {
   isActiveRightSidebar: boolean,
 }
 
-export const useAuthStore = defineStore({
-  id: 'auth',
-  state: (): State => ({
-    user: null,
-    token: localStorage.getItem('token') ?? null,
-    isActiveRightSidebar: false,
-  }),
-  actions: {
-    async loginApi(params = {}) {
-      const { data } = await api.get(
-        'http://178.57.106.190:18081/token',
-        {
-          params,
-          headers: {
-            'api-key': 'c041d36e381a835afce48c91686370c8',
-          },
-        },
-      );
-      localStorage.setItem('token', data.response.api_access_token);
-      this.token = data.response.api_access_token;
-      this.user = data;
-      return data;
-    },
+interface Request {
+  data: {
+    response: {
+      api_access_token: string;
+    };
+  }
+}
 
-    async logoutApi() {
-      const { data } = await api.post('api/public/user/logout');
-      return data;
-    },
-  },
+export const useAuthStore = defineStore('Auth', () => {
+  const { api } = useApiInstant();
+
+  const user = ref();
+  const token = ref(localStorage.getItem('token') ?? null);
+  const isActiveRightSidebar = ref(false);
+
+  const loginApi = async (params = {}) => {
+    const { data }: Request = await api.get(
+      'http://178.57.106.190:18081/token',
+      {
+        params,
+        headers: {
+          'api-key': 'c041d36e381a835afce48c91686370c8',
+        },
+      },
+    );
+    localStorage.setItem('token', data.response.api_access_token);
+    token.value = data.response.api_access_token;
+    user.value = data;
+    return data;
+  };
+
+  // const logoutApi = async () => {
+  //   const { data } = await api.post('api/public/user/logout');
+  //   return data;
+  // }
+
+  return {
+    user,
+    token,
+    isActiveRightSidebar,
+    loginApi,
+  };
 });

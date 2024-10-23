@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/api/apiInstant';
-// import api from '~/utils/api';
 
 interface Devices {
   id: number,
@@ -36,7 +35,9 @@ interface Room {
 }
 
 interface RequestData {
-  response: Room[]
+  data: {
+    response: Room[]
+  }
 }
 
 function filterRoom(rooms: Room[] | undefined): any {
@@ -68,6 +69,20 @@ function filterRoom(rooms: Room[] | undefined): any {
   return result;
 }
 
+function findRoom(list: Room[], id: number) {
+  let result = list.find((item) => item.id === id);
+  if (result) return result;
+  list.forEach((item) => {
+    if (item.rooms_in_group) {
+      const resultGroups = findRoom(item.rooms_in_group, id);
+      if (resultGroups) {
+        result = resultGroups;
+      }
+    }
+  });
+  if (result) return result;
+}
+
 export const useRoomsStore = defineStore('Rooms', () => {
   const storeAuth = useAuthStore();
   const { api } = useApiInstant();
@@ -79,61 +94,44 @@ export const useRoomsStore = defineStore('Rooms', () => {
   const getRoomsSelect = computed(() => filterRoom(list.value));
 
   const getRoomsApi = async (params = {}) => {
-    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
+    const data: RequestData = await api.get('http://10.35.16.1:8081/private/rooms-list-all', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    list.value = data.response;
-    total.value = data.response.length;
+    list.value = data.data.response;
+    total.value = data.data.response.length;
     return data;
   };
 
   const changeRooms = async (params = {}) => {
-    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
-      method: 'PATCH',
-      body: params,
-      // params: {
-      //   list: params,
-      //   total: total.value,
-      // },
-      headers: {
-        // 'api-key': 'c041d36e381a835afce48c91686370c8',
-        token: storeAuth.token,
+    const data: RequestData = await api.patch(
+      'http://10.35.16.1:8081/private/rooms-list-all',
+      params,
+      {
+        headers: {
+          'api-key': 'c041d36e381a835afce48c91686370c8',
+          token: storeAuth.token,
+        },
       },
-    });
+    );
 
     await getRoomsApi();
     return data;
   };
   const changeRoomApi = async (params = {}) => {
-    const data: RequestData = await api('http://10.35.16.1:8081/private/rooms-list-all', {
-      method: 'PATCH',
-      body: params,
+    const data: RequestData = await api.patch('http://10.35.16.1:8081/private/rooms-list-all', {
+      data: params,
       headers: {
-        // 'api-key': 'c041d36e381a835afce48c91686370c8',
+        'api-key': 'c041d36e381a835afce48c91686370c8',
         token: storeAuth.token,
       },
     });
 
     await getRoomsApi();
     return data;
-  };
-
-  const findRoom = (list: Room[], id: number) => {
-    let result = list.find((item) => item.id === id);
-    if (result) return result;
-    list.forEach((item) => {
-      if (item.rooms_in_group) {
-        const resultGroups = findRoom(item.rooms_in_group, id);
-        if (resultGroups) {
-          result = resultGroups;
-        }
-      }
-    });
-    if (result) return result;
   };
 
   return {
