@@ -1,19 +1,7 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/api/apiInstant';
-
-interface State {
-  user: null | object,
-  token: string | null,
-  isActiveRightSidebar: boolean,
-}
-
-interface Request {
-  data: {
-    response: {
-      api_access_token: string;
-    };
-  }
-}
+// Types
+import type { Request } from '~/types/AuthTypes';
 
 export const useAuthStore = defineStore('Auth', () => {
   const { api } = useApiInstant();

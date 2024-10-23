@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
-import _ from 'lodash';
+// Helpers
+import { roomColor } from '~/helpers/rooms'
 
+// Declare Options
 definePageMeta({
   middleware: ['auth'],
 });
@@ -17,22 +20,10 @@ const isLoading = ref(false);
 const isUpdateRightBar = ref(false);
 const form = ref(null);
 
-// Watchers
-watchEffect(() => {
-  data.value = storeRooms.list;
-});
-
+// methods
 const openRightBar = (item: any) => {
   isUpdateRightBar.value = true;
   form.value = item;
-};
-
-const roomColor = (color: string) => {
-  if (color === 'blue') return '#5398FF';
-  if (color === 'yellow') return '#FFD058';
-  if (color === 'orange') return '#FF9E58';
-  if (color === 'green') return '#19B58F';
-  return '#EAEFF4';
 };
 
 const save = _.debounce(async () => {
@@ -41,12 +32,17 @@ const save = _.debounce(async () => {
   isLoading.value = false;
 }, 1000);
 
+// Watchers
 watch(data, save);
+
+watchEffect(() => {
+  data.value = storeRooms.list;
+});
+
 </script>
 
 <template>
   <div>
-
     <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
       <DialogsRoomCreateDialog />
     </BaseBreadcrumb>

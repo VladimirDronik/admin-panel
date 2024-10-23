@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-// Types
 import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
+// Helpers
+import { checkStatusText, checkStatusColor } from '~/helpers/rooms'
+// Types
+import type { Room } from '~/types/RoomsTypes'
 import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
@@ -11,15 +14,7 @@ const storeUser = useAuthStore();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 
-interface Room {
-  id: number
-  is_group: boolean
-  rooms_in_group?: Room[]
-  sort: number
-  style: string
-  name: string
-}
-
+// Declare Options
 definePageMeta({
   middleware: ['auth'],
 });
@@ -107,21 +102,12 @@ const filters = ref<any[]>([
   },
 ]);
 
+const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
+
+// Methods
 const checkRoom = (item: Room | undefined) => {
   if (item) return item.name;
   return '-';
-};
-
-const checkStatusText = (item: string) => {
-  if (item === 'ON') return 'Включено';
-  if (item === 'OFF') return 'Выключено';
-  return 'Неопределён';
-};
-
-const checkStatusColor = (item: string) => {
-  if (item === 'ON') return 'bg-success';
-  if (item === 'OFF') return 'bg-error';
-  return 'bg-warning';
 };
 
 const toggleCategory = (event: any) => {
@@ -140,9 +126,6 @@ const toggleRoom = (event: any) => {
   popoverRoom.value.toggle(event);
 };
 
-const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
-
-// Methods
 const update = async (params: any = {}) => {
   isUpdate.value = true;
   await storeDevices.getDevicesApi({
@@ -195,6 +178,20 @@ const propsModel = (props: any[] | undefined) => {
   return result;
 };
 
+const findRoom = (list: Room[], id: number) => {
+  let result = list.find((item) => item.id === id);
+  if (result) return result;
+  list.forEach((item) => {
+    if (item.rooms_in_group) {
+      const resultGroups = findRoom(item.rooms_in_group, id);
+      if (resultGroups) {
+        result = resultGroups;
+      }
+    }
+  });
+  if (result) return result;
+}
+
 const updateFields = () => {
   if (storeDevices.item) {
     storeDevices.item = {
@@ -219,7 +216,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
 <template>
   <div>
-
     <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
       <DialogsDeviceCreateDialog />
     </BaseBreadcrumb>
@@ -375,7 +371,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </div>
         </template>
         <template #body="{ node }">
-          {{ checkRoom(storeRooms.findRoom(storeRooms.list, node.data.address)) }}
+          {{ checkRoom(findRoom(storeRooms.list, node.data.address)) }}
         </template>
       </Column>
       <Column field="status">

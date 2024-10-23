@@ -1,97 +1,28 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/api/apiInstant';
-
-interface Devices {
-  id: number,
-  type: number,
-  protocol: number,
-  state: number,
-  name: number,
-  address: number,
-  module: number,
-  category: string,
-  zone_id: number
-  status: string
-  children?: Devices[]
-  props: ModelProps[]
-}
-interface requsetDevices {
-  id: number,
-  type: number,
-  protocol: number,
-  state: number,
-  name: number,
-  address: number,
-  module: number,
-  category: string,
-  zone_id: number
-  status: string
-  children?: requsetDevices[]
-  props: ModelProps
-}
-
-interface GenerateFunction {
-  func: () => void,
-  funcText: string,
-  value: boolean,
-}
-
-interface ModelProps {
-  code: string,
-  type: string,
-  editable: GenerateFunction,
-  name: string,
-  required: GenerateFunction,
-  value: any,
-  values: string[]
-  visible: GenerateFunction,
-}
-
-interface RequestData {
-    data: {
-      list: Devices[]
-      total: number
-    }
-}
-
-interface Type {
-    category: string
-    name: string
-    type: string
-}
-
-function filterDevices(devices: Devices[], level: number, key: string): any {
-  return devices.map((item, index) => {
-    if (item.children) {
-      return {
-        key: level === 0 ? String(index) : `${key}-${index}}`,
-        data: {
-          id: item.id,
-          category: item.category,
-          name: item.name,
-          type: item.type,
-          address: item?.zone_id ?? '-',
-          status: item?.status ?? '-',
-        },
-        children: filterDevices(item.children, level + 1, level === 0 ? String(index) : `0${`-${index}`.repeat(level)}`),
-      };
-    }
-    return {
-      key: level === 0 ? String(index) : `${key}-${index}`,
-      data: {
-        id: item.id,
-        category: item.category,
-        name: item.name,
-        type: item.type,
-        address: item?.zone_id ?? '-',
-        status: item?.status ?? '-',
-      },
-    };
-  });
-}
+// Helpers
+import { filterInListDevices } from '~/helpers/devices'
+// Types
+import type { Devices, Type, RequestData, ModelProps, RequestDevices } from '~/types/DevicesTypes'
 
 export const useDevicesStore = defineStore('Devices', () => {
-  function createFunction(functionBody: string, props = {}) {
+  // Composables
+  const storeAuth = useAuthStore();
+  const { api } = useApiInstant();
+
+  // Variables
+  const list = ref<Devices[]>([]);
+  const total = ref<number>(0);
+  const item = ref<Devices | null>();
+  const types = ref<Type[]>([]);
+  const model = ref<Devices | null>();
+  const userAccessLevel = ref<any>(3);
+
+  // Computed Properties
+  const getDevices = computed(() => filterInListDevices(list.value, 0, ''));
+
+  // Methods
+  const createFunction = (functionBody: string, props = {}) => {
     const func = new Function('userAccessLevel', 'props', functionBody);
     return {
       func,
@@ -100,7 +31,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     };
   }
 
-  function propsModel(props: ModelProps | undefined): ModelProps[] {
+  const propsModel = (props: ModelProps | undefined): ModelProps[] => {
     if (!props) return [];
     const result = Object.values(props).map((item) => ({
       ...item,
@@ -111,20 +42,8 @@ export const useDevicesStore = defineStore('Devices', () => {
     return result;
   }
 
-  const storeAuth = useAuthStore();
-  const { api } = useApiInstant();
-
-  const list = ref<Devices[]>([]);
-  const total = ref<number>(0);
-  const item = ref<Devices | null>();
-  const types = ref<Type[]>([]);
-  const model = ref<Devices | null>();
-  const userAccessLevel = ref<any>(3);
-
-  const getDevices = computed(() => filterDevices(list.value, 0, ''));
-
   const getDevicesApi = async (params = {}) => {
-    const { data }: { data: RequestData} = await api('http://10.35.16.1:8082/objects', {
+    const { data }: RequestData = await api('http://10.35.16.1:8082/objects', {
       params,
       headers: {
         token: storeAuth.token,
@@ -148,7 +67,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
   const getModelApi = async (params = {}) => {
-    const data: { data: { data: requsetDevices }} = await api('http://10.35.16.1:8082/objects/model', {
+    const data: { data: { data: RequestDevices }} = await api('http://10.35.16.1:8082/objects/model', {
       params,
       headers: {
         token: storeAuth.token,
@@ -196,7 +115,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getControllerDetailsApi = async (id: number) => {
-    const { data }: {data: {data: requsetDevices}} = await api(
+    const { data }: {data: {data: RequestDevices}} = await api.get(
       `http://10.35.16.1:8082/objects/${id}`,
       {
         headers: {
@@ -218,7 +137,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
   const deleteDeviceApi = async (id: number) => {
-    const data: {data: requsetDevices} = await api.delete(
+    const data: {data: RequestDevices} = await api.delete(
       `http://10.35.16.1:8082/objects/${id}`,
       {
         headers: {
