@@ -9,5 +9,8 @@ export default {
     title: 'Название',
     category: 'Категория',
     type: 'Тип',
+    id: 'ID',
+    room: 'Помещение',
+    status: 'Статус',
   },
 };

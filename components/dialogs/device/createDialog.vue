@@ -107,6 +107,7 @@ const createDevice = async () => {
 
     form.value = {
       name: '',
+      zone_id: null,
       type: '',
       category: 'controller',
     };
@@ -228,7 +229,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
                   <div class="tw-w-full">
                     <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
                       <!-- {{ t('devices.title') }}  -->
-                      Размещение <span class="text-primary">*</span>
+                      {{ t('devices.room') }} <span class="text-primary">*</span>
                     </p>
                     <v-select :items="storeRooms.getRoomsSelect" v-model="form.zone_id" required :rules="emptyRules" />
                   </div>
@@ -305,7 +306,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
                             </p>
                             <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                               <p class="tw-py-3 tw-text-base">
-                                {{ item.value ? 'Включено' : 'Выключено'}}
+                                {{ item.value ? t('enabled') : t('disabled') }}
                               </p>
                               <v-switch
                                 :disabled="!item.editable.value"
