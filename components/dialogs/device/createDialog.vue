@@ -11,6 +11,7 @@ const dialog = defineModel({
 });
 
 // Composables
+const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 const {
   emptyRules,
@@ -30,6 +31,7 @@ const loadingModel = ref(false);
 const form = ref({
   name: '',
   type: '',
+  zone_id: null,
   category: 'controller',
 });
 
@@ -216,11 +218,20 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <StepPanel value="1">
             <v-form v-model="valid">
               <div>
-                <div>
-                  <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                    {{ t('devices.title') }} <span class="text-primary">*</span>
-                  </p>
-                  <v-text-field v-model="form.name" required :rules="emptyRules" />
+                <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
+                  <div class="tw-mr-2 tw-w-full">
+                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                      {{ t('devices.title') }} <span class="text-primary">*</span>
+                    </p>
+                    <v-text-field v-model="form.name" required :rules="emptyRules" />
+                  </div>
+                  <div class="tw-w-full">
+                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
+                      <!-- {{ t('devices.title') }}  -->
+                      Размещение <span class="text-primary">*</span>
+                    </p>
+                    <v-select :items="storeRooms.getRoomsSelect" v-model="form.zone_id" required :rules="emptyRules" />
+                  </div>
                 </div>
                 <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
                   <div class="tw-mr-2 tw-w-full">
