@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 // Builtin modules
+import { useI18n } from 'vue-i18n';
 import { useDisplay } from 'vuetify';
 
 const { width } = useDisplay();
+const { t } = useI18n();
 
 const storeRoom = useRoomsStore();
 const storeDevices = useDevicesStore();
@@ -122,7 +124,7 @@ const changeDevice = () => {
             :loading="loading"
             @click="changeDevice"
           >
-            Сохранить
+            {{ t('save') }}
           </v-btn>
         </div>
       </v-card>

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/api/apiInstant';
 // Helpers
-import { filterInListDevices } from '~/helpers/devices'
+import { filterInListDevices } from '~/helpers/devices';
 // Types
-import type { Devices, Type, RequestData, ModelProps, RequestDevices } from '~/types/DevicesTypes'
+import type {
+  Devices, Type, RequestData, ModelProps, RequestDevices,
+} from '~/types/DevicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
   // Composables
@@ -29,7 +31,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       funcText: String(func),
       value: func(userAccessLevel.value, props),
     };
-  }
+  };
 
   const propsModel = (props: ModelProps | undefined): ModelProps[] => {
     if (!props) return [];
@@ -40,7 +42,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       visible: item.visible ? createFunction(item.visible, props) : false,
     }));
     return result;
-  }
+  };
 
   const getDevicesApi = async (params = {}) => {
     const { data }: RequestData = await api('http://10.35.16.1:8082/objects', {

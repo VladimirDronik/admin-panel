@@ -4,7 +4,9 @@ import { useApiInstant } from '~/composables/api/apiInstant';
 import type { Request } from '~/types/AuthTypes';
 
 export const useAuthStore = defineStore('Auth', () => {
+  // Composables
   const { api } = useApiInstant();
+  const router = useRouter();
 
   const user = ref();
   const token = ref(localStorage.getItem('token') ?? null);
@@ -26,15 +28,17 @@ export const useAuthStore = defineStore('Auth', () => {
     return data;
   };
 
-  // const logoutApi = async () => {
-  //   const { data } = await api.post('api/public/user/logout');
-  //   return data;
-  // }
+  const logoutApi = async () => {
+    router.push({ name: 'auth-Login' });
+    // const { data } = await api.post('api/public/user/logout');
+    // return data;
+  };
 
   return {
     user,
     token,
     isActiveRightSidebar,
     loginApi,
+    logoutApi,
   };
 });

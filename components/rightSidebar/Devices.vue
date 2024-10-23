@@ -127,7 +127,6 @@ const changeDevice = () => {
                         <p class="tw-py-3 tw-text-base">
                           {{ item.value ? t('enabled') : t('disabled')}}
                         </p>
-                        <!-- <ToggleSwitch v-model="item.value" /> -->
                         <v-switch
                           v-model="item.value"
                           color="primary"
@@ -172,7 +171,6 @@ const changeDevice = () => {
                             <p class="tw-py-3 tw-text-base">
                               {{ item.value ? t('enabled') : t('disabled')}}
                             </p>
-                            <!-- <ToggleSwitch v-model="item.value" /> -->
                             <v-switch
                               :disabled="!item.editable.value"
                               v-model="item.value"

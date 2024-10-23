@@ -14,7 +14,7 @@ export const useApiInstant = () => {
     (response) => response,
     (error) => {
       console.error('Ошибка', error);
-      if (error.response.status === 401)router.push({ name: 'auth-Login' });
+      if (error.response.status === 401) router.push({ name: 'auth-Login' });
       return Promise.reject(error);
     },
   );

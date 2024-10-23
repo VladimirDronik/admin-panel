@@ -1,4 +1,4 @@
-import type { Room } from '~/types/RoomsTypes'
+import type { Room } from '~/types/RoomsTypes';
 
 export const filterInListRoom = (rooms: Room[] | undefined): any => {
   if (!rooms) return [];
@@ -27,7 +27,7 @@ export const filterInListRoom = (rooms: Room[] | undefined): any => {
     }
   });
   return result;
-}
+};
 
 export const checkStatusText = (item: string) => {
   if (item === 'ON') return 'Включено';

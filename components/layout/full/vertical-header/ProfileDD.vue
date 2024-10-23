@@ -66,14 +66,20 @@ const profileDD = [
               </v-avatar>
             </template>
             <div>
-              <h6 class="text-subtitle-1 font-weight-bold mb-2 custom-title">{{ item.title }}</h6>
+              <h6 class="text-subtitle-1 font-weight-bold mb-2 custom-title">
+                {{ item.title }}
+              </h6>
             </div>
-            <p class="text-subtitle-1 font-weight-regular textSecondary">{{ item.subtitle }}</p>
+            <p class="text-subtitle-1 font-weight-regular textSecondary">
+              {{ item.subtitle }}
+            </p>
           </v-list-item>
         </v-list>
       </perfect-scrollbar>
       <div class="pt-4 pb-6 px-8 text-center">
-        <v-btn color="primary" variant="outlined" block @click="authStore.logoutApi()">Logout</v-btn>
+        <v-btn color="primary" variant="outlined" block @click="authStore.logoutApi()">
+          Logout
+        </v-btn>
       </div>
     </v-sheet>
   </v-menu>

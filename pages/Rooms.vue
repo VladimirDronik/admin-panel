@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
 // Helpers
-import { roomColor } from '~/helpers/rooms'
+import { roomColor } from '~/helpers/rooms';
 
 // Declare Options
 definePageMeta({
@@ -27,9 +27,11 @@ const openRightBar = (item: any) => {
 };
 
 const save = _.debounce(async () => {
-  isLoading.value = true;
-  await storeRooms.changeRooms(data.value);
-  isLoading.value = false;
+  if (!_.isEqual(storeRooms.list, data.value)) {
+    isLoading.value = true;
+    await storeRooms.changeRooms(data.value);
+    isLoading.value = false;
+  }
 }, 1000);
 
 // Watchers

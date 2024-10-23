@@ -3,9 +3,9 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 // Helpers
-import { checkStatusText, checkStatusColor } from '~/helpers/rooms'
+import { checkStatusText, checkStatusColor } from '~/helpers/rooms';
 // Types
-import type { Room } from '~/types/RoomsTypes'
+import type { Room } from '~/types/RoomsTypes';
 import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
@@ -190,7 +190,7 @@ const findRoom = (list: Room[], id: number) => {
     }
   });
   if (result) return result;
-}
+};
 
 const updateFields = () => {
   if (storeDevices.item) {
@@ -304,7 +304,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
               <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
-  
+
             <Popover ref="popoverName">
               <div class="flex flex-col gap-4 category tw-p-2">
                 <v-text-field
@@ -329,7 +329,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
-  
+
             <Popover ref="popoverType">
               <div class="flex flex-col gap-4 category tw-p-2">
                 <v-text-field
@@ -354,7 +354,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
-  
+
             <Popover ref="popoverRoom">
               <div class="flex flex-col gap-4 category tw-p-2">
                 <v-select
@@ -394,7 +394,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         </template>
       </Column>
     </BaseTreeTable>
-  
+
     <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
   </div>
 </template>

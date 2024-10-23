@@ -1,4 +1,4 @@
-import type { Devices } from '~/types/DevicesTypes'
+import type { Devices } from '~/types/DevicesTypes';
 
 export function filterInListDevices(devices: Devices[], level: number, key: string): any {
   return devices.map((item, index) => {
