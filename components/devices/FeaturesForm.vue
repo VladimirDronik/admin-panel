@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const dialog = ref(false);
 </script>
 
 <template>
@@ -9,7 +10,13 @@
           ON
         </p>
         <div class="tw-flex tw-items-center tw-justify-end">
-          <v-btn class="tw-mr-2" variant="text" size="small" prepend-icon="mdi-cog">
+          <v-btn
+            @click="dialog = true"
+            class="tw-mr-2"
+            variant="text"
+            size="small"
+            prepend-icon="mdi-cog"
+          >
             Настройка
           </v-btn>
           <v-switch hide-details color="primary" />
@@ -51,5 +58,7 @@
         Нет действий
       </p>
     </div>
+
+    <DialogsDeviceFeaturesSettings v-model="dialog" />
   </div>
 </template>
