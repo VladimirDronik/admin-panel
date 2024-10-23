@@ -3,11 +3,13 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 // Composable modules
+import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 
 // Composables
 const router = useRouter();
 const store = useAuthStore();
+const { t } = useI18n();
 
 // Variables
 const loading = ref(true);
@@ -33,25 +35,16 @@ const login = async () => {
   <v-row class="d-flex mb-3">
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">
-        Login
+        {{ t('auth.login') }}
       </v-label>
       <v-text-field v-model="form.login" variant="outlined" hide-details color="primary" />
     </v-col>
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">
-        Password
+        {{ t('auth.password') }}
       </v-label>
       <v-text-field v-model="form.password" variant="outlined" type="password" hide-details color="primary" />
     </v-col>
-    <!-- <v-col cols="12" class="pt-0">
-      <div class="tw-flex align-center ml-n2 flex-wrap">
-        <v-checkbox v-model="checkbox" color="primary" hide-details>
-          <template #label>
-            Remeber this Device
-          </template>
-        </v-checkbox>
-      </div>
-    </v-col> -->
     <v-col cols="12" class="pt-0">
       <v-btn
         @click="login"
@@ -61,7 +54,7 @@ const login = async () => {
         block
         flat
       >
-        Sign in
+        {{ t('auth.signIn') }}
       </v-btn>
     </v-col>
   </v-row>

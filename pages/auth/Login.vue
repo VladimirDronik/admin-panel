@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 definePageMeta({
   layout: 'blank',
 });
+
+// Composables
+const { t } = useI18n();
 </script>
 <template>
   <div class="authentication">
@@ -14,7 +19,7 @@ definePageMeta({
                 <LayoutFullLogo />
               </div>
               <div class="text-body-1 text-muted text-center mb-3">
-                Your Social Campaigns
+                {{ t('auth.title') }}
               </div>
               <AuthLoginForm />
             </v-card-item>

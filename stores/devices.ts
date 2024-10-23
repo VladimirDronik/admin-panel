@@ -48,18 +48,16 @@ interface ModelProps {
 }
 
 interface RequestData {
-  data: {
     data: {
       list: Devices[]
       total: number
     }
-  }
 }
 
 interface Type {
-  category: string
-  name: string
-  type: string
+    category: string
+    name: string
+    type: string
 }
 
 function filterDevices(devices: Devices[], level: number, key: string): any {
@@ -126,31 +124,31 @@ export const useDevicesStore = defineStore('Devices', () => {
   const getDevices = computed(() => filterDevices(list.value, 0, ''));
 
   const getDevicesApi = async (params = {}) => {
-    const { data }: { data: any} = await api('http://10.35.16.1:8082/objects', {
+    const { data }: { data: RequestData} = await api('http://10.35.16.1:8082/objects', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    list.value = data?.list;
-    total.value = data?.total;
+    list.value = data.data.list;
+    total.value = data.data.total;
     return data;
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects/types', {
+    const { data }: { data: { data: Type[] } } = await api('http://10.35.16.1:8082/objects/types', {
       params,
       headers: {
         token: storeAuth.token,
       },
     });
 
-    types.value = data;
+    types.value = data.data;
     return data;
   };
   const getModelApi = async (params = {}) => {
-    const data: { data: requsetDevices } = await api('http://10.35.16.1:8082/objects/model', {
+    const data: { data: { data: requsetDevices }} = await api('http://10.35.16.1:8082/objects/model', {
       params,
       headers: {
         token: storeAuth.token,
@@ -158,36 +156,37 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     const result = {
-      ...data.data,
-      props: propsModel(data.data.props),
-      children: data.data.children?.map((item) => ({
+      ...data.data.data,
+      props: propsModel(data.data.data.props),
+      children: data.data.data.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),
     } as Devices;
-
-    console.log(result);
 
     model.value = result;
     return data;
   };
 
   const createDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects', {
-      method: 'POST',
-      body: params,
-      headers: {
-        'api-key': 'c041d36e381a835afce48c91686370c8',
-        token: storeAuth.token,
+    const { data }: { data: Type[] } = await api.post(
+      'http://10.35.16.1:8082/objects',
+      {
+        ...params,
       },
-    });
+      {
+        headers: {
+          'api-key': 'c041d36e381a835afce48c91686370c8',
+          token: storeAuth.token,
+        },
+      },
+    );
     return data;
   };
 
   const changeDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api('http://10.35.16.1:8082/objects', {
-      method: 'PUT',
-      body: params,
+    const { data }: { data: Type[] } = await api.put('http://10.35.16.1:8082/objects', {
+      data: params,
       headers: {
         'api-key': 'c041d36e381a835afce48c91686370c8',
         token: storeAuth.token,
@@ -197,7 +196,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getControllerDetailsApi = async (id: number) => {
-    const data: {data: requsetDevices} = await api(
+    const { data }: {data: {data: requsetDevices}} = await api(
       `http://10.35.16.1:8082/objects/${id}`,
       {
         headers: {
@@ -219,24 +218,15 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
   const deleteDeviceApi = async (id: number) => {
-    console.log(id);
-    const data: {data: requsetDevices} = await api(
-      `http://10.35.16.1:8088/objects/${id}`,
+    const data: {data: requsetDevices} = await api.delete(
+      `http://10.35.16.1:8082/objects/${id}`,
       {
-        method: 'DELETE',
         headers: {
           token: storeAuth.token,
         },
       },
     );
 
-    return data;
-  };
-
-  const logoutApi = async () => {
-    const { data } = await api('api/public/user/logout', {
-      methods: 'POST',
-    });
     return data;
   };
 
@@ -251,7 +241,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     getDevicesApi,
     getTypesApi,
     getModelApi,
-    logoutApi,
     propsModel,
     createDeviceApi,
     changeDeviceApi,

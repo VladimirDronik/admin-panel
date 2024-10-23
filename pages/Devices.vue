@@ -51,7 +51,7 @@ const headers = computed(() => [
   { text: t('Статус'), value: 'state' },
 ]);
 
-const getTypes = computed<Options>(() => storeDevices.types
+const getTypes = computed(() => storeDevices.types
   .filter((item) => getCategoriesOption.value.includes(item.category))
   .map((item) => ({
     title: item.name,
@@ -71,7 +71,7 @@ const childrenProps = computed(() => {
   }
 });
 
-const filters = ref<Filter[]>([
+const filters = ref<any[]>([
   {
     label: 'Категории',
     key: 'filter_by_category',
@@ -140,7 +140,7 @@ const toggleRoom = (event: any) => {
   popoverRoom.value.toggle(event);
 };
 
-const getCategoriesOption = computed<any[]>(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
+const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
 const update = async (params: any = {}) => {
@@ -236,7 +236,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            Категория
+            {{ t('devices.category') }}
           </p>
           <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4" />
@@ -266,7 +266,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            ID
+            {{ t('devices.id') }}
           </p>
           <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-white">
             <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
@@ -301,7 +301,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            Название
+            {{ t('devices.title') }}
           </p>
           <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
             <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
@@ -326,7 +326,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            Тип
+            {{ t('devices.type') }}
           </p>
           <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
@@ -351,7 +351,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            Помещение
+            {{ t('devices.room') }}
           </p>
           <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
@@ -380,7 +380,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <template #header>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
           <p class="tw-font-semibold">
-            Статус
+            {{ t('devices.status') }}
           </p>
           <!-- <button type="button" class="tree-table__header-filter tw-bg-white">
             <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
