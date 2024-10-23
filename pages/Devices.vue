@@ -218,186 +218,189 @@ watch([props, childrenProps], (newValue, oldValue) => {
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
-    <DialogsDeviceCreateDialog />
-  </BaseBreadcrumb>
-  <BaseTreeTable
-    @update="update"
-    @created="created"
-    @click-row="clickRow"
-    v-model:page="page"
-    v-model:filters="filters"
-    :total="storeDevices.total"
-    :items="storeDevices.getDevices"
-    :perPage="perPage"
-    :headers="headers"
-  >
-    <Column field="category" expander style="width: 200px">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.category') }}
-          </p>
-          <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
-            <IconFilterFilled class="tw-h-4 tw-w-4" />
-          </button>
-          <Popover ref="popoverCategory">
-            <div class="flex flex-col gap-4 category tw-pr-3">
-              <v-checkbox
-                v-model="filters[0].value"
-                label="Controller"
-                value="controller"
-                color="primary"
-                hide-details
-              />
-              <v-checkbox
-                v-model="filters[0].value"
-                label="Sensor"
-                value="sensor"
-                color="primary"
-                hide-details
-              />
-            </div>
-          </Popover>
-        </div>
-      </template>
-    </Column>
-    <Column field="id" style="width: 100px">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.id') }}
-          </p>
-          <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-white">
-            <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button>
-          <Popover ref="popoverId">
-            <div class="flex flex-col gap-4 category tw-p-2">
-              <v-text-field
-                v-model.number="filters[1].value"
-                :label="filters[1].label"
-                hide-details
-                class="tw-mb-1 tw-min-w-80"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-                compact
-                type="number"
-              />
-              <v-text-field
-                v-model.number="filters[2].value"
-                :label="filters[2].label"
-                hide-details
-                class="tw-min-w-80"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-                type="number"
-              />
-            </div>
-          </Popover>
-        </div>
-      </template>
-    </Column>
-    <Column field="name">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.title') }}
-          </p>
-          <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
-            <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button>
+  <div>
 
-          <Popover ref="popoverName">
-            <div class="flex flex-col gap-4 category tw-p-2">
-              <v-text-field
-                v-model.number="filters[3].value"
-                :label="filters[3].label"
-                hide-details
-                class="tw-min-w-96"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-              />
-            </div>
-          </Popover>
-        </div>
-      </template>
-    </Column>
-    <Column field="type">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.type') }}
-          </p>
-          <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button>
-
-          <Popover ref="popoverType">
-            <div class="flex flex-col gap-4 category tw-p-2">
-              <v-text-field
-                v-model.number="filters[4].value"
-                :label="filters[4].label"
-                hide-details
-                class="tw-min-w-80"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-              />
-            </div>
-          </Popover>
-        </div>
-      </template>
-    </Column>
-    <Column field="address">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.room') }}
-          </p>
-          <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button>
-
-          <Popover ref="popoverRoom">
-            <div class="flex flex-col gap-4 category tw-p-2">
-              <v-select
-                v-model.number="filters[5].value"
-                :label="filters[5].label"
-                :items="filters[5].options"
-                hide-details
-                class="tw-min-w-80"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-              />
-            </div>
-          </Popover>
-        </div>
-      </template>
-      <template #body="{ node }">
-        {{ checkRoom(storeRooms.findRoom(storeRooms.list, node.data.address)) }}
-      </template>
-    </Column>
-    <Column field="status">
-      <template #header>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <p class="tw-font-semibold">
-            {{ t('devices.status') }}
-          </p>
-          <!-- <button type="button" class="tree-table__header-filter tw-bg-white">
-            <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-          </button> -->
-        </div>
-      </template>
-      <template #body="{ node }">
-        <div
-          class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
-          :class="checkStatusColor(node.data.status)"
-        />
-        {{ checkStatusText(node.data.status)}}
-      </template>
-    </Column>
-  </BaseTreeTable>
-
-  <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
+    <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
+      <DialogsDeviceCreateDialog />
+    </BaseBreadcrumb>
+    <BaseTreeTable
+      @update="update"
+      @created="created"
+      @click-row="clickRow"
+      v-model:page="page"
+      v-model:filters="filters"
+      :total="storeDevices.total"
+      :items="storeDevices.getDevices"
+      :perPage="perPage"
+      :headers="headers"
+    >
+      <Column field="category" expander style="width: 200px">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.category') }}
+            </p>
+            <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconFilterFilled class="tw-h-4 tw-w-4" />
+            </button>
+            <Popover ref="popoverCategory">
+              <div class="flex flex-col gap-4 category tw-pr-3">
+                <v-checkbox
+                  v-model="filters[0].value"
+                  label="Controller"
+                  value="controller"
+                  color="primary"
+                  hide-details
+                />
+                <v-checkbox
+                  v-model="filters[0].value"
+                  label="Sensor"
+                  value="sensor"
+                  color="primary"
+                  hide-details
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+      </Column>
+      <Column field="id" style="width: 100px">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.id') }}
+            </p>
+            <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
+            </button>
+            <Popover ref="popoverId">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-text-field
+                  v-model.number="filters[1].value"
+                  :label="filters[1].label"
+                  hide-details
+                  class="tw-mb-1 tw-min-w-80"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  compact
+                  type="number"
+                />
+                <v-text-field
+                  v-model.number="filters[2].value"
+                  :label="filters[2].label"
+                  hide-details
+                  class="tw-min-w-80"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                  type="number"
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+      </Column>
+      <Column field="name">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.title') }}
+            </p>
+            <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
+            </button>
+  
+            <Popover ref="popoverName">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-text-field
+                  v-model.number="filters[3].value"
+                  :label="filters[3].label"
+                  hide-details
+                  class="tw-min-w-96"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+      </Column>
+      <Column field="type">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.type') }}
+            </p>
+            <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+            </button>
+  
+            <Popover ref="popoverType">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-text-field
+                  v-model.number="filters[4].value"
+                  :label="filters[4].label"
+                  hide-details
+                  class="tw-min-w-80"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+      </Column>
+      <Column field="address">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.room') }}
+            </p>
+            <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+            </button>
+  
+            <Popover ref="popoverRoom">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-select
+                  v-model.number="filters[5].value"
+                  :label="filters[5].label"
+                  :items="filters[5].options"
+                  hide-details
+                  class="tw-min-w-80"
+                  prepend-inner-icon="mdi-magnify"
+                  clearable
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+        <template #body="{ node }">
+          {{ checkRoom(storeRooms.findRoom(storeRooms.list, node.data.address)) }}
+        </template>
+      </Column>
+      <Column field="status">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.status') }}
+            </p>
+            <!-- <button type="button" class="tree-table__header-filter tw-bg-white">
+              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+            </button> -->
+          </div>
+        </template>
+        <template #body="{ node }">
+          <div
+            class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
+            :class="checkStatusColor(node.data.status)"
+          />
+          {{ checkStatusText(node.data.status)}}
+        </template>
+      </Column>
+    </BaseTreeTable>
+  
+    <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
+  </div>
 </template>
 
 <style>

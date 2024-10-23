@@ -45,79 +45,82 @@ watch(data, save);
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
-    <DialogsRoomCreateDialog />
-  </BaseBreadcrumb>
-  <VueDraggableNext v-model="data" handle=".handle-list" :animation="300">
-    <div v-for="place in data" :key="place.id">
-      <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
-        <AccordionPanel :value="place.id">
-          <AccordionHeader>
-            <div class="header__arrow">
-              <IconChevronUp stroke={2} class="header__arrow-up tw-w-6" />
-              <IconChevronDown stroke={2} class="header__arrow-down tw-w-6" />
-            </div>
-            <div
-              @click.stop="openRightBar(place)"
-              @keydown.stop="openRightBar(place)"
-              class="header-list tw-flex tw-w-full tw-justify-between"
-            >
-              <div class=" tw-flex tw-items-center">
-                <div :style="{ backgroundColor: roomColor(place.style) }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                <p class=" tw-text-lg tw-font-normal tw-text-black">
-                  {{ place.name }}
-                </p>
+  <div>
+
+    <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
+      <DialogsRoomCreateDialog />
+    </BaseBreadcrumb>
+    <VueDraggableNext v-model="data" handle=".handle-list" :animation="300">
+      <div v-for="place in data" :key="place.id">
+        <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
+          <AccordionPanel :value="place.id">
+            <AccordionHeader>
+              <div class="header__arrow">
+                <IconChevronUp stroke={2} class="header__arrow-up tw-w-6" />
+                <IconChevronDown stroke={2} class="header__arrow-down tw-w-6" />
               </div>
-              <IconGripVertical class="handle-list tw-w-5 tw-text-black" />
-            </div>
-          </AccordionHeader>
-          <AccordionContent>
-            <VueDraggableNext v-model="place.rooms_in_group" handle=".handle-item" :animation="300">
               <div
-                @click="openRightBar(room)"
-                @keydown="openRightBar(room)"
-                v-for="room in place.rooms_in_group"
-                :key="room.id"
-                class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
+                @click.stop="openRightBar(place)"
+                @keydown.stop="openRightBar(place)"
+                class="header-list tw-flex tw-w-full tw-justify-between"
               >
-                <div class="tw-flex tw-w-full tw-justify-between">
-                  <div class="tw-flex tw-items-center">
-                    <div :style="{ backgroundColor: roomColor(room.style) }" class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                    <p class="tw-text-lg tw-font-normal tw-text-black">
-                      {{ room.name }}
-                    </p>
-                  </div>
-                  <IconGripVertical class="handle-item tw-w-5" />
+                <div class=" tw-flex tw-items-center">
+                  <div :style="{ backgroundColor: roomColor(place.style) }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                  <p class=" tw-text-lg tw-font-normal tw-text-black">
+                    {{ place.name }}
+                  </p>
                 </div>
+                <IconGripVertical class="handle-list tw-w-5 tw-text-black" />
               </div>
-            </VueDraggableNext>
-          </AccordionContent>
-        </AccordionPanel>
-      </Accordion>
-      <div
-        v-else
-        @click="openRightBar(place)"
-        @keydown="openRightBar(place)"
-        class="room-item tw-mb-2 tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-9 tw-text-lg"
-      >
+            </AccordionHeader>
+            <AccordionContent>
+              <VueDraggableNext v-model="place.rooms_in_group" handle=".handle-item" :animation="300">
+                <div
+                  @click="openRightBar(room)"
+                  @keydown="openRightBar(room)"
+                  v-for="room in place.rooms_in_group"
+                  :key="room.id"
+                  class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
+                >
+                  <div class="tw-flex tw-w-full tw-justify-between">
+                    <div class="tw-flex tw-items-center">
+                      <div :style="{ backgroundColor: roomColor(room.style) }" class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                      <p class="tw-text-lg tw-font-normal tw-text-black">
+                        {{ room.name }}
+                      </p>
+                    </div>
+                    <IconGripVertical class="handle-item tw-w-5" />
+                  </div>
+                </div>
+              </VueDraggableNext>
+            </AccordionContent>
+          </AccordionPanel>
+        </Accordion>
         <div
-          :style="{ backgroundColor: roomColor(place.style) } "
-          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
-        />
-        <div class="tw-flex tw-w-full tw-justify-between">
-          <p class=" tw-text-lg tw-font-normal tw-text-black">
-            {{ place.name }}
-          </p>
-          <IconGripVertical class="handle-list tw-w-5" />
+          v-else
+          @click="openRightBar(place)"
+          @keydown="openRightBar(place)"
+          class="room-item tw-mb-2 tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-9 tw-text-lg"
+        >
+          <div
+            :style="{ backgroundColor: roomColor(place.style) } "
+            class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+          />
+          <div class="tw-flex tw-w-full tw-justify-between">
+            <p class=" tw-text-lg tw-font-normal tw-text-black">
+              {{ place.name }}
+            </p>
+            <IconGripVertical class="handle-list tw-w-5" />
+          </div>
         </div>
       </div>
-    </div>
-  </VueDraggableNext>
-  <RightSidebarRoom
-    v-model:is-update="isLoading"
-    v-model:form="form"
-    v-model:is-show="isUpdateRightBar"
-  />
+    </VueDraggableNext>
+    <RightSidebarRoom
+      v-model:is-update="isLoading"
+      v-model:form="form"
+      v-model:is-show="isUpdateRightBar"
+    />
+  </div>
 </template>
 
 <style lang="scss">

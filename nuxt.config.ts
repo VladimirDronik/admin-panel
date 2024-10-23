@@ -1,9 +1,14 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import Noir from './utils/themePrimeVue';
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import Noir from './utils/themePrimeVue';
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 
 export default defineNuxtConfig({
+
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
+  },
   runtimeConfig: {
     public: {
       backendApi: '',
