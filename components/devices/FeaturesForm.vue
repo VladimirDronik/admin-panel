@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { DialogsDeviceFeaturesSettings } from '#build/components';
+
 const dialog = ref(false);
 </script>
 
@@ -59,6 +61,6 @@ const dialog = ref(false);
       </p>
     </div>
 
-    <DialogsDeviceFeaturesSettings v-model="dialog" />
+    <DialogsDeviceFeatures v-model="dialog" />
   </div>
 </template>

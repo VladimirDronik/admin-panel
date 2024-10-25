@@ -4,6 +4,8 @@ import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
 // Helpers
 import { roomColor } from '~/helpers/rooms';
+// Types
+import type { Room } from '~/types/RoomsTypes';
 
 // Declare Options
 definePageMeta({
@@ -18,18 +20,29 @@ const data = ref(storeRooms.list);
 const isLoading = ref(false);
 
 const isUpdateRightBar = ref(false);
-const form = ref(null);
+const form = ref<Room | null>();
 
 // methods
-const openRightBar = (item: any) => {
+const openRightBar = (item: Room) => {
   isUpdateRightBar.value = true;
   form.value = item;
 };
 
+const roomIds = (list: Room[]) => list.map((item) => {
+  if (item.is_group) {
+    // return {
+    //   id: item.id,
+    //   rooms_in_group: roomIds(item.rooms_in_group)
+    // }
+  }
+  return item.id;
+});
+
 const save = _.debounce(async () => {
   if (!_.isEqual(storeRooms.list, data.value)) {
     isLoading.value = true;
-    await storeRooms.changeRooms(data.value);
+    const dataId = roomIds(data.value);
+    await storeRooms.changeRooms(dataId);
     isLoading.value = false;
   }
 }, 1000);

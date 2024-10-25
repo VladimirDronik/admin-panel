@@ -11,6 +11,8 @@ export interface Devices {
     status: string
     children?: Devices[]
     props: ModelProps[]
+    methods: Method[],
+    events: any
 }
 export interface RequestDevices {
     id: number,
@@ -24,7 +26,15 @@ export interface RequestDevices {
     zone_id: number
     status: string
     children?: RequestDevices[]
-    props: ModelProps
+    props: ModelProps,
+    methods: Method[],
+    events: any
+}
+
+export interface Method {
+    description: string
+    name: string
+    params: any
 }
 
 export interface GenerateFunction {

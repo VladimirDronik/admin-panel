@@ -110,7 +110,8 @@ const changeDevice = () => {
             color="primary"
           >
             <v-tab value="features">{{ t('devices.features') }}</v-tab>
-            <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab>
+            <v-tab value="events">{{ t('devices.events') }}</v-tab>
+            <!-- <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab> -->
             <v-tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</v-tab>
             <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.management') }}</v-tab>
           </v-tabs>

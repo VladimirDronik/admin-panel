@@ -31,7 +31,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
 
   const changeRooms = async (params = {}) => {
     const data: RequestData = await api.patch(
-      'http://10.35.16.1:8081/private/rooms-list-all',
+      'http://10.35.16.1:8081/private/zones/order',
       params,
       {
         headers: {
