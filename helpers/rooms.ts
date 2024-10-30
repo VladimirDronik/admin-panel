@@ -2,21 +2,15 @@ import type { Room } from '~/types/RoomsTypes';
 
 export const filterInListRoom = (rooms: Room[] | undefined): any => {
   if (!rooms) return [];
-  const result: any[] = [];
+  let result: any[] = [];
   rooms.forEach((item) => {
     if (item.rooms_in_group?.length) {
-      result.push({
+      result = result.concat(result, item.rooms_in_group.map((item) => ({
         title: item.name,
         props: {
           value: item.id,
         },
-      });
-      // result = result.concat(item.rooms_in_group.map((item) => ({
-      //   title: item.name,
-      //   props: {
-      //     value: item.id,
-      //   },
-      // })));
+      })));
     } else {
       result.push({
         title: item.name,

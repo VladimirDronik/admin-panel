@@ -1,9 +1,21 @@
 <script lang="ts" setup>
+import { VueDraggableNext } from 'vue-draggable-next';
 
 const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
+});
+
+const form = defineModel<any>('form', {
+  required: true,
+});
+
+defineProps({
+  edit: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const dialogMethod = ref(false);
@@ -71,24 +83,26 @@ const dialogNotification = ref(false);
       <DialogsDeviceFeaturesNotificationDialog v-model="dialogNotification" />
 
       <div v-if="storeDevices.item">
-        <div v-for="event in storeDevices.item.events" :key="event.code" class="tw-rounded tw-border">
-          <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
-            <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
-              <v-chip class="tw-mr-3" color="success" variant="flat">
-                Метод On
-              </v-chip>
-              <p>
-                {{ event.name }}
-              </p>
-            </div>
-            <div class="tw-flex tw-items-center">
-              <v-btn class="tw-mr-2" icon variant="text" size="x-small">
-                <TrashIcon class="handle-item tw-w-5" />
-              </v-btn>
-              <GripVerticalIcon class="handle-item tw-w-5" />
+        <VueDraggableNext v-model="form.props" handle=".handle-item" :animation="300">
+          <div v-for="event in form.props" :key="event.code" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
+            <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
+              <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
+                <v-chip class="tw-mr-3" color="success" variant="flat">
+                  Метод On
+                </v-chip>
+                <p>
+                  {{ event.name }}
+                </p>
+              </div>
+              <div class="tw-flex tw-items-center">
+                <v-btn class="tw-mr-2" icon variant="text" size="x-small">
+                  <TrashIcon class="handle-item tw-w-5" />
+                </v-btn>
+                <GripVerticalIcon class="handle-item tw-w-5 tw-cursor-pointer" />
+              </div>
             </div>
           </div>
-        </div>
+        </VueDraggableNext>
       </div>
 
       <div class="tw-pt-4">

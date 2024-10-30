@@ -230,37 +230,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       :perPage="perPage"
       :headers="headers"
     >
-      <Column field="category" expander style="width: 200px">
-        <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.category') }}
-            </p>
-            <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
-              <IconFilterFilled class="tw-h-4 tw-w-4" />
-            </button>
-            <Popover ref="popoverCategory">
-              <div class="flex flex-col gap-4 category tw-pr-3">
-                <v-checkbox
-                  v-model="filters[0].value"
-                  label="Controller"
-                  value="controller"
-                  color="primary"
-                  hide-details
-                />
-                <v-checkbox
-                  v-model="filters[0].value"
-                  label="Sensor"
-                  value="sensor"
-                  color="primary"
-                  hide-details
-                />
-              </div>
-            </Popover>
-          </div>
-        </template>
-      </Column>
-      <Column field="id" style="width: 100px">
+      <Column field="id" expander style="width: 100px">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">
@@ -393,6 +363,47 @@ watch([props, childrenProps], (newValue, oldValue) => {
           {{ checkStatusText(node.data.status)}}
         </template>
       </Column>
+      <Column field="tags" style="width: 200px">
+        <template #header>
+          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+            <p class="tw-font-semibold">
+              {{ t('devices.tags') }}
+            </p>
+            <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
+              <IconFilterFilled class="tw-h-4 tw-w-4" />
+            </button>
+            <Popover ref="popoverCategory">
+              <div class="flex flex-col gap-4 category tw-pr-3">
+                <v-checkbox
+                  v-model="filters[0].value"
+                  label="Controller"
+                  value="controller"
+                  color="primary"
+                  hide-details
+                />
+                <v-checkbox
+                  v-model="filters[0].value"
+                  label="Sensor"
+                  value="sensor"
+                  color="primary"
+                  hide-details
+                />
+              </div>
+            </Popover>
+          </div>
+        </template>
+        <template #body="{ node }">
+          <div class="tags">
+            <perfect-scrollbar class="tw-max-w-96">
+              <div class="tw-flex">
+                <v-btn class="tw-mr-2 tw-flex" size="small" color="primary" v-for="item in node.data.tags" :key="item">
+                  {{ item }}
+                </v-btn>
+              </div>
+            </perfect-scrollbar>
+          </div>
+        </template>
+      </Column>
     </BaseTreeTable>
 
     <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
@@ -400,6 +411,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
 </template>
 
 <style>
+.tags .ps__rail-x {
+  display: none;
+}
+
 .tree-table__header-filter {
   display: flex;
   justify-content: center;

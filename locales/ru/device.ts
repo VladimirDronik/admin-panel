@@ -7,7 +7,7 @@ export default {
     events: 'События',
     management: 'Управление',
     title: 'Название',
-    category: 'Категория',
+    tags: 'Теги',
     type: 'Тип',
     id: 'ID',
     room: 'Помещение',

@@ -7,6 +7,7 @@ export interface Devices {
     address: number,
     module: number,
     category: string,
+    tags: string[],
     zone_id: number
     status: string
     children?: Devices[]

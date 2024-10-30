@@ -7,7 +7,7 @@ export default {
     events: 'Events',
     management: 'Management',
     title: 'Title',
-    category: 'Category',
+    tags: 'Tags',
     type: 'Type',
     id: 'ID',
     room: 'Rooms',
