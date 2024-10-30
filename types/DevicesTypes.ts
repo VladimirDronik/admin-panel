@@ -38,6 +38,10 @@ export interface Method {
     params: any
 }
 
+export interface Tags {
+    key: string
+}
+
 export interface GenerateFunction {
     func: () => void,
     funcText: string,

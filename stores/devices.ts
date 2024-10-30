@@ -4,7 +4,7 @@ import { useApiInstant } from '~/composables/api/apiInstant';
 import { filterInListDevices } from '~/helpers/devices';
 // Types
 import type {
-  Devices, Type, RequestData, ModelProps, RequestDevices,
+  Devices, Type, RequestData, ModelProps, RequestDevices, Tags,
 } from '~/types/DevicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
@@ -15,6 +15,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   // Variables
   const list = ref<Devices[]>([]);
   const total = ref<number>(0);
+  const tags = ref<Tags[]>([]);
   const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
   const model = ref<Devices | null>();
@@ -68,6 +69,19 @@ export const useDevicesStore = defineStore('Devices', () => {
     types.value = data.data;
     return data;
   };
+
+  const getTagsApi = async (params = {}) => {
+    const { data }: { data: { data: any[] } } = await api('http://10.35.16.1:8082/objects/tags', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    tags.value = data.data;
+    return data;
+  };
+
   const getModelApi = async (params = {}) => {
     const data: { data: { data: RequestDevices }} = await api('http://10.35.16.1:8082/objects/model', {
       params,
@@ -153,6 +167,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   return {
     list,
+    tags,
     total,
     item,
     types,
@@ -162,6 +177,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     getDevicesApi,
     getTypesApi,
     getModelApi,
+    getTagsApi,
     propsModel,
     createDeviceApi,
     changeDeviceApi,

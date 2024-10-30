@@ -28,8 +28,8 @@ const isUpdate = ref(true);
 const isUpdateRightBar = ref(false);
 const isActiveRightSidebar = ref(false);
 
-const popoverCategory = ref();
 const popoverId = ref();
+const popoverTags = ref();
 const popoverName = ref();
 const popoverType = ref();
 const popoverRoom = ref();
@@ -66,12 +66,14 @@ const childrenProps = computed(() => {
   }
 });
 
+const tags = computed(() => Object.keys(storeDevices.tags).map((item) => item));
+
 const filters = ref<any[]>([
   {
-    label: 'Категории',
-    key: 'filter_by_category',
-    value: ['controller', 'sensor'],
-    options: ['controller', 'sensor'],
+    label: 'Теги',
+    key: 'tags',
+    value: [],
+    options: tags,
   },
   {
     label: 'ID обьекта',
@@ -100,6 +102,12 @@ const filters = ref<any[]>([
     value: null,
     options: ['Гостинная', 'Двор'],
   },
+  {
+    label: 'Статус',
+    key: 'filter_by_status',
+    value: null,
+    options: ['ON', 'OFF', 'Enable', 'N/A'],
+  },
 ]);
 
 const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
@@ -110,8 +118,11 @@ const checkRoom = (item: Room | undefined) => {
   return '-';
 };
 
-const toggleCategory = (event: any) => {
-  popoverCategory.value.toggle(event);
+const toggleTags = (event: any) => {
+  popoverTags.value.toggle(event);
+};
+const toggleStatus = (event: any) => {
+  popoverStatus.value.toggle(event);
 };
 const toggleId = (event: any) => {
   popoverId.value.toggle(event);
@@ -147,6 +158,7 @@ const clickRow = async (item: any) => {
 const created = async () => {
   await Promise.all([
     storeDevices.getTypesApi(),
+    storeDevices.getTagsApi(),
     storeDevices.getDevicesApi({
       limit: perPage,
       offset: 0,
@@ -350,9 +362,21 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.status') }}
             </p>
-            <!-- <button type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleStatus" type="button" class="tree-table__header-filter tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button> -->
+            </button>
+            <Popover :dismissable="false" ref="popoverStatus">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-select
+                  v-model="filters[6].value"
+                  :items="filters[6].options"
+                  :label="filters[6].label"
+                  class="tw-min-w-80"
+                  color="primary"
+                  hide-details
+                />
+              </div>
+            </Popover>
           </div>
         </template>
         <template #body="{ node }">
@@ -369,23 +393,19 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.tags') }}
             </p>
-            <button @click="toggleCategory" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleTags" type="button" class="tree-table__header-filter tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4" />
             </button>
-            <Popover ref="popoverCategory">
-              <div class="flex flex-col gap-4 category tw-pr-3">
-                <v-checkbox
+            <Popover :dismissable="false" ref="popoverTags">
+              <div class="flex flex-col gap-4 category tw-p-2">
+                <v-select
                   v-model="filters[0].value"
-                  label="Controller"
-                  value="controller"
+                  :items="filters[0].options"
+                  :label="filters[0].label"
+                  class="tw-min-w-80"
                   color="primary"
-                  hide-details
-                />
-                <v-checkbox
-                  v-model="filters[0].value"
-                  label="Sensor"
-                  value="sensor"
-                  color="primary"
+                  chips
+                  multiple
                   hide-details
                 />
               </div>
