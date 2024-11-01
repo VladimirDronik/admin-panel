@@ -115,92 +115,9 @@ const changeDevice = () => {
             </TabList>
             <TabPanels>
               <TabPanel value="features">
-                <div v-for="item in storeDevices.item?.props" :key="item.code">
-                  <div v-if="item.visible.value">
-                    <div v-if="item.type === 'bool'">
-                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                      </p>
-                      <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                        <p class="tw-py-3 tw-text-base">
-                          {{ item.value ? t('enabled') : t('disabled')}}
-                        </p>
-                        <v-switch
-                          v-model="item.value"
-                          color="primary"
-                          hide-details
-                          :disabled="!item.editable.value"
-                        />
-                      </div>
-                    </div>
-                    <div v-else-if="item.type === 'enum'">
-                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                      </p>
-                      <v-select
-                        v-model="item.value"
-                        :items="Object.keys(item.values)"
-                        :disabled="!item.editable.value"
-                      />
-                    </div>
-                    <div v-else>
-                      <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                        {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                      </p>
-                      <v-text-field
-                        v-model="item.value"
-                        :disabled="!item.editable.value"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div v-if="storeDevices.item?.category === 'sensor'">
-                  <div class="tw-mb-4" v-for="port in storeDevices.item?.children" :key="port.id">
-                    <p class="text-primary tw-mb-2 tw-pt-3 tw-text-2xl tw-font-semibold">
-                      {{port.name}}
-                    </p>
-                    <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
-                      <div v-if="item.visible.value">
-                        <div v-if="item.type === 'bool'">
-                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                          </p>
-                          <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                            <p class="tw-py-3 tw-text-base">
-                              {{ item.value ? t('enabled') : t('disabled')}}
-                            </p>
-                            <v-switch
-                              :disabled="!item.editable.value"
-                              v-model="item.value"
-                              color="primary"
-                              hide-details
-                            />
-                          </div>
-                        </div>
-                        <div v-else-if="item.type === 'enum'">
-                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                          </p>
-                          <v-select
-                            v-model="item.value"
-                            :disabled="!item.editable.value"
-                            :items="Object.keys(item.values)"
-                          />
-                        </div>
-                        <div v-else>
-                          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                            {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                          </p>
-                          <v-text-field
-                            v-model="item.value"
-                            :disabled="!item.editable.value"
-                            :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
+                <DevicesPropertiesForm v-model="storeDevices.item" />
+
                 <div class="tw-flex tw-justify-end">
                   <DialogsDeleteDialog
                     @delete="confirmDelete"
@@ -212,20 +129,18 @@ const changeDevice = () => {
                     :id="storeDevices.item?.id ?? -1"
                   />
 
-                  <v-btn
+                  <Button
                     :loading="loading"
-                    color="success"
-                    variant="flat"
                     class="tw-mr-2"
                     @click="changeDevice"
                   >
                     {{ t('save') }}
-                  </v-btn>
+                  </Button>
                 </div>
               </TabPanel>
               <TabPanel value="events">
                 <div v-if="storeDevices.item">
-                  <DevicesFeaturesForm v-model="storeDevices.item" />
+                  <DevicesEventsForm v-model="storeDevices.item" />
                 </div>
               </TabPanel>
               <!-- <TabPanel value="2">

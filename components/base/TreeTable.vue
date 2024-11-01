@@ -12,7 +12,6 @@ import TreeTable from 'primevue/treetable';
 // Types
 import type { Header } from 'vue3-easy-data-table';
 import type { Filter } from '@/types/MainTypes';
-import { NodeService } from './test';
 
 // Composables
 const route = useRoute();
@@ -130,8 +129,6 @@ emit('created', filter);
 defineExpose({
   filter,
 });
-
-NodeService.getTreeTableNodes().then((data: any) => (nodes.value = data));
 
 watch(() => props.total, () => {
   Array.from(Array(props.total).keys()).forEach((key) => expandedKeys.value[key] = true);

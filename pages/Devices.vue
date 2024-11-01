@@ -6,7 +6,6 @@ import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 import { checkStatusText, checkStatusColor } from '~/helpers/rooms';
 // Types
 import type { Room } from '~/types/RoomsTypes';
-import type { Filter, Options } from '@/types/MainTypes';
 
 // Composables
 const { t } = useI18n();

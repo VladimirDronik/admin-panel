@@ -157,121 +157,11 @@ const createDevice = async () => {
                 />
               </SharedUILabel>
             </div>
+
             <Divider />
-            <div v-if="storeDevices.model">
-              <div v-for="item in storeDevices.model?.props" :key="item.code">
-                <div v-if="item.visible.value">
-                  <SharedUILabel
-                    v-if="item.type === 'bool'"
-                    :title="item.name"
-                    :required="item.required.value"
-                  >
-                    <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                      <p class="tw-py-3 tw-text-base">
-                        {{ item.value ? t('enabled') : t('disabled')}}
-                      </p>
-                      <ToggleSwitch
-                        v-model="item.value"
-                        color="primary"
-                        :disabled="!item.editable.value"
-                      />
-                    </div>
-                  </SharedUILabel>
-                  <SharedUILabel
-                    v-else-if="item.type === 'enum'"
-                    :title="item.name"
-                    :required="item.required.value"
-                  >
-                    <v-select
-                      v-model="item.value"
-                      :items="Object.keys(item.values)"
-                      :disabled="!item.editable.value"
-                      :rules="item.required ? emptyRules : undefined"
-                      required
-                    />
-                  </SharedUILabel>
-                  <SharedUILabel
-                    v-else
-                    :title="item.name"
-                    :required="item.required.value"
-                  >
-                    <v-text-field
-                      v-model="item.value"
-                      :disabled="!item.editable.value"
-                      :rules="!item.required ? emptyRules : undefined"
-                      required
-                    />
-                  </SharedUILabel>
-                </div>
-              </div>
-              <div v-if="storeDevices.model?.category === 'sensor'">
-                <div class="tw-mb-4" v-for="port in storeDevices.model?.children" :key="port.id">
-                  <p class="text-primary tw-mb-2 tw-pt-3 tw-text-2xl tw-font-semibold">
-                    {{port.name}}
-                  </p>
-                  <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
-                    <div v-if="item.visible.value">
-                      <SharedUILabel
-                        v-if="item.type === 'bool'"
-                        :title="item.name"
-                        :required="item.required.value"
-                      >
-                        <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-                          <p class="tw-py-3 tw-text-base">
-                            {{ item.value ? t('enabled') : t('disabled')}}
-                          </p>
-                          <ToggleSwitch
-                            v-model="item.value"
-                            color="primary"
-                            :disabled="!item.editable.value"
-                          />
-                        </div>
-                      </SharedUILabel>
-                      <SharedUILabel
-                        v-else-if="item.type === 'enum'"
-                        :title="item.name"
-                        :required="item.required.value"
-                      >
-                        <v-select
-                          v-model="item.value"
-                          :disabled="!item.editable.value"
-                          :items="Object.keys(item.values)"
-                          :rules="!item.required ? emptyRules : undefined"
-                          required
-                        />
-                      </SharedUILabel>
-                      <SharedUILabel
-                        v-else
-                        :title="item.name"
-                        :required="item.required.value"
-                      >
-                        <v-text-field
-                          v-model="item.value"
-                          :disabled="!item.editable.value"
-                          :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
-                          :rules="!item.required ? emptyRules : undefined"
-                          required
-                        />
-                      </SharedUILabel>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <p v-if="!loadingModal" class="tw-text-center tw-text-xl">
-                {{ t('devices.preloadTitle') }}
-              </p>
-              <div v-else class="tw-flex tw-justify-center">
-                <v-progress-circular
-                  :size="30"
-                  :width="3"
-                  color="primary"
-                  class="tw-mb-2"
-                  indeterminate
-                />
-              </div>
-            </div>
+
+            <DevicesPropertiesForm v-model="storeDevices.model" :loadingModal="loadingModal" />
+
             <div class="tw-flex tw-justify-end">
               <Button
                 @click="dialog = false"
@@ -292,7 +182,7 @@ const createDevice = async () => {
         </v-form>
       </StepPanel>
       <StepPanel value="2">
-        <DevicesFeaturesForm v-if="storeDevices.model" v-model="storeDevices.model" />
+        <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
         <div class="tw-flex tw-justify-between">
           <Button
             :disabled="!valid"
