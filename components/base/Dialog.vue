@@ -10,12 +10,14 @@ defineProps({
 </script>
 
 <template>
-  <slot name="button" />
-  <v-dialog v-model="dialog" :max-width="width">
-    <v-card class="tw-bg-white tw-p-4">
-      <slot />
-    </v-card>
-  </v-dialog>
+  <div>
+    <slot name="button" />
+    <v-dialog v-model="dialog" :max-width="width">
+      <v-card class="tw-bg-white tw-p-4">
+        <slot />
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <style lang="scss" scoped>

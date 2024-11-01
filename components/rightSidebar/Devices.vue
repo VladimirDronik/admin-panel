@@ -228,7 +228,7 @@ const changeDevice = () => {
               </v-tabs-window-item>
 
               <v-tabs-window-item value="events">
-                <DevicesFeaturesForm />
+                <DevicesFeaturesForm v-model="storeDevices.item" />
               </v-tabs-window-item>
             </div>
           </v-tabs-window>

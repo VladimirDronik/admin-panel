@@ -45,7 +45,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     return result;
   };
 
-  const getDevicesApi = async (params = {}) => {
+  const getDevicesApi = async (params = {}, updateStore: boolean = true) => {
     const { data }: RequestData = await api('http://10.35.16.1:8082/objects', {
       params,
       headers: {
@@ -53,8 +53,11 @@ export const useDevicesStore = defineStore('Devices', () => {
       },
     });
 
-    list.value = data.data.list;
-    total.value = data.data.total;
+    if (updateStore) {
+      list.value = data.data.list;
+      total.value = data.data.total;
+    }
+
     return data;
   };
 

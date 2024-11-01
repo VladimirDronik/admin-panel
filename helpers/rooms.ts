@@ -6,17 +6,13 @@ export const filterInListRoom = (rooms: Room[] | undefined): any => {
   rooms.forEach((item) => {
     if (item.rooms_in_group?.length) {
       result = result.concat(result, item.rooms_in_group.map((item) => ({
-        title: item.name,
-        props: {
-          value: item.id,
-        },
+        name: item.name,
+        code: item.id,
       })));
     } else {
       result.push({
-        title: item.name,
-        props: {
-          value: item.id,
-        },
+        name: item.name,
+        code: item.id,
       });
     }
   });

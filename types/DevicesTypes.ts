@@ -13,7 +13,17 @@ export interface Devices {
     children?: Devices[]
     props: ModelProps[]
     methods: Method[],
-    events: any
+    events: {
+        [key: string]: Event
+    }
+}
+
+export interface Event {
+    code: string,
+    description: string,
+    name: string,
+    props: [],
+    target_type: string,
 }
 export interface RequestDevices {
     id: number,
@@ -29,7 +39,9 @@ export interface RequestDevices {
     children?: RequestDevices[]
     props: ModelProps,
     methods: Method[],
-    events: any
+    events: {
+        [key: string]: Event
+    }
 }
 
 export interface Method {

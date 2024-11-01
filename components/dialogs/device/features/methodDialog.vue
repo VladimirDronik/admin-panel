@@ -1,10 +1,21 @@
 <script lang="ts" setup>
 
-const storeDevices = useDevicesStore();
+const storeDevice = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
 });
+
+const objects = ref([]);
+
+storeDevice.getDevicesApi({
+  type_struct: 'easy',
+  with_methods: true,
+  limit: 9999,
+}, false)
+  .then((response) => {
+    objects.value = response.data.list;
+  });
 </script>
 
 <template>
@@ -23,14 +34,19 @@ const dialog = defineModel({
       </p>
 
       <div class="tw-flex">
-        <div v-if="storeDevices.item" class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
-          <div v-for="method in storeDevices.item.methods" :key="method.name">
-            <p class="tw-text-lg tw-font-semibold">
-              {{ method.name }}
-            </p>
-            <p>
-              {{ method.description }}
-            </p>
+        <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
+          <div v-if="objects?.methods?.length">
+            <div v-for="object in objects" :key="object.id">
+              <p class="tw-text-lg tw-font-semibold">
+                {{ object?.method?.name }}
+              </p>
+              <p>
+                {{ object?.method?.description }}
+              </p>
+            </div>
+          </div>
+          <div v-else>
+            Список Методов пуст
           </div>
         </div>
         <div class="tw-w-6/12">

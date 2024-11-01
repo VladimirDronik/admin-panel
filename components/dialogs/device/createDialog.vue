@@ -5,8 +5,12 @@ import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
 
-const dialog = defineModel({
+const visible = defineModel({
   default: false,
+});
+
+defineOptions({
+  inheritAttrs: false,
 });
 
 // Composables
@@ -116,28 +120,24 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
 <template>
   <div>
-    <BaseDialog v-model="dialog" :width="1200">
-      <template v-slot:button>
-        <v-btn color="primary" class="text-capitalize" @click="dialog = true">
-          {{ t('devices.addDevice') }}
-        </v-btn>
-      </template>
+    <Button
+      @click="visible = true"
+      class="text-capitalize"
+    >
+      {{ t('devices.addDevice') }}
+    </Button>
 
-      <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between">
-        <p class="tw-pl-2 tw-text-2xl tw-font-semibold">
-          {{ t('devices.addTitleDevice') }}
-        </p>
-        <v-btn @click="dialog = false" icon size="small" variant="text">
-          <XIcon class="white" />
-        </v-btn>
-      </div>
-
+    <Dialog
+      v-model:visible="visible"
+      modal
+      :header="t('devices.addTitleDevice')"
+      :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
+    >
       <DevicesStepperForm
         v-model:form="form"
-        v-model:dialog="dialog"
+        v-model:dialog="visible"
         :loadingModal="loadingModel"
       />
-
-    </BaseDialog>
+    </Dialog>
   </div>
 </template>

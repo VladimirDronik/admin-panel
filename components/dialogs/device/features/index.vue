@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import { VueDraggableNext } from 'vue-draggable-next';
 
-const storeDevices = useDevicesStore();
+const storeDevice = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
+});
+
+const selectedObject = defineModel<any>('object', {
+  required: true,
 });
 
 const form = defineModel<any>('form', {
@@ -22,6 +26,7 @@ const dialogMethod = ref(false);
 const dialogPause = ref(false);
 const dialogScript = ref(false);
 const dialogNotification = ref(false);
+
 </script>
 
 <template>
@@ -29,14 +34,14 @@ const dialogNotification = ref(false);
     <BaseDialog v-model="dialog" :width="1000">
       <div class="tw-mb-1 tw-flex tw-items-center tw-justify-between">
         <p class="tw-text-2xl tw-font-semibold">
-          Выключатель в гостиной
+          {{ form.name }}
         </p>
         <v-btn @click="dialog = false" icon size="small" variant="text">
           <XIcon class="white" />
         </v-btn>
       </div>
       <p class="tw-mb-7">
-        Событие при включении
+        {{ form.description }}
       </p>
 
       <div class="tw-mb-6 tw-flex tw-items-center">
@@ -82,9 +87,9 @@ const dialogNotification = ref(false);
       <DialogsDeviceFeaturesScriptDialog v-model="dialogScript" />
       <DialogsDeviceFeaturesNotificationDialog v-model="dialogNotification" />
 
-      <div v-if="storeDevices.item">
-        <VueDraggableNext v-model="form.props" handle=".handle-item" :animation="300">
-          <div v-for="event in form.props" :key="event.code" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
+      <div v-if="storeDevice.item">
+        <VueDraggableNext v-model="form.actions" handle=".handle-item" :animation="300">
+          <div v-for="event in form.actions" :key="event.code" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
             <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
               <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                 <v-chip class="tw-mr-3" color="success" variant="flat">
@@ -103,6 +108,9 @@ const dialogNotification = ref(false);
             </div>
           </div>
         </VueDraggableNext>
+        <div v-if="!form.actions.length">
+          Список событий пуст
+        </div>
       </div>
 
       <div class="tw-pt-4">

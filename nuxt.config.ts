@@ -1,7 +1,7 @@
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
-import Noir from './utils/themePrimeVue';
+import Noir from './theme/themePrimeVue';
 
 export default defineNuxtConfig({
 

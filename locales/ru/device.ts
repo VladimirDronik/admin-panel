@@ -8,6 +8,7 @@ export default {
     management: 'Управление',
     title: 'Название',
     tags: 'Теги',
+    category: 'Категория',
     type: 'Тип',
     id: 'ID',
     room: 'Помещение',

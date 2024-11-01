@@ -118,58 +118,70 @@ const createDevice = async () => {
         <v-form v-model="valid">
           <div>
             <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
-              <div class="tw-mr-2 tw-w-full">
-                <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                  {{ t('devices.title') }} <span class="text-primary">*</span>
-                </p>
-                <v-text-field v-model="form.name" required :rules="emptyRules" />
-              </div>
-              <div class="tw-w-full">
-                <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                  <!-- {{ t('devices.title') }}  -->
-                  {{ t('devices.room') }} <span class="text-primary">*</span>
-                </p>
-                <v-select :items="storeRooms.getRoomsSelect" v-model="form.zone_id" required :rules="emptyRules" />
-              </div>
+              <SharedUILabel :title="t('devices.title')" required>
+                <InputText
+                  v-model="form.name"
+                  :rules="emptyRules"
+                  class="tw-w-full"
+                  required
+                />
+              </SharedUILabel>
+              <SharedUILabel :title="t('devices.room')" required>
+                <Select
+                  v-model="form.zone_id"
+                  :rules="emptyRules"
+                  :options="storeRooms.getRoomsSelect"
+                  optionLabel="name"
+                  class="tw-w-full"
+                  required
+                />
+              </SharedUILabel>
             </div>
             <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
-              <div class="tw-mr-2 tw-w-full">
-                <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                  {{ t('devices.category') }} <span class="text-primary">*</span>
-                </p>
-                <v-select :items="categories" v-model="form.category" required :rules="emptyRules" />
-              </div>
-              <div class="tw-w-full">
-                <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                  {{ t('devices.type') }} <span class="text-primary">*</span>
-                </p>
-                <v-select :items="types" v-model="form.type" required :rules="emptyRules" />
-              </div>
+              <SharedUILabel :title="t('devices.category')" required>
+                <Select
+                  v-model="form.category"
+                  :options="categories"
+                  :rules="emptyRules"
+                  class="tw-w-full"
+                  required
+                />
+              </SharedUILabel>
+              <SharedUILabel :title="t('devices.type')" required>
+                <Select
+                  v-model="form.type"
+                  :options="types"
+                  :rules="emptyRules"
+                  class="tw-w-full"
+                  required
+                />
+              </SharedUILabel>
             </div>
-            <v-divider class=" tw-mb-3 !tw-border-black" />
+            <Divider />
             <div v-if="storeDevices.model">
               <div v-for="item in storeDevices.model?.props" :key="item.code">
                 <div v-if="item.visible.value">
-                  <div v-if="item.type === 'bool'">
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                    </p>
+                  <SharedUILabel
+                    v-if="item.type === 'bool'"
+                    :title="item.name"
+                    :required="item.required.value"
+                  >
                     <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                       <p class="tw-py-3 tw-text-base">
                         {{ item.value ? t('enabled') : t('disabled')}}
                       </p>
-                      <v-switch
+                      <ToggleSwitch
                         v-model="item.value"
                         color="primary"
-                        hide-details
                         :disabled="!item.editable.value"
                       />
                     </div>
-                  </div>
-                  <div v-else-if="item.type === 'enum'">
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                    </p>
+                  </SharedUILabel>
+                  <SharedUILabel
+                    v-else-if="item.type === 'enum'"
+                    :title="item.name"
+                    :required="item.required.value"
+                  >
                     <v-select
                       v-model="item.value"
                       :items="Object.keys(item.values)"
@@ -177,18 +189,19 @@ const createDevice = async () => {
                       :rules="item.required ? emptyRules : undefined"
                       required
                     />
-                  </div>
-                  <div v-else>
-                    <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                      {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                    </p>
+                  </SharedUILabel>
+                  <SharedUILabel
+                    v-else
+                    :title="item.name"
+                    :required="item.required.value"
+                  >
                     <v-text-field
                       v-model="item.value"
                       :disabled="!item.editable.value"
                       :rules="!item.required ? emptyRules : undefined"
                       required
                     />
-                  </div>
+                  </SharedUILabel>
                 </div>
               </div>
               <div v-if="storeDevices.model?.category === 'sensor'">
@@ -198,28 +211,27 @@ const createDevice = async () => {
                   </p>
                   <div class="tw-mb-1" v-for="item in port.props" :key="item.code">
                     <div v-if="item.visible.value">
-                      <div v-if="item.type === 'bool'">
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                        </p>
+                      <SharedUILabel
+                        v-if="item.type === 'bool'"
+                        :title="item.name"
+                        :required="item.required.value"
+                      >
                         <div class="tw-mb-4 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
                           <p class="tw-py-3 tw-text-base">
-                            {{ item.value ? t('enabled') : t('disabled') }}
+                            {{ item.value ? t('enabled') : t('disabled')}}
                           </p>
-                          <v-switch
-                            :disabled="!item.editable.value"
+                          <ToggleSwitch
                             v-model="item.value"
                             color="primary"
-                            hide-details
-                            :rules="!item.required ? emptyRules : undefined"
-                            required
+                            :disabled="!item.editable.value"
                           />
                         </div>
-                      </div>
-                      <div v-else-if="item.type === 'enum'">
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                        </p>
+                      </SharedUILabel>
+                      <SharedUILabel
+                        v-else-if="item.type === 'enum'"
+                        :title="item.name"
+                        :required="item.required.value"
+                      >
                         <v-select
                           v-model="item.value"
                           :disabled="!item.editable.value"
@@ -227,11 +239,12 @@ const createDevice = async () => {
                           :rules="!item.required ? emptyRules : undefined"
                           required
                         />
-                      </div>
-                      <div v-else>
-                        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-                          {{ item.name }} <span v-if="item.required.value" class="text-primary">*</span>
-                        </p>
+                      </SharedUILabel>
+                      <SharedUILabel
+                        v-else
+                        :title="item.name"
+                        :required="item.required.value"
+                      >
                         <v-text-field
                           v-model="item.value"
                           :disabled="!item.editable.value"
@@ -239,7 +252,7 @@ const createDevice = async () => {
                           :rules="!item.required ? emptyRules : undefined"
                           required
                         />
-                      </div>
+                      </SharedUILabel>
                     </div>
                   </div>
                 </div>
@@ -260,78 +273,71 @@ const createDevice = async () => {
               </div>
             </div>
             <div class="tw-flex tw-justify-end">
-              <v-btn
-                class="tw-mr-2"
-                color="primary"
-                variant="outlined"
+              <Button
                 @click="dialog = false"
+                class="tw-mr-2"
+                outlined
               >
                 {{ t('cancel') }}
-              </v-btn>
-              <v-btn
-                color="primary"
+              </Button>
+              <Button
                 :disabled="!valid"
                 :loading="loading"
                 @click="createDevice"
               >
                 {{ t('next') }}
-              </v-btn>
+              </Button>
             </div>
           </div>
         </v-form>
       </StepPanel>
       <StepPanel value="2">
-        <DevicesFeaturesForm />
+        <DevicesFeaturesForm v-if="storeDevices.model" v-model="storeDevices.model" />
         <div class="tw-flex tw-justify-between">
-          <v-btn
-            color="primary"
+          <Button
             :disabled="!valid"
             :loading="loading"
           >
             {{ t('goBack') }}
-          </v-btn>
+          </Button>
           <div>
-            <v-btn
+            <Button
               class="tw-mr-2"
-              color="primary"
-              variant="outlined"
+              outlined
             >
               {{ t('cancel') }}
-            </v-btn>
-            <v-btn
-              color="primary"
+            </Button>
+            <Button
               :disabled="!valid"
               :loading="loading"
             >
               {{ t('next') }}
-            </v-btn>
+            </Button>
           </div>
         </div>
       </StepPanel>
       <StepPanel value="3">
         <div class="tw-flex tw-justify-between">
-          <v-btn
-            color="primary"
+          <Button
             :disabled="!valid"
             :loading="loading"
           >
             {{ t('goBack') }}
-          </v-btn>
+          </Button>
           <div>
-            <v-btn
+            <Button
               class="tw-mr-2"
-              color="primary"
-              variant="outlined"
+              outlined
             >
               {{ t('cancel') }}
-            </v-btn>
-            <v-btn
+            </Button>
+            <Button
               color="primary"
               :disabled="!valid"
               :loading="loading"
             >
               {{ t('save') }}
-            </v-btn>
+            </Button>
           </div>
         </div>
       </StepPanel>

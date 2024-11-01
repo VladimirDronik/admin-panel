@@ -416,9 +416,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <div class="tags">
             <perfect-scrollbar class="tw-max-w-96">
               <div class="tw-flex">
-                <v-btn class="tw-mr-2 tw-flex" size="small" color="primary" v-for="item in node.data.tags" :key="item">
+                <Tag severity="primary" class="tw-mr-2 tw-flex" v-for="item in node.data.tags" :key="item">
                   {{ item }}
-                </v-btn>
+                </Tag>
               </div>
             </perfect-scrollbar>
           </div>

@@ -8,6 +8,7 @@ export default {
     management: 'Management',
     title: 'Title',
     tags: 'Tags',
+    category: 'Category',
     type: 'Type',
     id: 'ID',
     room: 'Rooms',
