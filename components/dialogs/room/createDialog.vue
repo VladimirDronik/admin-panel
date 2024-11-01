@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+// Static data modules
+import { colors } from '~/staticData/rooms';
+
+const { t } = useI18n();
 
 const dialog = defineModel({
   default: false,
@@ -16,39 +21,48 @@ const createRoom = async () => {
 
 <template>
   <div>
-    <BaseDialog v-model="dialog" :width="1200">
-      <template v-slot:button>
-        <v-btn color="primary" class="text-capitalize" @click="dialog = true">
-          Добавить Помещение
-        </v-btn>
-      </template>
-      <p class="tw-mb-4 tw-text-2xl tw-font-semibold">
-        Добавить Помещение
-      </p>
+    <Button @click="dialog = true">
+      Добавить Помещение
+    </Button>
+    <Dialog
+      v-model:visible="dialog"
+      :header="'Добавить Помещение'"
+      :style="{
+        'max-width': '1000px',
+        width: '100%',
+        margin: '0 20px',
+      }"
+      modal
+      dismissableMask
+    >
 
-      <div>
-        <div>
-          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-            Название
-          </p>
-          <v-text-field />
-        </div>
-        <div>
-          <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-            Цвет Категории
-          </p>
-          <v-select />
-        </div>
+      <div class="tw-mb-5">
+        <SharedUILabel :title="'Название'" required class="tw-mb-2">
+          <InputText class="tw-w-full" />
+        </SharedUILabel>
+        <SharedUILabel :title="'Цвет Категории'" required>
+          <Select
+            :options="colors"
+            class="tw-w-full"
+          >
+            <template #option="slotProps">
+              <div class="tw-flex tw-items-center">
+                <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                <div>{{ slotProps.option.name }}</div>
+              </div>
+            </template>
+          </Select>
+        </SharedUILabel>
       </div>
 
       <div class="tw-flex">
-        <v-btn color="primary" class="tw-mr-2" @click="createRoom">
-          Создать
-        </v-btn>
-        <v-btn color="primary" variant="outlined" @click="dialog = false">
-          Отмена
-        </v-btn>
+        <Button class="tw-mr-2" @click="createRoom">
+          {{ t('save') }}
+        </Button>
+        <Button variant="outlined" @click="dialog = false" outlined>
+          {{ t('cancel') }}
+        </Button>
       </div>
-    </BaseDialog>
+    </Dialog>
   </div>
 </template>

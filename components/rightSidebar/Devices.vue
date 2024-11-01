@@ -105,19 +105,16 @@ const changeDevice = () => {
 
         <v-card-text class="!tw-px-0 !tw-pt-1">
 
-          <v-tabs
-            v-model="tab"
-            color="primary"
-          >
-            <v-tab value="features">{{ t('devices.features') }}</v-tab>
-            <v-tab value="events">{{ t('devices.events') }}</v-tab>
-            <!-- <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab> -->
-            <v-tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</v-tab>
-            <v-tab value="four" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.management') }}</v-tab>
-          </v-tabs>
-          <v-tabs-window v-model="tab">
-            <div class="tw-pt-4">
-              <v-tabs-window-item value="features">
+          <Tabs value="features">
+            <TabList>
+              <Tab value="features">{{ t('devices.features') }}</Tab>
+              <Tab value="events">{{ t('devices.events') }}</Tab>
+              <!-- <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab> -->
+              <Tab value="ports">Порты</Tab>
+              <Tab value="four">{{ t('devices.management') }}</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel value="features">
                 <div v-for="item in storeDevices.item?.props" :key="item.code">
                   <div v-if="item.visible.value">
                     <div v-if="item.type === 'bool'">
@@ -225,13 +222,20 @@ const changeDevice = () => {
                     {{ t('save') }}
                   </v-btn>
                 </div>
-              </v-tabs-window-item>
-
-              <v-tabs-window-item value="events">
-                <DevicesFeaturesForm v-model="storeDevices.item" />
-              </v-tabs-window-item>
-            </div>
-          </v-tabs-window>
+              </TabPanel>
+              <TabPanel value="events">
+                <div v-if="storeDevices.item">
+                  <DevicesFeaturesForm v-model="storeDevices.item" />
+                </div>
+              </TabPanel>
+              <!-- <TabPanel value="2">
+                <p class="m-0">
+                  At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
+                  qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                </p>
+              </TabPanel> -->
+            </TabPanels>
+          </Tabs>
 
         </v-card-text>
       </v-card>

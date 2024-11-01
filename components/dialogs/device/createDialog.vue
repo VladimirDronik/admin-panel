@@ -130,6 +130,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <Dialog
       v-model:visible="visible"
       modal
+      dismissableMask
       :header="t('devices.addTitleDevice')"
       :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
     >

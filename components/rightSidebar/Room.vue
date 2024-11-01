@@ -2,6 +2,8 @@
 // Builtin modules
 import { useI18n } from 'vue-i18n';
 import { useDisplay } from 'vuetify';
+// Static data modules
+import { colors } from '~/staticData/rooms';
 
 const { width } = useDisplay();
 const { t } = useI18n();
@@ -20,33 +22,6 @@ const isUpdate = defineModel<boolean>('isUpdate', {
 const isActiveRightSidebar = defineModel<boolean>('isShow', {
   required: true,
 });
-
-const colors = [
-  {
-    title: 'Красный',
-    props: {
-      value: 'red',
-    },
-  },
-  {
-    title: 'Синий',
-    props: {
-      value: 'blue',
-    },
-  },
-  {
-    title: 'Желтый',
-    props: {
-      value: 'yellow',
-    },
-  },
-  {
-    title: 'Зеленый',
-    props: {
-      value: 'green',
-    },
-  },
-];
 
 const dialog = ref(false);
 
@@ -84,7 +59,7 @@ const changeDevice = () => {
     <BaseLoader :isUpdate="isUpdate">
       <v-card v-if="form" elevation="0" class="tw-min-h-80 tw-p-7">
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-          <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
+          <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
             {{ form.is_group ? 'Добавить категорию' : "Добавить помещение" }}
           </h3>
           <v-btn @click="isActiveRightSidebar = false" icon size="small" variant="text">
@@ -93,39 +68,41 @@ const changeDevice = () => {
         </div>
 
         <v-card-text class="!tw-px-0 !tw-pt-1">
-          <div>
-            <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-              Наименование <span class="text-primary">*</span>
-            </p>
-            <v-text-field v-model="form.name" />
-          </div>
-          <div>
-            <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-              Цвет категории <span class="text-primary">*</span>
-            </p>
-            <v-select v-model="form.style" :items="colors" />
-          </div>
+          <SharedUILabel :title="'Наименование'" required class="tw-mb-2">
+            <InputText v-model="form.name" class="tw-w-full" />
+          </SharedUILabel>
+          <SharedUILabel :title="'Цвет категории'" required class="tw-mb-2">
+            <Select
+              v-model="form.name"
+              :options="colors"
+              optionLabel="name"
+              class="tw-w-full"
+            >
+              <template #option="slotProps">
+                <div class="tw-flex tw-items-center">
+                  <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                  <div>{{ slotProps.option.name }}</div>
+                </div>
+              </template>
+            </Select>
+          </SharedUILabel>
         </v-card-text>
         <div class="tw-flex tw-justify-end">
           <DialogsDeleteDialog
             @delete="confirmDelete"
             v-model="dialog"
             :loading="loadingDelete"
-            :title="form.is_group ? 'Удалить категорию' : 'Удалить помещение'"
-            :subtitle="`Вы уверены, что хотите удалить «${form.name}»`"
+            :title="`Вы уверены, что хотите удалить «${form.name}»?`"
             class="tw-mr-2"
             :id="form.item?.id ?? -1"
           />
 
-          <v-btn
-            color="success"
-            variant="flat"
-            class="tw-mr-2"
+          <Button
             :loading="loading"
             @click="changeDevice"
           >
             {{ t('save') }}
-          </v-btn>
+          </Button>
         </div>
       </v-card>
     </BaseLoader>

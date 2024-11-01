@@ -9,7 +9,6 @@ const edit = ref(false);
 
 const object = defineModel<Devices>({
   required: true,
-  default: null,
 });
 
 const form = ref({
@@ -113,32 +112,6 @@ const editEvents = (event: any) => {
         </span>
       </p>
     </div>
-    <!-- <div class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
-      <div class="tw-mb-14 tw-flex tw-items-center tw-justify-between">
-        <p class="tw-text-lg tw-font-semibold">
-          Toggle
-        </p>
-        <div class="tw-flex tw-items-center tw-justify-end">
-          <v-btn
-            @click="createEvents(event)"
-            color="primary"
-            size="small"
-            prepend-icon="mdi-plus"
-          >
-            Добавить
-          </v-btn>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div class="tw-pt-4">
-      <v-btn class="tw-mr-4" color="primary">
-        Сохранить
-      </v-btn>
-      <v-btn color="primary" variant="outlined">
-        Отменить
-      </v-btn>
-    </div> -->
 
     <DialogsDeviceFeatures
       v-model="dialog"

@@ -9,7 +9,6 @@ import moment from 'moment';
 import _, { isArray } from 'lodash';
 // Components
 import TreeTable from 'primevue/treetable';
-import Column from 'primevue/column';
 // Types
 import type { Header } from 'vue3-easy-data-table';
 import type { Filter } from '@/types/MainTypes';
@@ -24,7 +23,7 @@ const page = defineModel<number>('page', {
 });
 
 const selectedKey = defineModel('selectedKey', {
-  default: null,
+  default: [],
 });
 
 const filters = defineModel<Filter[]>('filters', {
@@ -273,7 +272,7 @@ watch(() => props.total, () => {
 
     <BaseLoader :isUpdate="isUpdate">
       <TreeTable
-        @nodeSelect="(item) => emit('click-row', item)"
+        @nodeSelect="(item: any) => emit('click-row', item)"
         v-model:selectionKeys="selectedKey"
         v-model:expandedKeys="expandedKeys"
         :value="items"

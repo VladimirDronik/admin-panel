@@ -32,28 +32,38 @@ const deleteItem = () => {
 
 <template>
   <div>
-    <BaseDialog v-model="dialog" :width="800">
-      <template v-slot:button>
-        <v-btn color="error" @click="dialog = true">
+    <Button outlined @click="dialog = true">
+      {{ t('delete')}}
+    </Button>
+
+    <Dialog
+      v-model:visible="dialog"
+      :header="title"
+      :style="{
+        'max-width': '800px',
+        width: '100%',
+        margin: '0 20px',
+      }"
+      modal
+      dismissableMask
+    >
+      <div>
+        <Button
+          @click="deleteItem"
+          color="primary"
+          class="tw-mr-2"
+        >
           {{ t('delete')}}
-        </v-btn>
-      </template>
-      <div class="tw-p-3">
-        <p class="tw-mb-3 tw-text-2xl tw-font-semibold">
-          {{ title }}
-        </p>
-        <p v-if="subtitle" class="tw-mb-8 tw-text-sm">
-          {{ subtitle }}
-        </p>
-        <div>
-          <v-btn @click="deleteItem" color="primary" class="tw-mr-2">
-            {{ t('delete')}}
-          </v-btn>
-          <v-btn color="primary" variant="text" @click="dialog = false">
-            {{ t('cancel')}}
-          </v-btn>
-        </div>
+        </Button>
+        <Button
+          @click="dialog = false"
+          color="primary"
+          variant="text"
+          outlined
+        >
+          {{ t('cancel')}}
+        </Button>
       </div>
-    </BaseDialog>
+    </Dialog>
   </div>
 </template>
