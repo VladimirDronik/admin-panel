@@ -32,30 +32,29 @@ const login = async () => {
 </script>
 
 <template>
-  <v-row class="d-flex mb-3">
-    <v-col cols="12">
-      <v-label class="font-weight-bold mb-1">
-        {{ t('auth.login') }}
-      </v-label>
-      <v-text-field v-model="form.login" variant="outlined" hide-details color="primary" />
-    </v-col>
-    <v-col cols="12">
-      <v-label class="font-weight-bold mb-1">
-        {{ t('auth.password') }}
-      </v-label>
-      <v-text-field v-model="form.password" variant="outlined" type="password" hide-details color="primary" />
-    </v-col>
-    <v-col cols="12" class="pt-0">
-      <v-btn
-        @click="login"
-        :loading="!loading"
-        color="primary"
-        size="large"
-        block
-        flat
-      >
-        {{ t('auth.signIn') }}
-      </v-btn>
-    </v-col>
-  </v-row>
+  <div>
+    <SharedUILabel
+      :title="t('auth.login')"
+    >
+      <InputText
+        v-model="form.login"
+        class="tw-mb-3 tw-w-full"
+      />
+    </SharedUILabel>
+    <SharedUILabel
+      :title="t('auth.password')"
+    >
+      <InputText
+        v-model="form.password"
+        class="tw-mb-3 tw-w-full"
+      />
+    </SharedUILabel>
+    <Button
+      @click="login"
+      :loading="!loading"
+      class="tw-w-full"
+    >
+      {{ t('auth.signIn') }}
+    </Button>
+  </div>
 </template>

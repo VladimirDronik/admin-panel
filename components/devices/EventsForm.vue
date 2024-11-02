@@ -113,7 +113,7 @@ const editEvents = (event: any) => {
       </p>
     </div>
 
-    <DialogsDeviceFeatures
+    <DialogsDeviceEvents
       v-model="dialog"
       v-model:object="object"
       v-model:form="form"

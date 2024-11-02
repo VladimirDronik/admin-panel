@@ -31,61 +31,63 @@ const dialogNotification = ref(false);
 
 <template>
   <div>
-    <BaseDialog v-model="dialog" :width="1000">
-      <div class="tw-mb-1 tw-flex tw-items-center tw-justify-between">
-        <p class="tw-text-2xl tw-font-semibold">
-          {{ form.name }}
-        </p>
-        <v-btn @click="dialog = false" icon size="small" variant="text">
-          <XIcon class="white" />
-        </v-btn>
-      </div>
-      <p class="tw-mb-7">
+    <Dialog
+      v-model:visible="dialog"
+      :header="form.name"
+      :style="{
+        'max-width': '1000px',
+        width: '100%',
+        margin: '0 20px',
+      }"
+      modal
+      dismissableMask
+      :width="1000"
+    >
+      <p class="tw-mb-3">
         {{ form.description }}
       </p>
 
       <div class="tw-mb-6 tw-flex tw-items-center">
-        <v-btn
+        <Button
           @click="dialogMethod = true"
           prepend-icon="mdi-plus"
-          color="success"
-          variant="outlined"
+          outlined
           class="tw-mr-4"
         >
           Метод
-        </v-btn>
-        <v-btn
+        </Button>
+        <Button
           @click="dialogPause = true"
           prepend-icon="mdi-plus"
-          color="warning"
-          variant="outlined"
+          severity="warn"
+          outlined
           class="tw-mr-4"
         >
           Пауза
-        </v-btn>
-        <v-btn
+        </Button>
+        <Button
           @click="dialogScript = true"
           prepend-icon="mdi-plus"
-          color="info"
-          variant="outlined"
+          severity="info"
+          outlined
           class="tw-mr-4"
         >
           Скрипт
-        </v-btn>
-        <v-btn
+        </Button>
+        <Button
           @click="dialogNotification = true"
           prepend-icon="mdi-plus"
-          color="error"
-          variant="outlined"
+          severity="danger"
+          outlined
         >
           Уведомление
-        </v-btn>
+        </Button>
       </div>
 
-      <DialogsDeviceFeaturesMethodDialog v-model="dialogMethod" />
-      <DialogsDeviceFeaturesPauseDialog v-model="dialogPause" />
-      <DialogsDeviceFeaturesScriptDialog v-model="dialogScript" />
-      <DialogsDeviceFeaturesNotificationDialog v-model="dialogNotification" />
+      <DialogsDeviceEventsMethodDialog v-model="dialogMethod" />
+      <DialogsDeviceEventsPauseDialog v-model="dialogPause" />
+      <DialogsDeviceEventsScriptDialog v-model="dialogScript" />
+      <DialogsDeviceEventsNotificationDialog v-model="dialogNotification" />
 
       <div v-if="storeDevice.item">
         <VueDraggableNext v-model="form.actions" handle=".handle-item" :animation="300">
@@ -114,13 +116,13 @@ const dialogNotification = ref(false);
       </div>
 
       <div class="tw-pt-4">
-        <v-btn class="tw-mr-4" color="primary">
+        <Button class="tw-mr-4">
           Сохранить
-        </v-btn>
-        <v-btn color="primary" variant="outlined">
+        </Button>
+        <Button outlined>
           Отменить
-        </v-btn>
+        </Button>
       </div>
-    </BaseDialog>
+    </Dialog>
   </div>
 </template>

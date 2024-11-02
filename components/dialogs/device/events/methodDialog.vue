@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const storeDevice = useDevicesStore();
 
@@ -26,15 +29,17 @@ storeDevice.getDevicesApi({
 
 <template>
   <div>
-    <BaseDialog v-model="dialog" :width="1000">
-      <div class="tw-mb-1 tw-flex tw-items-center tw-justify-between">
-        <p class="tw-text-2xl tw-font-semibold">
-          Выбор метода обьекта
-        </p>
-        <v-btn @click="dialog = false" icon size="small" variant="text">
-          <XIcon class="white" />
-        </v-btn>
-      </div>
+    <Dialog
+      v-model:visible="dialog"
+      :header="'Выбор метода обьекта'"
+      :style="{
+        'max-width': '1000px',
+        width: '100%',
+        margin: '0 20px',
+      }"
+      modal
+      dismissableMask
+    >
       <p class="tw-mb-7">
         Позволяет выбрать метод любого обьекта в системе
       </p>
@@ -81,13 +86,13 @@ storeDevice.getDevicesApi({
       </div>
 
       <div class="tw-pt-4">
-        <v-btn class="tw-mr-4" color="primary">
-          Сохранить
-        </v-btn>
-        <v-btn color="primary" variant="outlined">
-          Отменить
-        </v-btn>
+        <Button class="tw-mr-2">
+          {{ t('save') }}
+        </Button>
+        <Button variant="outlined" @click="dialog = false" outlined>
+          {{ t('cancel') }}
+        </Button>
       </div>
-    </BaseDialog>
+    </Dialog>
   </div>
 </template>
