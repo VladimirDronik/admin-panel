@@ -17,5 +17,5 @@ export default {
       body: ['Manrope', 'sans-serif'],
     },
   },
-  plugins: [],
+  plugins: [['tailwindcss-primeui']],
 };

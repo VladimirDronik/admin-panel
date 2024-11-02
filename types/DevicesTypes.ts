@@ -18,6 +18,27 @@ export interface Devices {
     }
 }
 
+export interface Script {
+    id: number,
+    code: string,
+    name: string,
+    description: string,
+    params: {
+        timeout: {
+        code: string,
+        name: string,
+        description: string,
+        type: string
+        }
+    },
+    body: string
+}
+
+export interface RequestScript {
+    list: Script[]
+    total: number
+}
+
 export interface Event {
     code: string,
     description: string,

@@ -4,7 +4,7 @@ import { useApiInstant } from '~/composables/api/apiInstant';
 import { filterInListDevices } from '~/helpers/devices';
 // Types
 import type {
-  Devices, Type, RequestData, ModelProps, RequestDevices, Tags,
+  Devices, Type, RequestData, ModelProps, RequestDevices, Tags, Script, RequestScript,
 } from '~/types/DevicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
@@ -15,11 +15,17 @@ export const useDevicesStore = defineStore('Devices', () => {
   // Variables
   const list = ref<Devices[]>([]);
   const total = ref<number>(0);
+
   const tags = ref<Tags[]>([]);
-  const item = ref<Devices | null>();
   const types = ref<Type[]>([]);
+
+  const scripts = ref<Script[]>([]);
+  const scriptsTotal = ref<number>(0);
+
+  const item = ref<Devices | null>();
   const model = ref<Devices | null>();
-  const userAccessLevel = ref<any>(3);
+
+  const userAccessLevel = ref<number>(3);
 
   // Computed Properties
   const getDevices = computed(() => filterInListDevices(list.value, 0, ''));
@@ -82,6 +88,18 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     tags.value = data.data;
+    return data;
+  };
+  const getScriptsApi = async (params = {}) => {
+    const { data }: { data: { data: RequestScript } } = await api('http://10.35.16.1:8082/scripts', {
+      params,
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    scripts.value = data.data.list;
+    scriptsTotal.value = data.data.total;
     return data;
   };
 
@@ -176,11 +194,14 @@ export const useDevicesStore = defineStore('Devices', () => {
     types,
     model,
     getDevices,
+    scripts,
+    scriptsTotal,
     userAccessLevel,
     getDevicesApi,
     getTypesApi,
     getModelApi,
     getTagsApi,
+    getScriptsApi,
     propsModel,
     createDeviceApi,
     changeDeviceApi,

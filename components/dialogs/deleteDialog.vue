@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const dialog = ref(false);
+const dialog = defineModel<boolean>({
+  required: true,
+});
 
 const { t } = useI18n();
 
@@ -18,6 +20,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  showBtn: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits<{
@@ -32,7 +38,7 @@ const deleteItem = () => {
 
 <template>
   <div>
-    <Button outlined @click="dialog = true">
+    <Button v-if="showBtn" outlined @click="dialog = true">
       {{ t('delete')}}
     </Button>
 
