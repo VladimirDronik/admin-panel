@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 // Page title
-const title = ref('404-Page Not Found');
+const { t } = useI18n();
+
+const title = ref('404 Page Not Found');
 useHead({
   meta: [{ content: title }],
-  titleTemplate: (titleChunk) => (titleChunk
-    ? `${titleChunk} - 404-Page Not Found`
-    : 'Modernize - Nuxt3 Typescript based Free Admin Dashboard Template'),
+  title: '404 Page Not Found',
 });
 </script>
 <template>
@@ -13,14 +15,16 @@ useHead({
     <div>
       <img src="/images/background/errorimg.svg" width="500" alt="404" />
       <h1 class="text-h1 pt-3">
-        Opps!!!
+        {{ t('error.oops') }}
       </h1>
       <h4 class="text-h4 my-8">
-        This page you are looking for could not be found.
+        {{ t('error.errorPageText') }}
       </h4>
-      <v-btn flat color="primary" class="mb-4" to="/">
-        Go Back to Home
-      </v-btn>
+      <NuxtLink to="/Devices">
+        <Button flat color="primary" class="mb-4" to="/">
+          {{ t('error.goBack') }}
+        </Button>
+      </NuxtLink>
     </div>
   </div>
 </template>

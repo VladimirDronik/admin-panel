@@ -8,6 +8,11 @@ definePageMeta({
 
 // Composables
 const { t } = useI18n();
+
+useHead({
+  titleTemplate: computed(() => t('pages.login')),
+});
+
 </script>
 <template>
   <div class="authentication">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import _ from 'lodash';
+import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
 // Helpers
@@ -13,7 +14,12 @@ definePageMeta({
 });
 
 // Composables
+const { t } = useI18n();
 const storeRooms = useRoomsStore();
+
+useHead({
+  titleTemplate: computed(() => t('pages.rooms')),
+});
 
 // Variables
 const data = ref(storeRooms.list);

@@ -73,11 +73,18 @@ const changeDevice = () => {
           </SharedUILabel>
           <SharedUILabel :title="'Цвет категории'" required class="tw-mb-2">
             <Select
-              v-model="form.name"
+              v-model="form.style"
               :options="colors"
               optionLabel="name"
+              optionValue="code"
               class="tw-w-full"
             >
+              <template #value="slotProps">
+                <div class="tw-flex tw-items-center">
+                  <div :style="{ backgroundColor: slotProps.value.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                  <div>{{ slotProps.value }}</div>
+                </div>
+              </template>
               <template #option="slotProps">
                 <div class="tw-flex tw-items-center">
                   <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />

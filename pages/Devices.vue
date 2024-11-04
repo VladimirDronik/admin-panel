@@ -13,6 +13,10 @@ const storeUser = useAuthStore();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 
+useHead({
+  titleTemplate: computed(() => t('pages.devices')),
+});
+
 // Declare Options
 definePageMeta({
   middleware: ['auth'],
