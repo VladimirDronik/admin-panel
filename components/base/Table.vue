@@ -128,14 +128,14 @@ defineExpose({
         cols="12"
         lg="6"
       >
-        <v-btn
+        <!-- <v-btn
           v-if="filters.length"
           @click="isActiveFilters = !isActiveFilters"
           icon="mdi-filter"
           color="primary"
           variant="outlined"
           data-test="filter-btn"
-        />
+        /> -->
       </v-col>
       <v-col
         v-if="total > perPage"

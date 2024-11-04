@@ -140,132 +140,13 @@ watch(() => props.total, () => {
 
 <template>
   <div class="custom-table">
-    <v-row class="!tw-mb-1" v-if="false" data-test="bar">
-      <v-col
-        v-if="filters.length || total > perPage"
-        cols="12"
-        lg="6"
-      >
-        <v-btn
-          v-if="filters.length"
-          @click="isActiveFilters = !isActiveFilters"
-          icon="mdi-filter"
-          color="primary"
-          variant="outlined"
-          data-test="filter-btn"
-        />
-      </v-col>
-      <v-col
-        v-if="total > perPage"
-        cols="12"
-        lg="6"
-      >
-        <v-pagination
-          v-model="page"
-          :length="Math.ceil(total / perPage)"
-          color="primary"
-          class="tw-w-full"
-          rounded="circle"
-          data-test="pagination"
-        />
-      </v-col>
-    </v-row>
-
-    <AnimationTransitionHeight :duration="400">
-      <div
-        v-if="isActiveFilters"
-        class="tw-mb-3"
-        data-test="filters"
-      >
-        <v-card
-          class="tw-relative !tw-z-40 !tw-hidden !tw-overflow-visible !tw-p-3 md:!tw-block"
-          elevation="10"
-        >
-          <v-row class="!tw-pb-3 !tw-pr-3">
-            <v-col
-              v-for="filter in filters"
-              :key="filter.key"
-              md="6"
-              lg="4"
-              cols="12"
-              class="!tw-pb-0 !tw-pr-0"
-              data-test="filter"
-            >
-              <VueEasyDatePicker
-                v-if="filter.key === 'time'"
-                v-model="filter.value"
-                :max-date="new Date()"
-                class="tw-w-full"
-                range
-                time-picker-inline
-              />
-              <v-autocomplete
-                v-else-if="filter.options"
-                v-model="filter.value"
-                :items="filter.options"
-                :label="filter.label"
-                color="primary"
-                variant="outlined"
-                chips
-                multiple
-                clearable
-                hide-details
-                closable-chips
-              />
-              <v-text-field
-                v-else
-                v-model="filter.value"
-                :label="filter.label"
-                class="filter-input tw-h-full"
-                variant="outlined"
-                hide-details
-              />
-            </v-col>
-          </v-row>
-        </v-card>
-        <div class="tw-block md:tw-hidden">
-          <v-row class="!tw-pb-3 !tw-pr-3">
-            <v-col
-              v-for="filter in filters"
-              :key="filter.key"
-              cols="12"
-              lg="4"
-              md="6"
-              class="!tw-pb-0 !tw-pr-0"
-            >
-              <VueEasyDatePicker
-                v-if="filter.key === 'time'"
-                v-model="filter.value"
-                :max-date="new Date()"
-                class="tw-w-full"
-                range
-                time-picker-inline
-              />
-              <v-autocomplete
-                v-else-if="filter.options"
-                v-model="filter.value"
-                :items="filter.options"
-                :label="filter.label"
-                color="primary"
-                variant="outlined"
-                chips
-                multiple
-                clearable
-                hide-details
-                closable-chips
-              />
-              <v-text-field
-                v-else
-                v-model="filter.value"
-                :label="filter.label"
-                class="filter-input tw-h-full"
-                hide-details
-              />
-            </v-col>
-          </v-row>
-        </div>
-      </div>
-    </AnimationTransitionHeight>
+    <Paginator
+      v-if="total > perPage"
+      :rows="1"
+      :totalRecords="Math.ceil(total / perPage)"
+      v-model:first="page"
+      data-test="pagination"
+    />
 
     <BaseLoader :isUpdate="isUpdate">
       <TreeTable
@@ -319,5 +200,9 @@ watch(() => props.total, () => {
 
 .p-treetable-tbody tr {
   cursor: pointer;
+}
+
+.custom-table .p-paginator {
+  justify-content: end;
 }
 </style>

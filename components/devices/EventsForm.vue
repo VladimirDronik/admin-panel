@@ -63,23 +63,22 @@ const editEvents = (event: any) => {
 
 <template>
   <div v-if="events">
-    <div v-for="event in events" :key="event.code" class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-px-4 tw-py-2">
+    <div v-for="event in events" :key="event.code" class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
       <div class="tw-flex tw-items-center tw-justify-between">
         <p class="tw-text-lg tw-font-semibold">
           {{ event.name }}
         </p>
         <div v-if="events" class="tw-flex tw-items-center tw-justify-end">
-          <v-btn
+          <Button
             v-if="events.actions?.length"
             @click="editEvents(event)"
-            class="tw-mr-2"
-            variant="text"
+            severity="contrast"
             size="small"
-            prepend-icon="mdi-cog"
+            text
           >
             Настройка
-          </v-btn>
-          <v-btn
+          </Button>
+          <Button
             v-else
             @click="createEvents(event)"
             color="primary"
@@ -87,8 +86,7 @@ const editEvents = (event: any) => {
             prepend-icon="mdi-plus"
           >
             Добавить
-          </v-btn>
-          <!-- <v-switch hide-details color="primary" /> -->
+          </Button>
         </div>
       </div>
       <p class="tw-mb-2">
@@ -97,7 +95,7 @@ const editEvents = (event: any) => {
       <!-- <div>
         <ProgressSpinner />
       </div> -->
-      <p v-if="events.actions?.length">
+      <p :class="{ 'tw-opacity-0': !events.actions?.length }">
         <span class="text-primary tw-mr-2">
           Метод 0
         </span>

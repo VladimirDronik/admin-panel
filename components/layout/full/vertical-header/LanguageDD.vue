@@ -8,6 +8,8 @@ import Russia from '@/assets/images/flag/icon-flag-ru.svg';
 // Composables
 const { locale } = useI18n({ useScope: 'global' });
 
+const menu = ref();
+
 // Variables
 const languages = [
   {
@@ -18,75 +20,61 @@ const languages = [
   },
 ];
 
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
+
 // Methods
 const selectLanguage = (item: string) => {
   locale.value = item;
 };
 
 </script>
-<template>
-  <v-menu
-    :close-on-content-click="false"
-    location="bottom"
-  >
-    <!-- Selected Language -->
-    <template v-slot:activator="{ props }">
-      <v-btn
-        v-bind="props"
-        variant="text"
-        color="primary"
-        icon
-      >
-        <v-avatar size="22">
-          <div
-            v-for="language in languages"
-            :key="language.value"
-          >
-            <img
-              v-if="$i18n.locale === language.value"
-              :src="language.avatar"
-              :alt="$i18n.locale"
-              class="obj-cover tw-h-6 tw-w-6"
-            />
-          </div>
-        </v-avatar>
-      </v-btn>
-    </template>
-    <!--  -->
 
-    <!-- Menu -->
-    <v-sheet
-      rounded="md"
-      width="200"
-      elevation="10"
+<template>
+  <div>
+    <Button
+      @click="toggle"
+      text
+      color="primary"
+      icon="pi"
     >
-      <v-list class="theme-list">
-        <v-list-item
+      <div size="22">
+        <div
+          v-for="language in languages"
+          :key="language.value"
+        >
+          <img
+            v-if="$i18n.locale === language.value"
+            :src="language.avatar"
+            :alt="$i18n.locale"
+            class="obj-cover tw-h-6 tw-w-6 tw-rounded-full"
+          />
+        </div>
+      </div>
+    </Button>
+
+    <Popover ref="menu">
+      <div class="theme-list">
+        <button
           v-for="(item, index) in languages"
           @click="selectLanguage(item.value)"
           :key="index"
           :active="$i18n.locale === item.value"
           color="primary"
-          class="d-flex align-center"
+          class="tw-align-center tw-flex tw-min-w-44 tw-p-3"
+          type="button"
         >
-          <template v-slot:prepend>
-            <v-avatar size="22">
-              <img
-                :src="item.avatar"
-                :alt="item.avatar"
-                class="obj-cover tw-h-6 tw-w-6"
-              />
-            </v-avatar>
-          </template>
-          <v-list-item-title class="text-subtitle-1 font-weight-regular">
+          <img
+            :src="item.avatar"
+            :alt="item.avatar"
+            class="obj-cover tw-mr-2 tw-h-6 tw-w-6 tw-rounded-full"
+          />
+          <div class="text-subtitle-1 font-weight-regular">
             {{ item.title }}
-            <span class="text-disabled text-subtitle-1 pl-2">
-              ({{ item.subtext }})
-            </span>
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-sheet>
-    <!--  -->
-  </v-menu>
+          </div>
+        </button>
+      </div>
+    </Popover>
+  </div>
 </template>

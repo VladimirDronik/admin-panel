@@ -102,9 +102,7 @@ const dialogNotification = ref(false);
                 </p>
               </div>
               <div class="tw-flex tw-items-center">
-                <v-btn class="tw-mr-2" icon variant="text" size="x-small">
-                  <TrashIcon class="handle-item tw-w-5" />
-                </v-btn>
+                <Button class="tw-mr-2" icon="pi pi-trash" severity="secondary" rounded aria-label="Cancel" />
                 <GripVerticalIcon class="handle-item tw-w-5 tw-cursor-pointer" />
               </div>
             </div>

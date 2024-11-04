@@ -80,9 +80,7 @@ const changeDevice = () => {
           <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
             {{ storeDevices.item?.name }}
           </h3>
-          <v-btn @click="isActiveRightSidebar = false" icon size="small" variant="text">
-            <XIcon class="white" />
-          </v-btn>
+          <Button icon="pi pi-times" @click="isActiveRightSidebar = false" rounded size="small" text />
         </div>
         <v-chip
           class="!tw-rounded-lg !tw-px-2 !tw-py-1"

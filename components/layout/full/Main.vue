@@ -64,24 +64,20 @@ storeRooms.getRoomsApi();
   >
     <div class="d-flex align-center justify-space-between w-100">
       <div>
-        <v-btn
+        <Button
           v-if="!mdAndUp"
           size="small"
-          class=" ms-md-3 ms-sm-5 text-muted ms-3"
-          variant="flat"
-          icon
+          severity="secondary"
+          text
+          rounded
+          icon="pi pi-align-justify"
           @click="sDrawer = !sDrawer"
-        >
-          <Menu2Icon
-            size="20"
-            stroke-width="1.5"
-          />
-        </v-btn>
+        />
       </div>
-      <div>
-        <LayoutFullVerticalHeaderLanguageDD />
+      <div class="tw-flex tw-items-center">
+        <LayoutFullVerticalHeaderLanguageDD class="tw-mr-2" />
         <!-- Notification -->
-        <LayoutFullVerticalHeaderNotificationDD />
+        <LayoutFullVerticalHeaderNotificationDD class="tw-mr-2" />
         <!-- User Profile -->
         <LayoutFullVerticalHeaderProfileDD />
       </div>

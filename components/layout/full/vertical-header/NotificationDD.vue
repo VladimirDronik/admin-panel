@@ -2,9 +2,8 @@
 import { BellRingingIcon } from 'vue-tabler-icons';
 </script>
 <template>
-  <v-btn icon variant="text" class="custom-hover-primary text-muted">
-    <v-badge dot color="primary" offset-x="-5" offset-y="-3">
-      <BellRingingIcon stroke-width="1.5" size="22" />
-    </v-badge>
-  </v-btn>
+  <Button icon="pi" text class="custom-hover-primary text-muted tw-relative tw-top-0.5">
+    <BellRingingIcon stroke-width="1.5" size="22" />
+    <Badge value="2" class="tw-absolute tw-right-1.5 tw-top-0" />
+  </Button>
 </template>

@@ -77,9 +77,9 @@ const profileDD = [
         </v-list>
       </perfect-scrollbar>
       <div class="pt-4 pb-6 px-8 text-center">
-        <v-btn color="primary" variant="outlined" block @click="authStore.logoutApi()">
+        <Button class="tw-w-full" color="primary" outlined size="small" @click="authStore.logoutApi()">
           Logout
-        </v-btn>
+        </Button>
       </div>
     </v-sheet>
   </v-menu>
