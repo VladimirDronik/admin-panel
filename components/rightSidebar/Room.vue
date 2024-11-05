@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useDisplay } from 'vuetify';
 // Static data modules
 import { colors } from '~/staticData/rooms';
+import { getRoomColorByValue } from '~/helpers/rooms';
 
 const { width } = useDisplay();
 const { t } = useI18n();
@@ -81,8 +82,8 @@ const changeDevice = () => {
             >
               <template #value="slotProps">
                 <div class="tw-flex tw-items-center">
-                  <div :style="{ backgroundColor: slotProps.value.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                  <div>{{ slotProps.value }}</div>
+                  <div :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                  <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
                 </div>
               </template>
               <template #option="slotProps">

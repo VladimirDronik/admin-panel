@@ -1,4 +1,5 @@
 import type { Room } from '~/types/RoomsTypes';
+import { colors } from '~/staticData/rooms';
 
 export const filterInListRoom = (rooms: Room[] | undefined): any => {
   if (!rooms) return [];
@@ -37,4 +38,9 @@ export const roomColor = (color: string) => {
   if (color === 'orange') return '#FF9E58';
   if (color === 'green') return '#19B58F';
   return '#EAEFF4';
+};
+
+export const getRoomColorByValue = (value: string) => {
+  const result = colors.find((item) => item.code === value);
+  return result;
 };

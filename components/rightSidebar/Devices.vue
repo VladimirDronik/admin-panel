@@ -70,9 +70,9 @@ const changeDevice = () => {
   <v-navigation-drawer
     v-model="isActiveRightSidebar"
     location="right"
-    app
     elevation="10"
     :width="width / 3"
+    app
   >
     <BaseLoader :isUpdate="isUpdate">
       <v-card elevation="0" class="tw-min-h-80 tw-p-7">
@@ -80,7 +80,13 @@ const changeDevice = () => {
           <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
             {{ storeDevices.item?.name }}
           </h3>
-          <Button icon="pi pi-times" @click="isActiveRightSidebar = false" rounded size="small" text />
+          <Button
+            @click="isActiveRightSidebar = false"
+            icon="pi pi-times"
+            size="small"
+            rounded
+            text
+          />
         </div>
         <v-chip
           class="!tw-rounded-lg !tw-px-2 !tw-py-1"

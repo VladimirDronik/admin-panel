@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n';
 // Static data modules
 import { colors } from '~/staticData/rooms';
+import { getRoomColorByValue } from '~/helpers/rooms';
 
 const { t } = useI18n();
 
@@ -17,6 +18,11 @@ const createRoom = async () => {
   // await storeDevices.createDeviceApi(form.value);
   loading.value = false;
 };
+
+const form = ref({
+  name: '',
+  color: '',
+});
 </script>
 
 <template>
@@ -38,13 +44,22 @@ const createRoom = async () => {
 
       <div class="tw-mb-5">
         <SharedUILabel :title="'Название'" required class="tw-mb-2">
-          <InputText class="tw-w-full" />
+          <InputText v-model="form.name" class="tw-w-full" />
         </SharedUILabel>
         <SharedUILabel :title="'Цвет Категории'" required>
           <Select
             :options="colors"
             class="tw-w-full"
+            optionLabel="name"
+            optionValue="code"
+            v-model="form.color"
           >
+            <template #value="slotProps">
+              <div class="tw-flex tw-items-center">
+                <div :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
+              </div>
+            </template>
             <template #option="slotProps">
               <div class="tw-flex tw-items-center">
                 <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
