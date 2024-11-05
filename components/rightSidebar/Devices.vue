@@ -114,7 +114,7 @@ const changeDevice = () => {
               <Tab value="features">{{ t('devices.features') }}</Tab>
               <Tab value="events">{{ t('devices.events') }}</Tab>
               <!-- <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab> -->
-              <Tab value="ports">Порты</Tab>
+              <Tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</Tab>
               <Tab value="four">{{ t('devices.management') }}</Tab>
             </TabList>
             <TabPanels>
