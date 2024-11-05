@@ -32,7 +32,6 @@ const filterEvents = async (object: Devices) => {
     ...item,
     actions: Object.values(responce[index].data),
   }));
-  console.log(result);
 
   events.value = result;
 };

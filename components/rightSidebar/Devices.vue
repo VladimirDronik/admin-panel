@@ -113,7 +113,6 @@ const changeDevice = () => {
             <TabList>
               <Tab value="features">{{ t('devices.features') }}</Tab>
               <Tab value="events">{{ t('devices.events') }}</Tab>
-              <!-- <v-tab value="events" v-if="storeDevices.item?.category === 'controller'">{{ t('devices.events') }}</v-tab> -->
               <Tab value="ports" v-if="storeDevices.item?.category === 'controller'">Порты</Tab>
               <Tab value="four">{{ t('devices.management') }}</Tab>
             </TabList>
@@ -145,6 +144,11 @@ const changeDevice = () => {
               <TabPanel value="events">
                 <div v-if="storeDevices.item">
                   <DevicesEventsForm v-model="storeDevices.item" />
+                </div>
+              </TabPanel>
+              <TabPanel value="ports">
+                <div v-if="storeDevices.item">
+                  <DevicesPortsForm v-model="storeDevices.item" />
                 </div>
               </TabPanel>
             </TabPanels>
