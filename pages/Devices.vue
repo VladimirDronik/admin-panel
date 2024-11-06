@@ -255,10 +255,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
               <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
             <Popover ref="popoverId">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <v-text-field
+              <div class="category tw-flex tw-flex-col tw-gap-2 tw-p-2">
+                <InputText
                   v-model.number="filters[1].value"
-                  :label="filters[1].label"
+                  :placeholder="filters[1].label"
                   hide-details
                   class="tw-mb-1 tw-min-w-80"
                   prepend-inner-icon="mdi-magnify"
@@ -266,9 +266,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
                   compact
                   type="number"
                 />
-                <v-text-field
+                <InputText
                   v-model.number="filters[2].value"
-                  :label="filters[2].label"
+                  :placeholder="filters[2].label"
                   hide-details
                   class="tw-min-w-80"
                   prepend-inner-icon="mdi-magnify"
@@ -292,9 +292,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
             <Popover ref="popoverName">
               <div class="flex flex-col gap-4 category tw-p-2">
-                <v-text-field
+                <InputText
                   v-model.number="filters[3].value"
-                  :label="filters[3].label"
+                  :placeholder="filters[3].label"
                   hide-details
                   class="tw-min-w-96"
                   prepend-inner-icon="mdi-magnify"
@@ -317,9 +317,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
             <Popover ref="popoverType">
               <div class="flex flex-col gap-4 category tw-p-2">
-                <v-text-field
+                <InputText
                   v-model.number="filters[4].value"
-                  :label="filters[4].label"
+                  :placeholder="filters[4].label"
                   hide-details
                   class="tw-min-w-80"
                   prepend-inner-icon="mdi-magnify"
@@ -342,10 +342,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
             <Popover ref="popoverRoom">
               <div class="flex flex-col gap-4 category tw-p-2">
-                <v-select
+                <Select
                   v-model.number="filters[5].value"
-                  :label="filters[5].label"
-                  :items="filters[5].options"
+                  :placeholder="filters[5].label"
+                  :options="filters[5].options"
                   hide-details
                   class="tw-min-w-80"
                   prepend-inner-icon="mdi-magnify"
@@ -370,10 +370,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
             </button>
             <Popover :dismissable="false" ref="popoverStatus">
               <div class="flex flex-col gap-4 category tw-p-2">
-                <v-select
+                <Select
                   v-model="filters[6].value"
-                  :items="filters[6].options"
-                  :label="filters[6].label"
+                  :options="filters[6].options"
+                  :placeholder="filters[6].label"
                   class="tw-min-w-80"
                   color="primary"
                   hide-details
@@ -401,10 +401,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
             </button>
             <Popover :dismissable="false" ref="popoverTags">
               <div class="flex flex-col gap-4 category tw-p-2">
-                <v-select
+                <Select
                   v-model="filters[0].value"
-                  :items="filters[0].options"
-                  :label="filters[0].label"
+                  :options="filters[0].options"
+                  :placeholder="filters[0].label"
                   class="tw-min-w-80"
                   color="primary"
                   chips
@@ -417,13 +417,13 @@ watch([props, childrenProps], (newValue, oldValue) => {
         </template>
         <template #body="{ node }">
           <div class="tags">
-            <perfect-scrollbar class="tw-max-w-96">
+            <ScrollPanel class="tw-max-w-96" aria-orientation="horizontal">
               <div class="tw-flex">
                 <Tag severity="primary" class="tw-mr-2 tw-flex" v-for="item in node.data.tags" :key="item">
                   {{ item }}
                 </Tag>
               </div>
-            </perfect-scrollbar>
+            </ScrollPanel>
           </div>
         </template>
       </Column>
@@ -470,6 +470,14 @@ watch([props, childrenProps], (newValue, oldValue) => {
 .category .v-checkbox-btn {
   max-height: 32px !important;
   min-height: 32px !important;
+}
+
+.p-scrollpanel-bar-x {
+  display: none !important;
+}
+
+.p-scrollpanel-content {
+  padding-bottom: 0 !important;
 }
 
 </style>

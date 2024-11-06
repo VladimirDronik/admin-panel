@@ -58,17 +58,17 @@ const changeDevice = () => {
     :width="width / 3"
   >
     <BaseLoader :isUpdate="isUpdate">
-      <v-card v-if="form" elevation="0" class="tw-min-h-80 tw-p-7">
+      <div v-if="form" class="tw-min-h-80 tw-p-7">
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
             {{ form.is_group ? 'Добавить категорию' : "Добавить помещение" }}
           </h3>
-          <v-btn @click="isActiveRightSidebar = false" icon size="small" variant="text">
+          <Button text @click="isActiveRightSidebar = false" icon="pi" rounded size="small" variant="text">
             <XIcon class="white" />
-          </v-btn>
+          </Button>
         </div>
 
-        <v-card-text class="!tw-px-0 !tw-pt-1">
+        <div class="!tw-px-0 !tw-pt-1">
           <SharedUILabel :title="'Наименование'" required class="tw-mb-2">
             <InputText v-model="form.name" class="tw-w-full" />
           </SharedUILabel>
@@ -94,8 +94,8 @@ const changeDevice = () => {
               </template>
             </Select>
           </SharedUILabel>
-        </v-card-text>
-        <div class="tw-flex tw-justify-end">
+        </div>
+        <div class="tw-flex tw-justify-end tw-pt-2">
           <DialogsDeleteDialog
             @delete="confirmDelete"
             v-model="dialog"
@@ -112,7 +112,7 @@ const changeDevice = () => {
             {{ t('save') }}
           </Button>
         </div>
-      </v-card>
+      </div>
     </BaseLoader>
   </v-navigation-drawer>
 </template>

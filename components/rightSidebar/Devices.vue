@@ -75,7 +75,7 @@ const changeDevice = () => {
     app
   >
     <BaseLoader :isUpdate="isUpdate">
-      <v-card elevation="0" class="tw-min-h-80 tw-p-7">
+      <div elevation="0" class="tw-min-h-80 tw-p-7">
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
             {{ storeDevices.item?.name }}
@@ -107,7 +107,7 @@ const changeDevice = () => {
           </div>
         </v-chip>
 
-        <v-card-text class="!tw-px-0 !tw-pt-1">
+        <div class="!tw-px-0 !tw-pt-1">
 
           <Tabs value="features">
             <TabList>
@@ -154,8 +154,8 @@ const changeDevice = () => {
             </TabPanels>
           </Tabs>
 
-        </v-card-text>
-      </v-card>
+        </div>
+      </div>
     </BaseLoader>
   </v-navigation-drawer>
 </template>

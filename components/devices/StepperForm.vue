@@ -11,6 +11,7 @@ interface DeviceCreateForm {
 
 // Composables
 const { t } = useI18n();
+const toast = useToast();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 const {
@@ -100,9 +101,18 @@ const createDevice = async () => {
       category: 'controller',
     };
   } catch (error: any) {
-    showError(error?.data?.error);
+    showError();
   }
   loading.value = false;
+};
+
+const showError = () => {
+  toast.add({
+    severity: 'error',
+    summary: 'Ошибка создания',
+    detail: 'Устройство не было создано',
+    life: 5000,
+  });
 };
 </script>
 

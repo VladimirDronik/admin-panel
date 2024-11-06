@@ -94,9 +94,7 @@ const dialogNotification = ref(false);
           <div v-for="event in form.actions[form.code]" :key="event.id" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
             <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
               <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
-                <v-chip class="tw-mr-3" color="success" variant="flat">
-                  Метод On
-                </v-chip>
+                <Tag value="Метод On" class="tw-mr-3" />
                 <p>
                   {{ event.name }}
                 </p>

@@ -114,13 +114,7 @@ defineProps({
         {{ t('devices.preloadTitle') }}
       </p>
       <div v-else class="tw-flex tw-justify-center">
-        <v-progress-circular
-          :size="30"
-          :width="3"
-          color="primary"
-          class="tw-mb-2"
-          indeterminate
-        />
+        <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" fill="#19B58F" />
       </div>
     </div>
   </div>

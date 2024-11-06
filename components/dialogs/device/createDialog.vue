@@ -55,15 +55,6 @@ const getModel = async () => {
   loadingModel.value = false;
 };
 
-const showError = (text: string) => {
-  toast.add({
-    severity: 'error',
-    summary: 'Ошибка создания',
-    detail: 'Устройство не было создано',
-    life: 5000,
-  });
-};
-
 const propsModel = (props: any[] | undefined) => {
   if (!props) return [];
   const result = props.map((item) => ({
