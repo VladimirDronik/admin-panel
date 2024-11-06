@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const data = {
+const data = ref({
   in: {
     id: 1,
     title: 'Входы (in)',
@@ -37,7 +37,7 @@ const data = {
       },
     ],
   },
-};
+});
 
 </script>
 

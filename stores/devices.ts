@@ -90,6 +90,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     tags.value = data.data;
     return data;
   };
+
   const getScriptsApi = async (params = {}) => {
     const { data }: { data: { data: RequestScript } } = await api('http://10.35.16.1:8082/scripts', {
       params,
@@ -100,6 +101,20 @@ export const useDevicesStore = defineStore('Devices', () => {
 
     scripts.value = data.data.list;
     scriptsTotal.value = data.data.total;
+    return data;
+  };
+
+  const createEventApi = async (params = {}) => {
+    const { data }: { data: { data: RequestScript } } = await api.post(
+      'http://10.35.16.1:8083/events/actions',
+      params,
+      {
+        headers: {
+          token: storeAuth.token,
+        },
+      },
+    );
+
     return data;
   };
 
@@ -170,6 +185,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       })),
     } as Devices;
 
+    console.log(result);
     item.value = result;
     return data;
   };
@@ -204,6 +220,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     getScriptsApi,
     propsModel,
     createDeviceApi,
+    createEventApi,
     changeDeviceApi,
     createFunction,
     deleteDeviceApi,

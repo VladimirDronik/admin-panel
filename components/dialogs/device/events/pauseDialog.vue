@@ -5,9 +5,34 @@ const { t } = useI18n();
 
 const storeDevices = useDevicesStore();
 
+const form = ref({
+  name: '',
+});
+
+const loading = ref(false);
+
 const dialog = defineModel({
   default: false,
 });
+
+const object = defineModel<any>('object', {
+  default: false,
+});
+
+const createEvent = () => {
+  loading.value = true;
+  storeDevices.createEventApi({
+    args: form.value,
+    enabled: true,
+    name: '',
+    target_id: object.value.id,
+    target_type: 'not_matters',
+    type: 'method',
+    sort: 0,
+    qos: 0,
+  });
+  loading.value = false;
+};
 </script>
 
 <template>
@@ -28,14 +53,26 @@ const dialog = defineModel({
       </p>
 
       <SharedUILabel :title="'Секунд'" class="tw-mb-2">
-        <InputText type="number" class="tw-w-full" />
+        <InputText
+          v-model="form.name"
+          type="number"
+          class="tw-w-full"
+        />
       </SharedUILabel>
 
       <div class="tw-pt-3">
-        <Button class="tw-mr-2">
+        <Button
+          @click="createEvent"
+          :loading="loading"
+          class="tw-mr-2"
+        >
           {{ t('save') }}
         </Button>
-        <Button variant="outlined" @click="dialog = false" outlined>
+        <Button
+          variant="outlined"
+          @click="dialog = false"
+          outlined
+        >
           {{ t('cancel') }}
         </Button>
       </div>

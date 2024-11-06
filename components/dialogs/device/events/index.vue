@@ -84,14 +84,14 @@ const dialogNotification = ref(false);
         </Button>
       </div>
 
-      <DialogsDeviceEventsMethodDialog v-model="dialogMethod" />
-      <DialogsDeviceEventsPauseDialog v-model="dialogPause" />
-      <DialogsDeviceEventsScriptDialog v-model="dialogScript" />
+      <DialogsDeviceEventsMethodDialog v-model="dialogMethod" v-model:object="selectedObject" />
+      <DialogsDeviceEventsPauseDialog v-model="dialogPause" v-model:object="selectedObject" />
+      <DialogsDeviceEventsScriptDialog v-model="dialogScript" v-model:object="selectedObject" />
       <DialogsDeviceEventsNotificationDialog v-model="dialogNotification" />
 
       <div v-if="storeDevice.item">
         <VueDraggableNext v-model="form.actions" handle=".handle-item" :animation="300">
-          <div v-for="event in form.actions" :key="event.code" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
+          <div v-for="event in form.actions[form.code]" :key="event.id" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
             <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
               <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                 <v-chip class="tw-mr-3" color="success" variant="flat">
