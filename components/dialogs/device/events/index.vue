@@ -51,8 +51,8 @@ const dialogNotification = ref(false);
         <Button
           @click="dialogMethod = true"
           prepend-icon="mdi-plus"
-          outlined
           class="tw-mr-4"
+          outlined
         >
           Метод
         </Button>
@@ -60,8 +60,8 @@ const dialogNotification = ref(false);
           @click="dialogPause = true"
           prepend-icon="mdi-plus"
           severity="warn"
-          outlined
           class="tw-mr-4"
+          outlined
         >
           Пауза
         </Button>
@@ -69,8 +69,8 @@ const dialogNotification = ref(false);
           @click="dialogScript = true"
           prepend-icon="mdi-plus"
           severity="info"
-          outlined
           class="tw-mr-4"
+          outlined
         >
           Скрипт
         </Button>

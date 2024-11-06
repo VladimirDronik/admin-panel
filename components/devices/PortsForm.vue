@@ -44,28 +44,51 @@ const data = ref({
 <template>
   <div>
     <div v-for="item in data" :key="item.id">
-      <h3 class="tw-mb-2 tw-text-lg tw-font-semibold">
+      <h3 class="tw-mb-2 tw-text-lg">
         {{ item.title }}
       </h3>
       <DataTable :value="item.items" tableStyle="min-width: 50rem" class="tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border">
-        <Column field="number" style="width: 100px">
+        <Column field="number" style="width: 50px">
           <template #header>
-            <p class="tw-font-semibold">
+            <p>
               №
             </p>
           </template>
         </Column>
-        <Column field="type" header="Type" style="width: 150px">
+        <Column field="type" style="width: 70px">
+          <template #header>
+            <p>
+              Type
+            </p>
+          </template>
           <template #body="slotProps">
-            <Tag :value="slotProps.data.type" :severity="slotProps.data.colorType" />
+            <Tag :value="slotProps.data.type" :severity="slotProps.data.colorType">
+              <p class="text-base tw-font-normal">{{ slotProps.data.mode }}</p>
+            </Tag>
           </template>
         </Column>
-        <Column field="mode" header="Mode" style="width: 150px">
+        <Column field="mode" style="width: 70px">
+          <template #header>
+            <p>
+              Mode
+            </p>
+          </template>
           <template #body="slotProps">
-            <Tag :value="slotProps.data.mode" :severity="slotProps.data.colorMode" />
+            <Tag :severity="slotProps.data.colorMode">
+              <p class="text-base tw-font-normal">{{ slotProps.data.mode }}</p>
+            </Tag>
           </template>
         </Column>
-        <Column field="object" header="Object" />
+        <Column field="object" style=" width: 100px">
+          <template #header>
+            <p>
+              Object
+            </p>
+          </template>
+          <template #body="slotProps">
+            <p class="tw-truncate">{{ slotProps.data.object }}</p>
+          </template>
+        </Column>
       </DataTable>
     </div>
   </div>

@@ -185,7 +185,6 @@ export const useDevicesStore = defineStore('Devices', () => {
       })),
     } as Devices;
 
-    console.log(result);
     item.value = result;
     return data;
   };
