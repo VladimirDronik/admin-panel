@@ -11,9 +11,9 @@ const object = defineModel<Devices>({
   required: true,
 });
 
-const form = ref({
-  props: [],
-});
+const form = ref();
+
+const events = ref<any | null>();
 
 const filterEvents = async (object: Devices) => {
   if (!object.events) return [];
@@ -35,8 +35,6 @@ const filterEvents = async (object: Devices) => {
 
   events.value = result;
 };
-
-const events = ref<any | null>();
 
 const updateEvents = () => {
   filterEvents(object.value);

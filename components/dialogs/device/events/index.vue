@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
+import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 
 const storeDevice = useDevicesStore();
 
@@ -27,10 +29,49 @@ const dialogPause = ref(false);
 const dialogScript = ref(false);
 const dialogNotification = ref(false);
 
+const dialogDelete = ref(false);
+const loadingDelete = ref(false);
+
+const selectedId = ref(0);
+
+const editAction = ref(false);
+
+const deleteItem = (id: number) => {
+  selectedId.value = id;
+  dialogDelete.value = true;
+};
+
+const confirmDelete = async (id: number) => {
+  loadingDelete.value = true;
+  await storeDevice.deleteActionApi(id);
+  loadingDelete.value = true;
+};
+
+const eventsList = computed(() => {
+  if (form.value?.actions) {
+    return Object.values(form.value?.actions);
+  }
+  return form.value;
+});
+
+watch(eventsList, (_newValue, oldValue) => {
+  if (oldValue && form.value) {
+    const params = form.value?.actions[form.value?.code]?.map((item: any) => item.id);
+    storeDevice.changeActionOrderApi(params);
+  }
+});
+
+const openEdit = (event: any) => {
+  if (event.type === 'method') dialogMethod.value = true;
+  if (event.type === 'pause') dialogPause.value = true;
+  if (event.type === 'script') dialogScript.value = true;
+  if (event.type === 'notification') dialogNotification.value = true;
+  editAction.value = true;
+};
 </script>
 
 <template>
-  <div>
+  <div v-if="form">
     <Dialog
       v-model:visible="dialog"
       :header="form.name"
@@ -84,32 +125,76 @@ const dialogNotification = ref(false);
         </Button>
       </div>
 
-      <DialogsDeviceEventsMethodDialog v-model="dialogMethod" v-model:object="selectedObject" />
-      <DialogsDeviceEventsPauseDialog v-model="dialogPause" v-model:object="selectedObject" />
-      <DialogsDeviceEventsScriptDialog v-model="dialogScript" v-model:object="selectedObject" />
-      <DialogsDeviceEventsNotificationDialog v-model="dialogNotification" />
+      <DialogsDeviceEventsMethodDialog
+        v-model="dialogMethod"
+        :edit="edit"
+        v-model:object="selectedObject"
+      />
+      <DialogsDeviceEventsPauseDialog
+        v-model="dialogPause"
+        :edit="editAction"
+        v-model:object="selectedObject"
+      />
+      <DialogsDeviceEventsScriptDialog
+        v-model="dialogScript"
+        :edit="editAction"
+        v-model:object="selectedObject"
+      />
+      <DialogsDeviceEventsNotificationDialog
+        v-model="dialogNotification"
+      />
 
       <div v-if="storeDevice.item">
-        <VueDraggableNext v-model="form.actions" handle=".handle-item" :animation="300">
-          <div v-for="event in form.actions[form.code]" :key="event.id" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b">
-            <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-3">
+        <VueDraggableNext
+          v-model="form.actions[form.code]"
+          handle=".handle-item"
+          :animation="300"
+        >
+          <div
+            v-for="event in form.actions[form.code]"
+            :key="event.id"
+            @click="openEdit(event)"
+            @keydown="openEdit(event)"
+            class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
+          >
+            <!-- <div v-for="event in form.actions[form.code]" :key="event.id" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"> -->
+            <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
               <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
-                <Tag value="Метод On" class="tw-mr-3" />
+                <Tag
+                  :value="getActionsTitle(event.type)"
+                  :severity="getActionsColor(event.type)"
+                  class="tw-mr-3 !tw-w-32"
+                />
                 <p>
-                  {{ event.name }}
+                  {{ event.name ? event.name : '-'}}
                 </p>
               </div>
               <div class="tw-flex tw-items-center">
-                <Button class="tw-mr-2" icon="pi pi-trash" severity="secondary" rounded aria-label="Cancel" />
+                <Button
+                  @click.stop="deleteItem(event.id)"
+                  class="tw-mr-2"
+                  icon="pi pi-trash"
+                  aria-label="Cancel"
+                  text
+                  rounded
+                />
                 <GripVerticalIcon class="handle-item tw-w-5 tw-cursor-pointer" />
               </div>
             </div>
           </div>
         </VueDraggableNext>
-        <div v-if="!form.actions.length">
+        <div v-if="!form?.actions[form.code]?.length">
           Список событий пуст
         </div>
       </div>
+
+      <DialogsDeleteDialog
+        @delete="confirmDelete"
+        v-model="dialogDelete"
+        :id="selectedId"
+        :showBtn="false"
+        :loading="loadingDelete"
+      />
 
       <div class="tw-pt-4">
         <Button class="tw-mr-4">

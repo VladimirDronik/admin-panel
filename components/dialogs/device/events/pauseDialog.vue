@@ -19,15 +19,22 @@ const object = defineModel<any>('object', {
   default: false,
 });
 
-const createEvent = () => {
+defineProps({
+  edit: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const createAction = async () => {
   loading.value = true;
-  storeDevices.createEventApi({
+  await storeDevices.createEventApi({
     args: form.value,
     enabled: true,
     name: '',
     target_id: object.value.id,
-    target_type: 'not_matters',
-    type: 'method',
+    target_type: 'pause',
+    type: 'pause',
     sort: 0,
     qos: 0,
   });
@@ -62,7 +69,7 @@ const createEvent = () => {
 
       <div class="tw-pt-3">
         <Button
-          @click="createEvent"
+          @click="createAction"
           :loading="loading"
           class="tw-mr-2"
         >

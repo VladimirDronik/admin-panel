@@ -188,9 +188,35 @@ export const useDevicesStore = defineStore('Devices', () => {
     item.value = result;
     return data;
   };
+
+  const changeActionOrderApi = async (params = {}) => {
+    const data: {data: RequestDevices} = await api.put('http://10.35.16.1:8083/events/actions/order', {
+      data: params,
+      headers: {
+        'api-key': 'c041d36e381a835afce48c91686370c8',
+        token: storeAuth.token,
+      },
+    });
+
+    return data;
+  };
+
   const deleteDeviceApi = async (id: number) => {
     const data: {data: RequestDevices} = await api.delete(
       `http://10.35.16.1:8082/objects/${id}`,
+      {
+        headers: {
+          token: storeAuth.token,
+        },
+      },
+    );
+
+    return data;
+  };
+
+  const deleteActionApi = async (id: number) => {
+    const data: {data: RequestDevices} = await api.delete(
+      `http://10.35.16.1:8083/events/actions/${id}`,
       {
         headers: {
           token: storeAuth.token,
@@ -217,12 +243,14 @@ export const useDevicesStore = defineStore('Devices', () => {
     getModelApi,
     getTagsApi,
     getScriptsApi,
+    getControllerDetailsApi,
     propsModel,
     createDeviceApi,
     createEventApi,
     changeDeviceApi,
+    changeActionOrderApi,
     createFunction,
     deleteDeviceApi,
-    getControllerDetailsApi,
+    deleteActionApi,
   };
 });

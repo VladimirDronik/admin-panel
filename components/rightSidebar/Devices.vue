@@ -21,8 +21,6 @@ const isActiveRightSidebar = defineModel<boolean>('isOpen', {
   required: true,
 });
 
-const tab = ref(true);
-
 const checkStatusText = (item: string | undefined) => {
   if (!item) return 'Неоп';
   if (item === 'ON') return 'Вкл';

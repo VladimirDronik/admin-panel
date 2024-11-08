@@ -12,24 +12,25 @@ const object = defineModel<any>('object', {
   default: false,
 });
 
+defineProps({
+  edit: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const loading = ref(false);
 const deleteDialog = ref(false);
 
 const selectedScript = ref();
 
-const createEvent = () => {
+watch(dialog, () => {
+  if (dialog.value) selectedScript.value = null;
+});
+
+const createAction = async () => {
   loading.value = true;
-  console.log({
-    args: selectedScript.value,
-    enabled: true,
-    name: '',
-    target_id: object.value.id,
-    target_type: 'script',
-    type: 'script',
-    sort: 0,
-    qos: 0,
-  });
-  storeDevices.createEventApi({
+  await storeDevices.createEventApi({
     args: selectedScript.value,
     enabled: true,
     name: '',
@@ -75,24 +76,30 @@ created();
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
         <div v-for="script in storeDevices.scripts" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-          <button type="button" class="tw-text-left" @click="selectedScript = script">
+          <div class="tw-text-left">
             <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg tw-font-semibold">
               {{ script.name }}
             </p>
             <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }">
               {{ script.description }}
             </p>
-          </button>
+          </div>
           <div>
-            <Button icon="pi pi-pencil" severity="info" rounded aria-label="Search" class="tw-mr-2" />
-            <Button @click="deleteScript(script)" icon="pi pi-trash" severity="danger" rounded aria-label="Cancel" />
+            <Button @click="selectedScript = script" size="small" class="tw-mr-2">
+              Выбрать
+            </Button>
+            <Button size="small">
+              Подробности
+            </Button>
+            <!-- <Button icon="pi pi-pencil" severity="info" rounded aria-label="Search" class="tw-mr-2" />
+            <Button @click="deleteScript(script)" icon="pi pi-trash" severity="danger" rounded aria-label="Cancel" /> -->
           </div>
         </div>
       </div>
 
       <div class="tw-pt-4">
         <Button
-          @click="createEvent"
+          @click="createAction"
           :disabled="!selectedScript"
           :loading="loading"
           class="tw-mr-2"
@@ -108,11 +115,11 @@ created();
         </Button>
       </div>
 
-      <DialogsDeleteDialog
+      <!-- <DialogsDeleteDialog
         :id="selectedScript?.id"
         :showBtn="false"
         v-model="deleteDialog"
-      />
+      /> -->
     </Dialog>
   </div>
 </template>

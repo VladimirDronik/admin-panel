@@ -16,6 +16,10 @@ const props = defineProps({
     type: String,
     default: 'Удаление',
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   subtitle: {
     type: String,
     default: '',
@@ -56,6 +60,7 @@ const deleteItem = () => {
       <div>
         <Button
           @click="deleteItem"
+          :loading="loading"
           color="primary"
           class="tw-mr-2"
         >
