@@ -84,19 +84,24 @@ storeDevices.getDevicesApi({
         Позволяет выбрать метод любого обьекта в системе
       </p>
 
+      <div class="tw-flex">
+        <h3 class="tw-mr-2 tw-w-6/12">
+          Список Обьектов
+        </h3>
+        <h3 class="tw-w-6/12">
+          Список Методов
+        </h3>
+      </div>
       <div v-if="objects?.length" class="tw-flex">
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <div v-if="objects?.length">
-            <div v-for="object in objects" :key="object.id">
-              <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-                <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg tw-font-semibold">
+            <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in objects" :key="object.id">
+              <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
+                <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
                   {{ object.name }}
                 </p>
-                <Button size="small" @click="selectObject(object)">
-                  Выбрать
-                </Button>
               </div>
-            </div>
+            </button>
           </div>
           <div v-else>
             Список Обьектов пуст
@@ -105,14 +110,11 @@ storeDevices.getDevicesApi({
         <div class="tw-w-6/12">
           <div class="tw-mb-2 tw-rounded tw-border tw-p-3">
             <div v-if="selectedObject?.methods?.length">
-              <div v-for="method in selectedObject.methods" :key="method.name" class="tw-flex tw-items-center tw-justify-between">
-                <p :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }" class="tw-text-lg tw-font-semibold">
+              <button @click="selectMethod(method)" type="button" v-for="method in selectedObject.methods" :key="method.name" class="tw-flex tw-items-center tw-justify-between">
+                <p :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }" class="tw-text-lg">
                   {{ method.name }}
                 </p>
-                <Button size="small" @click="selectMethod(method)">
-                  Выбрать
-                </Button>
-              </div>
+              </button>
             </div>
             <div v-else>
               Список Методов пуст

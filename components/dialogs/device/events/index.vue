@@ -157,7 +157,6 @@ const openEdit = (event: any) => {
             @keydown="openEdit(event)"
             class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
           >
-            <!-- <div v-for="event in form.actions[form.code]" :key="event.id" class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"> -->
             <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
               <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                 <Tag

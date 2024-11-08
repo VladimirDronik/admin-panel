@@ -22,10 +22,16 @@ defineProps({
 const loading = ref(false);
 const deleteDialog = ref(false);
 
-const selectedScript = ref();
+const selectedScript = ref({
+  id: 0,
+});
 
 watch(dialog, () => {
-  if (dialog.value) selectedScript.value = null;
+  if (dialog.value) {
+    selectedScript.value = {
+      id: 0,
+    };
+  }
 });
 
 const createAction = async () => {
@@ -75,24 +81,18 @@ created();
       </p>
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
-        <div v-for="script in storeDevices.scripts" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in storeDevices.scripts" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <div class="tw-text-left">
-            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg tw-font-semibold">
+            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg">
               {{ script.name }}
             </p>
-            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }">
+            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-sm">
               {{ script.description }}
             </p>
           </div>
           <div>
-            <Button @click="selectedScript = script" size="small" class="tw-mr-2">
-              Выбрать
-            </Button>
-            <Button size="small">
-              Подробности
-            </Button>
-            <!-- <Button icon="pi pi-pencil" severity="info" rounded aria-label="Search" class="tw-mr-2" />
-            <Button @click="deleteScript(script)" icon="pi pi-trash" severity="danger" rounded aria-label="Cancel" /> -->
+            <Button icon="pi pi-pencil" severity="info" rounded aria-label="Search" class="tw-mr-2" />
+            <Button @click.stop="deleteScript(script)" icon="pi pi-trash" severity="danger" rounded aria-label="Cancel" />
           </div>
         </div>
       </div>
@@ -115,11 +115,11 @@ created();
         </Button>
       </div>
 
-      <!-- <DialogsDeleteDialog
+      <DialogsDeleteDialog
         :id="selectedScript?.id"
         :showBtn="false"
         v-model="deleteDialog"
-      /> -->
+      />
     </Dialog>
   </div>
 </template>

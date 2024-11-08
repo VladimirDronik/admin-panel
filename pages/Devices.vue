@@ -419,7 +419,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <div class="tags">
             <ScrollPanel class="tw-max-w-96" aria-orientation="horizontal">
               <div class="tw-flex">
-                <Tag severity="primary" class="tw-mr-2 tw-flex" v-for="item in node.data.tags" :key="item">
+                <Tag severity="warn" class="tw-mr-2 tw-flex" v-for="item in node.data.tags" :key="item">
                   {{ item }}
                 </Tag>
               </div>
