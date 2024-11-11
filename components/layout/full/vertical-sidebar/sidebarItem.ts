@@ -1,4 +1,7 @@
-import { ApertureIcon, LayoutDashboardIcon } from 'vue-tabler-icons';
+import { DevicesIcon } from 'vue-tabler-icons';
+import {
+  IconVideo, IconDoor, IconReportAnalytics, IconResize, IconGraph,
+} from '@tabler/icons-vue';
 
 export interface menu {
     header?: string;
@@ -16,16 +19,37 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
+  {
+    title: 'pages.general',
+    icon: IconReportAnalytics,
+    to: '/general',
+  },
   { header: 'pages.equipment' },
   {
     title: 'pages.devices',
-    icon: ApertureIcon,
+    icon: DevicesIcon,
     to: '/devices',
   },
   {
     title: 'pages.rooms',
-    icon: ApertureIcon,
+    icon: IconDoor,
     to: '/rooms',
+  },
+  {
+    title: 'pages.video',
+    icon: IconVideo,
+    to: '/video',
+  },
+  {
+    title: 'pages.display',
+    icon: IconResize,
+    to: '/display',
+  },
+  { header: 'pages.charts' },
+  {
+    title: 'pages.charts',
+    icon: IconGraph,
+    to: '/devices',
   },
   // { header: 'pages.visualization' },
   // {
