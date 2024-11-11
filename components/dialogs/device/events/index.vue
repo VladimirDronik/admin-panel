@@ -129,16 +129,19 @@ const openEdit = (event: any) => {
         v-model="dialogMethod"
         :edit="edit"
         v-model:object="selectedObject"
+        v-model:event="form"
       />
       <DialogsDeviceEventsPauseDialog
         v-model="dialogPause"
         :edit="editAction"
         v-model:object="selectedObject"
+        v-model:event="form"
       />
       <DialogsDeviceEventsScriptDialog
         v-model="dialogScript"
         :edit="editAction"
         v-model:object="selectedObject"
+        v-model:event="form"
       />
       <DialogsDeviceEventsNotificationDialog
         v-model="dialogNotification"

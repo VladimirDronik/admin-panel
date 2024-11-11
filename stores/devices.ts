@@ -104,11 +104,16 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
-  const createEventApi = async (params = {}) => {
+  const createEventApi = async (target_type: string, target_id: number, event_name: string, params = {}) => {
     const { data }: { data: { data: RequestScript } } = await api.post(
       'http://10.35.16.1:8083/events/actions',
       params,
       {
+        params: {
+          target_type,
+          target_id,
+          event_name,
+        },
         headers: {
           token: storeAuth.token,
         },

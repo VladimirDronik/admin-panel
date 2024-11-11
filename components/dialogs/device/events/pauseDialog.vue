@@ -19,6 +19,10 @@ const object = defineModel<any>('object', {
   default: false,
 });
 
+const event = defineModel<any>('event', {
+  default: false,
+});
+
 defineProps({
   edit: {
     type: Boolean,
@@ -28,10 +32,11 @@ defineProps({
 
 const createAction = async () => {
   loading.value = true;
-  await storeDevices.createEventApi({
+  console.log(event.value);
+  await storeDevices.createEventApi(event.value.target_type, event.value.id, event.value.name, {
     args: form.value,
     enabled: true,
-    name: '',
+    name: object.value.name,
     target_id: object.value.id,
     target_type: 'pause',
     type: 'pause',

@@ -13,6 +13,10 @@ const object = defineModel<any>('object', {
   default: false,
 });
 
+const event = defineModel<any>('event', {
+  default: false,
+});
+
 defineProps({
   edit: {
     type: Boolean,
@@ -37,16 +41,17 @@ const selectMethod = (method: any) => {
 
 const createAction = async () => {
   loading.value = true;
-  await storeDevices.createEventApi({
+  await storeDevices.createEventApi(event.value.target_type, event.value.id, event.value.name, {
     args: selectedMethod.value,
     enabled: true,
-    name: '',
+    name: object.value.name,
     target_id: object.value.id,
-    target_type: object.value.type,
-    type: 'method',
+    target_type: 'pause',
+    type: 'pause',
     sort: 0,
     qos: 0,
   });
+
   loading.value = false;
 };
 
