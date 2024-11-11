@@ -89,9 +89,8 @@ const editEvents = (event: any) => {
           <Button
             v-if="event.actions?.length"
             @click="editEvents(event)"
-            severity="contrast"
             size="small"
-            text
+            severity="info"
           >
             Настройка
           </Button>
