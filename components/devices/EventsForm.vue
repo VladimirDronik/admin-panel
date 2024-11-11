@@ -28,12 +28,32 @@ const filterEvents = async (object: Devices) => {
 
   const responce: any[] = await Promise.all(requests);
 
+  const filteredResponce = responce.map((item) => item.data);
+
   const result = objectEvents.map((item, index) => ({
     ...item,
-    actions: Object.values(responce[index].data)[0],
+    actions: filteredResponce[index][item.code],
+    actionTypes: actionsType(filteredResponce[index][item.code]),
   }));
 
   events.value = result;
+};
+
+const actionsType = (actions: any[]) => {
+  if (actions) {
+    return {
+      method: actions.filter((item) => item.target_type === 'method').length,
+      delay: actions.filter((item) => item.target_type === 'delay').length,
+      script: actions.filter((item) => item.target_type === 'script').length,
+      notification: actions.filter((item) => item.target_type === 'notification').length,
+    };
+  }
+  return {
+    method: 0,
+    delay: 0,
+    script: 0,
+    notification: 0,
+  };
 };
 
 const updateEvents = () => {
@@ -65,9 +85,9 @@ const editEvents = (event: any) => {
         <p class="tw-text-lg tw-font-semibold">
           {{ event.name }}
         </p>
-        <div v-if="events" class="tw-flex tw-items-center tw-justify-end">
+        <div v-if="event" class="tw-flex tw-items-center tw-justify-end">
           <Button
-            v-if="events.actions?.length"
+            v-if="event.actions?.length"
             @click="editEvents(event)"
             severity="contrast"
             size="small"
@@ -92,18 +112,18 @@ const editEvents = (event: any) => {
       <!-- <div>
         <ProgressSpinner />
       </div> -->
-      <p :class="{ 'tw-opacity-0': !events.actions?.length }">
+      <p :class="{ 'tw-opacity-0': !event.actions?.length }">
         <span class="text-primary tw-mr-2">
-          Метод 0
+          Метод {{ event.actionTypes.method }}
         </span>
         <span class="text-warning tw-mr-2">
-          Пауза 0
+          Пауза {{ event.actionTypes.delay }}
         </span>
         <span class="text-info tw-mr-2">
-          Скрипт 0
+          Скрипт {{ event.actionTypes.script }}
         </span>
         <span class="text-error">
-          Уведомление 0
+          Уведомление {{ event.actionTypes.notification }}
         </span>
       </p>
     </div>

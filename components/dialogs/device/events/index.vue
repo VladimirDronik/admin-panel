@@ -68,15 +68,7 @@ const confirmDelete = async (id: number) => {
   loadingDelete.value = true;
 };
 
-const eventsList = computed(() => {
-  if (form.value?.actions) {
-    return Object.values(form.value?.actions);
-  }
-  return form.value;
-});
-
 watch(actionsList, async (newValue, oldValue) => {
-  console.log(newValue, oldValue);
   if (!_.isEqual(oldValue, newValue)) {
     if (oldValue && form.value) {
       const params = form.value?.actions?.map((item: any) => item.id);
