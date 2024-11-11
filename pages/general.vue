@@ -1,5 +1,7 @@
 <template>
-  <div />
+  <div>
+    <BaseBreadcrumb title="pages.general" />
+  </div>
 </template>
 
 <script lang="ts" setup>

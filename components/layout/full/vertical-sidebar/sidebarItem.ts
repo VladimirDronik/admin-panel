@@ -49,7 +49,7 @@ const sidebarItem: menu[] = [
   {
     title: 'pages.charts',
     icon: IconGraph,
-    to: '/devices',
+    to: '/charts',
   },
   // { header: 'pages.visualization' },
   // {

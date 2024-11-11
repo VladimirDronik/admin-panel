@@ -20,7 +20,7 @@ useHead({
       <h4 class="text-h4 my-8">
         {{ t('error.errorPageText') }}
       </h4>
-      <NuxtLink to="/Devices">
+      <NuxtLink to="/devices">
         <Button flat color="primary" class="mb-4" to="/">
           {{ t('error.goBack') }}
         </Button>

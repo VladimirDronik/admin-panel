@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+    <BaseBreadcrumb title="pages.video" />
   </div>
 </template>
 
