@@ -195,13 +195,16 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const changeActionOrderApi = async (params = {}) => {
-    const data: {data: RequestDevices} = await api.put('http://10.35.16.1:8083/events/actions/order', {
-      data: params,
-      headers: {
-        'api-key': 'c041d36e381a835afce48c91686370c8',
-        token: storeAuth.token,
+    const data: {data: RequestDevices} = await api.put(
+      'http://10.35.16.1:8083/events/actions/order',
+      params,
+      {
+        headers: {
+          'api-key': 'c041d36e381a835afce48c91686370c8',
+          token: storeAuth.token,
+        },
       },
-    });
+    );
 
     return data;
   };

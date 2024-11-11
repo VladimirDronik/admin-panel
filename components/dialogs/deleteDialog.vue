@@ -61,6 +61,7 @@ const deleteItem = () => {
         <Button
           @click="deleteItem"
           :loading="loading"
+          :disabled="false"
           color="primary"
           class="tw-mr-2"
         >

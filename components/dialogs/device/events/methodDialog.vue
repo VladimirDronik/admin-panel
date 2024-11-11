@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
-
+const toast = useToast();
 const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
@@ -24,12 +25,22 @@ defineProps({
   },
 });
 
+const emit = defineEmits<{
+  (e: 'updateActions'): void
+}>();
+
 const objects = ref<any[]>([]);
 
 const selectedObject = ref<any>();
 const selectedMethod = ref<any>();
 
 const loading = ref(false);
+
+const search = ref('');
+
+watch(search, () => {
+  selectedObject.value = null;
+});
 
 const selectObject = (object: any) => {
   selectedObject.value = object;
@@ -39,19 +50,35 @@ const selectMethod = (method: any) => {
   selectedMethod.value = method;
 };
 
+const filteredObjects = computed(() => objects.value.filter((item) => item.name.includes(search.value)));
+
 const createAction = async () => {
   loading.value = true;
-  await storeDevices.createEventApi(event.value.target_type, event.value.id, event.value.name, {
-    args: selectedMethod.value,
-    enabled: true,
-    name: object.value.name,
-    target_id: object.value.id,
-    target_type: 'pause',
-    type: 'pause',
-    sort: 0,
-    qos: 0,
-  });
-
+  try {
+    await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+      args: selectedMethod.value,
+      enabled: true,
+      name: object.value.name,
+      target_id: object.value.id,
+      target_type: 'method',
+      type: 'method',
+      sort: 0,
+      qos: 0,
+    });
+    emit('updateActions');
+    toast.add({
+      severity: 'success',
+      summary: 'Действие успешно создано',
+      life: 5000,
+    });
+    dialog.value = false;
+  } catch {
+    toast.add({
+      severity: 'error',
+      summary: 'Ошибка добавления Метода',
+      life: 5000,
+    });
+  }
   loading.value = false;
 };
 
@@ -90,17 +117,18 @@ storeDevices.getDevicesApi({
       </p>
 
       <div class="tw-flex">
-        <h3 class="tw-mr-2 tw-w-6/12">
+        <h3 class="tw-mr-2 tw-w-6/12 tw-text-lg">
           Список Обьектов
         </h3>
-        <h3 class="tw-w-6/12">
+        <h3 class="tw-w-6/12 tw-text-lg">
           Список Методов
         </h3>
       </div>
       <div v-if="objects?.length" class="tw-flex">
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <div v-if="objects?.length">
-            <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in objects" :key="object.id">
+            <InputText v-model="search" class="tw-mb-2 tw-w-full" />
+            <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in filteredObjects" :key="object.id">
               <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
                 <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
                   {{ object.name }}

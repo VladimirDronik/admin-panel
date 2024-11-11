@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
+const toast = useToast();
 const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
@@ -23,6 +25,10 @@ defineProps({
   },
 });
 
+const emit = defineEmits<{
+  (e: 'updateActions'): void
+}>();
+
 const loading = ref(false);
 const deleteDialog = ref(false);
 
@@ -40,16 +46,31 @@ watch(dialog, () => {
 
 const createAction = async () => {
   loading.value = true;
-  await storeDevices.createEventApi(event.value.target_type, event.value.id, event.value.name, {
-    args: selectedScript.value,
-    enabled: true,
-    name: object.value.name,
-    target_id: object.value.id,
-    target_type: 'pause',
-    type: 'pause',
-    sort: 0,
-    qos: 0,
-  });
+  try {
+    await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+      args: selectedScript.value,
+      enabled: true,
+      name: object.value.name,
+      target_id: object.value.id,
+      target_type: 'script',
+      type: 'script',
+      sort: 0,
+      qos: 0,
+    });
+    emit('updateActions');
+    toast.add({
+      severity: 'success',
+      summary: 'Действие успешно создано',
+      life: 5000,
+    });
+    dialog.value = false;
+  } catch {
+    toast.add({
+      severity: 'error',
+      summary: 'Ошибка добавления Скрипта',
+      life: 5000,
+    });
+  }
   loading.value = false;
 };
 

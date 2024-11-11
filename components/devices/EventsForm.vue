@@ -30,7 +30,7 @@ const filterEvents = async (object: Devices) => {
 
   const result = objectEvents.map((item, index) => ({
     ...item,
-    actions: Object.values(responce[index].data),
+    actions: Object.values(responce[index].data)[0],
   }));
 
   events.value = result;

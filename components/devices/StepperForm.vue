@@ -90,6 +90,13 @@ const createDevice = async () => {
       limit: 10000,
       offset: 0,
     });
+
+    toast.add({
+      severity: 'success',
+      summary: 'Устройство успешно создано',
+      life: 5000,
+    });
+
     dialog.value = false;
 
     storeDevices.model = null;
@@ -101,18 +108,14 @@ const createDevice = async () => {
       category: 'controller',
     };
   } catch (error: any) {
-    showError();
+    toast.add({
+      severity: 'error',
+      summary: 'Ошибка создания',
+      detail: 'Устройство не было создано',
+      life: 5000,
+    });
   }
   loading.value = false;
-};
-
-const showError = () => {
-  toast.add({
-    severity: 'error',
-    summary: 'Ошибка создания',
-    detail: 'Устройство не было создано',
-    life: 5000,
-  });
 };
 </script>
 

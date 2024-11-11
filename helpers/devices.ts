@@ -34,7 +34,7 @@ export function filterInListDevices(devices: Devices[], level: number, key: stri
 
 export function getActionsColor(type: string): string {
   if (type === 'method') return 'default';
-  if (type === 'pause') return 'warn';
+  if (type === 'delay') return 'warn';
   if (type === 'script') return 'info';
   if (type === 'notification') return 'danger';
   return 'secondary';
@@ -42,8 +42,8 @@ export function getActionsColor(type: string): string {
 
 export function getActionsTitle(type: string): string {
   if (type === 'method') return 'Метод';
-  if (type === 'pause') return 'Пауза';
-  if (type === 'script') return 'Скринт';
+  if (type === 'delay') return 'Пауза';
+  if (type === 'script') return 'Скрипт';
   if (type === 'notification') return 'Уведомление';
   return 'secondary';
 }
