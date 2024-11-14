@@ -127,7 +127,7 @@ const createDevice = async () => {
       <Step value="3">{{ t('devices.management') }}</Step>
     </StepList>
     <StepPanels>
-      <StepPanel value="1">
+      <StepPanel v-slot="{ activateCallback }" value="1">
         <v-form v-model="valid">
           <div>
             <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
@@ -173,7 +173,7 @@ const createDevice = async () => {
 
             <Divider />
 
-            <DevicesPropertiesForm v-model="storeDevices.model" :loadingModal="loadingModal" />
+            <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
 
             <div class="tw-flex tw-justify-end">
               <Button
@@ -184,9 +184,8 @@ const createDevice = async () => {
                 {{ t('cancel') }}
               </Button>
               <Button
-                :disabled="!valid"
                 :loading="loading"
-                @click="createDevice"
+                @click="activateCallback('2')"
               >
                 {{ t('next') }}
               </Button>
@@ -194,7 +193,7 @@ const createDevice = async () => {
           </div>
         </v-form>
       </StepPanel>
-      <StepPanel value="2">
+      <StepPanel v-slot="{ activateCallback }" value="2">
         <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
         <div class="tw-flex tw-justify-between">
           <Button
@@ -205,6 +204,7 @@ const createDevice = async () => {
           </Button>
           <div>
             <Button
+              @click="activateCallback('1')"
               class="tw-mr-2"
               outlined
             >
@@ -213,6 +213,7 @@ const createDevice = async () => {
             <Button
               :disabled="!valid"
               :loading="loading"
+              @click="createDevice"
             >
               {{ t('next') }}
             </Button>

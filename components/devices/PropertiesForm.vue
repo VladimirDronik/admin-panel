@@ -19,6 +19,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  disableRoomSelect: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 </script>
@@ -26,7 +30,7 @@ defineProps({
 <template>
   <div>
     <div v-if="deviceObject">
-      <SharedUILabel :title="t('devices.room')" required>
+      <SharedUILabel v-if="!disableRoomSelect" :title="t('devices.room')" required>
         <Select
           v-model="deviceObject.zone_id"
           :rules="emptyRules"

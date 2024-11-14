@@ -173,7 +173,7 @@ const openEdit = (event: any) => {
           v-model="dialogNotification"
         />
 
-        <div v-if="storeDevice.item">
+        <div v-if="form">
           <VueDraggableNext
             v-model="actionsList"
             handle=".handle-item"

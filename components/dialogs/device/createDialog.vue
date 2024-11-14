@@ -129,6 +129,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         v-model:form="form"
         v-model:dialog="visible"
         :loadingModal="loadingModel"
+        disableRoomSelect
       />
     </Dialog>
   </div>
