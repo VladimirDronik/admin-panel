@@ -189,10 +189,13 @@ const openEdit = (event: any) => {
               <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
                 <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                   <Tag
-                    :value="getActionsTitle(event.type, event.args)"
                     :severity="getActionsColor(event.type)"
                     class="tw-mr-3 !tw-w-32"
-                  />
+                  >
+                    <p class="tw-font-normal">
+                      {{ getActionsTitle(event.type, event.args) }}
+                    </p>
+                  </Tag>
                   <p v-if="event.type === 'delay'">
                     {{ event.name ? event.name : '-'}}
                   </p>
