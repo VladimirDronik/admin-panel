@@ -8,6 +8,8 @@ const {
   emptyRules,
 } = useValidation();
 
+const storeRooms = useRoomsStore();
+
 const deviceObject = defineModel<Devices | null | undefined>({
   required: true,
 });
@@ -24,6 +26,17 @@ defineProps({
 <template>
   <div>
     <div v-if="deviceObject">
+      <SharedUILabel :title="t('devices.room')" required>
+        <Select
+          v-model="deviceObject.zone_id"
+          :rules="emptyRules"
+          :options="storeRooms.getRoomsSelect"
+          optionLabel="name"
+          optionValue="code"
+          class="tw-mb-3 tw-w-full"
+          required
+        />
+      </SharedUILabel>
       <div v-for="item in deviceObject?.props" :key="item.code">
         <div v-if="item.visible.value">
           <SharedUILabel

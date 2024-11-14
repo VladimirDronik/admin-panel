@@ -24,25 +24,33 @@ defineProps({
   },
 });
 
+const emit = defineEmits<{
+  (e: 'updateActions'): void
+}>();
+
+const updateActions = () => {
+  emit('updateActions');
+};
+
 const actionsList = ref<any[]>([]);
 
 const loading = ref(false);
 
-const updateActions = async () => {
-  loading.value = true;
-  if (form.value) {
-    const data: any = await $fetch('http://10.35.16.1:8083/events/actions', {
-      params: {
-        target_id: selectedObject.value.id,
-        target_type: form.value.target_type,
-      },
-    });
-    actionsList.value = data.data[form.value.code];
-  }
-  loading.value = true;
-};
+// const updateActions = async () => {
+//   loading.value = true;
+//   if (form.value) {
+//     const data: any = await $fetch('http://10.35.16.1:8083/events/actions', {
+//       params: {
+//         target_id: selectedObject.value.id,
+//         target_type: form.value.target_type,
+//       },
+//     });
+//     actionsList.value = data.data[form.value.code];
+//   }
+//   loading.value = true;
+// };
 
-watch(form, updateActions, { immediate: true });
+// watch(form, updateActions, { immediate: true });
 
 const dialogMethod = ref(false);
 const dialogPause = ref(false);
@@ -110,38 +118,34 @@ const openEdit = (event: any) => {
         <div class="tw-mb-6 tw-flex tw-items-center">
           <Button
             @click="dialogMethod = true"
-            prepend-icon="mdi-plus"
             class="tw-mr-4"
             outlined
-          >
-            Метод
-          </Button>
+            label="Метод"
+            icon="pi pi-plus"
+          />
           <Button
             @click="dialogPause = true"
-            prepend-icon="mdi-plus"
+            label="Пауза"
+            icon="pi pi-plus"
             severity="warn"
             class="tw-mr-4"
             outlined
-          >
-            Пауза
-          </Button>
+          />
           <Button
             @click="dialogScript = true"
-            prepend-icon="mdi-plus"
+            label="Скрипт"
+            icon="pi pi-plus"
             severity="info"
             class="tw-mr-4"
             outlined
-          >
-            Скрипт
-          </Button>
+          />
           <Button
             @click="dialogNotification = true"
-            prepend-icon="mdi-plus"
+            label="Уведомление"
+            icon="pi pi-plus"
             severity="danger"
             outlined
-          >
-            Уведомление
-          </Button>
+          />
         </div>
 
         <DialogsDeviceEventsMethodDialog
@@ -176,7 +180,7 @@ const openEdit = (event: any) => {
             :animation="300"
           >
             <div
-              v-for="event in actionsList"
+              v-for="event in form.actions"
               :key="event.id"
               @click="openEdit(event)"
               @keydown="openEdit(event)"
@@ -185,12 +189,18 @@ const openEdit = (event: any) => {
               <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
                 <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                   <Tag
-                    :value="getActionsTitle(event.type)"
+                    :value="getActionsTitle(event.type, event.args)"
                     :severity="getActionsColor(event.type)"
                     class="tw-mr-3 !tw-w-32"
                   />
-                  <p>
+                  <p v-if="event.type === 'delay'">
                     {{ event.name ? event.name : '-'}}
+                  </p>
+                  <p v-else-if="event.type === 'script'">
+                    {{ event.args.name ? event.args.name : '-'}}
+                  </p>
+                  <p v-else>
+                    {{ event.args.description ? event.args.description : '-'}}
                   </p>
                 </div>
                 <div class="tw-flex tw-items-center">
@@ -207,7 +217,7 @@ const openEdit = (event: any) => {
               </div>
             </div>
           </VueDraggableNext>
-          <div v-if="!actionsList?.length">
+          <div v-if="!form.actions?.length">
             Список событий пуст
           </div>
         </div>

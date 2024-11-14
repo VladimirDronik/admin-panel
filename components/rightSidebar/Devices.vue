@@ -75,9 +75,23 @@ const changeDevice = () => {
     <BaseLoader :isUpdate="isUpdate">
       <div elevation="0" class="tw-min-h-80 tw-p-7">
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-          <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-            {{ storeDevices.item?.name }}
-          </h3>
+
+          <Inplace v-if="storeDevices.item" class="tw-w-full">
+            <template #display>
+              <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
+                {{ storeDevices.item?.name }}
+              </h3>
+            </template>
+            <template #content="{ closeCallback }">
+              <span class=" tw-flex tw-w-full tw-items-center tw-gap-2">
+                <InputText
+                  v-model="storeDevices.item.name"
+                  autofocus
+                />
+                <Button icon="pi pi-times" text severity="danger" @click="closeCallback" />
+              </span>
+            </template>
+          </Inplace>
           <Button
             @click="isActiveRightSidebar = false"
             icon="pi pi-times"

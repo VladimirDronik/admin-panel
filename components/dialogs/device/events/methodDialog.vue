@@ -128,13 +128,15 @@ storeDevices.getDevicesApi({
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <div v-if="objects?.length">
             <InputText v-model="search" class="tw-mb-2 tw-w-full" />
-            <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in filteredObjects" :key="object.id">
-              <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
-                <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
-                  {{ object.name }}
-                </p>
-              </div>
-            </button>
+            <ScrollPanel style="height: 300px">
+              <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in filteredObjects" :key="object.id">
+                <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
+                  <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
+                    {{ object.name }}
+                  </p>
+                </div>
+              </button>
+            </ScrollPanel>
           </div>
           <div v-else>
             Список Обьектов пуст

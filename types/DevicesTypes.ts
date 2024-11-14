@@ -3,7 +3,7 @@ export interface Devices {
     type: number,
     protocol: number,
     state: number,
-    name: number,
+    name: string,
     address: number,
     module: number,
     category: string,

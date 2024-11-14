@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { request } from 'playwright-core';
-import type { Devices, Event } from '~/types/DevicesTypes';
-
-const storeDevice = useDevicesStore();
+import type { Devices } from '~/types/DevicesTypes';
 
 const dialog = ref(false);
 const edit = ref(false);
@@ -12,6 +9,7 @@ const object = defineModel<Devices>({
 });
 
 const form = ref();
+const selectedEvent = ref('');
 
 const events = ref<any | null>();
 
@@ -39,6 +37,10 @@ const filterEvents = async (object: Devices) => {
   events.value = result;
 };
 
+watch(events, () => {
+  form.value = events.value?.find((item: any) => item.code === selectedEvent.value) ?? null;
+});
+
 const actionsType = (actions: any[]) => {
   if (actions) {
     return {
@@ -65,12 +67,14 @@ updateEvents();
 watch(() => object.value?.events, updateEvents);
 
 const createEvents = (event: any) => {
+  selectedEvent.value = event.code;
   form.value = event;
   dialog.value = true;
   edit.value = true;
 };
 
 const editEvents = (event: any) => {
+  selectedEvent.value = event.code;
   form.value = event;
   dialog.value = true;
   edit.value = false;
@@ -90,19 +94,18 @@ const editEvents = (event: any) => {
             v-if="event.actions?.length"
             @click="editEvents(event)"
             size="small"
-            severity="info"
-          >
-            Настройка
-          </Button>
+            text
+            label="Настройка"
+            icon="pi pi-cog"
+          />
           <Button
             v-else
             @click="createEvents(event)"
             color="primary"
             size="small"
-            prepend-icon="mdi-plus"
-          >
-            Добавить
-          </Button>
+            label="Добавить"
+            icon="pi pi-plus"
+          />
         </div>
       </div>
       <p class="tw-mb-2">
@@ -128,6 +131,7 @@ const editEvents = (event: any) => {
     </div>
 
     <DialogsDeviceEvents
+      @update-actions="updateEvents"
       v-model="dialog"
       v-model:object="object"
       v-model:form="form"
