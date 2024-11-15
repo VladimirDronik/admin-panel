@@ -76,7 +76,7 @@ const confirmDelete = async (id: number) => {
   loadingDelete.value = true;
 };
 
-watch(actionsList, async (newValue, oldValue) => {
+watch(() => form.value?.actions, async (newValue, oldValue) => {
   if (!_.isEqual(oldValue, newValue)) {
     if (oldValue && form.value) {
       const params = form.value?.actions?.map((item: any) => item.id);
@@ -175,7 +175,7 @@ const openEdit = (event: any) => {
 
         <div v-if="form">
           <VueDraggableNext
-            v-model="actionsList"
+            v-model="form.actions"
             handle=".handle-item"
             :animation="300"
           >
