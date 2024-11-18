@@ -49,7 +49,7 @@ storeRooms.getRoomsApi();
             <!---If Has Child -->
             <LayoutFullVerticalSidebarNavCollapse class="leftPadding" key="item" :item="item" :level="0" v-else-if="item.children" />
             <!---Single Item-->
-            <LayoutFullVerticalSidebarNavItem :item="item" v-else class="leftPadding" />
+            <LayoutFullVerticalSidebarNavItem :level="0" :item="item" v-else class="leftPadding" />
             <!---End Single Item-->
           </template>
         </v-list>

@@ -1,52 +1,36 @@
 <script lang="ts" setup>
 
-const page = ref(1);
-const filters = ref([]);
-
 const headers = [
   {
     label: 'ID',
     code: 'id',
   },
   {
-    label: 'Тип',
-    code: 'type',
+    label: 'Имя',
+    code: 'name',
   },
   {
     label: 'Статус',
-    code: 'status',
+    code: 'script',
   },
   {
-    label: 'Надпись',
-    code: 'Inscription',
-  },
-  {
-    label: 'Обьект',
-    code: 'object',
-  },
-  {
-    label: 'Помещение',
-    code: 'room',
-  },
-  {
-    label: 'Активно',
-    code: 'active',
+    label: 'Доступ',
+    code: 'count',
   },
   {
     label: 'Действия',
     code: 'actions',
   },
 ];
-
 </script>
 
 <template>
   <div>
-    <BaseBreadcrumb title="pages.display">
+    <BaseBreadcrumb title="pages.users">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
-        label="Добавить отображение"
+        label="Добавить Пользователя"
       />
     </BaseBreadcrumb>
     <BaseNewTable

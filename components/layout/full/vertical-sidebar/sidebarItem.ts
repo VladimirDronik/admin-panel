@@ -1,6 +1,15 @@
 import { DevicesIcon } from 'vue-tabler-icons';
 import {
-  IconVideo, IconDoor, IconReportAnalytics, IconResize, IconGraph,
+  IconVideo,
+  IconDoor,
+  IconReportAnalytics,
+  IconResize,
+  IconTimeline,
+  IconSettings,
+  IconBrandTabler,
+  IconPlug,
+  IconLogs,
+  IconUsers,
 } from '@tabler/icons-vue';
 
 export interface menu {
@@ -45,44 +54,38 @@ const sidebarItem: menu[] = [
     icon: IconResize,
     to: '/display',
   },
-  { header: 'pages.charts' },
+  { header: 'pages.settings' },
+  {
+    title: 'pages.networkSettings',
+    icon: IconPlug,
+    to: '/networks',
+  },
+  {
+    title: 'pages.scripts',
+    icon: IconBrandTabler,
+    to: '/scripts',
+  },
+  {
+    title: 'pages.users',
+    icon: IconUsers,
+    to: '/users',
+  },
+  {
+    title: 'pages.parameters',
+    icon: IconSettings,
+    to: '/parameters',
+  },
+  { header: 'pages.diagnostics' },
+  {
+    title: 'pages.logging',
+    icon: IconLogs,
+    to: '/logs',
+  },
   {
     title: 'pages.charts',
-    icon: IconGraph,
+    icon: IconTimeline,
     to: '/charts',
   },
-  // { header: 'pages.visualization' },
-  // {
-  //   title: 'Мобильное прил.',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
-  // {
-  //   title: 'Планшетная версия',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
-  // { header: 'Функции' },
-  // {
-  //   title: 'Сценарии',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
-  // {
-  //   title: 'Графики',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
-  // {
-  //   title: 'Планировщик',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
-  // {
-  //   title: 'Оповещения',
-  //   icon: ApertureIcon,
-  //   to: '/login',
-  // },
 ];
 
 export default sidebarItem;

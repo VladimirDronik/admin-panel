@@ -202,6 +202,9 @@ const openEdit = (event: any) => {
                   <p v-else-if="event.type === 'script'">
                     {{ event.args.name ? event.args.name : '-'}}
                   </p>
+                  <p v-else-if="event.type === 'method'">
+                    {{ event.args.object ? event.args.object : '-'}}
+                  </p>
                   <p v-else>
                     {{ event.args.description ? event.args.description : '-'}}
                   </p>

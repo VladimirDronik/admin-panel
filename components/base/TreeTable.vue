@@ -159,6 +159,11 @@ watch(() => props.total, () => {
         tableStyle="min-width: 50rem"
       >
         <slot />
+        <template #empty>
+          <div class="tw-flex tw-justify-center">
+            Нет данных
+          </div>
+        </template>
       </TreeTable>
     </BaseLoader>
   </div>
@@ -177,20 +182,6 @@ watch(() => props.total, () => {
   & .v-pagination__list {
     justify-content: end !important;
   }
-}
-
-.tree-table {
-  border: 1px solid var(--p-treetable-body-cell-border-color);
-  border-bottom: none;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.p-treetable-header-cell {
-  &:not(:last-child) {
-    border-right: 1px solid var(--p-treetable-body-cell-border-color);
-  }
-  background-color: #E0ECE9 !important;
 }
 
 .p-treetable-row-selected {

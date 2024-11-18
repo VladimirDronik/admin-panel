@@ -25,7 +25,7 @@ const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
 
-defineProps({
+const props = defineProps({
   loadingModal: {
     type: Boolean,
     default: false,
@@ -33,12 +33,36 @@ defineProps({
 });
 
 // Variables
-const valid = ref(false);
 const loading = ref(false);
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(_.filter(storeDevices.types, ['category', form.value.category]), 'type')));
 const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
+
+const checkValidInput = (value: any) => value || value === false;
+
+const valid = computed(() => {
+  const main = checkValidInput(form.value.zone_id)
+  && checkValidInput(form.value.category)
+  && checkValidInput(form.value.type)
+  && checkValidInput(form.value.name);
+
+  let props = true;
+  let children = true;
+
+  if (storeDevices.model?.props.length) {
+    props = storeDevices.model.props.every((item) => checkValidInput(item.value));
+  }
+
+  if (storeDevices.model?.children?.length) {
+    children = storeDevices.model.children.every((child) => {
+      if (child.props.length) return true;
+      return child.props.every((item) => checkValidInput(item.value));
+    });
+  }
+
+  return main && props && children;
+});
 
 const createDevice = async () => {
   loading.value = true;
@@ -120,7 +144,7 @@ const createDevice = async () => {
 </script>
 
 <template>
-  <Stepper value="1" class="basis-[50rem]">
+  <Stepper value="1" class="basis-[50rem]" linear>
     <StepList>
       <Step value="1">{{ t('devices.features') }}</Step>
       <Step value="2">{{ t('devices.events') }}</Step>
@@ -128,121 +152,97 @@ const createDevice = async () => {
     </StepList>
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
-        <v-form v-model="valid">
-          <div>
-            <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
-              <SharedUILabel :title="t('devices.title')" required>
-                <InputText
-                  v-model="form.name"
-                  :rules="emptyRules"
-                  class="tw-w-full"
-                  required
-                />
-              </SharedUILabel>
-              <SharedUILabel :title="t('devices.room')" required>
-                <Select
-                  v-model="form.zone_id"
-                  :rules="emptyRules"
-                  :options="storeRooms.getRoomsSelect"
-                  optionLabel="name"
-                  class="tw-w-full"
-                  required
-                />
-              </SharedUILabel>
-            </div>
-            <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
-              <SharedUILabel :title="t('devices.category')" required>
-                <Select
-                  v-model="form.category"
-                  :options="categories"
-                  :rules="emptyRules"
-                  class="tw-w-full"
-                  required
-                />
-              </SharedUILabel>
-              <SharedUILabel :title="t('devices.type')" required>
-                <Select
-                  v-model="form.type"
-                  :options="types"
-                  :rules="emptyRules"
-                  class="tw-w-full"
-                  required
-                />
-              </SharedUILabel>
-            </div>
-
-            <Divider />
-
-            <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
-
-            <div class="tw-flex tw-justify-end">
-              <Button
-                @click="dialog = false"
-                class="tw-mr-2"
-                outlined
-              >
-                {{ t('cancel') }}
-              </Button>
-              <Button
-                :loading="loading"
-                @click="activateCallback('2')"
-              >
-                {{ t('next') }}
-              </Button>
-            </div>
+        <v-form>
+          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
+            <SharedUILabel :title="t('devices.title')" required>
+              <InputText
+                v-model="form.name"
+                class="tw-w-full"
+                required
+              />
+            </SharedUILabel>
+            <SharedUILabel :title="t('devices.room')" required>
+              <Select
+                v-model="form.zone_id"
+                :options="storeRooms.getRoomsSelect"
+                optionLabel="name"
+                class="tw-w-full"
+                required
+              />
+            </SharedUILabel>
+          </div>
+          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
+            <SharedUILabel :title="t('devices.category')" required>
+              <Select
+                v-model="form.category"
+                :options="categories"
+                class="tw-w-full"
+                required
+              />
+            </SharedUILabel>
+            <SharedUILabel :title="t('devices.type')" required>
+              <Select
+                v-model="form.type"
+                :options="types"
+                class="tw-w-full"
+                required
+              />
+            </SharedUILabel>
           </div>
         </v-form>
+
+        <Divider />
+
+        <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
+
+        <div class="tw-flex tw-justify-end">
+          <Button
+            @click="dialog = false"
+            class="tw-mr-2"
+            outlined
+          >
+            {{ t('cancel') }}
+          </Button>
+          <Button
+            :disabled="!valid"
+            :loading="loading"
+            @click="activateCallback('2')"
+          >
+            {{ t('next') }}
+          </Button>
+        </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
         <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
         <div class="tw-flex tw-justify-between">
           <Button
-            :disabled="!valid"
-            :loading="loading"
+            @click="activateCallback('1')"
           >
             {{ t('goBack') }}
           </Button>
-          <div>
-            <Button
-              @click="activateCallback('1')"
-              class="tw-mr-2"
-              outlined
-            >
-              {{ t('cancel') }}
-            </Button>
-            <Button
-              :disabled="!valid"
-              :loading="loading"
-              @click="createDevice"
-            >
-              {{ t('next') }}
-            </Button>
-          </div>
+          <Button
+            :loading="loading"
+            @click="activateCallback('3')"
+          >
+            {{ t('next') }}
+          </Button>
         </div>
       </StepPanel>
-      <StepPanel value="3">
+      <StepPanel v-slot="{ activateCallback }" value="3">
+        Пока пусто
         <div class="tw-flex tw-justify-between">
           <Button
-            :disabled="!valid"
-            :loading="loading"
+            @click="activateCallback('2')"
           >
             {{ t('goBack') }}
           </Button>
-          <div>
-            <Button
-              class="tw-mr-2"
-              outlined
-            >
-              {{ t('cancel') }}
-            </Button>
-            <Button
-              color="primary"
-              :disabled="!valid"
-              :loading="loading"
-            >
-              {{ t('save') }}
-            </Button>
-          </div>
+          <Button
+            color="primary"
+            @click="createDevice"
+            :loading="loading"
+          >
+            {{ t('save') }}
+          </Button>
         </div>
       </StepPanel>
     </StepPanels>

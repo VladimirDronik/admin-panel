@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
-
-const toast = useToast();
 
 const visible = defineModel({
   default: false,
@@ -114,9 +111,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <Button
       @click="visible = true"
       class="text-capitalize"
-    >
-      {{ t('devices.addDevice') }}
-    </Button>
+      icon="pi pi-plus"
+      :label="t('devices.addDevice')"
+    />
 
     <Dialog
       v-model:visible="visible"

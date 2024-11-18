@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('Auth', () => {
   };
 
   const logoutApi = async () => {
-    router.push({ name: 'auth-Login' });
+    router.push({ name: 'auth-login' });
     // const { data } = await api.post('api/public/user/logout');
     // return data;
   };

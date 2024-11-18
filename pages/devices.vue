@@ -38,7 +38,7 @@ const popoverType = ref();
 const popoverRoom = ref();
 const popoverStatus = ref();
 
-const selectedItemId = ref(null);
+const selectedDevice = ref();
 
 // Computed Properties
 const headers = computed(() => [
@@ -153,8 +153,8 @@ const update = async (params: any = {}) => {
 const clickRow = async (item: any) => {
   isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
-  selectedItemId.value = item.data.id;
-  await storeDevices.getControllerDetailsApi(item.data.id);
+  const data = await storeDevices.getControllerDetailsApi(item.data.id);
+  selectedDevice.value = data;
   isUpdateRightBar.value = false;
 };
 
@@ -419,7 +419,12 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <div class="tags">
             <ScrollPanel class="tw-max-w-96" aria-orientation="horizontal">
               <div class="tw-flex">
-                <Tag severity="warn" class="tw-mr-2 tw-flex" v-for="item in node.data.tags" :key="item">
+                <Tag
+                  v-for="item in node.data.tags"
+                  :key="item"
+                  severity="warn"
+                  class="tw-mr-2 tw-flex"
+                >
                   {{ item }}
                 </Tag>
               </div>
@@ -429,7 +434,11 @@ watch([props, childrenProps], (newValue, oldValue) => {
       </Column>
     </BaseTreeTable>
 
-    <RightSidebarDevices v-model:is-update="isUpdateRightBar" v-model:is-open="isActiveRightSidebar" />
+    <RightSidebarDevices
+      v-model:is-update="isUpdateRightBar"
+      v-model:is-open="isActiveRightSidebar"
+      v-model:form="selectedDevice"
+    />
   </div>
 </template>
 

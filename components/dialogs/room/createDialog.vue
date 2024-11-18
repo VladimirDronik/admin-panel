@@ -27,9 +27,11 @@ const form = ref({
 
 <template>
   <div>
-    <Button @click="dialog = true">
-      Добавить Помещение
-    </Button>
+    <Button
+      icon="pi pi-plus"
+      label="Добавить Помещение"
+      @click="dialog = true"
+    />
     <Dialog
       v-model:visible="dialog"
       :header="'Добавить Помещение'"

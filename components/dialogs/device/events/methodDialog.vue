@@ -56,7 +56,10 @@ const createAction = async () => {
   loading.value = true;
   try {
     await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
-      args: selectedMethod.value,
+      args: {
+        ...selectedMethod.value,
+        object: selectedObject.value.name,
+      },
       enabled: true,
       name: object.value.name,
       target_id: object.value.id,

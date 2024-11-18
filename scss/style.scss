@@ -36,3 +36,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.data-table, .tree-table {
+  border: 1px solid var(--p-treetable-body-cell-border-color);
+  border-bottom: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.p-datatable-header-cell, .p-treetable-header-cell {
+  &:not(:last-child) {
+    border-right: 1px solid var(--p-treetable-body-cell-border-color);
+  }
+  background-color: #E0ECE9 !important;
+}

@@ -23,7 +23,7 @@ const login = async () => {
   loading.value = true;
   try {
     await store.loginApi(form.value);
-    router.push({ name: 'devices' });
+    router.push({ name: 'general' });
   } catch (error: any) {
     console.log(error);
   }

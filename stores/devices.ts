@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import _ from 'lodash';
 import { useApiInstant } from '~/composables/api/apiInstant';
 // Helpers
 import { filterInListDevices } from '~/helpers/devices';
@@ -160,14 +161,44 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
-  const changeDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api.put('http://10.35.16.1:8082/objects', {
-      data: params,
-      headers: {
-        'api-key': 'c041d36e381a835afce48c91686370c8',
-        token: storeAuth.token,
-      },
+  const changeDeviceApi = async (params: Devices) => {
+    if (_.isEmpty(params)) return undefined;
+
+    const props: any = {};
+    params.props.forEach((item) => props[item.code] = item.value);
+
+    const children = params.children?.map((item) => {
+      const childrenProps: any = {};
+      item.props.forEach((prop) => childrenProps[prop.code] = prop.value);
+      return {
+        ...item,
+        props: childrenProps,
+      };
     });
+
+    const newParams: any = {
+      id: params.id,
+      type: params.type,
+      zone_id: params.zone_id,
+      protocol: params.protocol,
+      category: params.category,
+      name: params.name,
+      status: params.status,
+      props,
+    };
+
+    newParams.children = children;
+
+    const { data }: { data: Type[] } = await api.put(
+      'http://10.35.16.1:8082/objects',
+      newParams,
+      {
+        headers: {
+          'api-key': 'c041d36e381a835afce48c91686370c8',
+          token: storeAuth.token,
+        },
+      },
+    );
     return data;
   };
 
@@ -191,7 +222,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     } as Devices;
 
     item.value = result;
-    return data;
+    return result;
   };
 
   const changeActionOrderApi = async (params = {}) => {
