@@ -7,7 +7,7 @@ export const useApiInstant = () => {
 
   const api = axios.create({
     baseURL: runtimeConfig.public.backendApi,
-    timeout: 10000,
+    timeout: 100000,
   });
 
   api.interceptors.response.use(

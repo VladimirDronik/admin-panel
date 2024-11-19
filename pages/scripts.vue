@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 
+const storeDevices = useDevicesStore();
+
 const headers = [
   {
     label: 'ID',
@@ -11,7 +13,7 @@ const headers = [
   },
   {
     label: 'Скрипт',
-    code: 'script',
+    code: 'code',
   },
   {
     label: 'Выполнений',
@@ -21,11 +23,9 @@ const headers = [
     label: 'Системный',
     code: 'system',
   },
-  {
-    label: 'Действия',
-    code: 'actions',
-  },
 ];
+
+storeDevices.getScriptsApi();
 </script>
 
 <template>
@@ -40,8 +40,35 @@ const headers = [
     <BaseNewTable
       class="data-table"
       :headers="headers"
-      :items="[]"
-    />
+      :items="storeDevices.scripts"
+    >
+      <Column field="actions" style="width: 200px">
+        <template #header>
+          <p class="tw-font-semibold">
+            Действия
+          </p>
+        </template>
+        <template #body="{ node }">
+          <div>
+            <Button
+              outlined
+              icon="pi pi-pencil"
+              severity="info"
+              rounded
+              aria-label="Search"
+              class="tw-mr-2"
+            />
+            <Button
+              outlined
+              icon="pi pi-trash"
+              severity="danger"
+              rounded
+              aria-label="Cancel"
+            />
+          </div>
+        </template>
+      </Column>
+    </BaseNewTable>
   </div>
 </template>
 

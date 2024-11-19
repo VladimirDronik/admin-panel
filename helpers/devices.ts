@@ -53,11 +53,21 @@ export function updateParamsForApi(params: Devices) {
   if (_.isEmpty(params)) return undefined;
 
   const props: any = {};
-  params.props.forEach((item) => props[item.code] = item.value);
+  params.props.forEach((item) => props[item.code] = {
+    ...item,
+    editable: item.editable.funcText,
+    required: item.required.funcText,
+    visible: item.visible.funcText,
+  });
 
   const children = params.children?.map((item) => {
     const childrenProps: any = {};
-    item.props.forEach((prop) => childrenProps[prop.code] = prop.value);
+    item.props.forEach((prop) => childrenProps[prop.code] = {
+      ...prop,
+      editable: prop.editable.funcText,
+      required: prop.required.funcText,
+      visible: prop.visible.funcText,
+    });
     return {
       ...item,
       props: childrenProps,

@@ -64,39 +64,13 @@ const valid = computed(() => {
 
 const createDevice = async () => {
   loading.value = true;
-  // const newProps: any = {};
-  // const newChildren: any = [];
-  // storeDevices.model?.props.forEach((item) => {
-  //   newProps[item.code] = {
-  //     code: item.code,
-  //     name: item.name,
-  //     type: item.type,
-  //     value: item.value,
-  //   };
-  // });
-  // if (storeDevices.model?.children) {
-  //   storeDevices.model?.children.forEach((item) => {
-  //     newChildren.push({
-  //       ...item,
-  //       props: item.props.map((item) => ({
-  //         code: item.code,
-  //         name: item.name,
-  //         type: item.type,
-  //         value: item.value,
-  //       })),
-  //     });
-  //   });
-  //   storeDevices.model?.children[0]?.props.forEach((item) => {
-  //     newChildren[item.code] = {
-  //       code: item.code,
-  //       name: item.name,
-  //       type: item.type,
-  //       value: item.value,
-  //     };
-  //   });
-  // }
   try {
-    if (storeDevices.model) await storeDevices.createDeviceApi(updateParamsForApi(storeDevices.model));
+    if (storeDevices.model) {
+      await storeDevices.createDeviceApi(updateParamsForApi({
+        ...storeDevices.model,
+        ...form.value,
+      }));
+    }
     await storeDevices.getDevicesApi({
       limit: 10000,
       offset: 0,
@@ -153,6 +127,7 @@ const createDevice = async () => {
                 v-model="form.zone_id"
                 :options="storeRooms.getRoomsSelect"
                 optionLabel="name"
+                optionValue="code"
                 class="tw-w-full"
                 required
               />

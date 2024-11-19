@@ -110,6 +110,8 @@ const updateName = () => {
   if (form.value) name.value = form.value?.name;
 };
 
+watch(() => form.value?.name, updateName);
+
 </script>
 
 <template>

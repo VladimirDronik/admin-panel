@@ -21,6 +21,7 @@ defineProps<{
         :header="item.label"
         :key="item.code"
       />
+      <slot />
       <template #empty>
         <div class="tw-flex tw-justify-center">
           Нет данных

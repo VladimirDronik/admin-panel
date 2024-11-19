@@ -1,6 +1,6 @@
 export interface Devices {
     id: number,
-    type: number,
+    type: string,
     protocol: number,
     state: number,
     name: string,
@@ -9,7 +9,7 @@ export interface Devices {
     parent_id: number,
     category: string,
     tags: string[],
-    zone_id: number
+    zone_id: number | null
     status: string
     children?: Devices[]
     props: ModelProps[]
