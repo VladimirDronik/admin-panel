@@ -6,6 +6,7 @@ export interface Devices {
     name: string,
     address: number,
     module: number,
+    parent_id: number,
     category: string,
     tags: string[],
     zone_id: number

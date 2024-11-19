@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import _ from 'lodash';
 import { useApiInstant } from '~/composables/api/apiInstant';
 // Helpers
-import { filterInListDevices } from '~/helpers/devices';
+import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
 // Types
 import type {
   Devices, Type, RequestData, ModelProps, RequestDevices, Tags, Script, RequestScript,
@@ -164,34 +164,9 @@ export const useDevicesStore = defineStore('Devices', () => {
   const changeDeviceApi = async (params: Devices) => {
     if (_.isEmpty(params)) return undefined;
 
-    const props: any = {};
-    params.props.forEach((item) => props[item.code] = item.value);
-
-    const children = params.children?.map((item) => {
-      const childrenProps: any = {};
-      item.props.forEach((prop) => childrenProps[prop.code] = prop.value);
-      return {
-        ...item,
-        props: childrenProps,
-      };
-    });
-
-    const newParams: any = {
-      id: params.id,
-      type: params.type,
-      zone_id: params.zone_id,
-      protocol: params.protocol,
-      category: params.category,
-      name: params.name,
-      status: params.status,
-      props,
-    };
-
-    newParams.children = children;
-
     const { data }: { data: Type[] } = await api.put(
       'http://10.35.16.1:8082/objects',
-      newParams,
+      updateParamsForApi(params),
       {
         headers: {
           'api-key': 'c041d36e381a835afce48c91686370c8',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
+import { updateParamsForApi } from '~/helpers/devices';
 
 interface DeviceCreateForm {
   name: string,
@@ -14,9 +15,6 @@ const { t } = useI18n();
 const toast = useToast();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
-const {
-  emptyRules,
-} = useValidation();
 
 const form = defineModel<DeviceCreateForm>('form', {
   required: true,
@@ -25,7 +23,7 @@ const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
 
-const props = defineProps({
+defineProps({
   loadingModal: {
     type: Boolean,
     default: false,
@@ -66,50 +64,39 @@ const valid = computed(() => {
 
 const createDevice = async () => {
   loading.value = true;
-  const newProps: any = {};
-  const newChildren: any = [];
-  storeDevices.model?.props.forEach((item) => {
-    newProps[item.code] = {
-      code: item.code,
-      name: item.name,
-      type: item.type,
-      value: item.value,
-    };
-  });
-  if (storeDevices.model?.children) {
-    storeDevices.model?.children.forEach((item) => {
-      newChildren.push({
-        ...item,
-        props: item.props.map((item) => ({
-          code: item.code,
-          name: item.name,
-          type: item.type,
-          value: item.value,
-        })),
-      });
-    });
-    storeDevices.model?.children[0]?.props.forEach((item) => {
-      newChildren[item.code] = {
-        code: item.code,
-        name: item.name,
-        type: item.type,
-        value: item.value,
-      };
-    });
-  }
+  // const newProps: any = {};
+  // const newChildren: any = [];
+  // storeDevices.model?.props.forEach((item) => {
+  //   newProps[item.code] = {
+  //     code: item.code,
+  //     name: item.name,
+  //     type: item.type,
+  //     value: item.value,
+  //   };
+  // });
+  // if (storeDevices.model?.children) {
+  //   storeDevices.model?.children.forEach((item) => {
+  //     newChildren.push({
+  //       ...item,
+  //       props: item.props.map((item) => ({
+  //         code: item.code,
+  //         name: item.name,
+  //         type: item.type,
+  //         value: item.value,
+  //       })),
+  //     });
+  //   });
+  //   storeDevices.model?.children[0]?.props.forEach((item) => {
+  //     newChildren[item.code] = {
+  //       code: item.code,
+  //       name: item.name,
+  //       type: item.type,
+  //       value: item.value,
+  //     };
+  //   });
+  // }
   try {
-    if (storeDevices.model?.category === 'sensor') {
-      await storeDevices.createDeviceApi({
-        ...form.value,
-        props: newProps,
-        children: newChildren,
-      });
-    } else {
-      await storeDevices.createDeviceApi({
-        ...form.value,
-        props: newProps,
-      });
-    }
+    if (storeDevices.model) await storeDevices.createDeviceApi(updateParamsForApi(storeDevices.model));
     await storeDevices.getDevicesApi({
       limit: 10000,
       offset: 0,

@@ -25,6 +25,11 @@ export const checkStatusText = (item: string) => {
   if (item === 'OFF') return 'Выключено';
   return 'Неопределён';
 };
+export const checkStatusTextSmall = (item: string) => {
+  if (item === 'ON') return 'Вкл';
+  if (item === 'OFF') return 'Выкл';
+  return 'Неоп';
+};
 
 export const checkStatusColor = (item: string) => {
   if (item === 'ON') return 'bg-success';
