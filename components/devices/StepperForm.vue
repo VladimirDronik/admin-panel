@@ -49,7 +49,10 @@ const valid = computed(() => {
   let children = true;
 
   if (storeDevices.model?.props.length) {
-    props = storeDevices.model.props.every((item) => checkValidInput(item.value));
+    props = storeDevices.model.props.every((item) => {
+      if (item.required) return true;
+      return checkValidInput(item.value);
+    });
   }
 
   if (storeDevices.model?.children?.length) {
