@@ -7,9 +7,10 @@ import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 
 // Composables
+const { t } = useI18n();
 const router = useRouter();
 const store = useAuthStore();
-const { t } = useI18n();
+const { updateData } = useUtils();
 
 // Variables
 const loading = ref(true);
@@ -21,12 +22,16 @@ const form = ref({
 
 const login = async () => {
   loading.value = true;
-  try {
-    await store.loginApi(form.value);
-    router.push({ name: 'general' });
-  } catch (error: any) {
-    console.log(error);
-  }
+  updateData({
+    update: async () => {
+      await store.loginApi(form.value);
+    },
+    success: () => {
+      router.push({ name: 'general' });
+    },
+    errorMessage: 'Ошибка входа',
+    disableSuccessMessage: true,
+  });
   loading.value = false;
 };
 </script>

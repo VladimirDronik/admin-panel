@@ -20,21 +20,33 @@ export const filterInListRoom = (rooms: Room[] | undefined): any => {
   return result;
 };
 
-export const checkStatusText = (item: string) => {
+export const checkStatusText = (item: string | undefined) => {
   if (item === 'ON') return 'Включено';
   if (item === 'OFF') return 'Выключено';
   return 'Неопределён';
 };
-export const checkStatusTextSmall = (item: string) => {
+export const checkStatusTextSmall = (item: string | undefined) => {
   if (item === 'ON') return 'Вкл';
   if (item === 'OFF') return 'Выкл';
   return 'Неоп';
 };
 
-export const checkStatusColor = (item: string) => {
+export const checkStatusBackgroundColor = (item: string | undefined) => {
   if (item === 'ON') return 'bg-success';
   if (item === 'OFF') return 'bg-error';
   return 'bg-warning';
+};
+
+export const checkStatusPrimeVueColor = (item: string | undefined) => {
+  if (item === 'ON') return 'primary';
+  if (item === 'OFF') return 'danger';
+  return 'warn';
+};
+
+export const checkStatusColor = (item: string | undefined) => {
+  if (item === 'ON') return 'success';
+  if (item === 'OFF') return 'error';
+  return 'warning';
 };
 
 export const roomColor = (color: string) => {

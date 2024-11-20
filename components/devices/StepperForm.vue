@@ -1,8 +1,10 @@
 <script setup lang="ts">
+// Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { updateParamsForApi } from '~/helpers/devices';
 
+// Types
 interface DeviceCreateForm {
   name: string,
   type: string,
@@ -12,7 +14,7 @@ interface DeviceCreateForm {
 
 // Composables
 const { t } = useI18n();
-const toast = useToast();
+const { updateData } = useUtils();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 
@@ -36,8 +38,6 @@ const loading = ref(false);
 // Computed Properties
 const types = computed(() => _.uniq(_.map(_.filter(storeDevices.types, ['category', form.value.category]), 'type')));
 const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
-
-const checkValidInput = (value: any) => value || value === false;
 
 const valid = computed(() => {
   const main = checkValidInput(form.value.zone_id)
@@ -65,42 +65,37 @@ const valid = computed(() => {
   return main && props && children;
 });
 
+// Methods
+const checkValidInput = (value: any) => value || value === false;
+
 const createDevice = async () => {
   loading.value = true;
-  try {
-    if (storeDevices.model) {
-      await storeDevices.createDeviceApi(updateParamsForApi({
-        ...storeDevices.model,
-        ...form.value,
-      }));
-    }
-    await storeDevices.getDevicesApi({
-      limit: 10000,
-      offset: 0,
+  if (storeDevices.model) {
+    const params = updateParamsForApi({
+      ...storeDevices.model,
+      ...form.value,
     });
 
-    toast.add({
-      severity: 'success',
-      summary: 'Устройство успешно создано',
-      life: 5000,
-    });
-
-    dialog.value = false;
-
-    storeDevices.model = null;
-
-    form.value = {
-      name: '',
-      zone_id: null,
-      type: '',
-      category: 'controller',
-    };
-  } catch (error: any) {
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка создания',
-      detail: 'Устройство не было создано',
-      life: 5000,
+    await updateData({
+      update: async () => {
+        await storeDevices.createDeviceApi(params);
+        await storeDevices.getDevicesApi({
+          limit: 10000,
+          offset: 0,
+        });
+      },
+      success: () => {
+        dialog.value = false;
+        storeDevices.model = null;
+        form.value = {
+          name: '',
+          zone_id: null,
+          type: '',
+          category: 'controller',
+        };
+      },
+      successMessage: 'Устройство успешно создано',
+      errorMessage: 'Устройство не было создано',
     });
   }
   loading.value = false;
@@ -114,9 +109,10 @@ const createDevice = async () => {
       <Step value="2">{{ t('devices.events') }}</Step>
       <Step value="3">{{ t('devices.management') }}</Step>
     </StepList>
+
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
-        <v-form>
+        <form>
           <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
             <SharedUILabel :title="t('devices.title')" required>
               <InputText
@@ -154,23 +150,16 @@ const createDevice = async () => {
               />
             </SharedUILabel>
           </div>
-        </v-form>
 
-        <Divider />
+          <Divider />
 
-        <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
+          <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
+
+        </form>
 
         <div class="tw-flex tw-justify-end">
           <Button
-            @click="dialog = false"
-            class="tw-mr-2"
-            outlined
-          >
-            {{ t('cancel') }}
-          </Button>
-          <Button
             :disabled="!valid"
-            :loading="loading"
             @click="activateCallback('2')"
           >
             {{ t('next') }}
@@ -186,7 +175,6 @@ const createDevice = async () => {
             {{ t('goBack') }}
           </Button>
           <Button
-            :loading="loading"
             @click="activateCallback('3')"
           >
             {{ t('next') }}
@@ -205,9 +193,8 @@ const createDevice = async () => {
             color="primary"
             @click="createDevice"
             :loading="loading"
-          >
-            {{ t('save') }}
-          </Button>
+            :label="t('save')"
+          />
         </div>
       </StepPanel>
     </StepPanels>

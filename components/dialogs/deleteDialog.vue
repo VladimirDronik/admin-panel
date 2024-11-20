@@ -42,9 +42,12 @@ const deleteItem = () => {
 
 <template>
   <div>
-    <Button v-if="showBtn" outlined @click="dialog = true">
-      {{ t('delete')}}
-    </Button>
+    <Button
+      v-if="showBtn"
+      @click="dialog = true"
+      :label="t('delete')"
+      outlined
+    />
 
     <Dialog
       v-model:visible="dialog"
@@ -55,18 +58,16 @@ const deleteItem = () => {
         margin: '0 20px',
       }"
       modal
-      dismissableMask
+      dismissable-mask
     >
       <div>
         <Button
           @click="deleteItem"
           :loading="loading"
-          :disabled="false"
           color="primary"
           class="tw-mr-2"
-        >
-          {{ t('delete')}}
-        </Button>
+          :label="t('delete')"
+        />
         <Button
           @click="dialog = false"
           color="primary"

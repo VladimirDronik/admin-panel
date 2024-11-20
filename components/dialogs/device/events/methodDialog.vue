@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
-const toast = useToast();
+const { updateData } = useUtils();
 const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
@@ -54,34 +53,29 @@ const filteredObjects = computed(() => objects.value.filter((item) => item.name.
 
 const createAction = async () => {
   loading.value = true;
-  try {
-    await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
-      args: {
-        ...selectedMethod.value,
-        object: selectedObject.value.name,
-      },
-      enabled: true,
-      name: object.value.name,
-      target_id: object.value.id,
-      target_type: 'method',
-      type: 'method',
-      sort: 0,
-      qos: 0,
-    });
-    emit('updateActions');
-    toast.add({
-      severity: 'success',
-      summary: 'Действие успешно создано',
-      life: 5000,
-    });
-    dialog.value = false;
-  } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка добавления Метода',
-      life: 5000,
-    });
-  }
+  updateData({
+    update: async () => {
+      await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+        args: {
+          ...selectedMethod.value,
+          object: selectedObject.value.name,
+        },
+        enabled: true,
+        name: object.value.name,
+        target_id: object.value.id,
+        target_type: 'method',
+        type: 'method',
+        sort: 0,
+        qos: 0,
+      });
+      emit('updateActions');
+    },
+    success: () => {
+      dialog.value = false;
+    },
+    successMessage: 'Метод успешно сохранен',
+    errorMessage: 'Ошибка добавления Метода',
+  });
   loading.value = false;
 };
 

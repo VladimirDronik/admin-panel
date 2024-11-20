@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
-const toast = useToast();
+const { updateData } = useUtils();
 
 const storeDevices = useDevicesStore();
 
@@ -38,33 +37,28 @@ const emit = defineEmits<{
 
 const createAction = async () => {
   loading.value = true;
-  try {
-    await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
-      args: {
-        duration: `${Number(form.value.duration)}s`,
-      },
-      enabled: true,
-      name: `${Number(form.value.duration)} секунд`,
-      target_id: object.value.id,
-      target_type: 'delay',
-      type: 'delay',
-      sort: 0,
-      qos: 0,
-    });
-    emit('updateActions');
-    toast.add({
-      severity: 'success',
-      summary: 'Действие успешно создано',
-      life: 5000,
-    });
-    dialog.value = false;
-  } catch {
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка добавления Паузы',
-      life: 5000,
-    });
-  }
+  updateData({
+    update: async () => {
+      await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+        args: {
+          duration: `${Number(form.value.duration)}s`,
+        },
+        enabled: true,
+        name: `${Number(form.value.duration)} секунд`,
+        target_id: object.value.id,
+        target_type: 'delay',
+        type: 'delay',
+        sort: 0,
+        qos: 0,
+      });
+      emit('updateActions');
+    },
+    success: () => {
+      dialog.value = false;
+    },
+    successMessage: 'Пауза успешно сохранена',
+    errorMessage: 'Ошибка добавления Паузы',
+  });
   loading.value = false;
 };
 </script>

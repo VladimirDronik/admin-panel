@@ -3,19 +3,19 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { useDisplay } from 'vuetify';
-import { useToast } from 'primevue/usetoast';
 import type { Devices } from '~/types/DevicesTypes';
+import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusPrimeVueColor } from '~/helpers/rooms';
 
-const toast = useToast();
-
-const { width } = useDisplay();
-
-const storeDevices = useDevicesStore();
+// Composables
 const { t } = useI18n();
+const { width } = useDisplay();
+const { updateData } = useUtils();
+const storeDevices = useDevicesStore();
+
+// Variables
+const name = ref('');
 
 const dialog = ref(false);
-
-const name = ref('');
 
 const loading = ref(false);
 const loadingDelete = ref(false);
@@ -32,50 +32,25 @@ const form = defineModel<Devices | undefined>('form', {
   required: true,
 });
 
-const checkStatusText = (item: string | undefined) => {
-  if (!item) return 'Неоп';
-  if (item === 'ON') return 'Вкл';
-  if (item === 'OFF') return 'Выкл';
-  return 'Неоп';
-};
-
-const checkStatusColor = (item: string | undefined, background: boolean = false, light: boolean = false) => {
-  if (background) {
-    if (item === 'ON') return 'bg-success';
-    if (item === 'OFF') return 'bg-error';
-    return 'bg-warning';
-  }
-  if (light) {
-    if (item === 'ON') return 'bg-lightsuccess';
-    if (item === 'OFF') return 'bg-lighterror';
-    return 'bg-lightwarning';
-  }
-  if (item === 'ON') return 'success';
-  if (item === 'OFF') return 'error';
-  return 'warning';
-};
-
+// Methods
 const confirmDelete = async () => {
   loadingDelete.value = true;
-  try {
-    if (storeDevices.item?.id) await storeDevices.deleteDeviceApi(storeDevices.item?.id);
-    await storeDevices.getDevicesApi({
-      limit: 10000,
-      offset: 0,
-    });
-    toast.add({
-      severity: 'success',
-      summary: 'Устройство удалено',
-      life: 5000,
-    });
-    dialog.value = false;
-    isActiveRightSidebar.value = false;
-  } catch (error) {
-    console.error(error);
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка удаления устройства',
-      life: 5000,
+  if (storeDevices.item?.id) {
+    const id = storeDevices.item?.id;
+    updateData({
+      update: async () => {
+        await storeDevices.deleteDeviceApi(id);
+        await storeDevices.getDevicesApi({
+          limit: 10000,
+          offset: 0,
+        });
+      },
+      success: () => {
+        dialog.value = false;
+        isActiveRightSidebar.value = false;
+      },
+      successMessage: 'Устройство удалено',
+      errorMessage: 'Ошибка удаления устройства',
     });
   }
   loadingDelete.value = false;
@@ -83,24 +58,17 @@ const confirmDelete = async () => {
 
 const changeDevice = async () => {
   loading.value = true;
-  try {
-    if (form.value) {
-      await storeDevices.changeDeviceApi({
-        ...form.value,
-        name: name.value,
-      });
-    }
-    toast.add({
-      severity: 'success',
-      summary: 'Устройство обновленно',
-      life: 5000,
-    });
-  } catch (error) {
-    console.error(error);
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка обновления устройства',
-      life: 5000,
+  if (form.value) {
+    const params = {
+      ...form.value,
+      name: name.value,
+    };
+    updateData({
+      update: async () => {
+        await storeDevices.changeDeviceApi(params);
+      },
+      successMessage: 'Устройство обновленно',
+      errorMessage: 'Ошибка обновления устройства',
     });
   }
   loading.value = false;
@@ -110,8 +78,8 @@ const updateName = () => {
   if (form.value) name.value = form.value?.name;
 };
 
+// Watchers
 watch(() => form.value?.name, updateName);
-
 </script>
 
 <template>
@@ -152,24 +120,23 @@ watch(() => form.value?.name, updateName);
             text
           />
         </div>
-        <v-chip
-          class="!tw-rounded-lg !tw-px-2 !tw-py-1"
+        <Tag
+          :severity="checkStatusPrimeVueColor(form?.status)"
+          class="!tw-rounded-lg"
+          outlined
           label
-          variant="outlined"
-          :color="checkStatusColor(form?.status)"
-          :class="checkStatusColor(form?.status, false, true)"
         >
 
           <div class="tw-flex tw-items-center">
             <div
               class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-              :class="checkStatusColor(form?.status, true, false)"
+              :class="checkStatusBackgroundColor(form?.status)"
             />
-            <p class="tw-text-black">
-              {{ checkStatusText(form?.status) }}
+            <p>
+              {{ checkStatusTextSmall(form?.status) }}
             </p>
           </div>
-        </v-chip>
+        </Tag>
 
         <div class="!tw-px-0 !tw-pt-1">
 
@@ -213,7 +180,6 @@ watch(() => form.value?.name, updateName);
                   />
 
                   <Button
-                    :disabled="false"
                     :loading="loading"
                     class="tw-mr-2"
                     @click="changeDevice"

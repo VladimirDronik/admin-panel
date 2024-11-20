@@ -83,8 +83,6 @@ export function updateParamsForApi(params: Devices) {
     name: params.name,
     status: params.status,
     events: params.events,
-    // tags: params.tags,
-    // parent_id: params.parent_id,
     props,
   };
 

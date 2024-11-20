@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { checkStatusTextSmall, checkStatusColor } from '~/helpers/rooms';
+import { checkStatusTextSmall, checkStatusBackgroundColor } from '~/helpers/rooms';
 
 const { t } = useI18n();
 
@@ -65,7 +65,7 @@ const items = [
         <div class="tw-absolute tw-right-2 tw-top-2 tw-flex tw-items-center tw-rounded-full tw-bg-slate-300 tw-px-3 tw-py-2 tw-text-sm">
           <div
             class="tw-mr-2 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusColor(item.status)"
+            :class="checkStatusBackgroundColor(item.status)"
           />
           {{ checkStatusTextSmall(item.status)}}
         </div>

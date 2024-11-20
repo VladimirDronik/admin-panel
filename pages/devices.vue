@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 // Helpers
-import { checkStatusText, checkStatusColor } from '~/helpers/rooms';
+import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/rooms';
 // Types
 import type { Room } from '~/types/RoomsTypes';
 
@@ -385,7 +385,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         <template #body="{ node }">
           <div
             class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusColor(node.data.status)"
+            :class="checkStatusBackgroundColor(node.data.status)"
           />
           {{ checkStatusText(node.data.status)}}
         </template>
