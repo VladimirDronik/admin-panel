@@ -170,22 +170,9 @@ watch(() => props.total, () => {
 </template>
 
 <style lang="scss">
-.filter-input .v-field__input {
-  min-height: 56px;
-}
-
-.base-table {
-  border: 1px solid rgb(var(--v-theme-borderColor)) !important;
-}
-
-.custom-table {
-  & .v-pagination__list {
-    justify-content: end !important;
-  }
-}
 
 .p-treetable-row-selected {
-  background-color: rgb(var(--v-theme-lightprimary)) !important;
+  background-color: var(--p-primary-50) !important;
   color: black !important;
 }
 

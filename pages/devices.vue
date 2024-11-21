@@ -41,14 +41,6 @@ const popoverStatus = ref();
 const selectedDevice = ref();
 
 // Computed Properties
-const headers = computed(() => [
-  { text: t('Название'), value: 'name' },
-  { text: t('Тип'), value: 'type' },
-  { text: t('Протокол'), value: 'protocol' },
-  { text: t('IP адрес устройства'), value: 'address' },
-  { text: t('Статус'), value: 'state' },
-]);
-
 const getTypes = computed(() => storeDevices.types
   .filter((item) => getCategoriesOption.value.includes(item.category))
   .map((item) => ({
@@ -244,7 +236,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
       :total="storeDevices.total"
       :items="storeDevices.getDevices"
       :perPage="perPage"
-      :headers="headers"
     >
       <Column field="id" expander style="width: 100px">
         <template #header>

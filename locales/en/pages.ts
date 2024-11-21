@@ -1,5 +1,6 @@
 export default {
   pages: {
+    home: 'Home',
     page: 'Page',
     login: 'Login',
     rooms: 'Rooms',

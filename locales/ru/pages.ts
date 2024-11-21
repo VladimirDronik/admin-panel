@@ -1,5 +1,6 @@
 export default {
   pages: {
+    home: 'Домашняя',
     page: 'Страница',
     login: 'Логин',
     rooms: 'Помещения',

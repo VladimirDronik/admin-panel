@@ -53,7 +53,7 @@ const toggle = (event: any) => {
         <template #content>
           <div class="tw-px-2">
             <h6 class="tw-text-xl">Профиль пользователя</h6>
-            <div class="tw-mt-4 tw-flex tw-items-center tw-pb-6">
+            <div class="tw-mt-4 tw-flex tw-items-center tw-pb-4">
               <img
                 src="~/assets/images/user-1.jpg"
                 width="80"
@@ -62,18 +62,18 @@ const toggle = (event: any) => {
               />
               <div class="tw-ml-3">
                 <h6 class="tw-text-xl tw-font-semibold">Никита Гурьянов</h6>
-                <span class="text-subtitle-1 font-weight-regular textSecondary">
+                <span>
                   ул. Гоголя, 09
                 </span>
                 <div class="tw-mt-1 tw-flex tw-items-center">
                   <MailIcon size="18" stroke-width="1.5" />
-                  <span class="text-subtitle-1 font-weight-regular textSecondary tw-ml-2">
+                  <span class=" tw-ml-2">
                     ID: 00000000
                   </span>
                 </div>
               </div>
             </div>
-            <v-divider />
+            <Divider />
           </div>
           <ScrollPanel style="height: calc(100vh - 240px); max-height: 160px">
             <div class="tw-px-6">
@@ -91,10 +91,10 @@ const toggle = (event: any) => {
                   class="tw-mr-3 tw-max-w-6"
                 />
                 <div>
-                  <h6 class="custom-title tw-mb-1 tw-font-bold">
+                  <h6 class="tw-mb-1 tw-font-bold">
                     {{ item.title }}
                   </h6>
-                  <p class="font-weight-regular textSecondary">
+                  <p class="font-weight-regular">
                     {{ item.subtitle }}
                   </p>
                 </div>
