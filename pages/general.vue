@@ -43,7 +43,7 @@ const layout = ref([
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.general">
       <Button
         class="text-capitalize"
@@ -73,7 +73,7 @@ const layout = ref([
         </grid-item>
       </template>
     </grid-layout>
-  </div>
+  </BasePanel>
 </template>
 
 <style>

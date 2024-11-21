@@ -161,6 +161,7 @@ const clickRow = async (item: any) => {
 const created = async () => {
   await Promise.all([
     storeDevices.getTypesApi(),
+    storeRooms.getRoomsApi(),
     storeDevices.getTagsApi(),
     storeDevices.getDevicesApi({
       limit: perPage,
@@ -230,7 +231,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
       <DialogsDeviceCreateDialog />
     </BaseBreadcrumb>
@@ -384,7 +385,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         </template>
         <template #body="{ node }">
           <div
-            class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
+            class="tw-bg-primary tw-h-2.5 tw-w-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(node.data.status)"
           />
           {{ checkStatusText(node.data.status)}}
@@ -434,12 +435,14 @@ watch([props, childrenProps], (newValue, oldValue) => {
       </Column>
     </BaseTreeTable>
 
-    <RightSidebarDevices
-      v-model:is-update="isUpdateRightBar"
-      v-model:is-open="isActiveRightSidebar"
-      v-model:form="selectedDevice"
-    />
-  </div>
+    <template #rightbar>
+      <RightSidebarDevices
+        v-model:is-update="isUpdateRightBar"
+        v-model:is-open="isActiveRightSidebar"
+        v-model:form="selectedDevice"
+      />
+    </template>
+  </BasePanel>
 </template>
 
 <style>
@@ -463,7 +466,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
   }
 
   &:hover, &:focus {
-    background-color: rgb(var(--v-theme-primary));
+    background-color: var(--p-primary-color);
     color: white;
 
     svg {

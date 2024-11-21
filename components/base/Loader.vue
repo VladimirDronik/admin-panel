@@ -26,15 +26,10 @@ defineProps({
         <div
           v-if="isUpdate"
           data-test="loader"
-          class="tw-absolute tw-inset-0 tw-z-40 tw-overflow-hidden tw-bg-white tw-opacity-80"
+          class="tw-absolute tw-inset-0 tw-z-40 tw-overflow-hidden tw-bg-white"
         >
           <div class="tw-flex tw-h-full tw-items-center tw-justify-center">
-            <v-progress-circular
-              :size="60"
-              :width="6"
-              color="primary"
-              indeterminate
-            />
+            <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" fill="#19B58F" />
           </div>
         </div>
       </transition>

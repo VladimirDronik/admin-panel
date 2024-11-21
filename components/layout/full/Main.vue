@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue';
-import { Menu2Icon } from 'vue-tabler-icons';
-import { useDisplay } from 'vuetify';
+// import { useDisplay } from 'vuetify';
 
 import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem';
 
-const { mdAndUp } = useDisplay();
+// const { mdAndUp } = useDisplay();
 
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
@@ -25,7 +24,7 @@ storeRooms.getRoomsApi();
     elevation="0"
     rail-width="75"
     app
-    :rail="mdAndUp"
+    :rail="false"
     expand-on-hover
     id="main"
   >
@@ -65,7 +64,7 @@ storeRooms.getRoomsApi();
     <div class="d-flex align-center justify-space-between w-100">
       <div>
         <Button
-          v-if="!mdAndUp"
+          v-if="!false"
           size="small"
           severity="secondary"
           text

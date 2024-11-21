@@ -43,7 +43,7 @@ const items = [
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.video">
       <Button
         class="text-capitalize"
@@ -72,7 +72,7 @@ const items = [
         <Button class="tw-absolute tw-bottom-2 tw-right-2" icon="pi pi-cog" text rounded size="large" />
       </div>
     </div>
-  </div>
+  </BasePanel>
 </template>
 
 <style>

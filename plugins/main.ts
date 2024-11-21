@@ -6,6 +6,7 @@ import VueTablerIcons from 'vue-tabler-icons';
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import GridLayout from 'vue-grid-layout3';
 import 'vue-grid-layout3/dist/style.css';
+import '@/scss/style.scss';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PerfectScrollbarPlugin);

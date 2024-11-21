@@ -23,6 +23,8 @@ useHead({
 
 // Variables
 const data = ref(storeRooms.list);
+
+const isUpdate = ref(false);
 const isLoading = ref(false);
 
 const isUpdateRightBar = ref(false);
@@ -53,6 +55,12 @@ const save = _.debounce(async () => {
   }
 }, 1000);
 
+const created = async () => {
+  isUpdate.value = true;
+  await storeRooms.getRoomsApi();
+  isUpdate.value = false;
+};
+
 // Watchers
 watch(data, save);
 
@@ -60,10 +68,11 @@ watchEffect(() => {
   data.value = storeRooms.list;
 });
 
+created();
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
       <DialogsRoomCreateDialog />
     </BaseBreadcrumb>
@@ -137,7 +146,7 @@ watchEffect(() => {
       v-model:form="form"
       v-model:is-show="isUpdateRightBar"
     />
-  </div>
+  </BasePanel>
 </template>
 
 <style lang="scss">

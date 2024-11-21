@@ -4,11 +4,11 @@ export default defineVitestConfig({
   test: {
     globals: true,
     environment: 'nuxt',
-    server: {
-      deps: {
-        inline: ['vuetify'],
-      },
-    },
+    // server: {
+    //   deps: {
+    //     inline: ['vuetify'],
+    //   },
+    // },
   },
   resolve: {
     alias: {

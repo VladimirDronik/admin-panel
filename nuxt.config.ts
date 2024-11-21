@@ -1,6 +1,6 @@
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+// import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import Noir from './theme/themePrimeVue';
 
 export default defineNuxtConfig({
@@ -22,11 +22,11 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
+    // vue: {
+    //   template: {
+    //     transformAssetUrls,
+    //   },
+    // },
     plugins: [
       nodePolyfills(),
     ],
@@ -59,11 +59,11 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
-        config?.plugins?.push(vuetify({ autoImport: true }));
-      });
-    },
+    // (_options, nuxt) => {
+    //   nuxt.hooks.hook('vite:extendConfig', (config) => {
+    //     config?.plugins?.push(vuetify({ autoImport: true }));
+    //   });
+    // },
     '@pinia/nuxt',
     '@nuxtjs/google-fonts',
     '@primevue/nuxt-module',

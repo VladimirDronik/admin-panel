@@ -6,7 +6,6 @@ const dark = ref(true);
 
 </script>
 <template>
-
   <LogoLight v-if="dark" />
   <LogoDark v-else />
 </template>

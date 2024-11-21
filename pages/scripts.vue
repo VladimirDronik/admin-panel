@@ -36,7 +36,7 @@ storeDevices.getScriptsApi();
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.scripts">
       <Button
         class="text-capitalize"
@@ -76,7 +76,7 @@ storeDevices.getScriptsApi();
         </template>
       </Column>
     </BaseNewTable>
-  </div>
+  </BasePanel>
 </template>
 
 <style>

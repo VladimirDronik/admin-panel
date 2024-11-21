@@ -48,7 +48,7 @@ const headers = [
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.display">
       <Button
         class="text-capitalize"
@@ -61,7 +61,7 @@ const headers = [
       :headers="headers"
       :items="[]"
     />
-  </div>
+  </BasePanel>
 </template>
 
 <style>

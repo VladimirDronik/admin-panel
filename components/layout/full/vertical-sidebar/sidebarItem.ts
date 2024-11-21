@@ -28,6 +28,7 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
+  { header: 'Home' },
   {
     title: 'pages.general',
     icon: IconReportAnalytics,

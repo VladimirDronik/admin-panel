@@ -38,11 +38,11 @@ defineProps({
     <!-- Title -->
     <h3
       v-if="title"
-      class="text-h3"
+      class="tw-text-2xl tw-font-semibold"
     >
       {{ t(title) }}
       <!-- Total -->
-      <span class="tw-relative tw-bottom-1.5 tw-text-base" v-if="total !== -1">
+      <span class="tw-relative tw-bottom-1.5 tw-text-base tw-font-normal" v-if="total !== -1">
         {{ total }}
       </span>
       <!--  -->

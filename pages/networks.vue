@@ -10,7 +10,9 @@ useHead({
 </script>
 
 <template>
-  <BaseBreadcrumb title="pages.networkSettings" />
+  <BasePanel>
+    <BaseBreadcrumb title="pages.networkSettings" />
+  </BasePanel>
 </template>
 
 <style>

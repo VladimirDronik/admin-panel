@@ -77,7 +77,7 @@ const setChartOptions = () => {
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.charts" />
     <div class="chart-panel">
       <div class="tw-mb-5 tw-flex tw-h-full tw-flex-col tw-gap-2 tw-rounded-lg tw-border tw-p-3">
@@ -93,7 +93,7 @@ const setChartOptions = () => {
         <Chart class="tw-h-full" type="line" :data="chartData" :options="chartOptions" />
       </div>
     </div>
-  </div>
+  </BasePanel>
 </template>
 
 <style>

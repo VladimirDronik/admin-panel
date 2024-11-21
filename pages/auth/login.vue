@@ -1,5 +1,10 @@
 <script setup lang="ts">
+// Builtin modules
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+// Composable modules
 import { useI18n } from 'vue-i18n';
+import { useAuthStore } from '@/stores/auth';
 
 // Declare Options
 definePageMeta({
@@ -8,30 +13,81 @@ definePageMeta({
 
 // Composables
 const { t } = useI18n();
+const router = useRouter();
+const store = useAuthStore();
+const { updateData } = useUtils();
 
 useHead({
   titleTemplate: computed(() => t('pages.login')),
 });
 
+// Variables
+const loading = ref(true);
+
+const form = ref({
+  login: 'web',
+  password: '12345',
+});
+
+const login = async () => {
+  loading.value = true;
+  updateData({
+    update: async () => {
+      await store.loginApi(form.value);
+    },
+    success: () => {
+      router.push({ name: 'general' });
+    },
+    errorMessage: 'Ошибка входа',
+    disableSuccessMessage: true,
+  });
+  loading.value = false;
+};
+
 </script>
 <template>
-  <div class="authentication">
-    <v-container fluid class="pa-3">
-      <v-row class="h-100vh d-flex justify-center align-center">
-        <v-col cols="12" lg="4" xl="3" class="d-flex align-center">
-          <v-card rounded="md" elevation="10" class="px-sm-1 px-0 withbg mx-auto" max-width="500">
-            <v-card-item class="pa-sm-8">
-              <div class="d-flex justify-center py-4">
-                <LayoutFullLogo />
-              </div>
-              <div class="text-body-1 text-muted text-center mb-3">
-                {{ t('auth.title') }}
-              </div>
-              <AuthLoginForm />
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+  <div class="auth-screen tw-h-screen">
+    <div style="height: 85vh" class="tw-flex tw-items-center tw-justify-center">
+      <div style="width: 500px;" class="tw-rounded-lg tw-bg-white tw-p-5">
+        <div class="tw-flex tw-justify-center tw-py-4">
+          <LayoutFullLogo />
+        </div>
+        <div class="tw-mb-3 tw-text-center tw-text-lg">
+          {{ t('auth.title') }}
+        </div>
+        <div>
+          <SharedUILabel
+            :title="t('auth.login')"
+          >
+            <InputText
+              v-model="form.login"
+              class="tw-mb-3 tw-w-full"
+            />
+          </SharedUILabel>
+          <SharedUILabel
+            :title="t('auth.password')"
+          >
+            <InputText
+              v-model="form.password"
+              class="tw-mb-3 tw-w-full"
+            />
+          </SharedUILabel>
+          <Button
+            @click="login"
+            :loading="!loading"
+            class="tw-w-full"
+          >
+            {{ t('auth.signIn') }}
+          </Button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+.auth-screen {
+
+  background-color: #EAF8F5;
+}
+</style>

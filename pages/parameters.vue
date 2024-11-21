@@ -9,9 +9,9 @@ useHead({
 </script>
 
 <template>
-  <div>
+  <BasePanel>
     <BaseBreadcrumb title="pages.parameters" />
-  </div>
+  </BasePanel>
 </template>
 
 <style>
