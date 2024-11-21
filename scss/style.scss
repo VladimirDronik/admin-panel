@@ -1,52 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");
-// @import './variables';
-// @import 'vuetify/styles/main.sass';
-// @import './override';
-@import './animation';
-// @import './layout/container';
-// @import './layout/sidebar';
-// @import './layout/topbar';
-// @import './layout/rtl';
-// @import './components/VBreadcrumb';
-// @import './components/VAlert';
-// @import './components/VButtons';
-// @import './components/VCard';
-// @import './components/VCarousel';
-// @import './components/VField';
-// @import './components/VList';
-// @import './components/VInput';
-// @import './components/VNavigationDrawer';
-// @import './components/VShadow';
-// @import './components/VSwitch';
-// @import './components/VSelectionControl';
-// @import './components/VTextField';
-// @import './components/VTextarea';
-// @import './components/VTabs';
-// @import './components/VTable';
-// @import './components/VExpansionpanel';
-// @import './pages/dashboards';
-// @import './pages/datatable';
-@import './pages/auth';
-@import 'vue3-perfect-scrollbar/style.css';
-@import "vue3-easy-data-table/dist/style.css";
-
-
-@import 'primeicons/primeicons.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.data-table, .tree-table {
-  border: 1px solid var(--p-treetable-body-cell-border-color);
-  border-bottom: none;
-  border-radius: 8px;
-  overflow: hidden;
-}
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");
 
-.p-datatable-header-cell, .p-treetable-header-cell {
-  &:not(:last-child) {
-    border-right: 1px solid var(--p-treetable-body-cell-border-color);
-  }
-  background-color: #E0ECE9 !important;
-}
+@import './animation';
+
+@import './components/tables.scss';
+
+@import 'vue3-perfect-scrollbar/style.css';
+@import "vue3-easy-data-table/dist/style.css";
+
+@import 'primeicons/primeicons.css';
+
+
+
