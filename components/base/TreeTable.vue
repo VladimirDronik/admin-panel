@@ -165,19 +165,3 @@ watch(() => props.total, () => {
     </BaseLoader>
   </div>
 </template>
-
-<style lang="scss">
-
-.p-treetable-row-selected {
-  background-color: var(--p-primary-50) !important;
-  color: black !important;
-}
-
-.p-treetable-tbody tr {
-  cursor: pointer;
-}
-
-.custom-table .p-paginator {
-  justify-content: end;
-}
-</style>

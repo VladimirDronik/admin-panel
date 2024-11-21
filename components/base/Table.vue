@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 // Builtin modules
 import {
   type PropType, ref, watch, computed,
@@ -7,26 +7,31 @@ import { useRoute } from 'vue-router';
 // External modules
 import moment from 'moment';
 import _, { isArray } from 'lodash';
+// Components
+import TreeTable from 'primevue/treetable';
 // Types
-import type { Header } from 'vue3-easy-data-table';
 import type { Filter } from '@/types/MainTypes';
+
+interface Header {
+  label: string;
+  code: string;
+}
 
 // Composables
 const route = useRoute();
 
 // Declare Options
 const page = defineModel<number>('page', {
-  required: true,
+  default: 1,
 });
 
 const filters = defineModel<Filter[]>('filters', {
-  required: true,
+  default: [],
 });
 
 const props = defineProps({
   total: {
     type: Number,
-    required: true,
     default: 0,
   },
   items: {
@@ -38,7 +43,6 @@ const props = defineProps({
   },
   perPage: {
     type: Number,
-    required: true,
     default: 0,
   },
   headers: {
@@ -62,7 +66,6 @@ const isActiveFilters = ref(false);
 
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
-
 // Methods
 const filter = _.debounce(async () => {
   isUpdate.value = true;
@@ -121,167 +124,33 @@ defineExpose({
 </script>
 
 <template>
-  <div class="custom-table">
-    <v-row class="!tw-mb-1" v-if="filters.length || total > perPage" data-test="bar">
-      <v-col
-        v-if="filters.length || total > perPage"
-        cols="12"
-        lg="6"
-      >
-        <!-- <v-btn
-          v-if="filters.length"
-          @click="isActiveFilters = !isActiveFilters"
-          icon="mdi-filter"
-          color="primary"
-          variant="outlined"
-          data-test="filter-btn"
-        /> -->
-      </v-col>
-      <v-col
-        v-if="total > perPage"
-        cols="12"
-        lg="6"
-      >
-        <v-pagination
-          v-model="page"
-          :length="Math.ceil(total / perPage)"
-          color="primary"
-          class="tw-w-full"
-          rounded="circle"
-          data-test="pagination"
-        />
-      </v-col>
-    </v-row>
-
-    <div
-      v-if="isActiveFilters"
-      class="tw-mb-3"
-      data-test="filters"
-    >
-      <v-card
-        class="tw-relative !tw-z-40 !tw-hidden !tw-overflow-visible !tw-p-3 md:!tw-block"
-        elevation="10"
-      >
-        <v-row class="!tw-pb-3 !tw-pr-3">
-          <v-col
-            v-for="filter in filters"
-            :key="filter.key"
-            md="6"
-            lg="4"
-            cols="12"
-            class="!tw-pb-0 !tw-pr-0"
-            data-test="filter"
-          >
-            <VueEasyDatePicker
-              v-if="filter.key === 'time'"
-              v-model="filter.value"
-              :max-date="new Date()"
-              class="tw-w-full"
-              range
-              time-picker-inline
-            />
-            <v-autocomplete
-              v-else-if="filter.options"
-              v-model="filter.value"
-              :items="filter.options"
-              :label="filter.label"
-              color="primary"
-              variant="outlined"
-              chips
-              multiple
-              clearable
-              hide-details
-              closable-chips
-            />
-            <v-text-field
-              v-else
-              v-model="filter.value"
-              :label="filter.label"
-              class="filter-input tw-h-full"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-        </v-row>
-      </v-card>
-      <div class="tw-block md:tw-hidden">
-        <v-row class="!tw-pb-3 !tw-pr-3">
-          <v-col
-            v-for="filter in filters"
-            :key="filter.key"
-            cols="12"
-            lg="4"
-            md="6"
-            class="!tw-pb-0 !tw-pr-0"
-          >
-            <VueEasyDatePicker
-              v-if="filter.key === 'time'"
-              v-model="filter.value"
-              :max-date="new Date()"
-              class="tw-w-full"
-              range
-              time-picker-inline
-            />
-            <v-autocomplete
-              v-else-if="filter.options"
-              v-model="filter.value"
-              :items="filter.options"
-              :label="filter.label"
-              color="primary"
-              variant="outlined"
-              chips
-              multiple
-              clearable
-              hide-details
-              closable-chips
-            />
-            <v-text-field
-              v-else
-              v-model="filter.value"
-              :label="filter.label"
-              class="filter-input tw-h-full"
-              hide-details
-            />
-          </v-col>
-        </v-row>
-      </div>
-    </div>
-
+  <div>
+    <Paginator
+      v-if="total > perPage"
+      :rows="1"
+      :totalRecords="Math.ceil(total / perPage)"
+      v-model:first="page"
+      data-test="pagination"
+    />
     <BaseLoader :isUpdate="isUpdate">
-      <EasyDataTable
-        @click-row="(item: any) => emit('click-row', item)"
-        :items="items"
+      <DataTable
+        @nodeSelect="(item: any) => emit('click-row', item)"
+        :value="items"
         :headers="headers"
-        class="base-table"
-        table-class-name="customize-table"
-        hide-footer
       >
-        <template
-          v-for="slot of Object.keys($slots)"
-          #[slot]="scope"
-        >
-          <slot
-            v-bind="scope"
-            :name="slot"
-          />
+        <Column
+          v-for="item in headers"
+          :field="item.code"
+          :header="item.label"
+          :key="item.code"
+        />
+        <slot />
+        <template #empty>
+          <div class="tw-flex tw-justify-center">
+            Нет данных
+          </div>
         </template>
-      </EasyDataTable>
+      </DataTable>
     </BaseLoader>
   </div>
 </template>
-
-<style lang="scss">
-.filter-input .v-field__input {
-  min-height: 56px;
-}
-
-.base-table {
-  border: 1px solid rgb(var(--v-theme-borderColor)) !important;
-}
-
-.custom-table {
-  & .v-pagination__list {
-    justify-content: end !important;
-  }
-}
-</style>

@@ -11,3 +11,16 @@
   }
   background-color: #E0ECE9 !important;
 }
+
+.p-treetable-row-selected {
+  background-color: var(--p-primary-50) !important;
+  color: black !important;
+}
+
+.p-treetable-tbody tr {
+  cursor: pointer !important;
+}
+
+.custom-table .p-paginator {
+  justify-content: end;
+}
