@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <div>
-    <DataTable :value="items" tableStyle="min-width: 50rem">
+    <DataTable :value="items">
       <Column
         v-for="item in headers"
         :field="item.code"

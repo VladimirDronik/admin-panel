@@ -17,7 +17,7 @@ defineProps({
   <div>
     <div
       v-show="!isLoading"
-      class="tw-relative"
+      class="tw-relative tw-w-full"
     >
       <transition
         name="smooth-loader"
@@ -26,10 +26,10 @@ defineProps({
         <div
           v-if="isUpdate"
           data-test="loader"
-          class="tw-absolute tw-inset-0 tw-z-40 tw-overflow-hidden tw-bg-white"
+          class="tw-absolute tw-inset-0 tw-z-40 tw-w-full tw-overflow-hidden tw-bg-white"
         >
           <div class="tw-flex tw-h-full tw-items-center tw-justify-center">
-            <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" fill="#19B58F" />
+            <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" stroke="#19B58F" />
           </div>
         </div>
       </transition>

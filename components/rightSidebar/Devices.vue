@@ -17,6 +17,8 @@ const name = ref('');
 
 const dialog = ref(false);
 
+const active = ref(false);
+
 const loading = ref(false);
 const loadingDelete = ref(false);
 
@@ -79,7 +81,10 @@ const updateName = () => {
 };
 
 // Watchers
-watch(() => form.value?.name, updateName);
+watch(() => form.value?.name, () => {
+  updateName();
+  active.value = false;
+});
 
 </script>
 
@@ -87,7 +92,7 @@ watch(() => form.value?.name, updateName);
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <Inplace v-if="form" class="tw-w-full" @open="updateName">
+        <Inplace v-model:active="active" v-if="form" class="tw-w-full" @open="updateName">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
               {{ form?.name }}
@@ -116,11 +121,10 @@ watch(() => form.value?.name, updateName);
       </div>
       <Tag
         :severity="checkStatusColor(form?.status)"
-        class="!tw-rounded-lg"
+        class="tw-ml-3 !tw-rounded-lg"
         outlined
         label
       >
-
         <div class="tw-flex tw-items-center">
           <div
             class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"

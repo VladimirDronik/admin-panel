@@ -29,9 +29,9 @@ onMounted(() => {
 
 <template>
   <div
-    :style="{ width: `${width / 3}px` }"
+    :style="{ 'max-width': `${isOpen ? width / 3 : 0}px` }"
     :class="{ 'rightbar-active': isOpen }"
-    class="rightbar tw-absolute tw-inset-y-0 tw-right-0 tw-z-20 tw-translate-x-full tw-border-l tw-bg-white"
+    class="rightbar tw-w-full tw-border-l tw-bg-white"
   >
     <BaseLoader :isUpdate="isUpdate">
       <ScrollPanel :style="{ height: `${height - 90}px`, width: '100%' }">
@@ -44,11 +44,6 @@ onMounted(() => {
 <style scoped lang="scss">
 
 .rightbar {
-  transition: transform .15s linear;
-  transform: translateX(101%) !important;
-
-  &-active {
-    transform: translateX(0) !important;
-  }
+  transition: max-width .1s linear;
 }
 </style>

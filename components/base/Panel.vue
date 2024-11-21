@@ -1,6 +1,6 @@
 <template>
-  <div class="panel-wrapper tw-relative">
-    <div class="tw-px-6 tw-pt-6">
+  <div class="panel-wrapper tw-relative tw-flex">
+    <div class="tw-w-full tw-px-6 tw-pt-6">
       <slot />
     </div>
     <!-- <div class="tw-absolute tw-inset-y-0 tw-right-0 tw-z-20 tw-bg-white">

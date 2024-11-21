@@ -15,6 +15,7 @@ export const Components = [
   'Inplace',
   'Toast',
   'Stepper',
+  'StepPanel',
   'StepPanels',
   'Divider',
   'StepList',

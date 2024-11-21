@@ -154,7 +154,6 @@ watch(() => props.total, () => {
         :value="items"
         class="tree-table"
         selectionMode="single"
-        tableStyle="min-width: 50rem"
       >
         <slot />
         <template #empty>

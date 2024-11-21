@@ -142,6 +142,7 @@ const update = async (params: any = {}) => {
 };
 
 const clickRow = async (item: any) => {
+  if (storeDevices.item?.id === item.data.id) return;
   isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
   const data = await storeDevices.getControllerDetailsApi(item.data.id);
@@ -271,7 +272,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </div>
         </template>
       </Column>
-      <Column v-if="!isActiveRightSidebar" field="name">
+      <Column field="name">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">
@@ -294,6 +295,11 @@ watch([props, childrenProps], (newValue, oldValue) => {
               </div>
             </Popover>
           </div>
+        </template>
+        <template #body="{ node }">
+          <p class="tw-max-w-48 tw-truncate">
+            {{ node.data.name }}
+          </p>
         </template>
       </Column>
       <Column field="type">
@@ -321,7 +327,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </div>
         </template>
       </Column>
-      <Column field="address">
+      <Column v-if="!isActiveRightSidebar" field="address">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">
@@ -350,7 +356,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           {{ checkRoom(findRoom(storeRooms.list, node.data.address)) }}
         </template>
       </Column>
-      <Column field="status">
+      <Column v-if="!isActiveRightSidebar" field="status">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">
@@ -381,7 +387,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           {{ checkStatusText(node.data.status)}}
         </template>
       </Column>
-      <Column field="tags" style="width: 200px">
+      <Column v-if="!isActiveRightSidebar" field="tags" style="width: 200px">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">
