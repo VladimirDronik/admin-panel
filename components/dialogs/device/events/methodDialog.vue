@@ -53,7 +53,7 @@ const filteredObjects = computed(() => objects.value.filter((item) => item.name.
 
 const createAction = async () => {
   loading.value = true;
-  updateData({
+  await updateData({
     update: async () => {
       await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
         args: {

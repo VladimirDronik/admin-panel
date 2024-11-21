@@ -13,7 +13,7 @@ defineProps({
 <template>
   <div class="tw-mr-2 tw-w-full">
     <p v-if="title" class="tw-mb-1.5 tw-text-lg tw-font-semibold">
-      {{ title }} <span v-if="required" class="text-primary">*</span>
+      {{ title }} <span v-if="required" class="tw-text-primary">*</span>
     </p>
     <slot />
   </div>

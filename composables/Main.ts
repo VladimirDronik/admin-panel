@@ -20,7 +20,7 @@ export function useUtils() {
     try {
       await params.update();
       if (params.success) params.success();
-      if (params.disableSuccessMessage) {
+      if (!params.disableSuccessMessage) {
         toast.add({
           severity: 'success',
           summary: t(params.successMessage ?? 'Успешно'),
@@ -29,7 +29,7 @@ export function useUtils() {
       }
     } catch (error) {
       if (params.error) params.error();
-      if (params.disableSuccessMessage) {
+      if (!params.disableSuccessMessage) {
         toast.add({
           severity: 'error',
           summary: 'Ошибка создания',

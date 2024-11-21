@@ -9,7 +9,6 @@ import type { Room } from '~/types/RoomsTypes';
 
 // Composables
 const { t } = useI18n();
-const storeUser = useAuthStore();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 
@@ -272,7 +271,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </div>
         </template>
       </Column>
-      <Column field="name">
+      <Column v-if="!isActiveRightSidebar" field="name">
         <template #header>
           <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
             <p class="tw-font-semibold">

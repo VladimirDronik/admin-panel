@@ -32,7 +32,7 @@ const form = ref({
 // Methods
 const login = async () => {
   loading.value = true;
-  updateData({
+  await updateData({
     update: async () => {
       await store.loginApi(form.value);
     },

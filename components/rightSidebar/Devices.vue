@@ -37,7 +37,7 @@ const confirmDelete = async () => {
   loadingDelete.value = true;
   if (storeDevices.item?.id) {
     const id = storeDevices.item?.id;
-    updateData({
+    await updateData({
       update: async () => {
         await storeDevices.deleteDeviceApi(id);
         await storeDevices.getDevicesApi({
@@ -63,7 +63,7 @@ const changeDevice = async () => {
       ...form.value,
       name: name.value,
     };
-    updateData({
+    await updateData({
       update: async () => {
         await storeDevices.changeDeviceApi(params);
       },
@@ -87,7 +87,6 @@ watch(() => form.value?.name, updateName);
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-
         <Inplace v-if="form" class="tw-w-full" @open="updateName">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
@@ -161,7 +160,7 @@ watch(() => form.value?.name, updateName);
           <TabPanels>
             <TabPanel value="features">
 
-              <DevicesPropertiesForm v-model="form" />
+              <DevicesPropertiesForm v-if="form" v-model="form" />
 
               <div class="tw-flex tw-justify-end">
                 <DialogsDeleteDialog
