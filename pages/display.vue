@@ -49,6 +49,7 @@ const headers = [
 
 <template>
   <BasePanel>
+
     <BaseBreadcrumb title="pages.display">
       <Button
         class="text-capitalize"

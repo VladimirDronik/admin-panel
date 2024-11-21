@@ -7,7 +7,7 @@ const open = defineModel<boolean>('open', {
 </script>
 
 <template>
-  <div class="tw-pl-96" :class="{ '!tw-pl-20': !open }">
+  <div class="tw-pl-80" :class="{ '!tw-pl-20': !open }">
     <Card class="tw-sticky tw-top-0 tw-z-30 tw-h-full tw-max-h-28 !tw-rounded-none tw-border-b !tw-shadow-none">
       <template #content>
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between">

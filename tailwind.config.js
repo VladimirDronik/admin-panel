@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+import tailwindPrimeVue from 'tailwindcss-primeui';
+
 export default {
   content: [
     './components/**/*.{js,vue,ts}',
@@ -17,5 +20,5 @@ export default {
       body: ['Manrope', 'sans-serif'],
     },
   },
-  plugins: [['tailwindcss-primeui']],
+  plugins: [tailwindPrimeVue],
 };

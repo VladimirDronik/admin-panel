@@ -20,7 +20,7 @@ const to = computed(() => route.path);
 </script>
 
 <template>
-  <div :class="{ '!tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-96">
+  <div :class="{ 'tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80">
     <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r !tw-shadow-none">
       <template #content>
         <div class="tw-mb-7 ">
@@ -34,7 +34,7 @@ const to = computed(() => route.path);
               :to="item.to"
               :class="{ '!tw-justify-center': !open }"
               as="router-link"
-              class="tw-mb-1 tw-w-full !tw-justify-start !tw-text-black"
+              class="tw-mb-1 tw-w-full !tw-justify-start tw-text-black"
             >
               <component
                 :is="item.icon"
@@ -48,7 +48,7 @@ const to = computed(() => route.path);
           <p
             v-else
             class="tw-mb-3 tw-pt-3 tw-font-semibold"
-            :class="{ '!tw-text-center': !open }"
+            :class="{ 'tw-text-center': !open }"
           >
             {{ open ? t(item.header) : '...' }}
           </p>
