@@ -8,14 +8,14 @@ import { roomColor } from '~/helpers/rooms';
 // Types
 import type { Room } from '~/types/RoomsTypes';
 
+// Composables
+const { t } = useI18n();
+const storeRooms = useRoomsStore();
+
 // Declare Options
 definePageMeta({
   middleware: ['auth'],
 });
-
-// Composables
-const { t } = useI18n();
-const storeRooms = useRoomsStore();
 
 useHead({
   titleTemplate: computed(() => t('pages.rooms')),
@@ -27,8 +27,8 @@ const data = ref(storeRooms.list);
 const isUpdate = ref(false);
 const isLoading = ref(false);
 
-const isUpdateRightBar = ref(false);
 const form = ref<Room | null>();
+const isUpdateRightBar = ref(false);
 
 // methods
 const openRightBar = (item: Room) => {

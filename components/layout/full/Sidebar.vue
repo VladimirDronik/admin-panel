@@ -1,29 +1,31 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import sidebarData from './vertical-sidebar/sidebarItem';
+import sidebarData from './sidebarItem';
 
 // Composables
+const route = useRoute();
 const { t } = useI18n();
 
+// Declare Options
 const open = defineModel('open', {
   required: true,
 });
 
+// Variables
 const sidebar = shallowRef(sidebarData);
 
-const route = useRoute();
-
+// Computed Properties
 const to = computed(() => route.path);
 
 </script>
 
 <template>
   <div :class="{ '!tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-96">
-    <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none">
+    <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r !tw-shadow-none">
       <template #content>
         <div class="tw-mb-7 ">
-          <LayoutFullLogo v-if="open" />
-          <LayoutFullLogoRtlLogo v-else />
+          <Logo v-if="open" />
+          <LogoRtlLogo v-else />
         </div>
         <div v-for="item in sidebar" :key="item.title">
           <div v-if="!item.header">

@@ -4,9 +4,9 @@ import { useI18n } from 'vue-i18n';
 // Page title
 const { t } = useI18n();
 
-const title = ref('404 Page Not Found');
+// Declare Options
 useHead({
-  meta: [{ content: title }],
+  meta: [{ content: '404 Page Not Found' }],
   title: '404 Page Not Found',
 });
 </script>
