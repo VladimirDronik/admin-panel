@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useApiInstant } from '~/composables/api/apiInstant';
+import { useApiInstant } from '~/composables/api/instant';
 // Types
 import type { Request } from '~/types/AuthTypes';
 

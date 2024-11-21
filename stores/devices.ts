@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
-import { useApiInstant } from '~/composables/api/apiInstant';
+import { useApiInstant } from '~/composables/api/instant';
 // Helpers
 import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
 // Types

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useApiInstant } from '~/composables/api/apiInstant';
+import { useApiInstant } from '~/composables/api/instant';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
