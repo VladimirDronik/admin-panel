@@ -11,17 +11,17 @@ useHead({
 });
 </script>
 <template>
-  <div class="d-flex justify-center align-center text-center h-100vh">
+  <div class="tw-align-center tw-h-100vh tw-flex tw-justify-center tw-text-center">
     <div>
       <img src="/images/background/errorimg.svg" width="500" alt="404" />
-      <h1 class="text-h1 pt-3">
+      <h1 class="tw-pt-3 tw-text-3xl tw-font-semibold">
         {{ t('error.oops') }}
       </h1>
-      <h4 class="text-h4 my-8">
+      <h4 class="tw-my-8 tw-text-lg">
         {{ t('error.errorPageText') }}
       </h4>
       <NuxtLink to="/devices">
-        <Button flat color="primary" class="mb-4" to="/">
+        <Button flat color="tw-primary" class="tw-mb-4" to="/">
           {{ t('error.goBack') }}
         </Button>
       </NuxtLink>
