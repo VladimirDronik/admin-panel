@@ -2,16 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'primeicons/primeicons.css';
+@import 'vue-grid-layout3/dist/style.css';
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");
 
 @import './animation';
-
 @import './components/tables.scss';
 
-@import 'vue3-perfect-scrollbar/style.css';
-@import "vue3-easy-data-table/dist/style.css";
 
-@import 'primeicons/primeicons.css';
 
 
 

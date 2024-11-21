@@ -4,8 +4,10 @@ import { useAuthStore } from '@/stores/auth';
 import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
+// Composables
 const authStore = useAuthStore();
 
+// Variables
 const profileDD = [
   {
     avatar: proUser1,
@@ -23,6 +25,7 @@ const profileDD = [
 
 const menu = ref();
 
+// Methods
 const toggle = (event: any) => {
   menu.value.toggle(event);
 };
@@ -72,7 +75,7 @@ const toggle = (event: any) => {
             </div>
             <v-divider />
           </div>
-          <perfect-scrollbar style="height: calc(100vh - 240px); max-height: 160px">
+          <ScrollPanel style="height: calc(100vh - 240px); max-height: 160px">
             <div class="tw-px-6">
               <div
                 v-for="item in profileDD"
@@ -97,7 +100,7 @@ const toggle = (event: any) => {
                 </div>
               </div>
             </div>
-          </perfect-scrollbar>
+          </ScrollPanel>
           <div class="tw-px-2 tw-py-4 tw-text-center">
             <Button
               @click="authStore.logoutApi()"

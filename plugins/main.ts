@@ -1,18 +1,20 @@
-import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
-import VueApexCharts from 'vue3-apexcharts';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import VueTablerIcons from 'vue-tabler-icons';
-// @ts-ignore
-import Vue3EasyDataTable from 'vue3-easy-data-table';
+import { createI18n } from 'vue-i18n';
 import GridLayout from 'vue-grid-layout3';
-import 'vue-grid-layout3/dist/style.css';
+import VueTablerIcons from 'vue-tabler-icons';
+// Data Locales
+import messages from '@/locales/messages';
+// Styles
 import '@/scss/style.scss';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(PerfectScrollbarPlugin);
-  nuxtApp.vueApp.use(VueApexCharts);
+  const i18n = createI18n({
+    legacy: false,
+    globalInjection: true,
+    locale: 'ru',
+    messages,
+  });
+
+  nuxtApp.vueApp.use(i18n);
   nuxtApp.vueApp.use(VueTablerIcons);
   nuxtApp.vueApp.use(GridLayout);
-  nuxtApp.vueApp.component('EasyDataTable', Vue3EasyDataTable);
-  nuxtApp.vueApp.component('VueEasyDatePicker', VueDatePicker);
 });
