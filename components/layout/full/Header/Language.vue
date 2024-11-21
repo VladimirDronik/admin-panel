@@ -48,7 +48,7 @@ const selectLanguage = (item: string) => {
             v-if="$i18n.locale === language.value"
             :src="language.avatar"
             :alt="$i18n.locale"
-            class="obj-cover tw-h-6 tw-w-6 tw-rounded-full"
+            class="tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
           />
         </div>
       </div>

@@ -34,7 +34,7 @@ const to = computed(() => route.path);
               :to="item.to"
               :class="{ 'tw-justify-center': !open }"
               as="router-link"
-              class="tw-mb-1 tw-w-full tw-justify-start tw-text-black"
+              class="tw-mb-1 tw-w-full !tw-justify-start !tw-text-black"
             >
               <component
                 :is="item.icon"

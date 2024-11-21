@@ -12,3 +12,8 @@ export interface Options {
     value: any
   }
 }
+
+export interface Header {
+  text: string,
+  value: string,
+}

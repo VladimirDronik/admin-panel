@@ -10,8 +10,7 @@ import _, { isArray } from 'lodash';
 // Components
 import TreeTable from 'primevue/treetable';
 // Types
-import type { Header } from 'vue3-easy-data-table';
-import type { Filter } from '@/types/MainTypes';
+import type { Filter, Header } from '@/types/MainTypes';
 
 // Composables
 const route = useRoute();
@@ -49,7 +48,6 @@ const props = defineProps({
   },
   headers: {
     type: Object as PropType<Header[]>,
-    required: true,
     default() {
       return [];
     },
