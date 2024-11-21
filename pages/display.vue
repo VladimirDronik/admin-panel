@@ -57,7 +57,7 @@ const headers = [
         label="Добавить отображение"
       />
     </BaseBreadcrumb>
-    <BaseNewTable
+    <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"

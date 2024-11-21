@@ -7,7 +7,7 @@ useHead({
   titleTemplate: computed(() => t('pages.scripts')),
 });
 
-const storeDevices = useDevicesStore();
+const storeScript = useScriptStore();
 
 const headers = [
   {
@@ -32,7 +32,7 @@ const headers = [
   },
 ];
 
-storeDevices.getScriptsApi();
+storeScript.getScriptsApi();
 </script>
 
 <template>
@@ -44,10 +44,10 @@ storeDevices.getScriptsApi();
         label="Добавить Скрипт"
       />
     </BaseBreadcrumb>
-    <BaseNewTable
+    <BaseTable
       class="data-table"
       :headers="headers"
-      :items="storeDevices.scripts"
+      :items="storeScript.list"
     >
       <Column field="actions" style="width: 200px">
         <template #header>
@@ -75,7 +75,7 @@ storeDevices.getScriptsApi();
           </div>
         </template>
       </Column>
-    </BaseNewTable>
+    </BaseTable>
   </BasePanel>
 </template>
 

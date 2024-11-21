@@ -40,7 +40,7 @@ const headers = [
         label="Добавить Пользователя"
       />
     </BaseBreadcrumb>
-    <BaseNewTable
+    <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"

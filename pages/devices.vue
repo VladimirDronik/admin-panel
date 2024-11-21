@@ -50,13 +50,13 @@ const getTypes = computed(() => storeDevices.types
   })));
 
 const props = computed(() => {
-  if (storeDevices.item?.props) {
-    return storeDevices.item.props.map((item) => item.value);
+  if (storeDevices.object?.props) {
+    return storeDevices.object.props.map((item) => item.value);
   }
 });
 const childrenProps = computed(() => {
-  if (storeDevices.item?.children) {
-    return storeDevices.item?.children.map((item) => item?.props.map((item) => item.value))[0];
+  if (storeDevices.object?.children) {
+    return storeDevices.object?.children.map((item) => item?.props.map((item) => item.value))[0];
   }
 });
 
@@ -142,7 +142,7 @@ const update = async (params: any = {}) => {
 };
 
 const clickRow = async (item: any) => {
-  if (storeDevices.item?.id === item.data.id) return;
+  if (storeDevices.object?.id === item.data.id) return;
   isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
   const data = await storeDevices.getControllerDetailsApi(item.data.id, {
@@ -203,11 +203,11 @@ const findRoom = (list: Room[], id: number) => {
 };
 
 const updateFields = () => {
-  if (storeDevices.item) {
-    storeDevices.item = {
-      ...storeDevices.item,
-      props: propsModel(storeDevices.item.props),
-      children: storeDevices.item.children?.map((item) => ({
+  if (storeDevices.object) {
+    storeDevices.object = {
+      ...storeDevices.object,
+      props: propsModel(storeDevices.object.props),
+      children: storeDevices.object.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),

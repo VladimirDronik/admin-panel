@@ -49,11 +49,12 @@ export interface Event {
 }
 export interface RequestDevices {
     id: number,
-    type: number,
+    type: string,
     protocol: number,
     state: number,
-    name: number,
+    name: string,
     address: number,
+    parent_id: number,
     module: number,
     category: string,
     zone_id: number
@@ -61,6 +62,7 @@ export interface RequestDevices {
     children?: RequestDevices[]
     props: ModelProps,
     methods: Method[],
+    tags: string[],
     events: {
         [key: string]: Event
     }

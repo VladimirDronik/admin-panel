@@ -215,6 +215,7 @@ const openEdit = (event: any) => {
                     class="tw-mr-2"
                     icon="pi pi-trash"
                     aria-label="Cancel"
+                    severity="secondary"
                     text
                     rounded
                   />

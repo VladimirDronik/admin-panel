@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const { updateData } = useUtils();
+const storeScript = useScriptStore();
 const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
@@ -70,7 +71,7 @@ const createAction = async () => {
 
 const created = async () => {
   loading.value = true;
-  await storeDevices.getScriptsApi();
+  await storeScript.getScriptsApi();
   loading.value = false;
 };
 
@@ -100,7 +101,7 @@ created();
       </p>
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
-        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in storeDevices.scripts" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in storeScript.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <div class="tw-text-left">
             <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg">
               {{ script.name }}

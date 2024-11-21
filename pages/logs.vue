@@ -31,7 +31,7 @@ const headers = [
         label="Настройки"
       />
     </BaseBreadcrumb>
-    <BaseNewTable
+    <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"

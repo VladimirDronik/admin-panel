@@ -37,8 +37,8 @@ const form = defineModel<Devices | undefined>('form', {
 // Methods
 const confirmDelete = async () => {
   loadingDelete.value = true;
-  if (storeDevices.item?.id) {
-    const id = storeDevices.item?.id;
+  if (storeDevices.object?.id) {
+    const id = storeDevices.object?.id;
     await updateData({
       update: async () => {
         await storeDevices.deleteDeviceApi(id);

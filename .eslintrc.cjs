@@ -14,6 +14,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    camelcase: 'off',
     'no-shadow': 'off',
     'no-console': 'off',
     'no-continue': 'off',

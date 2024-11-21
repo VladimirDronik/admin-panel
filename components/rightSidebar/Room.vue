@@ -31,7 +31,7 @@ const loadingDelete = ref(false);
 
 const confirmDelete = async () => {
   loadingDelete.value = true;
-  if (storeDevices.item?.id) await storeDevices.deleteDeviceApi(storeDevices.item?.id);
+  if (storeDevices.object?.id) await storeDevices.deleteDeviceApi(storeDevices.object?.id);
   await storeDevices.getDevicesApi({
     limit: 10000,
     offset: 0,

@@ -20,10 +20,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const tags = ref<Tags[]>([]);
   const types = ref<Type[]>([]);
 
-  const scripts = ref<Script[]>([]);
-  const scriptsTotal = ref<number>(0);
-
-  const item = ref<Devices | null>();
+  const object = ref<Devices | null>();
   const model = ref<Devices | null>();
 
   const userAccessLevel = ref<number>(3);
@@ -89,19 +86,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     tags.value = data.data;
-    return data;
-  };
-
-  const getScriptsApi = async (params = {}) => {
-    const { data }: { data: { data: RequestScript } } = await api('http://10.35.16.1:8082/scripts', {
-      params,
-      headers: {
-        token: storeAuth.token,
-      },
-    });
-
-    scripts.value = data.data.list;
-    scriptsTotal.value = data.data.total;
     return data;
   };
 
@@ -178,7 +162,6 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getControllerDetailsApi = async (id: number, params: any = {}) => {
-    console.log(params);
     const { data }: {data: {data: RequestDevices}} = await api.get(
       `http://10.35.16.1:8082/objects/${id}`,
       {
@@ -198,7 +181,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       })),
     } as Devices;
 
-    item.value = result;
+    object.value = result;
     return result;
   };
 
@@ -247,18 +230,15 @@ export const useDevicesStore = defineStore('Devices', () => {
     list,
     tags,
     total,
-    item,
+    object,
     types,
     model,
     getDevices,
-    scripts,
-    scriptsTotal,
     userAccessLevel,
     getDevicesApi,
     getTypesApi,
     getModelApi,
     getTagsApi,
-    getScriptsApi,
     getControllerDetailsApi,
     propsModel,
     createDeviceApi,

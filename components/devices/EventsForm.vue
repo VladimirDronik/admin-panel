@@ -85,7 +85,7 @@ const editEvents = (event: any) => {
 <template>
   <div v-if="events">
     <div v-for="event in events" :key="event.code" class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
-      <div class="tw-flex tw-items-center tw-justify-between">
+      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <p class="tw-text-lg tw-font-semibold">
           {{ event.name }}
         </p>
@@ -96,6 +96,7 @@ const editEvents = (event: any) => {
             size="small"
             text
             label="Настройка"
+            severity="secondary"
             icon="pi pi-cog"
           />
           <Button
@@ -115,16 +116,16 @@ const editEvents = (event: any) => {
         <ProgressSpinner />
       </div> -->
       <p :class="{ 'tw-opacity-0': !event.actions?.length }">
-        <span class="text-primary tw-mr-2">
+        <span class="tw-mr-2 tw-text-primary">
           Метод {{ event.actionTypes.method }}
         </span>
-        <span class="text-warning tw-mr-2">
+        <span class="tw-text-warn tw-mr-2">
           Пауза {{ event.actionTypes.delay }}
         </span>
-        <span class="text-info tw-mr-2">
+        <span class="tw-text-info tw-mr-2">
           Скрипт {{ event.actionTypes.script }}
         </span>
-        <span class="text-error">
+        <span class="tw-text-danger">
           Уведомление {{ event.actionTypes.notification }}
         </span>
       </p>
