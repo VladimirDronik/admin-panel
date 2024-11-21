@@ -32,7 +32,7 @@ const to = computed(() => route.path);
             <Button
               :text="to !== item.to"
               :to="item.to"
-              :class="{ 'tw-justify-center': !open }"
+              :class="{ '!tw-justify-center': !open }"
               as="router-link"
               class="tw-mb-1 tw-w-full !tw-justify-start !tw-text-black"
             >
@@ -48,7 +48,7 @@ const to = computed(() => route.path);
           <p
             v-else
             class="tw-mb-3 tw-pt-3 tw-font-semibold"
-            :class="{ 'tw-text-center': !open }"
+            :class="{ '!tw-text-center': !open }"
           >
             {{ open ? t(item.header) : '...' }}
           </p>

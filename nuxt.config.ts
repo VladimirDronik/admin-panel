@@ -1,14 +1,13 @@
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-// import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 import Noir from './theme/themePrimeVue';
 
 export default defineNuxtConfig({
-
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     layoutTransition: { name: 'layout', mode: 'out-in' },
   },
+
   runtimeConfig: {
     public: {
       backendApi: '',
@@ -22,20 +21,13 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    // vue: {
-    //   template: {
-    //     transformAssetUrls,
-    //   },
-    // },
     plugins: [
       nodePolyfills(),
     ],
     server: {
       fs: {
         allow: [
-          // search up for workspace root
           searchForWorkspaceRoot(process.cwd()),
-          // your custom rules
           '/path/to/custom/allow',
         ],
       },
@@ -44,26 +36,13 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  devtools: {
-    enabled: true,
-  },
-
   routeRules: {
     '/': {
       redirect: '/auth/login',
     },
   },
 
-  build: {
-    transpile: ['vuetify'],
-  },
-
   modules: [
-    // (_options, nuxt) => {
-    //   nuxt.hooks.hook('vite:extendConfig', (config) => {
-    //     config?.plugins?.push(vuetify({ autoImport: true }));
-    //   });
-    // },
     '@pinia/nuxt',
     '@nuxtjs/google-fonts',
     '@primevue/nuxt-module',

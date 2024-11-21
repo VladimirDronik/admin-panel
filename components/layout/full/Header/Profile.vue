@@ -37,7 +37,7 @@ const toggle = (event: any) => {
     <Button
       @click="toggle"
       text
-      color="primary"
+      rounded
       icon="pi"
     >
       <img
