@@ -1,10 +1,5 @@
 import { createI18n } from 'vue-i18n';
-import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
-import VueApexCharts from 'vue3-apexcharts';
-import VueDatePicker from '@vuepic/vue-datepicker';
 import VueTablerIcons from 'vue-tabler-icons';
-// @ts-ignore
-import Vue3EasyDataTable from 'vue3-easy-data-table';
 import messages from '@/locales/messages';
 
 export const plugins = (language: string = 'en', plugins: any[] = []) => {
@@ -19,9 +14,5 @@ export const plugins = (language: string = 'en', plugins: any[] = []) => {
 };
 
 export const components = {
-  VueEasyDatePicker: VueDatePicker,
-  EasyDataTable: Vue3EasyDataTable,
-  PerfectScrollbarPlugin,
-  VueApexCharts,
   VueTablerIcons,
 };

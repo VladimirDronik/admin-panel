@@ -145,15 +145,17 @@ const clickRow = async (item: any) => {
   if (storeDevices.item?.id === item.data.id) return;
   isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
-  const data = await storeDevices.getControllerDetailsApi(item.data.id);
+  const data = await storeDevices.getControllerDetailsApi(item.data.id, {
+    without_children: item.data.tags.includes('controller'),
+  });
   selectedDevice.value = data;
   isUpdateRightBar.value = false;
 };
 
 const created = async () => {
   await Promise.all([
-    storeDevices.getTypesApi(),
     storeRooms.getRoomsApi(),
+    storeDevices.getTypesApi(),
     storeDevices.getTagsApi(),
     storeDevices.getDevicesApi({
       limit: perPage,

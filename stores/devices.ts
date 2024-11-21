@@ -177,10 +177,12 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
-  const getControllerDetailsApi = async (id: number) => {
+  const getControllerDetailsApi = async (id: number, params: any = {}) => {
+    console.log(params);
     const { data }: {data: {data: RequestDevices}} = await api.get(
       `http://10.35.16.1:8082/objects/${id}`,
       {
+        params,
         headers: {
           token: storeAuth.token,
         },
