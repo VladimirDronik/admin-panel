@@ -1,6 +1,6 @@
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import Noir from './theme/themePrimeVue';
+import Noir from './theme/themeLight';
 import { Components } from './theme/Components';
 
 export default defineNuxtConfig({
