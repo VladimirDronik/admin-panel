@@ -32,21 +32,21 @@ export const checkStatusTextSmall = (item: string | undefined) => {
 };
 
 export const checkStatusBackgroundColor = (item: string | undefined) => {
-  if (item === 'ON') return 'bg-success';
-  if (item === 'OFF') return 'bg-error';
-  return 'bg-warning';
+  if (item === 'ON') return 'tw-bg-success';
+  if (item === 'OFF') return 'tw-bg-danger';
+  return 'tw-bg-warn';
 };
 
-export const checkStatusPrimeVueColor = (item: string | undefined) => {
-  if (item === 'ON') return 'primary';
-  if (item === 'OFF') return 'danger';
-  return 'warn';
+export const checkStatusTextColor = (item: string | undefined) => {
+  if (item === 'ON') return 'tw-text-primary';
+  if (item === 'OFF') return 'tw-text-danger';
+  return 'tw-text-warn';
 };
 
 export const checkStatusColor = (item: string | undefined) => {
   if (item === 'ON') return 'success';
-  if (item === 'OFF') return 'error';
-  return 'warning';
+  if (item === 'OFF') return 'danger';
+  return 'warn';
 };
 
 export const roomColor = (color: string) => {

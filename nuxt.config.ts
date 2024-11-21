@@ -1,6 +1,7 @@
 import { searchForWorkspaceRoot } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import Noir from './theme/themePrimeVue';
+import { Components } from './theme/Components';
 
 export default defineNuxtConfig({
   app: {
@@ -61,6 +62,10 @@ export default defineNuxtConfig({
   },
 
   primevue: {
+    autoImport: false,
+    components: {
+      include: Components,
+    },
     options: {
       theme: {
         preset: Noir,

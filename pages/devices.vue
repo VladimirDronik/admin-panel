@@ -376,7 +376,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         </template>
         <template #body="{ node }">
           <div
-            class="tw-bg-primary tw-h-2.5 tw-w-2.5 tw-rounded-full"
+            class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(node.data.status)"
           />
           {{ checkStatusText(node.data.status)}}

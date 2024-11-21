@@ -1,6 +1,8 @@
-@import 'primeicons/primeicons.css';
-@import 'vue-grid-layout3/dist/style.css';
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");
+@forward 'primeicons/primeicons.css';
+@forward 'vue-grid-layout3/dist/style.css';
+@forward './components/tables';
+@forward './animation';
+@forward './variables';
 
 @layer tailwind-base, primevue, tailwind-utilities;
 
@@ -13,10 +15,4 @@
   @tailwind utilities;
 }
 
-@import './components/tables.scss';
-@import './animation';
-
-
-
-
-
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");

@@ -20,7 +20,7 @@ const to = computed(() => route.path);
 </script>
 
 <template>
-  <div :class="{ 'tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80">
+  <div :class="{ '!tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80">
     <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r !tw-shadow-none">
       <template #content>
         <div class="tw-mb-7 ">

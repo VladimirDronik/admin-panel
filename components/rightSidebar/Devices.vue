@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // import { useDisplay } from 'vuetify';
 import type { Devices } from '~/types/DevicesTypes';
-import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusPrimeVueColor } from '~/helpers/rooms';
+import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/rooms';
 
 // Composables
 const { t } = useI18n();
@@ -116,7 +116,7 @@ watch(() => form.value?.name, updateName);
         />
       </div>
       <Tag
-        :severity="checkStatusPrimeVueColor(form?.status)"
+        :severity="checkStatusColor(form?.status)"
         class="!tw-rounded-lg"
         outlined
         label
