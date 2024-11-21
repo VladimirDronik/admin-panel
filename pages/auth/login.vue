@@ -6,16 +6,16 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 
-// Declare Options
-definePageMeta({
-  layout: 'blank',
-});
-
 // Composables
 const { t } = useI18n();
 const router = useRouter();
 const store = useAuthStore();
 const { updateData } = useUtils();
+
+// Declare Options
+definePageMeta({
+  layout: 'blank',
+});
 
 useHead({
   titleTemplate: computed(() => t('pages.login')),
@@ -29,6 +29,7 @@ const form = ref({
   password: '12345',
 });
 
+// Methods
 const login = async () => {
   loading.value = true;
   updateData({
@@ -50,12 +51,12 @@ const login = async () => {
     <div style="height: 85vh" class="tw-flex tw-items-center tw-justify-center">
       <div style="width: 500px;" class="tw-rounded-lg tw-bg-white tw-p-5">
         <div class="tw-flex tw-justify-center tw-py-4">
-          <LayoutFullLogo />
+          <Logo />
         </div>
         <div class="tw-mb-3 tw-text-center tw-text-lg">
           {{ t('auth.title') }}
         </div>
-        <div>
+        <form>
           <SharedUILabel
             :title="t('auth.login')"
           >
@@ -79,7 +80,7 @@ const login = async () => {
           >
             {{ t('auth.signIn') }}
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   </div>

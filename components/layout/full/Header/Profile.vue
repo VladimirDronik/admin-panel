@@ -21,66 +21,102 @@ const profileDD = [
   },
 ];
 
+const menu = ref();
+
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
+
 </script>
 
 <template>
-  <!-- ---------------------------------------------- -->
-  <!-- notifications DD -->
-  <!-- ---------------------------------------------- -->
-  <v-menu :close-on-content-click="false">
-    <template v-slot:activator="{ props }">
-      <v-btn class="custom-hover-primary" variant="text" v-bind="props" icon>
-        <v-avatar size="35">
-          <img src="~/assets/images/user-1.jpg" width="35" alt="Profile" />
-        </v-avatar>
-      </v-btn>
-    </template>
-    <v-sheet rounded="md" width="360" elevation="10">
-      <div class="px-8 pt-6">
-        <h6 class="text-h5 font-weight-medium">Профиль пользователя</h6>
-        <div class="d-flex align-center mt-4 pb-6">
-          <v-avatar size="80">
-            <img src="~/assets/images/user-1.jpg" width="80" alt="Profile" />
-          </v-avatar>
-          <div class="ml-3">
-            <h6 class="text-h6 mb-n1">Mathew Anderson</h6>
-            <span class="text-subtitle-1 font-weight-regular textSecondary">
-              ул. Гоголя, 09
-            </span>
-            <div class="d-flex align-center mt-1">
-              <MailIcon size="18" stroke-width="1.5" />
-              <span class="text-subtitle-1 font-weight-regular textSecondary ml-2">
-                ID: 00000000
-              </span>
+  <div>
+    <Button
+      @click="toggle"
+      text
+      color="primary"
+      icon="pi"
+    >
+      <img
+        class="tw-rounded-full"
+        src="~/assets/images/user-1.jpg"
+        width="35"
+        alt="Profile"
+      />
+    </Button>
+
+    <Popover ref="menu" class="profile">
+      <Card class="tw-w-96 !tw-shadow-none">
+        <template #content>
+          <div class="tw-px-2">
+            <h6 class="tw-text-xl">Профиль пользователя</h6>
+            <div class="tw-mt-4 tw-flex tw-items-center tw-pb-6">
+              <img
+                src="~/assets/images/user-1.jpg"
+                width="80"
+                alt="Profile"
+                class="tw-rounded-full"
+              />
+              <div class="tw-ml-3">
+                <h6 class="tw-text-xl tw-font-semibold">Никита Гурьянов</h6>
+                <span class="text-subtitle-1 font-weight-regular textSecondary">
+                  ул. Гоголя, 09
+                </span>
+                <div class="tw-mt-1 tw-flex tw-items-center">
+                  <MailIcon size="18" stroke-width="1.5" />
+                  <span class="text-subtitle-1 font-weight-regular textSecondary tw-ml-2">
+                    ID: 00000000
+                  </span>
+                </div>
+              </div>
             </div>
+            <v-divider />
           </div>
-        </div>
-        <v-divider />
-      </div>
-      <perfect-scrollbar style="height: calc(100vh - 240px); max-height: 160px">
-        <v-list class="py-0 theme-list" lines="two">
-          <v-list-item v-for="item in profileDD" :key="item.title" class="py-4 px-8 custom-text-primary" :to="item.href">
-            <template v-slot:prepend>
-              <v-avatar size="48" color="lightprimary" class="mr-3" rounded="md">
-                <v-img :src="item.avatar" width="24" height="24" :alt="item.avatar" class="tw-max-w-6" />
-              </v-avatar>
-            </template>
-            <div>
-              <h6 class="text-subtitle-1 font-weight-bold mb-2 custom-title">
-                {{ item.title }}
-              </h6>
+          <perfect-scrollbar style="height: calc(100vh - 240px); max-height: 160px">
+            <div class="tw-px-6">
+              <div
+                v-for="item in profileDD"
+                :key="item.title"
+                class="tw-flex tw-py-4"
+                :to="item.href"
+              >
+                <img
+                  :src="item.avatar"
+                  width="24"
+                  height="24"
+                  :alt="item.avatar"
+                  class="tw-mr-3 tw-max-w-6"
+                />
+                <div>
+                  <h6 class="custom-title tw-mb-1 tw-font-bold">
+                    {{ item.title }}
+                  </h6>
+                  <p class="font-weight-regular textSecondary">
+                    {{ item.subtitle }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <p class="text-subtitle-1 font-weight-regular textSecondary">
-              {{ item.subtitle }}
-            </p>
-          </v-list-item>
-        </v-list>
-      </perfect-scrollbar>
-      <div class="pt-4 pb-6 px-8 text-center">
-        <Button class="tw-w-full" color="primary" outlined size="small" @click="authStore.logoutApi()">
-          Logout
-        </Button>
-      </div>
-    </v-sheet>
-  </v-menu>
+          </perfect-scrollbar>
+          <div class="tw-px-2 tw-py-4 tw-text-center">
+            <Button
+              @click="authStore.logoutApi()"
+              class="tw-w-full"
+              color="primary"
+              size="small"
+              outlined
+            >
+              Logout
+            </Button>
+          </div>
+        </template>
+      </Card>
+    </Popover>
+  </div>
 </template>
+
+<style>
+.profile .p-popover-content {
+  background: none !important;
+}
+</style>

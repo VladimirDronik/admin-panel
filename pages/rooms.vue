@@ -141,11 +141,14 @@ created();
         </div>
       </div>
     </VueDraggableNext>
-    <RightSidebarRoom
-      v-model:is-update="isLoading"
-      v-model:form="form"
-      v-model:is-show="isUpdateRightBar"
-    />
+
+    <template #rightbar>
+      <RightSidebarRoom
+        v-model:is-update="isLoading"
+        v-model:form="form"
+        v-model:is-show="isUpdateRightBar"
+      />
+    </template>
   </BasePanel>
 </template>
 

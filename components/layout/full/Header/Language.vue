@@ -68,7 +68,7 @@ const selectLanguage = (item: string) => {
           <img
             :src="item.avatar"
             :alt="item.avatar"
-            class="obj-cover tw-mr-2 tw-h-6 tw-w-6 tw-rounded-full"
+            class="tw-mr-2 tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
           />
           <div class="text-subtitle-1 font-weight-regular">
             {{ item.title }}
