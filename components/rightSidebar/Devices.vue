@@ -192,7 +192,7 @@ watch(() => form.value?.name, () => {
             </TabPanel>
             <TabPanel value="ports">
               <div v-if="form">
-                <DevicesPortsForm v-model="form" />
+                <DevicesPortsForm v-model="form" :id="storeDevices.object?.id ?? 0" />
               </div>
             </TabPanel>
           </TabPanels>

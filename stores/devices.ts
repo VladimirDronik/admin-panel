@@ -23,6 +23,8 @@ export const useDevicesStore = defineStore('Devices', () => {
   const object = ref<Devices | null>();
   const model = ref<Devices | null>();
 
+  const ports = ref<any>();
+
   const userAccessLevel = ref<number>(3);
 
   // Computed Properties
@@ -50,7 +52,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getDevicesApi = async (params = {}, updateStore: boolean = true) => {
-    const { data }: RequestData = await api('http://10.35.16.1:8082/objects', {
+    const { data }: RequestData = await api.get('http://10.35.16.1:8082/objects', {
       params,
       headers: {
         token: storeAuth.token,
@@ -66,7 +68,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api('http://10.35.16.1:8082/objects/types', {
+    const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8082/objects/types', {
       params,
       headers: {
         token: storeAuth.token,
@@ -78,7 +80,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTagsApi = async (params = {}) => {
-    const { data }: { data: { data: any[] } } = await api('http://10.35.16.1:8082/objects/tags', {
+    const { data }: { data: { data: any[] } } = await api.get('http://10.35.16.1:8082/objects/tags', {
       params,
       headers: {
         token: storeAuth.token,
@@ -86,6 +88,17 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     tags.value = data.data;
+    return data;
+  };
+
+  const getPortsApi = async (id: number) => {
+    const { data }: { data: { data: any[] } } = await api.get(`http://10.35.16.1:8082/controllers/${id}/ports`, {
+      headers: {
+        token: storeAuth.token,
+      },
+    });
+
+    ports.value = data.data;
     return data;
   };
 
@@ -109,7 +122,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getModelApi = async (params = {}) => {
-    const data: { data: { data: RequestDevices }} = await api('http://10.35.16.1:8082/objects/model', {
+    const data: { data: { data: RequestDevices }} = await api.get('http://10.35.16.1:8082/objects/model', {
       params,
       headers: {
         token: storeAuth.token,
@@ -228,6 +241,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   return {
     list,
+    ports,
     tags,
     total,
     object,
@@ -235,6 +249,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     model,
     getDevices,
     userAccessLevel,
+    getPortsApi,
     getDevicesApi,
     getTypesApi,
     getModelApi,

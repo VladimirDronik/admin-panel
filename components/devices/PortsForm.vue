@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+import _ from 'lodash';
+
+const storeDevices = useDevicesStore();
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
+});
 
 const data = ref({
   in: {
@@ -39,15 +49,19 @@ const data = ref({
   },
 });
 
+watch(() => props.id, () => {
+  storeDevices.getPortsApi(props.id);
+});
+
 </script>
 
 <template>
   <div>
-    <div v-for="item in data" :key="item.id">
+    <div v-for="item in storeDevices.ports" :key="item.id">
       <h3 class="tw-mb-2 tw-text-lg">
-        {{ item.title }}
+        {{ _.startCase(_.toLower(item.group)) }}
       </h3>
-      <DataTable :value="item.items" tableStyle="min-width: 50rem" class="tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border">
+      <DataTable :value="item.ports" class="tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border">
         <Column field="number" style="width: 50px">
           <template #header>
             <p>
@@ -62,8 +76,8 @@ const data = ref({
             </p>
           </template>
           <template #body="slotProps">
-            <Tag :value="slotProps.data.type" :severity="slotProps.data.colorType">
-              <p class="text-base tw-font-normal">{{ slotProps.data.mode }}</p>
+            <Tag severity="info">
+              <p class="tw-font-normal">{{ slotProps.data.type }}</p>
             </Tag>
           </template>
         </Column>
@@ -74,19 +88,24 @@ const data = ref({
             </p>
           </template>
           <template #body="slotProps">
-            <Tag :severity="slotProps.data.colorMode">
-              <p class="text-base tw-font-normal">{{ slotProps.data.mode }}</p>
+            <Tag severity="warn">
+              <p class="tw-font-normal">{{ slotProps.data.mode || '-' }}</p>
             </Tag>
           </template>
         </Column>
-        <Column field="object" style=" width: 100px">
+        <Column field="objects" style=" width: 100px">
           <template #header>
             <p>
               Object
             </p>
           </template>
           <template #body="slotProps">
-            <p class="tw-truncate">{{ slotProps.data.object }}</p>
+            <p v-for="object in slotProps.data.objects" :key="object" class="tw-truncate">
+              {{ object }}
+            </p>
+            <p v-if="!slotProps.data.objects">
+              -
+            </p>
           </template>
         </Column>
       </DataTable>
