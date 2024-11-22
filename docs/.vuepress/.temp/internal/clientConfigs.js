@@ -1,13 +1,13 @@
-import * as clientConfig0 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-active-header-links/lib/client/config.js'
-import * as clientConfig1 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-back-to-top/lib/client/config.js'
-import * as clientConfig2 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-copy-code/lib/client/config.js'
-import * as clientConfig3 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-markdown-hint/lib/client/config.js'
-import * as clientConfig4 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-medium-zoom/lib/client/config.js'
-import * as clientConfig5 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-nprogress/lib/client/config.js'
-import * as clientConfig6 from '/Users/nikitaguranov/Desktop/admin-panel/docs/.vuepress/.temp/prismjs/config.js'
-import * as clientConfig7 from '/Users/nikitaguranov/Desktop/admin-panel/docs/.vuepress/.temp/markdown-tab/config.js'
-import * as clientConfig8 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/plugin-theme-data/lib/client/config.js'
-import * as clientConfig9 from '/Users/nikitaguranov/Desktop/admin-panel/node_modules/@vuepress/theme-default/lib/client/config.js'
+import * as clientConfig0 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-active-header-links/lib/client/config.js'
+import * as clientConfig1 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-back-to-top/lib/client/config.js'
+import * as clientConfig2 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-copy-code/lib/client/config.js'
+import * as clientConfig3 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-markdown-hint/lib/client/config.js'
+import * as clientConfig4 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-medium-zoom/lib/client/config.js'
+import * as clientConfig5 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-nprogress/lib/client/config.js'
+import * as clientConfig6 from 'C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/prismjs/config.js'
+import * as clientConfig7 from 'C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/markdown-tab/config.js'
+import * as clientConfig8 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/plugin-theme-data/lib/client/config.js'
+import * as clientConfig9 from 'C:/TouchOn/panel/admin-panel/node_modules/@vuepress/theme-default/lib/client/config.js'
 
 export const clientConfigs = [
   clientConfig0,
