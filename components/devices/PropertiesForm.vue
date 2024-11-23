@@ -48,7 +48,7 @@ defineProps({
             :title="item.name"
             :required="item.required.value"
           >
-            <SharedUiSwitchField v-model="item.value" :disabled="!item.editable.value" />
+            <SharedUISwitchField v-model="item.value" :disabled="!item.editable.value" />
           </SharedUILabel>
           <SharedUILabel
             v-else-if="item.type === 'enum'"
@@ -91,7 +91,7 @@ defineProps({
                 :title="item.name"
                 :required="item.required.value"
               >
-                <SharedUiSwitchField v-model="item.value" :disabled="!item.editable.value" />
+                <SharedUISwitchField v-model="item.value" :disabled="!item.editable.value" />
               </SharedUILabel>
               <SharedUILabel
                 v-else-if="item.type === 'enum'"

@@ -15,8 +15,8 @@ defineProps<{
 </script>
 
 <template>
-  <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between tw-rounded tw-border tw-border-black tw-px-4">
-    <p class="tw-py-3 tw-text-base">
+  <div style="border-color: var(--p-inputtext-border-color);" class="tw-mb-3 tw-flex tw-items-center tw-justify-between tw-rounded-md tw-border tw-border-black tw-px-3">
+    <p class="tw-py-2 tw-text-base">
       {{ item ? t('enabled') : t('disabled')}}
     </p>
     <ToggleSwitch

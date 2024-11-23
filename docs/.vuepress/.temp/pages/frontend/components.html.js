@@ -1,5 +1,5 @@
 import comp from "C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/components.html.vue"
-const data = JSON.parse("{\"path\":\"/frontend/components.html\",\"title\":\"Components\",\"lang\":\"ru-RU\",\"frontmatter\":{},\"headers\":[{\"level\":2,\"title\":\"UI Components\",\"slug\":\"ui-components\",\"link\":\"#ui-components\",\"children\":[]},{\"level\":2,\"title\":\"Base Components\",\"slug\":\"base-components\",\"link\":\"#base-components\",\"children\":[]}],\"git\":{},\"filePathRelative\":\"frontend/components.md\"}")
+const data = JSON.parse("{\"path\":\"/frontend/components.html\",\"title\":\"Components\",\"lang\":\"ru-RU\",\"frontmatter\":{},\"headers\":[{\"level\":2,\"title\":\"UI Components\",\"slug\":\"ui-components\",\"link\":\"#ui-components\",\"children\":[]},{\"level\":2,\"title\":\"Base Components\",\"slug\":\"base-components\",\"link\":\"#base-components\",\"children\":[]}],\"git\":{\"updatedTime\":1732393185000,\"contributors\":[{\"name\":\"Nikita Guryanov\",\"email\":\"nikgur177@gmail.com\",\"commits\":1,\"url\":\"https://github.com/Nikita Guryanov\"}]},\"filePathRelative\":\"frontend/components.md\"}")
 export { comp, data }
 
 if (import.meta.webpackHot) {

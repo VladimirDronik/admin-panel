@@ -113,7 +113,7 @@ const createDevice = async () => {
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
         <form>
-          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
+          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-gap-2">
             <SharedUILabel :title="t('devices.title')" required>
               <InputText
                 v-model="form.name"
@@ -132,7 +132,7 @@ const createDevice = async () => {
               />
             </SharedUILabel>
           </div>
-          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center">
+          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-gap-2">
             <SharedUILabel :title="t('devices.category')" required>
               <Select
                 v-model="form.category"
