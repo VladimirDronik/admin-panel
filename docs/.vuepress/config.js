@@ -22,6 +22,7 @@ export default defineUserConfig({
       '/frontend/intro',
       '/frontend/components',
       '/frontend/composables',
+      '/frontend/helpers',
     ],
   }),
 
