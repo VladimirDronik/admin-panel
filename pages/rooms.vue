@@ -143,7 +143,7 @@ created();
     </VueDraggableNext>
 
     <template #rightbar>
-      <RightSidebarRoom
+      <RightBarRoom
         v-model:is-update="isLoading"
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"

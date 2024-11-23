@@ -434,7 +434,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
     </BaseTreeTable>
 
     <template #rightbar>
-      <RightSidebarDevices
+      <RightBarDevices
         v-model:is-update="isUpdateRightBar"
         v-model:is-open="isActiveRightSidebar"
         v-model:form="selectedDevice"
