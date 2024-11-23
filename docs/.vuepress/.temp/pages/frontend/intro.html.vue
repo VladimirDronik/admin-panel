@@ -25,7 +25,7 @@
 <p>Jira Software: <a href="http://178.57.106.190:17171" target="_blank" rel="noopener noreferrer">http://178.57.106.190:17171</a></p>
 <p>Github Repository: <a href="https://github.com/VladimirDronik/admin-panel" target="_blank" rel="noopener noreferrer">https://github.com/VladimirDronik/admin-panel</a></p>
 <h2 id="стек" tabindex="-1"><a class="header-anchor" href="#стек"><span>Стек</span></a></h2>
-<div class="tw-flex tw-gap-2 tw-pt-2">
+<div class="tags tw-flex tw-gap-2 tw-pt-2 tw-w-full">
   <div class="tag tw-rounded-lg tw-text-primary">Nuxt v3</div>
   <div class="tag tw-rounded-lg tw-text-primary">PrimeVue v4</div>
   <div class="tag tw-rounded-lg tw-text-primary">Tailwind v3</div>
@@ -33,6 +33,7 @@
   <div class="tag tw-rounded-lg tw-text-primary">Vue-i18n v10</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vite v5</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vitest v2</div>
+  <div class="tag tw-rounded-lg tw-text-primary">Scssddddsdsdsdsds</div>
 </div>
 <h2 id="конфигурация" tabindex="-1"><a class="header-anchor" href="#конфигурация"><span>Конфигурация</span></a></h2>
 <p>Используется как SPA фреймворк.</p>
@@ -65,11 +66,18 @@
 .tw-text-primary {
   color: var(--vp-c-accent, #299764);
 }
+
 .tw-bg-primary {
   color: var(--vp-c-accent, #299764);
 }
+
+.tags {
+  flex-wrap: wrap;
+}
+
 .tag {
   padding: 5px 10px;
   border: 1px solid #19B58F;
+  white-space: nowrap;
 }
 </style>
