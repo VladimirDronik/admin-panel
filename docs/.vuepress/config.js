@@ -7,6 +7,10 @@ import autoprefixer from 'autoprefixer'
 export default defineUserConfig({
   lang: 'ru-RU',
 
+  head: [
+    ['link', { rel: "icon", sizes: "32x32", href: "logo-dark.svg"}],
+  ],
+
   title: 'TouchOn ❤️',
   description: 'Документация для разработчиков📄',
 

@@ -14,6 +14,7 @@
 <h2 id="полезные-ссылки" tabindex="-1"><a class="header-anchor" href="#полезные-ссылки"><span>Полезные ссылки</span></a></h2>
 <p>Новая Админка: <a href="http://10.35.16.1" target="_blank" rel="noopener noreferrer">http://10.35.16.1</a> (Логин: web, Пароль: 12345)</p>
 <p>Старая Админка: <a href="http://10.200.3.1" target="_blank" rel="noopener noreferrer">http://10.200.3.1</a> (Логин: touchon, Пароль: touchon)</p>
+<p>Figma Дизайн: <a href="https://www.figma.com/design/pDt71g3yU58Wfw15lB7pMM/%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B0?node-id=15-22143&amp;node-type=frame&amp;t=ukB0bp3aVLw0wYd5-0" target="_blank" rel="noopener noreferrer">https://www.figma.com</a></p>
 <p>Swagger:</p>
 <ul>
 <li>Translator <a href="http://10.35.16.1:8081/swagger/index.html" target="_blank" rel="noopener noreferrer">http://10.35.16.1:8081/swagger/index.html</a></li>

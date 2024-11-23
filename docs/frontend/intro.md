@@ -45,6 +45,8 @@
 
 Старая Админка: [http://10.200.3.1](http://10.200.3.1) (Логин: touchon, Пароль: touchon)
 
+Figma Дизайн: [https://www.figma.com](https://www.figma.com/design/pDt71g3yU58Wfw15lB7pMM/%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B0?node-id=15-22143&node-type=frame&t=ukB0bp3aVLw0wYd5-0)
+
 Swagger: 
 - Translator [http://10.35.16.1:8081/swagger/index.html](http://10.35.16.1:8081/swagger/index.html)
 - Object manager [http://10.35.16.1:8082/swagger/index.html](http://10.35.16.1:8082/swagger/index.html)
