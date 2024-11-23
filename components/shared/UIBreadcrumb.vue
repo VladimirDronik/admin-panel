@@ -1,17 +1,9 @@
 <script setup lang="ts">
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-// Types
-import type { PropType } from 'vue';
 
 // Composables
 const { t } = useI18n();
-
-interface Breadcrumb {
-  text: string,
-  disabled: boolean,
-  href: string,
-}
 
 // Declare Options
 defineProps({

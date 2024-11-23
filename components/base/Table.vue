@@ -7,8 +7,6 @@ import { useRoute } from 'vue-router';
 // External modules
 import moment from 'moment';
 import _, { isArray } from 'lodash';
-// Components
-import TreeTable from 'primevue/treetable';
 // Types
 import type { Filter } from '@/types/MainTypes';
 
@@ -62,7 +60,6 @@ const emit = defineEmits<{
 
 // Variables
 const isUpdate = ref(false);
-const isActiveFilters = ref(false);
 
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));

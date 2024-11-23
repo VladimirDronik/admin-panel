@@ -36,6 +36,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'vue/require-default-prop': 'off',
     'import/prefer-default-export': 'off',
+    'vue/require-valid-default-prop': 'off',
     'vue/multi-word-component-names': 'off',
     'tailwindcss/no-custom-classname': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',

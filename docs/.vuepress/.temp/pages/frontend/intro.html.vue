@@ -1,5 +1,16 @@
 <template><div><h1 id="introduction" tabindex="-1"><a class="header-anchor" href="#introduction"><span>Introduction</span></a></h1>
 <p>Основаная информация для разработчиков о Frontend части Административной панели от Потрясающих для Лучших разработчиков в мире.😏</p>
+<h2 id="скрипты-проекта" tabindex="-1"><a class="header-anchor" href="#скрипты-проекта"><span>Скрипты проекта</span></a></h2>
+<p><code v-pre>npm run dev</code>: Запуск панели администрации в режиме разработчика.</p>
+<p><code v-pre>npm run preview</code>: Запуск панели администрации в режиме Production.</p>
+<p><code v-pre>npm run build</code>: Сборка панели администрации в Production.</p>
+<p><code v-pre>npm run lint</code>: Проверка проекта на ошибки Eslint.</p>
+<p><code v-pre>npm run lint:fix</code>: Проверка проекта на ошибки Eslint с автоматическими исправлениями.</p>
+<p><code v-pre>npm run test:unit</code>: Live Проверка unit тестов с выводом в терминале.</p>
+<p><code v-pre>npm run coverage</code>: Проверка тестов Components с выводом в терминале.</p>
+<p><code v-pre>npm run coverage:ui</code>: Live Проверка тестов Components с выводом на веб странице.</p>
+<p><code v-pre>npm run docs:dev</code>: Запуск страницы документации в режиме разработчика.</p>
+<p><code v-pre>npm run docs:build</code>: Сборка страниц документации проекта.</p>
 <h2 id="полезные-ссылки" tabindex="-1"><a class="header-anchor" href="#полезные-ссылки"><span>Полезные ссылки</span></a></h2>
 <p>Новая Админка: <a href="http://10.35.16.1" target="_blank" rel="noopener noreferrer">http://10.35.16.1</a> (Логин: web, Пароль: 12345)</p>
 <p>Старая Админка: <a href="http://10.200.3.1" target="_blank" rel="noopener noreferrer">http://10.200.3.1</a> (Логин: touchon, Пароль: touchon)</p>
@@ -42,7 +53,7 @@
 <p>Используются готовые решения
 <a href="https://tabler.io/icons" target="_blank" rel="noopener noreferrer">vue-tabler-icons</a>
 и
-<a href="https://primevue.org/icons/#list" target="_blank" rel="noopener noreferrer">primeicons</a></p>
+<a href="https://primevue.org/icons/#list" target="_blank" rel="noopener noreferrer">primeicons</a>.</p>
 </div></template>
 
 

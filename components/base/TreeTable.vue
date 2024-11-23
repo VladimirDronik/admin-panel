@@ -61,10 +61,7 @@ const emit = defineEmits<{
 }>();
 
 // Variables
-const nodes = ref(null);
-
 const isUpdate = ref(false);
-const isActiveFilters = ref(false);
 
 const expandedKeys = ref<any>({});
 
