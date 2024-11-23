@@ -1,6 +1,21 @@
-# Frontend
+<style lang="scss">
+@tailwind utilities;
+
+.tw-text-primary {
+  color: var(--vp-c-accent, #299764);
+}
+.tw-bg-primary {
+  color: var(--vp-c-accent, #299764);
+}
+.tag {
+  padding: 5px 10px;
+  border: 1px solid #19B58F;
+}
+</style>
+
+# Introduction
  
-Frontend Документация от Потрясающих для Лучших разработчиков в мире.😏
+Основаная информация для разработчиков о Frontend части Административной панели от Потрясающих для Лучших разработчиков в мире.😏
 
 ## Полезные ссылки
 
@@ -20,20 +35,6 @@ Jira Software: [http://178.57.106.190:17171](http://178.57.106.190:17171)
 Github Repository: [https://github.com/VladimirDronik/admin-panel](https://github.com/VladimirDronik/admin-panel)
 
 ## Стек
-<style lang="scss">
-@tailwind utilities;
-
-.tw-text-primary {
-  color: var(--vp-c-accent, #299764);
-}
-.tw-bg-primary {
-  color: var(--vp-c-accent, #299764);
-}
-.tag {
-  padding: 5px 10px;
-  border: 1px solid #19B58F;
-}
-</style>
 <div class="tw-flex tw-gap-2 tw-pt-2">
   <div class="tag tw-rounded-lg tw-text-primary">Nuxt v3</div>
   <div class="tag tw-rounded-lg tw-text-primary">PrimeVue v4</div>
@@ -65,17 +66,3 @@ Github Repository: [https://github.com/VladimirDronik/admin-panel](https://githu
 [vue-tabler-icons](https://tabler.io/icons)
 и
 [primeicons](https://primevue.org/icons/#list)
-
-## Components
-
-### UI Components
-
-Скоро
-
-### Base Components
-
-Скоро
-
-## Функции
-
-Скоро

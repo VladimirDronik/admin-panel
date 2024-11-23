@@ -14,4 +14,33 @@ features:
 footer: Created by Nikita Guryanov
 ---
 
-[default-theme-home]: https://vuejs.press/reference/default-theme/frontmatter.html#home-page
+<style lang="scss">
+@tailwind utilities;
+
+.tw-text-primary {
+  color: var(--vp-c-accent, #299764);
+}
+.tw-bg-primary {
+  color: var(--vp-c-accent, #299764);
+}
+.tag {
+  padding: 5px 10px;
+  border: 1px solid #19B58F;
+}
+</style>
+
+## Доп Информация
+
+Проект был создан на 
+[VuePress v2](https://vuepress.vuejs.org/)
+и может использовать для дальнейшей работы
+[Markdown](https://vuepress.vuejs.org/guide/markdown.html), 
+[Vue v3](https://v3.ru.vuejs.org/ru/), 
+[Emoji](https://github.com/markdown-templates/markdown-emojis),
+<span class="tw-text-primary">HTML CSS</span>
+.
+
+Для дополнительной стилизации CSS используется
+[TailwindCSS](https://tailwindcss.com/),
+
+Надеемся что это документация вам сильно поможет в вашей дальнейшей работе!😽

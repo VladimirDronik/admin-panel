@@ -1,8 +1,10 @@
 export const redirects = JSON.parse("{}")
 
 export const routes = Object.fromEntries([
-  ["/frontend.html", { loader: () => import(/* webpackChunkName: "frontend.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend.html.js"), meta: {"title":"Frontend"} }],
   ["/", { loader: () => import(/* webpackChunkName: "index.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/index.html.js"), meta: {"title":"Главная"} }],
+  ["/frontend/components.html", { loader: () => import(/* webpackChunkName: "frontend_components.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/components.html.js"), meta: {"title":"Components"} }],
+  ["/frontend/composables.html", { loader: () => import(/* webpackChunkName: "frontend_composables.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/composables.html.js"), meta: {"title":"Composables and Helpers"} }],
+  ["/frontend/intro.html", { loader: () => import(/* webpackChunkName: "frontend_intro.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/intro.html.js"), meta: {"title":"Introduction"} }],
   ["/404.html", { loader: () => import(/* webpackChunkName: "404.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/404.html.js"), meta: {"title":""} }],
 ]);
 

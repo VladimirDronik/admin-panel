@@ -8,10 +8,21 @@ export default defineUserConfig({
   lang: 'ru-RU',
 
   title: 'TouchOn ❤️',
-  description: 'Документация 📄',
+  description: 'Документация для разработчиков📄',
 
   theme: defaultTheme({
-    navbar: ['/', '/frontend'],
+    navbar: [
+      '/',
+      {
+        text: 'Frontend',
+        link: '/frontend/intro'
+      },
+    ],
+    sidebar: [
+      '/frontend/intro',
+      '/frontend/components',
+      '/frontend/composables',
+    ],
   }),
 
   bundler: viteBundler({

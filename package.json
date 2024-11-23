@@ -55,6 +55,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vuepress/bundler-vite": "^2.0.0-rc.18",
+    "@vuepress/plugin-search": "^2.0.0-rc.61",
     "@vuepress/theme-default": "^2.0.0-rc.60",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.1",
