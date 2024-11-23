@@ -33,7 +33,7 @@
   <div class="tag tw-rounded-lg tw-text-primary">Vue-i18n v10</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vite v5</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vitest v2</div>
-  <div class="tag tw-rounded-lg tw-text-primary">Scssddddsdsdsdsds</div>
+  <div class="tag tw-rounded-lg tw-text-primary">Scss</div>
 </div>
 <h2 id="конфигурация" tabindex="-1"><a class="header-anchor" href="#конфигурация"><span>Конфигурация</span></a></h2>
 <p>Используется как SPA фреймворк.</p>

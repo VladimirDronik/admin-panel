@@ -74,7 +74,7 @@ Github Repository: [https://github.com/VladimirDronik/admin-panel](https://githu
   <div class="tag tw-rounded-lg tw-text-primary">Vue-i18n v10</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vite v5</div>
   <div class="tag tw-rounded-lg tw-text-primary">Vitest v2</div>
-  <div class="tag tw-rounded-lg tw-text-primary">Scssddddsdsdsdsds</div>
+  <div class="tag tw-rounded-lg tw-text-primary">Scss</div>
 </div>
 
 ## Конфигурация
