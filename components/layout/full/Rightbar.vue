@@ -33,11 +33,11 @@ onMounted(() => {
     :class="{ 'rightbar-active': isOpen }"
     class="rightbar tw-w-full tw-border-l tw-bg-white"
   >
-    <BaseLoader :isUpdate="isUpdate">
+    <SharedUILoader :isUpdate="isUpdate">
       <ScrollPanel :style="{ height: `${height - 90}px`, width: '100%' }">
         <slot />
       </ScrollPanel>
-    </BaseLoader>
+    </SharedUILoader>
   </div>
 </template>
 

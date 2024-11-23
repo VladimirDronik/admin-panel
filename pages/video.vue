@@ -43,14 +43,14 @@ const items = [
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.video">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.video">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить устройство"
       />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
 
     <div class="tw-mb-5 tw-flex tw-gap-2">
       <Select placeholder="Выберите Категорию" />
@@ -72,7 +72,7 @@ const items = [
         <Button class="tw-absolute tw-bottom-2 tw-right-2" icon="pi pi-cog" text rounded size="large" />
       </div>
     </div>
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

@@ -10,9 +10,9 @@ useHead({
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.networkSettings" />
-  </BasePanel>
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.networkSettings" />
+  </SharedUIPanel>
 </template>
 
 <style>

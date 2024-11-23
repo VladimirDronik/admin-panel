@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import BaseBreadcrumb from '../Breadcrumb.vue';
+import BaseBreadcrumb from '../../shared/UIBreadcrumb.vue';
 import { plugins } from '@/test/unit.setup';
 
 describe('BaseBreadcrumb.vue', () => {

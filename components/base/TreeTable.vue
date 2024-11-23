@@ -146,7 +146,7 @@ watch(() => props.total, () => {
       data-test="pagination"
     />
 
-    <BaseLoader :isUpdate="isUpdate">
+    <SharedUILoader :isUpdate="isUpdate">
       <TreeTable
         @nodeSelect="(item: any) => emit('click-row', item)"
         v-model:selectionKeys="selectedKey"
@@ -162,6 +162,6 @@ watch(() => props.total, () => {
           </div>
         </template>
       </TreeTable>
-    </BaseLoader>
+    </SharedUILoader>
   </div>
 </template>

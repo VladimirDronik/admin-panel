@@ -9,11 +9,7 @@ useHead({
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.parameters" />
-  </BasePanel>
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.parameters" />
+  </SharedUIPanel>
 </template>
-
-<style>
-
-</style>

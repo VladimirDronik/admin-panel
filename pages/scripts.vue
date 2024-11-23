@@ -36,14 +36,14 @@ storeScript.getScriptsApi();
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.scripts">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.scripts">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить Скрипт"
       />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
       :headers="headers"
@@ -55,7 +55,7 @@ storeScript.getScriptsApi();
             Действия
           </p>
         </template>
-        <template #body="{ node }">
+        <template>
           <div>
             <Button
               outlined
@@ -76,7 +76,7 @@ storeScript.getScriptsApi();
         </template>
       </Column>
     </BaseTable>
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

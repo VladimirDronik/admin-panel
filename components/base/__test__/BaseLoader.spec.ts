@@ -2,7 +2,7 @@ import {
   describe, it, expect,
 } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import BaseLoader from '../Loader.vue';
+import BaseLoader from '../../shared/UILoader.vue';
 import { plugins } from '~/test/unit.setup';
 
 describe('BaseLoader.vue', () => {

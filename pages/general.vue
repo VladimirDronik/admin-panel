@@ -43,21 +43,21 @@ const layout = ref([
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.general">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.general">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить виджет"
       />
-    </BaseBreadcrumb>
-    <grid-layout
+    </SharedUIBreadcrumb>
+    <GridLayout
       v-model:layout="layout"
       :col-num="12"
       :row-height="100"
     >
       <template #default="{ gridItemProps }">
-        <grid-item
+        <GridItem
           class="rounded-lg tw-flex tw-items-end tw-justify-end tw-p-3"
           v-for="item in layout"
           :key="item.i"
@@ -70,10 +70,10 @@ const layout = ref([
           :i="item.i"
         >
           <Button icon="pi pi-cog" text rounded size="large" />
-        </grid-item>
+        </GridItem>
       </template>
-    </grid-layout>
-  </BasePanel>
+    </GridLayout>
+  </SharedUIPanel>
 </template>
 
 <style>

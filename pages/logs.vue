@@ -24,19 +24,19 @@ const headers = [
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.logging">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.logging">
       <Button
         class="text-capitalize"
         label="Настройки"
       />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"
     />
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

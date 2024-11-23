@@ -72,10 +72,10 @@ created();
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.rooms" :total="storeRooms.total">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.rooms" :total="storeRooms.total">
       <DialogsRoomCreateDialog />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <VueDraggableNext v-model="data" handle=".handle-list" :animation="300">
       <div v-for="place in data" :key="place.id">
         <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
@@ -149,7 +149,7 @@ created();
         v-model:is-show="isUpdateRightBar"
       />
     </template>
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style lang="scss">

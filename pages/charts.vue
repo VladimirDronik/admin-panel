@@ -78,8 +78,8 @@ const setChartOptions = () => {
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.charts" />
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.charts" />
     <div class="chart-panel">
       <div class="tw-mb-5 tw-flex tw-h-full tw-flex-col tw-gap-2 tw-rounded-lg tw-border tw-p-3">
         <Select placeholder="Выберите Категорию" />
@@ -94,7 +94,7 @@ const setChartOptions = () => {
         <Chart class="tw-h-full" type="line" :data="chartData" :options="chartOptions" />
       </div>
     </div>
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

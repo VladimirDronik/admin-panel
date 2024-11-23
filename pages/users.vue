@@ -32,20 +32,20 @@ const headers = [
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.users">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.users">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить Пользователя"
       />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"
     />
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

@@ -114,7 +114,7 @@ const openEdit = (event: any) => {
         {{ form.description }}
       </p>
 
-      <BaseLoader :update="loading">
+      <SharedUILoader :update="loading">
         <div class="tw-mb-6 tw-flex tw-items-center">
           <Button
             @click="dialogMethod = true"
@@ -245,7 +245,7 @@ const openEdit = (event: any) => {
             Отменить
           </Button>
         </div> -->
-      </BaseLoader>
+      </SharedUILoader>
     </Dialog>
   </div>
 </template>

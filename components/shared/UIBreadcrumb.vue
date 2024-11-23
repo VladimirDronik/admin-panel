@@ -23,12 +23,6 @@ defineProps({
     type: Number,
     default: -1,
   },
-  breadcrumbs: {
-    type: Object as PropType<Breadcrumb[]>,
-    default() {
-      return [];
-    },
-  },
 });
 
 </script>

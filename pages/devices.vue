@@ -225,10 +225,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
 </script>
 
 <template>
-  <BasePanel>
-    <BaseBreadcrumb title="pages.devices" :total="storeDevices.total">
+  <SharedUIPanel>
+    <SharedUIBreadcrumb title="pages.devices" :total="storeDevices.total">
       <DialogsDeviceCreateDialog />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <BaseTreeTable
       @update="update"
       @created="created"
@@ -440,7 +440,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
         v-model:form="selectedDevice"
       />
     </template>
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

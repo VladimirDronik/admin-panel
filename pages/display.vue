@@ -48,21 +48,21 @@ const headers = [
 </script>
 
 <template>
-  <BasePanel>
+  <SharedUIPanel>
 
-    <BaseBreadcrumb title="pages.display">
+    <SharedUIBreadcrumb title="pages.display">
       <Button
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить отображение"
       />
-    </BaseBreadcrumb>
+    </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
       :headers="headers"
       :items="[]"
     />
-  </BasePanel>
+  </SharedUIPanel>
 </template>
 
 <style>

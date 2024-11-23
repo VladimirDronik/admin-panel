@@ -132,7 +132,7 @@ defineExpose({
       v-model:first="page"
       data-test="pagination"
     />
-    <BaseLoader :isUpdate="isUpdate">
+    <SharedUILoader :isUpdate="isUpdate">
       <DataTable
         @nodeSelect="(item: any) => emit('click-row', item)"
         :value="items"
@@ -151,6 +151,6 @@ defineExpose({
           </div>
         </template>
       </DataTable>
-    </BaseLoader>
+    </SharedUILoader>
   </div>
 </template>
