@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import type { Devices } from '~/types/DevicesTypes';
 
+// API
 export function filterInListDevices(devices: Devices[], level: number, key: string): any {
   return devices.map((item, index) => {
     if (item.children) {
@@ -31,22 +32,6 @@ export function filterInListDevices(devices: Devices[], level: number, key: stri
       },
     };
   });
-}
-
-export function getActionsColor(type: string): string {
-  if (type === 'method') return 'default';
-  if (type === 'delay') return 'warn';
-  if (type === 'script') return 'info';
-  if (type === 'notification') return 'danger';
-  return 'secondary';
-}
-
-export function getActionsTitle(type: string, args: any): string {
-  if (type === 'method') return `Метод ${args.name ?? '-'}`;
-  if (type === 'delay') return 'Пауза';
-  if (type === 'script') return 'Скрипт';
-  if (type === 'notification') return 'Уведомление';
-  return 'secondary';
 }
 
 export function updateParamsForApi(params: Devices) {
@@ -89,4 +74,21 @@ export function updateParamsForApi(params: Devices) {
   newParams.children = children;
 
   return newParams;
+}
+//
+
+export function getActionsColor(type: string): string {
+  if (type === 'method') return 'default';
+  if (type === 'delay') return 'warn';
+  if (type === 'script') return 'info';
+  if (type === 'notification') return 'danger';
+  return 'secondary';
+}
+
+export function getActionsTitle(type: string, args: any): string {
+  if (type === 'method') return `Метод ${args.name ?? '-'}`;
+  if (type === 'delay') return 'Пауза';
+  if (type === 'script') return 'Скрипт';
+  if (type === 'notification') return 'Уведомление';
+  return 'secondary';
 }

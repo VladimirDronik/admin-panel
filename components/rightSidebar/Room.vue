@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-// import { useDisplay } from 'vuetify';
 // Static data modules
 import { colors } from '~/staticData/rooms';
 import { getRoomColorByValue } from '~/helpers/rooms';
 
-// const { width } = useDisplay();
 const { t } = useI18n();
 
 const storeRoom = useRoomsStore();

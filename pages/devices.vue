@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 // Helpers
-import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/rooms';
+import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
 import type { Room } from '~/types/RoomsTypes';
 

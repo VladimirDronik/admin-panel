@@ -2,6 +2,7 @@ export const redirects = JSON.parse("{}")
 
 export const routes = Object.fromEntries([
   ["/", { loader: () => import(/* webpackChunkName: "index.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/index.html.js"), meta: {"title":"Главная"} }],
+  ["/frontend/code-style.html", { loader: () => import(/* webpackChunkName: "frontend_code-style.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/code-style.html.js"), meta: {"title":"Code Style"} }],
   ["/frontend/components.html", { loader: () => import(/* webpackChunkName: "frontend_components.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/components.html.js"), meta: {"title":"Components"} }],
   ["/frontend/composables.html", { loader: () => import(/* webpackChunkName: "frontend_composables.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/composables.html.js"), meta: {"title":"Composables"} }],
   ["/frontend/helpers.html", { loader: () => import(/* webpackChunkName: "frontend_helpers.html" */"C:/TouchOn/panel/admin-panel/docs/.vuepress/.temp/pages/frontend/helpers.html.js"), meta: {"title":"Helpers Functions"} }],

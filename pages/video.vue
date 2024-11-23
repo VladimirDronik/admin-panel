@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
-import { checkStatusTextSmall, checkStatusBackgroundColor } from '~/helpers/rooms';
+import { checkStatusTextSmall, checkStatusBackgroundColor } from '~/helpers/main';
 
 const { t } = useI18n();
 

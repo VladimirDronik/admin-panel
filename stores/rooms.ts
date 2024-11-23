@@ -7,15 +7,19 @@ import type { Room, RequestData } from '~/types/RoomsTypes';
 import type { Devices } from '~/types/DevicesTypes';
 
 export const useRoomsStore = defineStore('Rooms', () => {
+  // Composables
   const storeAuth = useAuthStore();
   const { api } = useApiInstant();
 
+  // Variables
   const list = ref<Room[]>([]);
   const total = ref<number>(0);
   const item = ref<Devices | null>(null);
 
+  // Computed
   const getRoomsSelect = computed(() => filterInListRoom(list.value));
 
+  // Methods
   const getRoomsApi = async (params = {}) => {
     const data: RequestData = await api.get('http://10.35.16.1:8081/private/rooms-list-all', {
       params,
