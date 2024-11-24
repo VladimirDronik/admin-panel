@@ -4,9 +4,6 @@ import type { Devices } from '@/types/DevicesTypes';
 
 // Composables
 const { t } = useI18n();
-const {
-  emptyRules,
-} = useValidation();
 
 const storeRooms = useRoomsStore();
 
@@ -33,7 +30,6 @@ defineProps({
       <SharedUILabel v-if="!disableRoomSelect" :title="t('devices.room')" required>
         <Select
           v-model="deviceObject.zone_id"
-          :rules="emptyRules"
           :options="storeRooms.getRoomsSelect"
           optionLabel="name"
           optionValue="code"
@@ -59,7 +55,6 @@ defineProps({
               v-model="item.value"
               :options="Object.keys(item.values)"
               :disabled="!item.editable.value"
-              :rules="item.required ? emptyRules : undefined"
               class="tw-mb-3 tw-w-full"
               required
             />
@@ -72,7 +67,6 @@ defineProps({
             <InputText
               v-model="item.value"
               :disabled="!item.editable.value"
-              :rules="!item.required ? emptyRules : undefined"
               class="tw-mb-3 tw-w-full"
               required
             />
@@ -102,7 +96,6 @@ defineProps({
                   v-model="item.value"
                   :disabled="!item.editable.value"
                   :options="Object.keys(item.values)"
-                  :rules="!item.required ? emptyRules : undefined"
                   class="tw-mb-3 tw-w-full"
                   required
                 />
@@ -116,7 +109,6 @@ defineProps({
                   v-model="item.value"
                   :disabled="!item.editable.value"
                   :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
-                  :rules="!item.required ? emptyRules : undefined"
                   class="tw-mb-3 tw-w-full"
                   required
                 />

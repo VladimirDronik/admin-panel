@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useApiInstant } from '~/composables/api/instant';
+import { useApiInstant } from '~/composables/Api';
 // Types
 import type { Request } from '~/types/AuthTypes';
 
@@ -8,10 +8,12 @@ export const useAuthStore = defineStore('Auth', () => {
   const { api } = useApiInstant();
   const router = useRouter();
 
+  // Variables
   const user = ref();
   const token = ref(localStorage.getItem('token') ?? null);
   const isActiveRightSidebar = ref(false);
 
+  // Methods
   const loginApi = async (params = {}) => {
     const { data }: Request = await api.get(
       'http://178.57.106.190:18081/token',

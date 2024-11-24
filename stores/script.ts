@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useApiInstant } from '~/composables/api/instant';
+import { useApiInstant } from '~/composables/Api';
 // Types
 import type {
   Script, RequestScript,
@@ -7,8 +7,8 @@ import type {
 
 export const useScriptStore = defineStore('ScriptStore', () => {
   // Composables
-  const storeAuth = useAuthStore();
   const { api } = useApiInstant();
+  const storeAuth = useAuthStore();
 
   const list = ref<Script[]>([]);
   const total = ref<number>(0);

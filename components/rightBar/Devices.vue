@@ -2,13 +2,11 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-// import { useDisplay } from 'vuetify';
 import type { Devices } from '~/types/DevicesTypes';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
 
 // Composables
 const { t } = useI18n();
-// const { width } = useDisplay();
 const { updateData } = useUtils();
 const storeDevices = useDevicesStore();
 

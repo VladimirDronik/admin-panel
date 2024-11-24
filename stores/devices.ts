@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
-import { useApiInstant } from '~/composables/api/instant';
+import { useApiInstant } from '~/composables/Api';
 // Helpers
 import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
 // Types
 import type {
-  Devices, Type, RequestData, ModelProps, RequestDevices, Tags, Script, RequestScript,
+  Devices, Type, RequestData, ModelProps, RequestDevices, Tags, RequestScript,
 } from '~/types/DevicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
   // Composables
-  const storeAuth = useAuthStore();
   const { api } = useApiInstant();
+  const storeAuth = useAuthStore();
 
   // Variables
   const list = ref<Devices[]>([]);

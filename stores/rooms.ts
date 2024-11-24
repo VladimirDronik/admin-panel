@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useApiInstant } from '~/composables/api/instant';
+import { useApiInstant } from '~/composables/Api';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
@@ -8,8 +8,8 @@ import type { Devices } from '~/types/DevicesTypes';
 
 export const useRoomsStore = defineStore('Rooms', () => {
   // Composables
-  const storeAuth = useAuthStore();
   const { api } = useApiInstant();
+  const storeAuth = useAuthStore();
 
   // Variables
   const list = ref<Room[]>([]);

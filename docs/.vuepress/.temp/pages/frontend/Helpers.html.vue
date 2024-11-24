@@ -4,15 +4,15 @@
 <h3 id="checkstatuscolor" tabindex="-1"><a class="header-anchor" href="#checkstatuscolor"><span>checkStatusColor</span></a></h3>
 <p><code v-pre>(item: string | undefined) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля <code v-pre>status</code>.</p>
-<p>Возвращает название цвета для использования в компонентах <code v-pre>PrimeVue</code> в <code v-pre>severity</code>.</p>
+<p>Возвращает название цвета для использования в компонентах <code v-pre>PrimeVue</code> в параметре <code v-pre>severity</code>.</p>
 <h3 id="checkstatustext" tabindex="-1"><a class="header-anchor" href="#checkstatustext"><span>checkStatusText</span></a></h3>
 <p><code v-pre>(item: string | undefined) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля <code v-pre>status</code>.</p>
-<p>Возвращает читаемое имя статуса для таблицы.</p>
+<p>Возвращает читаемое имя статуса для человека.</p>
 <h3 id="checkstatustextsmall" tabindex="-1"><a class="header-anchor" href="#checkstatustextsmall"><span>checkStatusTextSmall</span></a></h3>
 <p><code v-pre>(item: string | undefined) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля <code v-pre>status</code>.</p>
-<p>Возвращает короткое читаемое имя статуса для таблицы.</p>
+<p>Возвращает короткое читаемое имя статуса для человека.</p>
 <h3 id="checkstatustextcolor" tabindex="-1"><a class="header-anchor" href="#checkstatustextcolor"><span>checkStatusTextColor</span></a></h3>
 <p><code v-pre>(item: string | undefined) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля <code v-pre>status</code>.</p>
@@ -25,11 +25,11 @@
 <h3 id="getactionstitle" tabindex="-1"><a class="header-anchor" href="#getactionstitle"><span>getActionsTitle</span></a></h3>
 <p><code v-pre>(type: string) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля action <code v-pre>type</code> о типе действия в событии.</p>
-<p>Возвращает читаемое имя действия для таблицы.</p>
+<p>Возвращает читаемое имя действия для человека.</p>
 <h3 id="getactionscolor" tabindex="-1"><a class="header-anchor" href="#getactionscolor"><span>getActionsColor</span></a></h3>
 <p><code v-pre>(type: string, args: any) =&gt; string</code></p>
 <p>Функция получает данные от сервера поля action <code v-pre>type</code> о типе действия в событии  и <code v-pre>args</code> действия.</p>
-<p>Возвращает название цвета для использования в компонентах <code v-pre>PrimeVue</code> в <code v-pre>severity</code>.</p>
+<p>Возвращает название цвета для использования в компонентах <code v-pre>PrimeVue</code> в параметре <code v-pre>severity</code>.</p>
 <h2 id="rooms" tabindex="-1"><a class="header-anchor" href="#rooms"><span>Rooms</span></a></h2>
 <h3 id="roomcolor" tabindex="-1"><a class="header-anchor" href="#roomcolor"><span>roomColor</span></a></h3>
 <p><code v-pre>(color: string) =&gt; string</code></p>
