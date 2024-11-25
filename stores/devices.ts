@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
+// Composable modules
 import { useApiInstant } from '~/composables/Api';
+import { useUserStore } from '~/stores/user';
 // Helpers
 import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
 // Types
@@ -11,7 +13,7 @@ import type {
 export const useDevicesStore = defineStore('Devices', () => {
   // Composables
   const { api } = useApiInstant();
-  const storeAuth = useAuthStore();
+  const storeUser = useUserStore();
 
   // Variables
   const list = ref<Devices[]>([]);
@@ -55,7 +57,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const { data }: RequestData = await api.get('http://10.35.16.1:8082/objects', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -71,7 +73,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8082/objects/types', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -83,7 +85,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const { data }: { data: { data: any[] } } = await api.get('http://10.35.16.1:8082/objects/tags', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -94,7 +96,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const getPortsApi = async (id: number) => {
     const { data }: { data: { data: any[] } } = await api.get(`http://10.35.16.1:8082/controllers/${id}/ports`, {
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -113,7 +115,7 @@ export const useDevicesStore = defineStore('Devices', () => {
           event_name,
         },
         headers: {
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -125,7 +127,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const data: { data: { data: RequestDevices }} = await api.get('http://10.35.16.1:8082/objects/model', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -151,7 +153,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       {
         headers: {
           'api-key': 'c041d36e381a835afce48c91686370c8',
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -167,7 +169,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       {
         headers: {
           'api-key': 'c041d36e381a835afce48c91686370c8',
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -180,7 +182,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       {
         params,
         headers: {
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -205,7 +207,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       {
         headers: {
           'api-key': 'c041d36e381a835afce48c91686370c8',
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -218,7 +220,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       `http://10.35.16.1:8082/objects/${id}`,
       {
         headers: {
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -231,7 +233,7 @@ export const useDevicesStore = defineStore('Devices', () => {
       `http://10.35.16.1:8083/events/actions/${id}`,
       {
         headers: {
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );

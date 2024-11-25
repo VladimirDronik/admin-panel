@@ -3,8 +3,8 @@ import { useI18n } from 'vue-i18n';
 import sidebarData from './sidebarItem';
 
 // Composables
-const route = useRoute();
 const { t } = useI18n();
+const route = useRoute();
 
 // Declare Options
 const open = defineModel('open', {

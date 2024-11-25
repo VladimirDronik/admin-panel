@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/Api';
+import { useUserStore } from '~/stores/user';
 // Types
 import type {
   Script, RequestScript,
@@ -8,7 +9,7 @@ import type {
 export const useScriptStore = defineStore('ScriptStore', () => {
   // Composables
   const { api } = useApiInstant();
-  const storeAuth = useAuthStore();
+  const storeUser = useUserStore();
 
   const list = ref<Script[]>([]);
   const total = ref<number>(0);
@@ -17,7 +18,7 @@ export const useScriptStore = defineStore('ScriptStore', () => {
     const { data }: { data: { data: RequestScript } } = await api.get('http://10.35.16.1:8082/scripts', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
