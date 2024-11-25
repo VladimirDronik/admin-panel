@@ -1,5 +1,4 @@
 import { createI18n } from 'vue-i18n';
-import GridLayout from 'vue-grid-layout3';
 import VueTablerIcons from 'vue-tabler-icons';
 // Data Locales
 import messages from '@/locales/messages';
@@ -16,5 +15,4 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.vueApp.use(i18n);
   nuxtApp.vueApp.use(VueTablerIcons);
-  nuxtApp.vueApp.use(GridLayout);
 });
