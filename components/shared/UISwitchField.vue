@@ -7,12 +7,15 @@ const { t } = useI18n();
 
 // Declare Options
 const value = defineModel<boolean>({
-  required: true,
+  default: false,
 });
 
-defineProps<{
-  disabled: boolean
-}>();
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>

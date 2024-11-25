@@ -8,6 +8,8 @@ useHead({
   titleTemplate: computed(() => t('pages.video')),
 });
 
+const isOpen = ref(false);
+
 const items = [
   {
     name: 'Камера №1',
@@ -45,15 +47,11 @@ const items = [
 <template>
   <SharedUIPanel>
     <SharedUIBreadcrumb title="pages.video">
-      <Button
-        class="text-capitalize"
-        icon="pi pi-plus"
-        label="Добавить устройство"
-      />
+      <DialogsVideoSelectDialog />
     </SharedUIBreadcrumb>
 
     <div class="tw-mb-5 tw-flex tw-gap-2">
-      <Select placeholder="Выберите Категорию" />
+      <Select placeholder="Выберите Категорию" :options="['Видеорегистраторы', 'Камеры']" />
       <InputText placeholder="Поиск" />
     </div>
 
@@ -69,9 +67,13 @@ const items = [
           />
           {{ checkStatusTextSmall(item.status)}}
         </div>
-        <Button class="tw-absolute tw-bottom-2 tw-right-2" icon="pi pi-cog" text rounded size="large" />
+        <Button @click="isOpen = true" class="tw-absolute tw-bottom-2 tw-right-2" icon="pi pi-cog" text rounded size="large" />
       </div>
     </div>
+
+    <template #rightbar>
+      <RightBarVideo v-model:is-open="isOpen" />
+    </template>
   </SharedUIPanel>
 </template>
 
