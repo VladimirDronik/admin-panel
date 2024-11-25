@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/Api';
+import { useUserStore } from '~/stores/user';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
@@ -9,7 +10,7 @@ import type { Devices } from '~/types/DevicesTypes';
 export const useRoomsStore = defineStore('Rooms', () => {
   // Composables
   const { api } = useApiInstant();
-  const storeAuth = useAuthStore();
+  const storeUser = useUserStore();
 
   // Variables
   const list = ref<Room[]>([]);
@@ -24,7 +25,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
     const data: RequestData = await api.get('http://10.35.16.1:8081/private/rooms-list-all', {
       params,
       headers: {
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 
@@ -40,7 +41,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
       {
         headers: {
           'api-key': 'c041d36e381a835afce48c91686370c8',
-          token: storeAuth.token,
+          token: storeUser.userLocal?.token,
         },
       },
     );
@@ -53,7 +54,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
       data: params,
       headers: {
         'api-key': 'c041d36e381a835afce48c91686370c8',
-        token: storeAuth.token,
+        token: storeUser.userLocal?.token,
       },
     });
 

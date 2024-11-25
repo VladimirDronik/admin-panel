@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { MailIcon } from 'vue-tabler-icons';
-import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '~/stores/user';
 import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
 // Composables
-const authStore = useAuthStore();
+const authStore = useUserStore();
 
 // Variables
 const profileDD = [

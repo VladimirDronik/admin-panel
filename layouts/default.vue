@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import { useUserStore } from '~/stores/user';
 
-const open = ref(true);
+const authStore = useUserStore();
+
+const open = ref<boolean>(!!authStore.userLocal?.openSidebar);
+
+watch(open, (newValue) => authStore.changeSideBar(newValue));
 
 </script>
 
@@ -9,13 +14,11 @@ const open = ref(true);
     <!-- Layout -->
     <LayoutFullSidebar v-model:open="open" class="tw-z-40" />
     <LayoutFullHeader v-model:open="open">
+      <!-- Notifications -->
       <Toast :baseZIndex="99999" />
+      <!--  -->
       <slot />
     </LayoutFullHeader>
-    <!--  -->
-
-    <!-- Notifications -->
-
     <!--  -->
   </div>
 </template>

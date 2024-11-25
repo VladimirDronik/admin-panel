@@ -1,12 +1,12 @@
 // Composable modules
-import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '~/stores/user';
 
 export default defineNuxtRouteMiddleware((_to, _from) => {
   // Composable
-  const storeAuth = useAuthStore();
+  const storeUser = useUserStore();
 
-  if (!storeAuth.user) {
-    if (!localStorage.getItem('token')) {
+  if (!storeUser.user) {
+    if (!localStorage.getItem('touchOn')) {
       return navigateTo('/auth/login');
     }
   }

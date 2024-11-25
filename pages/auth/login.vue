@@ -4,12 +4,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 // Composable modules
 import { useI18n } from 'vue-i18n';
-import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '~/stores/user';
 
 // Composables
 const { t } = useI18n();
 const router = useRouter();
-const store = useAuthStore();
+const storeUser = useUserStore();
 const { updateData } = useUtils();
 
 // Declare Options
@@ -34,7 +34,7 @@ const login = async () => {
   loading.value = true;
   await updateData({
     update: async () => {
-      await store.loginApi(form.value);
+      await storeUser.loginApi(form.value);
     },
     success: () => {
       router.push({ name: 'general' });

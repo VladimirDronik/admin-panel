@@ -58,7 +58,7 @@ const layout = ref([
     >
       <template #default="{ gridItemProps }">
         <GridItem
-          class="rounded-lg tw-flex tw-items-end tw-justify-end tw-p-3"
+          class="tw-flex tw-items-end tw-justify-end tw-rounded-lg tw-p-3"
           v-for="item in layout"
           :key="item.i"
           v-bind="gridItemProps"

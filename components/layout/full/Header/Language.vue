@@ -1,9 +1,12 @@
 <script setup lang="ts">
 // Builtin modules
 import { useI18n } from 'vue-i18n';
+import { useUserStore } from '~/stores/user';
 // Images
 import England from '@/assets/images/flag/icon-flag-en.svg';
 import Russia from '@/assets/images/flag/icon-flag-ru.svg';
+
+const authStore = useUserStore();
 
 // Composables
 const { locale } = useI18n({ useScope: 'global' });
@@ -28,6 +31,10 @@ const toggle = (event: any) => {
 const selectLanguage = (item: string) => {
   locale.value = item;
 };
+
+selectLanguage(authStore.userLocal?.language ?? 'ru');
+
+watch(locale, (newValue) => authStore.changeLanguage(newValue));
 
 </script>
 
