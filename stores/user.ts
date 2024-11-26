@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/Api';
+// Static Data
+import { auth } from '~/staticData/endpoints';
 // Types
 import type { Request } from '~/types/AuthTypes';
 
@@ -27,7 +29,7 @@ export const useUserStore = defineStore('User', () => {
   // Methods
   const loginApi = async (params = {}) => {
     const { data }: Request = await api.get(
-      'http://178.57.106.190:18081/token',
+      auth,
       {
         params,
         headers: {

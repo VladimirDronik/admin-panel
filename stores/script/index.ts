@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia';
+// Composables modules
 import { useAPI } from '~/composables/NewApi';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
+// Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import { scriptRequestSchema, type ScriptData } from './scriptTypes';
 
@@ -8,7 +12,7 @@ export const useScriptStore = defineStore('ScriptStore', () => {
 
   const getScriptsApi = async (params = {}) => {
     const data: unknown = await useAPI(
-      'http://10.35.16.1:8082/scripts',
+      paths.scripts,
       {
         params,
       },

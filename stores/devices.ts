@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
+// Static Data modules
+import { paths, objectManager } from '~/staticData/endpoints';
 // Composable modules
 import { useApiInstant } from '~/composables/Api';
 import { useUserStore } from '~/stores/user';
-// Helpers
+// Helpers modules
 import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
-// Types
+// Types modules
 import type {
   Devices, Type, RequestData, ModelProps, RequestDevices, Tags, RequestScript,
 } from '~/types/DevicesTypes';
@@ -54,7 +56,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getDevicesApi = async (params = {}, updateStore: boolean = true) => {
-    const { data }: RequestData = await api.get('http://10.35.16.1:8082/objects', {
+    const { data }: RequestData = await api.get(paths.objects, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -70,7 +72,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api.get('http://10.35.16.1:8082/objects/types', {
+    const { data }: { data: { data: Type[] } } = await api.get(paths.objectsTypes, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -82,7 +84,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTagsApi = async (params = {}) => {
-    const { data }: { data: { data: any[] } } = await api.get('http://10.35.16.1:8082/objects/tags', {
+    const { data }: { data: { data: any[] } } = await api.get(paths.objectsTags, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -94,7 +96,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getPortsApi = async (id: number) => {
-    const { data }: { data: { data: any[] } } = await api.get(`http://10.35.16.1:8082/controllers/${id}/ports`, {
+    const { data }: { data: { data: any[] } } = await api.get(`${objectManager}/controllers/${id}/ports`, {
       headers: {
         token: storeUser.userLocal?.token,
       },
@@ -106,7 +108,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const createEventApi = async (target_type: string, target_id: number, event_name: string, params = {}) => {
     const { data }: { data: { data: RequestScript } } = await api.post(
-      'http://10.35.16.1:8083/events/actions',
+      paths.eventsActions,
       params,
       {
         params: {
@@ -124,7 +126,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getModelApi = async (params = {}) => {
-    const data: { data: { data: RequestDevices }} = await api.get('http://10.35.16.1:8082/objects/model', {
+    const data: { data: { data: RequestDevices }} = await api.get(paths.objectModel, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -146,7 +148,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const createDeviceApi = async (params = {}) => {
     const { data }: { data: Type[] } = await api.post(
-      'http://10.35.16.1:8082/objects',
+      paths.objects,
       {
         ...params,
       },
@@ -164,7 +166,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     if (_.isEmpty(params)) return undefined;
 
     const { data }: { data: Type[] } = await api.put(
-      'http://10.35.16.1:8082/objects',
+      paths.objects,
       updateParamsForApi(params),
       {
         headers: {
@@ -178,7 +180,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const getControllerDetailsApi = async (id: number, params: any = {}) => {
     const { data }: {data: {data: RequestDevices}} = await api.get(
-      `http://10.35.16.1:8082/objects/${id}`,
+      `${paths.objects}/${id}`,
       {
         params,
         headers: {
@@ -202,7 +204,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const changeActionOrderApi = async (params = {}) => {
     const data: {data: RequestDevices} = await api.put(
-      'http://10.35.16.1:8083/events/actions/order',
+      paths.eventsActionsOrder,
       params,
       {
         headers: {
@@ -217,7 +219,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const deleteDeviceApi = async (id: number) => {
     const data: {data: RequestDevices} = await api.delete(
-      `http://10.35.16.1:8082/objects/${id}`,
+      `${paths.objects}/${id}`,
       {
         headers: {
           token: storeUser.userLocal?.token,
@@ -230,7 +232,7 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const deleteActionApi = async (id: number) => {
     const data: {data: RequestDevices} = await api.delete(
-      `http://10.35.16.1:8083/events/actions/${id}`,
+      `${paths.eventsActions}/${id}`,
       {
         headers: {
           token: storeUser.userLocal?.token,

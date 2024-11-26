@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { useApiInstant } from '~/composables/Api';
 import { useUserStore } from '~/stores/user';
+// Static Data
+import { paths } from '~/staticData/endpoints';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
@@ -22,7 +24,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
 
   // Methods
   const getRoomsApi = async (params = {}) => {
-    const data: RequestData = await api.get('http://10.35.16.1:8081/private/rooms-list-all', {
+    const data: RequestData = await api.get(paths.privateRoomsList, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -36,7 +38,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
 
   const changeRooms = async (params = {}) => {
     const data: RequestData = await api.patch(
-      'http://10.35.16.1:8081/private/zones/order',
+      paths.privateZonesOrder,
       params,
       {
         headers: {
@@ -50,7 +52,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
     return data;
   };
   const changeRoomApi = async (params = {}) => {
-    const data: RequestData = await api.patch('http://10.35.16.1:8081/private/rooms-list-all', {
+    const data: RequestData = await api.patch(paths.privateRoomsList, {
       data: params,
       headers: {
         'api-key': 'c041d36e381a835afce48c91686370c8',
