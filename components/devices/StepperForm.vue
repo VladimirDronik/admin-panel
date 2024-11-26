@@ -6,10 +6,10 @@ import { updateParamsForApi } from '~/helpers/devices';
 
 // Types
 interface DeviceCreateForm {
-  name: string,
-  type: string,
-  zone_id: number | null,
-  category: string,
+  name: string;
+  type: string;
+  zone_id: number | null;
+  category: string;
 }
 
 // Composables
@@ -36,14 +36,19 @@ defineProps({
 const loading = ref(false);
 
 // Computed Properties
-const types = computed(() => _.uniq(_.map(_.filter(storeDevices.types, ['category', form.value.category]), 'type')));
+const types = computed(() => _.uniq(
+  _.map(
+    _.filter(storeDevices.types, ['category', form.value.category]),
+    'type',
+  ),
+));
 const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
 
 const valid = computed(() => {
   const main = checkValidInput(form.value.zone_id)
-  && checkValidInput(form.value.category)
-  && checkValidInput(form.value.type)
-  && checkValidInput(form.value.name);
+    && checkValidInput(form.value.category)
+    && checkValidInput(form.value.type)
+    && checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -115,11 +120,7 @@ const createDevice = async () => {
         <form>
           <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-gap-2">
             <SharedUILabel :title="t('devices.title')" required>
-              <InputText
-                v-model="form.name"
-                class="tw-w-full"
-                required
-              />
+              <InputText v-model="form.name" class="tw-w-full" required />
             </SharedUILabel>
             <SharedUILabel :title="t('devices.room')" required>
               <Select
@@ -151,32 +152,31 @@ const createDevice = async () => {
             </SharedUILabel>
           </div>
 
-          <Divider class="tw-mb-3" />
+          <Divider class="tw-pb-3" />
 
-          <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
-
+          <DevicesPropertiesForm
+            disableRoomSelect
+            v-model="storeDevices.model"
+            :loadingModal="loadingModal"
+          />
         </form>
 
         <div class="tw-flex tw-justify-end">
-          <Button
-            :disabled="!valid"
-            @click="activateCallback('2')"
-          >
+          <Button :disabled="!valid" @click="activateCallback('2')">
             {{ t('next') }}
           </Button>
         </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
-        <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
+        <DevicesEventsForm
+          v-if="storeDevices.model"
+          v-model="storeDevices.model"
+        />
         <div class="tw-flex tw-justify-between">
-          <Button
-            @click="activateCallback('1')"
-          >
+          <Button @click="activateCallback('1')">
             {{ t('goBack') }}
           </Button>
-          <Button
-            @click="activateCallback('3')"
-          >
+          <Button @click="activateCallback('3')">
             {{ t('next') }}
           </Button>
         </div>
@@ -184,9 +184,7 @@ const createDevice = async () => {
       <StepPanel v-slot="{ activateCallback }" value="3">
         Пока пусто
         <div class="tw-flex tw-justify-between">
-          <Button
-            @click="activateCallback('2')"
-          >
+          <Button @click="activateCallback('2')">
             {{ t('goBack') }}
           </Button>
           <Button
