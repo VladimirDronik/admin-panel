@@ -87,23 +87,16 @@ const getFormattedOptions = (values: Record<string, any>) => {
           deviceObject?.type === 'mega_d'
         "
       >
-        <div
-          class="tw-flex tw-flex-col tw-gap-4 tw-w-full"
-          v-for="item in sortedPropsForMegaD"
-          :key="item.code"
-        >
-          <div
-            class="tw-flex tw-items-center tw-w-full tw-mb-4"
-            v-if="item.visible.value"
-          >
-            <div class="tw-flex-1 tw-text-right tw-pr-2">
+        <div v-for="item in sortedPropsForMegaD" :key="item.code">
+          <SharedUIField v-if="item.visible.value">
+            <template #label>
               <SharedUILabel
                 :title="t(`devices.${item.code}`)"
                 :required="item.required.value"
               />
-            </div>
+            </template>
 
-            <div class="tw-flex-1 tw-text-left">
+            <template #input>
               <template v-if="item.code === 'protocol'">
                 <Select
                   v-model="item.value"
@@ -133,8 +126,8 @@ const getFormattedOptions = (values: Record<string, any>) => {
                   "
                 />
               </template>
-            </div>
-          </div>
+            </template>
+          </SharedUIField>
         </div>
       </div>
 
