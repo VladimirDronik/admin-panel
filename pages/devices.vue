@@ -255,7 +255,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.id') }}
             </p>
-            <button @click="toggleId" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleId" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
             <Popover ref="popoverId">
@@ -290,7 +290,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.title') }}
             </p>
-            <button @click="toggleName" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleName" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
 
@@ -320,7 +320,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.type') }}
             </p>
-            <button @click="toggleType" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleType" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
 
@@ -345,7 +345,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.room') }}
             </p>
-            <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
 
@@ -374,7 +374,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.status') }}
             </p>
-            <button @click="toggleStatus" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleStatus" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
             </button>
             <Popover :dismissable="false" ref="popoverStatus">
@@ -405,7 +405,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
             <p class="tw-font-semibold">
               {{ t('devices.tags') }}
             </p>
-            <button @click="toggleTags" type="button" class="tree-table__header-filter tw-bg-white">
+            <button @click="toggleTags" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
               <IconFilterFilled class="tw-h-4 tw-w-4" />
             </button>
             <Popover :dismissable="false" ref="popoverTags">
