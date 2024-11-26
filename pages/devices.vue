@@ -152,13 +152,11 @@ const clickRow = async (item: any) => {
       }),
       storeDevices.getPortsApi(item.data.id),
     ]);
-    console.log(data);
     [selectedDevice.value] = data;
   } else {
     const data = await storeDevices.getControllerDetailsApi(item.data.id, {
       without_children: item.data.tags.includes('controller'),
     });
-    console.log(data);
     selectedDevice.value = data;
   }
   isUpdateRightBar.value = false;
@@ -436,7 +434,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
                   severity="warn"
                   class="tw-mr-2 tw-flex"
                 >
-                  {{ item }}
+                  <p class="tw-font-normal">
+                    {{ item }}
+                  </p>
                 </Tag>
               </div>
             </ScrollPanel>

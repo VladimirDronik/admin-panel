@@ -134,7 +134,7 @@ watch(() => form.value?.category, () => {
             class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(form?.status)"
           />
-          <p>
+          <p class="tw-font-normal">
             {{ checkStatusTextSmall(form?.status) }}
           </p>
         </div>
