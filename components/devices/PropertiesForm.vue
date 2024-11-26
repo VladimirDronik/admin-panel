@@ -23,13 +23,19 @@ defineProps({
   },
 });
 
-const sortedProps = ref([]);
+const sortedPropsForMegaD = ref([]);
+
+// Сортировка для MegaD
 watch(
   () => deviceObject.value?.props,
   (newProps) => {
-    if (newProps) {
+    if (
+      deviceObject.value?.category === "controller" &&
+      deviceObject.value?.type === "mega_d" &&
+      newProps
+    ) {
       const fieldOrder = ["id", "address", "password", "protocol"];
-      sortedProps.value = [...newProps].sort(
+      sortedPropsForMegaD.value = [...newProps].sort(
         (a, b) => fieldOrder.indexOf(a.code) - fieldOrder.indexOf(b.code)
       );
     }
@@ -37,7 +43,7 @@ watch(
   { immediate: true }
 );
 
-const getFieldSettings = (code: string) => {
+const getFieldSettingsForMegaD = (code: string) => {
   switch (code) {
     case "id":
     case "address":
@@ -74,55 +80,107 @@ const getFormattedOptions = (values: Record<string, any>) => {
         />
       </SharedUILabel>
 
+      <!-- MegaDForm -->
       <div
-        class="tw-flex tw-flex-col tw-gap-4 tw-w-full"
-        v-for="item in sortedProps"
-        :key="item.code"
+        v-if="
+          deviceObject?.category === 'controller' &&
+          deviceObject?.type === 'mega_d'
+        "
       >
         <div
-          class="tw-flex tw-items-center tw-w-full tw-mb-4"
-          v-if="item.visible.value"
+          class="tw-flex tw-flex-col tw-gap-4 tw-w-full"
+          v-for="item in sortedPropsForMegaD"
+          :key="item.code"
         >
-          <!-- Лейбл -->
-          <div class="tw-flex-1 tw-text-right tw-pr-4">
-            <SharedUILabel
-              :title="t(`devices.${item.code}`)"
-              :required="item.required.value"
-            />
-          </div>
+          <div
+            class="tw-flex tw-items-center tw-w-full tw-mb-4"
+            v-if="item.visible.value"
+          >
+            <div class="tw-flex-1 tw-text-right tw-pr-2">
+              <SharedUILabel
+                :title="t(`devices.${item.code}`)"
+                :required="item.required.value"
+              />
+            </div>
 
-          <div class="tw-flex-1 tw-text-left">
-            <template v-if="item.type === 'bool'">
+            <div class="tw-flex-1 tw-text-left">
+              <template v-if="item.code === 'protocol'">
+                <Select
+                  v-model="item.value"
+                  :options="getFormattedOptions(item.values)"
+                  :style="{
+                    width: getFieldSettingsForMegaD(item.code).inputWidth,
+                  }"
+                  :disabled="!item.editable.value"
+                  class="tw-w-full"
+                  required
+                />
+              </template>
+              <template v-else>
+                <InputText
+                  v-model="item.value"
+                  :maxlength="getFieldSettingsForMegaD(item.code).maxLength"
+                  :style="{
+                    width: getFieldSettingsForMegaD(item.code).inputWidth,
+                  }"
+                  :disabled="!item.editable.value"
+                  class="tw-w-full tw-border tw-border-gray-300 tw-rounded tw-px-3"
+                  required
+                  :type="
+                    item.type === 'int' || item.type === 'float'
+                      ? 'number'
+                      : 'text'
+                  "
+                />
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else>
+        <div v-for="item in deviceObject.props" :key="item.code">
+          <div v-if="item.visible.value">
+            <SharedUILabel
+              v-if="item.type === 'bool'"
+              :title="item.name"
+              :required="item.required.value"
+            >
               <SharedUISwitchField
                 v-model="item.value"
                 :disabled="!item.editable.value"
               />
-            </template>
-            <template v-else-if="item.type === 'enum'">
+            </SharedUILabel>
+            <SharedUILabel
+              v-else-if="item.type === 'enum'"
+              :title="item.name"
+              :required="item.required.value"
+            >
               <Select
                 v-model="item.value"
-                :options="getFormattedOptions(item.values)"
-                :style="{ width: getFieldSettings(item.code).inputWidth }"
+                :options="Object.keys(item.values)"
                 :disabled="!item.editable.value"
-                class="tw-w-full"
+                class="tw-mb-3 tw-w-full"
                 required
               />
-            </template>
-            <template v-else>
+            </SharedUILabel>
+            <SharedUILabel
+              v-else
+              :title="item.name"
+              :required="item.required.value"
+            >
               <InputText
                 v-model="item.value"
-                class="tw-w-full tw-border tw-border-gray-300 tw-rounded tw-px-3"
-                required
                 :disabled="!item.editable.value"
-                :maxlength="getFieldSettings(item.code).maxLength"
-                :style="{ width: getFieldSettings(item.code).inputWidth }"
                 :type="
                   item.type === 'int' || item.type === 'float'
                     ? 'number'
                     : 'text'
                 "
+                class="tw-mb-3 tw-w-full"
+                required
               />
-            </template>
+            </SharedUILabel>
           </div>
         </div>
       </div>
