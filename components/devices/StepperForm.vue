@@ -151,7 +151,7 @@ const createDevice = async () => {
             </SharedUILabel>
           </div>
 
-          <Divider />
+          <Divider class="tw-mb-3" />
 
           <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
 
