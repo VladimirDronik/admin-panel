@@ -142,13 +142,25 @@ const update = async (params: any = {}) => {
 };
 
 const clickRow = async (item: any) => {
-  if (storeDevices.object?.id === item.data.id) return;
+  if (storeDevices.object?.id === item.data.id && isActiveRightSidebar.value) return;
   isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
-  const data = await storeDevices.getControllerDetailsApi(item.data.id, {
-    without_children: item.data.tags.includes('controller'),
-  });
-  selectedDevice.value = data;
+  if (item.data.tags.includes('controller')) {
+    const data = await Promise.all([
+      storeDevices.getControllerDetailsApi(item.data.id, {
+        without_children: item.data.tags.includes('controller'),
+      }),
+      storeDevices.getPortsApi(item.data.id),
+    ]);
+    console.log(data);
+    [selectedDevice.value] = data;
+  } else {
+    const data = await storeDevices.getControllerDetailsApi(item.data.id, {
+      without_children: item.data.tags.includes('controller'),
+    });
+    console.log(data);
+    selectedDevice.value = data;
+  }
   isUpdateRightBar.value = false;
 };
 
@@ -225,7 +237,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
 </script>
 
 <template>
-  <SharedUIPanel>
+  <SharedUIPanel :is-update="isUpdate">
     <SharedUIBreadcrumb title="pages.devices" :total="storeDevices.total">
       <DialogsDeviceCreateDialog />
     </SharedUIBreadcrumb>

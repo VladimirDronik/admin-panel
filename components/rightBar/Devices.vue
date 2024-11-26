@@ -13,6 +13,8 @@ const storeDevices = useDevicesStore();
 // Variables
 const name = ref('');
 
+const tabs = ref('features');
+
 const dialog = ref(false);
 
 const active = ref(false);
@@ -84,6 +86,10 @@ watch(() => form.value?.name, () => {
   active.value = false;
 });
 
+watch(() => form.value?.category, () => {
+  if (form.value?.category !== 'controller') tabs.value = 'features';
+});
+
 </script>
 
 <template>
@@ -136,7 +142,7 @@ watch(() => form.value?.name, () => {
 
       <div class="!tw-px-0 !tw-pt-1">
 
-        <Tabs value="features">
+        <Tabs v-model:value="tabs">
           <TabList>
             <Tab value="features">
               <p class="tw-font-normal">

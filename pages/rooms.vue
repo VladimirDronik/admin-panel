@@ -72,7 +72,7 @@ created();
 </script>
 
 <template>
-  <SharedUIPanel>
+  <SharedUIPanel :isUpdate="isUpdate">
     <SharedUIBreadcrumb title="pages.rooms" :total="storeRooms.total">
       <DialogsRoomCreateDialog />
     </SharedUIBreadcrumb>

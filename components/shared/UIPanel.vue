@@ -1,10 +1,19 @@
+<script setup lang="ts">
+
+const isUpdate = defineModel('isUpdate', {
+  default: false,
+});
+</script>
+
 <template>
-  <div class="panel-wrapper tw-relative tw-flex">
-    <div class="tw-w-full tw-px-6 tw-pt-6">
-      <slot />
+  <SharedUILoader :isUpdate="isUpdate">
+    <div class="panel-wrapper tw-relative tw-flex">
+      <div class="tw-w-full tw-px-6 tw-pt-6">
+        <slot />
+      </div>
+      <slot name="rightbar" />
     </div>
-    <slot name="rightbar" />
-  </div>
+  </SharedUILoader>
 </template>
 
 <style>
