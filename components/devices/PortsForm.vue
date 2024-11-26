@@ -12,14 +12,14 @@ const storeDevices = useDevicesStore();
         {{ _.startCase(_.toLower(item.group)) }}
       </h3>
       <DataTable :value="item.ports" class="tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border">
-        <Column field="number" style="width: 50px; max-width: 50px">
+        <Column field="number" style="width: 10px; max-width: 10px; overflow: hidden;">
           <template #header>
             <p>
               №
             </p>
           </template>
         </Column>
-        <Column field="type" style="width: 70px">
+        <Column field="type" style="width: 30px;  max-width: 30px; overflow: hidden;">
           <template #header>
             <p>
               Type
@@ -31,7 +31,7 @@ const storeDevices = useDevicesStore();
             </Tag>
           </template>
         </Column>
-        <Column field="mode" style="width: 70px; max-width: 70px">
+        <Column field="mode" style="width: 30px; max-width: 30px; overflow: hidden;">
           <template #header>
             <p>
               Mode
@@ -43,7 +43,7 @@ const storeDevices = useDevicesStore();
             </Tag>
           </template>
         </Column>
-        <Column field="objects" style=" width: 100px; max-width: 100px">
+        <Column field="objects" style=" width: 100px; max-width: 100px; overflow: hidden;">
           <template #header>
             <p>
               Object
