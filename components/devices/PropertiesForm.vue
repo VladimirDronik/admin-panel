@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
-import type { Devices } from "@/types/DevicesTypes";
-import { watch, ref } from "vue";
+import { useI18n } from 'vue-i18n';
+import { watch, ref } from 'vue';
+import type { Devices } from '@/types/DevicesTypes';
 
 // Composables
 const { t } = useI18n();
@@ -30,36 +30,34 @@ watch(
   () => deviceObject.value?.props,
   (newProps) => {
     if (
-      deviceObject.value?.category === "controller" &&
-      deviceObject.value?.type === "mega_d" &&
-      newProps
+      deviceObject.value?.category === 'controller'
+      && deviceObject.value?.type === 'mega_d'
+      && newProps
     ) {
-      const fieldOrder = ["id", "address", "password", "protocol"];
+      const fieldOrder = ['id', 'address', 'password', 'protocol'];
       sortedPropsForMegaD.value = [...newProps].sort(
-        (a, b) => fieldOrder.indexOf(a.code) - fieldOrder.indexOf(b.code)
+        (a, b) => fieldOrder.indexOf(a.code) - fieldOrder.indexOf(b.code),
       );
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const getFieldSettingsForMegaD = (code: string) => {
   switch (code) {
-    case "id":
-    case "address":
-      return { maxLength: 15, inputWidth: "18ch" };
-    case "password":
-      return { maxLength: 6, inputWidth: "12ch" };
-    case "protocol":
-      return { maxLength: 4, inputWidth: "12ch" };
+    case 'id':
+    case 'address':
+      return { maxLength: 15, inputWidth: '18ch' };
+    case 'password':
+      return { maxLength: 6, inputWidth: '12ch' };
+    case 'protocol':
+      return { maxLength: 4, inputWidth: '12ch' };
     default:
-      return { maxLength: 255, inputWidth: "100%" };
+      return { maxLength: 255, inputWidth: '100%' };
   }
 };
 
-const getFormattedOptions = (values: Record<string, any>) => {
-  return Object.keys(values).map((option) => option.toUpperCase());
-};
+const getFormattedOptions = (values: Record<string, any>) => Object.keys(values).map((option) => option.toUpperCase());
 </script>
 
 <template>
@@ -83,8 +81,8 @@ const getFormattedOptions = (values: Record<string, any>) => {
       <!-- MegaDForm -->
       <div
         v-if="
-          deviceObject?.category === 'controller' &&
-          deviceObject?.type === 'mega_d'
+          deviceObject?.category === 'controller'
+            && deviceObject?.type === 'mega_d'
         "
       >
         <div v-for="item in sortedPropsForMegaD" :key="item.code">
@@ -117,7 +115,7 @@ const getFormattedOptions = (values: Record<string, any>) => {
                     width: getFieldSettingsForMegaD(item.code).inputWidth,
                   }"
                   :disabled="!item.editable.value"
-                  class="tw-w-full tw-border tw-border-gray-300 tw-rounded tw-px-3"
+                  class="tw-w-full tw-rounded tw-border tw-border-gray-300 tw-px-3"
                   required
                   :type="
                     item.type === 'int' || item.type === 'float'

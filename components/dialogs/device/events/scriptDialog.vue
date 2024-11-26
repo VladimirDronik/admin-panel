@@ -69,18 +69,20 @@ const createAction = async () => {
   loading.value = false;
 };
 
-const created = async () => {
-  loading.value = true;
-  await storeScript.getScriptsApi();
-  loading.value = false;
-};
-
 const deleteScript = (script: any) => {
   selectedScript.value = script;
   deleteDialog.value = true;
 };
 
-created();
+if (storeScript.scripts) {
+  storeScript.scripts.refresh();
+} else {
+  storeScript.getScriptsApi({
+    limit: 99,
+  });
+}
+
+const refScripts = computed(() => storeScript.scripts);
 </script>
 
 <template>
@@ -101,7 +103,7 @@ created();
       </p>
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
-        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in storeScript.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in refScripts?.data?.data.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <div class="tw-text-left">
             <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg">
               {{ script.name }}

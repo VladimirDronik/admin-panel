@@ -32,11 +32,19 @@ const headers = [
   },
 ];
 
-storeScript.getScriptsApi();
+if (storeScript.scripts) {
+  storeScript.scripts.refresh();
+} else {
+  storeScript.getScriptsApi({
+    limit: 99,
+  });
+}
+
+const data = computed(() => storeScript.scripts);
 </script>
 
 <template>
-  <SharedUIPanel>
+  <SharedUIPanel :is-update="data?.pending">
     <SharedUIBreadcrumb title="pages.scripts">
       <Button
         class="text-capitalize"
@@ -44,38 +52,40 @@ storeScript.getScriptsApi();
         label="Добавить Скрипт"
       />
     </SharedUIBreadcrumb>
-    <BaseTable
-      class="data-table"
-      :headers="headers"
-      :items="storeScript.list"
-    >
-      <Column field="actions" style="width: 200px">
-        <template #header>
-          <p class="tw-font-semibold">
-            Действия
-          </p>
-        </template>
-        <template>
-          <div>
-            <Button
-              outlined
-              icon="pi pi-pencil"
-              severity="info"
-              rounded
-              aria-label="Search"
-              class="tw-mr-2"
-            />
-            <Button
-              outlined
-              icon="pi pi-trash"
-              severity="danger"
-              rounded
-              aria-label="Cancel"
-            />
-          </div>
-        </template>
-      </Column>
-    </BaseTable>
+    <div v-if="data">
+      <BaseTable
+        class="data-table"
+        :headers="headers"
+        :items="data.data?.data.list"
+      >
+        <Column field="actions" style="width: 200px">
+          <template #header>
+            <p class="tw-font-semibold">
+              Действия
+            </p>
+          </template>
+          <template>
+            <div>
+              <Button
+                outlined
+                icon="pi pi-pencil"
+                severity="info"
+                rounded
+                aria-label="Search"
+                class="tw-mr-2"
+              />
+              <Button
+                outlined
+                icon="pi pi-trash"
+                severity="danger"
+                rounded
+                aria-label="Cancel"
+              />
+            </div>
+          </template>
+        </Column>
+      </BaseTable>
+    </div>
   </SharedUIPanel>
 </template>
 
