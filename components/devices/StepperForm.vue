@@ -130,6 +130,7 @@ const createDevice = async () => {
                 optionValue="code"
                 class="tw-w-full"
                 required
+                multiple
               />
             </SharedUILabel>
           </div>

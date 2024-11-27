@@ -6,7 +6,7 @@ import { useUserStore } from '~/stores/user';
 import England from '@/assets/images/flag/icon-flag-en.svg';
 import Russia from '@/assets/images/flag/icon-flag-ru.svg';
 
-const authStore = useUserStore();
+const userStore = useUserStore();
 
 // Composables
 const { locale } = useI18n({ useScope: 'global' });
@@ -32,9 +32,20 @@ const selectLanguage = (item: string) => {
   locale.value = item;
 };
 
-selectLanguage(authStore.userLocal?.language ?? 'ru');
+selectLanguage(userStore.userLocal?.language ?? 'ru');
 
-watch(locale, (newValue) => authStore.changeLanguage(newValue));
+watch(locale, (newValue) => {
+  localStorage.setItem(userStore.localStorageName, JSON.stringify({
+    ...userStore.userLocal,
+    language: newValue,
+  }));
+  if (userStore.userLocal) {
+    userStore.userLocal = {
+      ...userStore.userLocal,
+      language: newValue,
+    };
+  }
+});
 
 </script>
 

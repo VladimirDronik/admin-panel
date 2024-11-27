@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user';
 
-const authStore = useUserStore();
+const userStore = useUserStore();
 
-const open = ref<boolean>(!!authStore.userLocal?.openSidebar);
+const open = ref<boolean>(!!userStore.userLocal?.openSidebar);
 
-watch(open, (newValue) => authStore.changeSideBar(newValue));
+watch(open, (newValue) => {
+  localStorage.setItem(userStore.localStorageName, JSON.stringify({
+    ...userStore.userLocal,
+    openSidebar: newValue,
+  }));
+  if (userStore.userLocal) {
+    userStore.userLocal = {
+      ...userStore.userLocal,
+      openSidebar: newValue,
+    };
+  }
+});
 
 </script>
 

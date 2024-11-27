@@ -5,7 +5,7 @@ import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
 // Composables
-const authStore = useUserStore();
+const router = useRouter();
 
 // Variables
 const profileDD = [
@@ -103,7 +103,7 @@ const toggle = (event: any) => {
           </ScrollPanel>
           <div class="tw-px-2 tw-py-4 tw-text-center">
             <Button
-              @click="authStore.logoutApi()"
+              @click="router.push({ name: 'auth-login' })"
               class="tw-w-full"
               color="primary"
               size="small"

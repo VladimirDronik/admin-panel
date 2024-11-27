@@ -6,6 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const api = $fetch.create({
     onRequest({ request, options, error }) {
       if (storeUser.userLocal?.token) options.headers.set('token', storeUser.userLocal?.token);
+      if (storeUser.userLocal?.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
     },
     async onResponseError({ response, error }) {
       console.error('Ошибка', error);

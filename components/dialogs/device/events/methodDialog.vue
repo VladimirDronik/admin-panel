@@ -92,7 +92,7 @@ storeDevices.getDevicesApi({
   limit: 9999,
 }, false)
   .then((response) => {
-    objects.value = response.data.list;
+    objects.value = response.response.list;
   });
 </script>
 

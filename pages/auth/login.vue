@@ -5,12 +5,23 @@ import { useRouter } from 'vue-router';
 // Composable modules
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '~/stores/user';
+// Static Data
+import { auth } from '~/staticData/endpoints';
+// Types
+import { loginSchema, type loginData } from '~/types/UserTypes';
+import type { APIData } from '~/types/StoreTypes';
+
+interface LocalData {
+  token: string | null;
+  openSidebar: boolean;
+  language: string;
+}
 
 // Composables
 const { t } = useI18n();
 const router = useRouter();
 const storeUser = useUserStore();
-const { updateData } = useUtils();
+const toast = useToast();
 
 // Declare Options
 definePageMeta({
@@ -24,30 +35,63 @@ useHead({
 // Variables
 const loading = ref(true);
 
-const form = ref({
+const user = ref<APIData<any> | null>();
+
+const params = ref({
   login: 'web',
   password: '12345',
 });
 
-// Methods
-const login = async () => {
-  loading.value = true;
-  await updateData({
-    update: async () => {
-      await storeUser.loginApi(form.value);
-    },
-    success: () => {
-      router.push({ name: 'general' });
-    },
-    errorMessage: 'Ошибка входа',
-    disableSuccessMessage: true,
-  });
-  loading.value = false;
+const success = (response: any) => {
+  const localStorageData = localStorage.getItem(storeUser.localStorageName);
+  const localData = (localStorageData ? JSON.parse(localStorageData) : null) as LocalData | null;
+  if (localData) {
+    localStorage.setItem(storeUser.localStorageName, JSON.stringify({
+      ...localData,
+      token: response.response.api_access_token,
+    }));
+    storeUser.userLocal = {
+      ...localData,
+      token: response.response.api_access_token,
+    };
+  } else {
+    localStorage.setItem(storeUser.localStorageName, JSON.stringify({
+      token: response.response.api_access_token,
+      openSidebar: true,
+      language: 'ru',
+    }));
+    storeUser.userLocal = {
+      token: response.response.api_access_token,
+      openSidebar: true,
+      language: 'ru',
+    };
+  }
+  router.push({ name: 'general' });
 };
+
+const data: unknown = await useAPI(
+  auth,
+  {
+    params,
+    immediate: false,
+    success,
+    error: () => {
+      toast.add({
+        severity: 'error',
+        summary: 'Ошибка входа',
+        life: 5000,
+      });
+    },
+  },
+  loginSchema,
+);
+
+user.value = data as APIData<loginData>;
 
 </script>
 <template>
-  <div class="auth-screen tw-h-screen">
+  <div v-if="user" class="auth-screen tw-h-screen">
+    <Toast :baseZIndex="99999" />
     <div style="height: 85vh" class="tw-flex tw-items-center tw-justify-center">
       <div style="width: 500px;" class="tw-rounded-lg tw-bg-white tw-p-5">
         <div class="tw-flex tw-justify-center tw-py-4">
@@ -61,7 +105,7 @@ const login = async () => {
             :title="t('auth.login')"
           >
             <InputText
-              v-model="form.login"
+              v-model="params.login"
               class="tw-mb-3 tw-w-full"
             />
           </SharedUILabel>
@@ -69,12 +113,12 @@ const login = async () => {
             :title="t('auth.password')"
           >
             <InputText
-              v-model="form.password"
+              v-model="params.password"
               class="tw-mb-3 tw-w-full"
             />
           </SharedUILabel>
           <Button
-            @click="login"
+            @click="user.refresh()"
             :loading="!loading"
             class="tw-w-full"
           >
