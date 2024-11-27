@@ -99,7 +99,7 @@ const refScripts = computed(() => storeScript.scripts);
       </p>
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
-        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in refScripts?.data?.data.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in refScripts?.data?.response.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <div class="tw-text-left">
             <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg">
               {{ script.name }}
