@@ -82,6 +82,9 @@ const data: unknown = await useAPI(
         life: 5000,
       });
     },
+    headers: {
+      'api-key': 'c041d36e381a835afce48c91686370c8',
+    },
   },
   loginSchema,
 );
