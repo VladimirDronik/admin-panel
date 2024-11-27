@@ -38,9 +38,9 @@ defineProps({
 const loading = ref(false);
 
 // Computed Properties
-const types = computed(() => _.uniq(_.map(storeDevices.types, 'type')));
-const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
-const tags = computed(() => _.uniq(Object.keys(storeDevices.tags)));
+const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
+const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
+const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.keys(storeDevices.tags?.data?.response)) : []));
 
 const toggleTag = (tag: string) => {
   if (!form.value.tags) {
@@ -66,12 +66,11 @@ watch(
 const isSelected = (tagName: string): boolean => Boolean((form.value.tags ?? []).find((tag) => tag === tagName));
 
 const valid = computed(() => {
-  const main =
-    checkValidInput(form.value.zone_id) &&
-    checkValidInput(form.value.tags) &&
-    checkValidInput(form.value.category) &&
-    checkValidInput(form.value.type) &&
-    checkValidInput(form.value.name);
+  const main = checkValidInput(form.value.zone_id)
+    && checkValidInput(form.value.tags)
+    && checkValidInput(form.value.category)
+    && checkValidInput(form.value.type)
+    && checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -142,7 +141,7 @@ const createDevice = async () => {
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
         <form>
-          <div class="tw-mb-4 tw-flex tw-flex-wrap tw-gap-2">
+          <div class="tw-mb-4 tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
             <Tag
               v-for="tag in tags"
               :key="tag"
@@ -151,7 +150,7 @@ const createDevice = async () => {
               :severity="isSelected(tag) ? 'success' : undefined"
               class="tw-cursor-pointer tw-rounded-md tw-px-3 tw-py-1 tw-text-sm"
             >
-              <p class="tw-font-thin">{{ tag }}</p>
+              <p class="tw-font-normal">{{ tag }}</p>
             </Tag>
           </div>
           <div class="-tw-ml-[50%] tw-pr-[5%]">
@@ -160,7 +159,7 @@ const createDevice = async () => {
                 {{ t('devices.category') }}
               </template>
               <template #input>
-                <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
+                <MultiSelect v-model="form.tags" :options="categories" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
               </template>
             </SharedUIField>
 
