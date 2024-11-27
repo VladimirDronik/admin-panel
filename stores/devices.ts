@@ -64,8 +64,8 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     if (updateStore) {
-      list.value = data.data.list;
-      total.value = data.data.total;
+      list.value = data.response.list;
+      total.value = data.response.total;
     }
 
     return data;

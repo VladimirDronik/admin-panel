@@ -25,6 +25,8 @@ defineProps({
 
 const sortedPropsForMegaD = ref([]);
 
+const test = computed(() => deviceObject.value?.props);
+
 // Сортировка для MegaD
 watch(
   () => deviceObject.value?.props,
@@ -62,6 +64,7 @@ const getFormattedOptions = (values: Record<string, any>) => Object.keys(values)
 
 <template>
   <div>
+    {{ test }}
     <div v-if="deviceObject">
       <SharedUILabel
         v-if="!disableRoomSelect"

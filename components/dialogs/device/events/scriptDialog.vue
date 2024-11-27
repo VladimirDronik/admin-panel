@@ -74,13 +74,9 @@ const deleteScript = (script: any) => {
   deleteDialog.value = true;
 };
 
-if (storeScript.scripts) {
-  storeScript.scripts.refresh();
-} else {
-  storeScript.getScriptsApi({
-    limit: 99,
-  });
-}
+storeScript.getScriptsApi({
+  limit: 99,
+});
 
 const refScripts = computed(() => storeScript.scripts);
 </script>

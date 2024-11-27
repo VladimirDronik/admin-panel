@@ -11,15 +11,19 @@ export const useScriptStore = defineStore('ScriptStore', () => {
   const scripts = ref<APIData<ScriptData> | null>();
 
   const getScriptsApi = async (params = {}) => {
-    const data: unknown = await useAPI(
-      paths.scripts,
-      {
-        params,
-      },
-      scriptRequestSchema,
-    );
+    if (scripts.value) {
+      scripts.value.refresh();
+    } else {
+      const data: unknown = await useAPI(
+        paths.scripts,
+        {
+          params,
+        },
+        scriptRequestSchema,
+      );
 
-    scripts.value = data as APIData<ScriptData>;
+      scripts.value = data as APIData<ScriptData>;
+    }
   };
 
   return {
