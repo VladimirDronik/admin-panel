@@ -122,11 +122,10 @@ user.value = data as APIData<loginData>;
           </SharedUILabel>
           <Button
             @click="user.refresh()"
-            :loading="!loading"
+            :loading="!user.pending"
             class="tw-w-full"
-          >
-            {{ t('auth.signIn') }}
-          </Button>
+            :label="t('auth.signIn')"
+          />
         </form>
       </div>
     </div>
