@@ -110,17 +110,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
-  const getPortsApi = async (id: number) => {
-    const { data }: { data: { response: any[] } } = await api.get(`${objectManager}/controllers/${id}/ports`, {
-      headers: {
-        token: storeUser.userLocal?.token,
-      },
-    });
-
-    ports.value = data.response;
-    return data;
-  };
-
   const createEventApi = async (target_type: string, target_id: number, event_name: string, params = {}) => {
     const { data }: { data: { data: RequestScript } } = await api.post(
       paths.eventsActions,
@@ -268,7 +257,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     model,
     getDevices,
     userAccessLevel,
-    getPortsApi,
     getDevicesApi,
     getTypesApi,
     getModelApi,

@@ -150,24 +150,8 @@ const update = async (params: any = {}) => {
 
 const clickRow = async (item: any) => {
   if (storeDevices.object?.id === item.data.id && isActiveRightSidebar.value) return;
-  // isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
   selectedId.value = item.data.id;
-  // if (item.data.tags.includes('controller')) {
-  //   const data = await Promise.all([
-  //     storeDevices.getControllerDetailsApi(item.data.id, {
-  //       without_children: item.data.tags.includes('controller'),
-  //     }),
-  //     storeDevices.getPortsApi(item.data.id),
-  //   ]);
-  //   [selectedDevice.value] = data;
-  // } else {
-  //   const data = await storeDevices.getControllerDetailsApi(item.data.id, {
-  //     without_children: item.data.tags.includes('controller'),
-  //   });
-  //   selectedDevice.value = data;
-  // }
-  // isUpdateRightBar.value = false;
 };
 
 onBeforeMount(() => {
