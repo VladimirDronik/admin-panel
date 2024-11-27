@@ -2,6 +2,7 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
+import MultiSelect from 'primevue/multiselect';
 import { updateParamsForApi } from '~/helpers/devices';
 
 // Types
@@ -10,6 +11,7 @@ interface DeviceCreateForm {
   type: string;
   zone_id: number | null;
   category: string;
+  tags: string[];
 }
 
 // Composables
@@ -36,19 +38,40 @@ defineProps({
 const loading = ref(false);
 
 // Computed Properties
-const types = computed(() => _.uniq(
-  _.map(
-    _.filter(storeDevices.types?.data?.response, ['category', form.value.category]),
-    'type',
-  ),
-));
-const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
+const types = computed(() => _.uniq(_.map(storeDevices.types, 'type')));
+const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
+const tags = computed(() => _.uniq(Object.keys(storeDevices.tags)));
+
+const toggleTag = (tag: string) => {
+  if (!form.value.tags) {
+    form.value.tags = [];
+  }
+  const index = form.value.tags.indexOf(tag);
+  if (index === -1) {
+    form.value.tags.push(tag);
+  } else {
+    form.value.tags.splice(index, 1);
+  }
+};
+
+watch(
+  () => form.value.tags,
+  (updatedTags) => {
+    console.log(updatedTags, ' yay');
+    storeDevices.getTypesApi({ tags: updatedTags.join(';') });
+  },
+  { deep: true },
+);
+
+const isSelected = (tagName: string): boolean => Boolean((form.value.tags ?? []).find((tag) => tag === tagName));
 
 const valid = computed(() => {
-  const main = checkValidInput(form.value.zone_id)
-    && checkValidInput(form.value.category)
-    && checkValidInput(form.value.type)
-    && checkValidInput(form.value.name);
+  const main =
+    checkValidInput(form.value.zone_id) &&
+    checkValidInput(form.value.tags) &&
+    checkValidInput(form.value.category) &&
+    checkValidInput(form.value.type) &&
+    checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -96,6 +119,7 @@ const createDevice = async () => {
           name: '',
           zone_id: null,
           type: '',
+          tags: [],
           category: 'controller',
         };
       },
@@ -118,48 +142,63 @@ const createDevice = async () => {
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
         <form>
-          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-gap-2">
-            <SharedUILabel :title="t('devices.title')" required>
-              <InputText v-model="form.name" class="tw-w-full" required />
-            </SharedUILabel>
-            <SharedUILabel :title="t('devices.room')" required>
-              <Select
-                v-model="form.zone_id"
-                :options="storeRooms.getRoomsSelect"
-                optionLabel="name"
-                optionValue="code"
-                class="tw-w-full"
-                required
-                multiple
-              />
-            </SharedUILabel>
+          <div class="tw-mb-4 tw-flex tw-flex-wrap tw-gap-2">
+            <Tag
+              v-for="tag in tags"
+              :key="tag"
+              @click="toggleTag(tag)"
+              :value="tag"
+              :severity="isSelected(tag) ? 'success' : undefined"
+              class="tw-cursor-pointer tw-rounded-md tw-px-3 tw-py-1 tw-text-sm"
+            >
+              <p class="tw-font-thin">{{ tag }}</p>
+            </Tag>
           </div>
-          <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-gap-2">
-            <SharedUILabel :title="t('devices.category')" required>
-              <Select
-                v-model="form.category"
-                :options="categories"
-                class="tw-w-full"
-                required
-              />
-            </SharedUILabel>
-            <SharedUILabel :title="t('devices.type')" required>
-              <Select
-                v-model="form.type"
-                :options="types"
-                class="tw-w-full"
-                required
-              />
-            </SharedUILabel>
+          <div class="-tw-ml-[50%] tw-pr-[5%]">
+            <SharedUIField :required="true">
+              <template #label>
+                {{ t('devices.category') }}
+              </template>
+              <template #input>
+                <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
+              </template>
+            </SharedUIField>
+
+            <SharedUIField :required="true">
+              <template #label>
+                {{ t('devices.type') }}
+              </template>
+              <template #input>
+                <Select v-model="form.type" :options="types" required class="tw-w-2/4" />
+              </template>
+            </SharedUIField>
+          </div>
+
+          <Divider class="tw-mt-0 tw-pb-3" />
+
+          <div class="-tw-ml-[50%] tw-pr-[5%]">
+            <SharedUIField :required="true">
+              <template #label>
+                {{ t('devices.title') }}
+              </template>
+              <template #input>
+                <InputText v-model="form.name" required class="tw-w-3/4" />
+              </template>
+            </SharedUIField>
+
+            <SharedUIField :required="true">
+              <template #label>
+                {{ t('devices.room') }}
+              </template>
+              <template #input>
+                <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" required />
+              </template>
+            </SharedUIField>
           </div>
 
           <Divider class="tw-pb-3" />
 
-          <DevicesPropertiesForm
-            disableRoomSelect
-            v-model="storeDevices.model"
-            :loadingModal="loadingModal"
-          />
+          <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
         </form>
 
         <div class="tw-flex tw-justify-end">
@@ -169,10 +208,7 @@ const createDevice = async () => {
         </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
-        <DevicesEventsForm
-          v-if="storeDevices.model"
-          v-model="storeDevices.model"
-        />
+        <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
         <div class="tw-flex tw-justify-between">
           <Button @click="activateCallback('1')">
             {{ t('goBack') }}
@@ -188,12 +224,7 @@ const createDevice = async () => {
           <Button @click="activateCallback('2')">
             {{ t('goBack') }}
           </Button>
-          <Button
-            color="primary"
-            @click="createDevice"
-            :loading="loading"
-            :label="t('save')"
-          />
+          <Button color="primary" @click="createDevice" :loading="loading" :label="t('save')" />
         </div>
       </StepPanel>
     </StepPanels>
