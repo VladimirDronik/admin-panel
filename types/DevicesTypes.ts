@@ -97,7 +97,7 @@ export interface ModelProps {
 
 export interface RequestData {
     data: {
-        data: {
+        response: {
             list: Devices[]
             total: number
         }

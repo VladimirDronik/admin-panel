@@ -5,7 +5,7 @@ import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 // Helpers
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
-import type { Room } from '~/types/RoomsTypes';
+import type { RoomItem } from '~/stores/rooms/roomsTypes';
 
 // Composables
 const { t } = useI18n();
@@ -107,7 +107,7 @@ const filters = ref<any[]>([
 const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
-const checkRoom = (item: Room | undefined) => {
+const checkRoom = (item: RoomItem | undefined) => {
   if (item) return item.name;
   return '-';
 };
@@ -162,9 +162,12 @@ const clickRow = async (item: any) => {
   isUpdateRightBar.value = false;
 };
 
+onBeforeMount(() => {
+  storeRooms.getRoomsApi();
+});
+
 const created = async () => {
   await Promise.all([
-    storeRooms.getRoomsApi(),
     storeDevices.getTypesApi(),
     storeDevices.getTagsApi(),
     storeDevices.getDevicesApi({
@@ -198,7 +201,8 @@ const propsModel = (props: any[] | undefined) => {
   return result;
 };
 
-const findRoom = (list: Room[], id: number) => {
+const findRoom = (list: RoomItem[] | undefined, id: number) => {
+  if (!list) return;
   let result = list.find((item) => item.id === id);
   if (result) return result;
   list.forEach((item) => {
@@ -365,7 +369,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </div>
         </template>
         <template #body="{ node }">
-          {{ checkRoom(findRoom(storeRooms.list, node.data.address)) }}
+          {{ checkRoom(findRoom(storeRooms.rooms?.data?.response, node.data.address)) }}
         </template>
       </Column>
       <Column v-if="!isActiveRightSidebar" field="status">

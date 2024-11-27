@@ -32,13 +32,9 @@ const headers = [
   },
 ];
 
-if (storeScript.scripts) {
-  storeScript.scripts.refresh();
-} else {
-  storeScript.getScriptsApi({
-    limit: 99,
-  });
-}
+storeScript.getScriptsApi({
+  limit: 99,
+});
 
 const data = computed(() => storeScript.scripts);
 </script>

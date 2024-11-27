@@ -1,8 +1,8 @@
-import type { Room } from '~/types/RoomsTypes';
+import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import { colors } from '~/staticData/rooms';
 
 // API
-export const filterInListRoom = (rooms: Room[] | undefined): any => {
+export const filterInListRoom = (rooms: RoomItem[] | undefined): any => {
   if (!rooms) return [];
   let result: any[] = [];
   rooms.forEach((item) => {

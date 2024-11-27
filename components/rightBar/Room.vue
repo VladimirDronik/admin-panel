@@ -39,12 +39,6 @@ const confirmDelete = async () => {
   loadingDelete.value = false;
 };
 
-const changeDevice = () => {
-  loading.value = true;
-  storeRoom.changeRoomApi();
-  loading.value = false;
-};
-
 </script>
 
 <template>
@@ -98,7 +92,6 @@ const changeDevice = () => {
 
         <Button
           :loading="loading"
-          @click="changeDevice"
         >
           {{ t('save') }}
         </Button>
