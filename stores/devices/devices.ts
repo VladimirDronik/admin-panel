@@ -9,8 +9,15 @@ import { useUserStore } from '~/stores/user';
 import { filterInListDevices, updateParamsForApi } from '~/helpers/devices';
 // Types modules
 import type {
-  Devices, Type, RequestData, ModelProps, RequestDevices, Tags, RequestScript,
+  Devices, RequestData, ModelProps, RequestDevices, Tags, RequestScript,
 } from '~/types/DevicesTypes';
+// Types and Schemes
+import type { APIData } from '~/types/StoreTypes';
+import {
+  typesListSchema, type TypeData,
+  tagsSchema, type TagsData,
+  devicesListSchema, type FullDevice,
+} from './devicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
   // Composables
@@ -21,8 +28,8 @@ export const useDevicesStore = defineStore('Devices', () => {
   const list = ref<Devices[]>([]);
   const total = ref<number>(0);
 
-  const tags = ref<Tags[]>([]);
-  const types = ref<Type[]>([]);
+  const tags = ref<APIData<TagsData> | null>();
+  const types = ref<APIData<TypeData[]> | null>();
 
   const object = ref<Devices | null>();
   const model = ref<Devices | null>();
@@ -55,6 +62,38 @@ export const useDevicesStore = defineStore('Devices', () => {
     return result;
   };
 
+  const getTypesApi = async (params = {}) => {
+    if (types.value) {
+      types.value.refresh();
+    } else {
+      const data: unknown = await useAPI(
+        paths.objectsTypes,
+        {
+          params,
+        },
+        typesListSchema,
+      );
+
+      types.value = data as APIData<TypeData[]>;
+    }
+  };
+
+  const getTagsApi = async (params = {}) => {
+    if (tags.value) {
+      tags.value.refresh();
+    } else {
+      const data: unknown = await useAPI(
+        paths.objectsTags,
+        {
+          params,
+        },
+        tagsSchema,
+      );
+
+      tags.value = data as APIData<TagsData>;
+    }
+  };
+
   const getDevicesApi = async (params = {}, updateStore: boolean = true) => {
     const { data }: RequestData = await api.get(paths.objects, {
       params,
@@ -68,30 +107,6 @@ export const useDevicesStore = defineStore('Devices', () => {
       total.value = data.response.total;
     }
 
-    return data;
-  };
-
-  const getTypesApi = async (params = {}) => {
-    const { data }: { data: { response: Type[] } } = await api.get(paths.objectsTypes, {
-      params,
-      headers: {
-        token: storeUser.userLocal?.token,
-      },
-    });
-
-    types.value = data.response;
-    return data;
-  };
-
-  const getTagsApi = async (params = {}) => {
-    const { data }: { data: { response: any[] } } = await api.get(paths.objectsTags, {
-      params,
-      headers: {
-        token: storeUser.userLocal?.token,
-      },
-    });
-
-    tags.value = data.response;
     return data;
   };
 
@@ -147,7 +162,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const createDeviceApi = async (params = {}) => {
-    const { data }: { data: Type[] } = await api.post(
+    const { data }: { data: any } = await api.post(
       paths.objects,
       {
         ...params,
@@ -165,7 +180,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   const changeDeviceApi = async (params: Devices) => {
     if (_.isEmpty(params)) return undefined;
 
-    const { data }: { data: Type[] } = await api.put(
+    const { data }: { data: any[] } = await api.put(
       paths.objects,
       updateParamsForApi(params),
       {

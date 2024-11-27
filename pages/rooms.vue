@@ -9,7 +9,7 @@ import { paths } from '~/staticData/endpoints';
 import { roomColor } from '~/helpers/rooms';
 // Types
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
-import type { APIDataResponse } from '~/types/StoreTypes';
+import type { APIData } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -27,7 +27,7 @@ useHead({
 // Variables
 const isLoading = ref(false);
 
-const orderRooms = ref<APIDataResponse<RoomItem[]>>();
+const orderRooms = ref<APIData<RoomItem[]>>();
 
 const form = ref<RoomItem | null>();
 const isUpdateRightBar = ref(false);
@@ -61,7 +61,7 @@ onBeforeMount(async () => {
     },
   );
 
-  orderRooms.value = data as APIDataResponse<RoomItem[]>;
+  orderRooms.value = data as APIData<RoomItem[]>;
 });
 
 const save = async () => {

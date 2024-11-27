@@ -6,6 +6,10 @@ import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
+import type { TablePortData } from '~/stores/devices/devicesTypes';
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { objectManager } from '~/staticData/endpoints';
 
 // Composables
 const { t } = useI18n();
@@ -27,7 +31,6 @@ const perPage = 10000;
 const page = ref(1);
 
 const isUpdate = ref(true);
-const isUpdateRightBar = ref(false);
 const isActiveRightSidebar = ref(false);
 
 const popoverId = ref();
@@ -37,10 +40,12 @@ const popoverType = ref();
 const popoverRoom = ref();
 const popoverStatus = ref();
 
+const selectedId = ref<number>();
+
 const selectedDevice = ref();
 
 // Computed Properties
-const getTypes = computed(() => storeDevices.types
+const getTypes = computed(() => storeDevices.types?.data?.response
   .filter((item) => getCategoriesOption.value.includes(item.category))
   .map((item) => ({
     title: item.name,
@@ -60,7 +65,9 @@ const childrenProps = computed(() => {
   }
 });
 
-const tags = computed(() => Object.keys(storeDevices.tags).map((item) => item));
+const tags = computed(() => {
+  if (storeDevices.tags?.data?.response) return Object.keys(storeDevices.tags?.data?.response).map((item) => item);
+});
 
 const filters = ref<any[]>([
   {
@@ -143,33 +150,34 @@ const update = async (params: any = {}) => {
 
 const clickRow = async (item: any) => {
   if (storeDevices.object?.id === item.data.id && isActiveRightSidebar.value) return;
-  isUpdateRightBar.value = true;
+  // isUpdateRightBar.value = true;
   isActiveRightSidebar.value = true;
-  if (item.data.tags.includes('controller')) {
-    const data = await Promise.all([
-      storeDevices.getControllerDetailsApi(item.data.id, {
-        without_children: item.data.tags.includes('controller'),
-      }),
-      storeDevices.getPortsApi(item.data.id),
-    ]);
-    [selectedDevice.value] = data;
-  } else {
-    const data = await storeDevices.getControllerDetailsApi(item.data.id, {
-      without_children: item.data.tags.includes('controller'),
-    });
-    selectedDevice.value = data;
-  }
-  isUpdateRightBar.value = false;
+  selectedId.value = item.data.id;
+  // if (item.data.tags.includes('controller')) {
+  //   const data = await Promise.all([
+  //     storeDevices.getControllerDetailsApi(item.data.id, {
+  //       without_children: item.data.tags.includes('controller'),
+  //     }),
+  //     storeDevices.getPortsApi(item.data.id),
+  //   ]);
+  //   [selectedDevice.value] = data;
+  // } else {
+  //   const data = await storeDevices.getControllerDetailsApi(item.data.id, {
+  //     without_children: item.data.tags.includes('controller'),
+  //   });
+  //   selectedDevice.value = data;
+  // }
+  // isUpdateRightBar.value = false;
 };
 
 onBeforeMount(() => {
   storeRooms.getRoomsApi();
+  storeDevices.getTypesApi();
+  storeDevices.getTagsApi();
 });
 
 const created = async () => {
   await Promise.all([
-    storeDevices.getTypesApi(),
-    storeDevices.getTagsApi(),
     storeDevices.getDevicesApi({
       limit: perPage,
       offset: 0,
@@ -451,9 +459,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
     <template #rightbar>
       <RightBarDevices
-        v-model:is-update="isUpdateRightBar"
         v-model:is-open="isActiveRightSidebar"
         v-model:form="selectedDevice"
+        v-model:id="selectedId"
       />
     </template>
   </SharedUIPanel>
