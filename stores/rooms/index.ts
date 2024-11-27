@@ -4,12 +4,12 @@ import { paths } from '~/staticData/endpoints';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
-import type { APIDataResponse } from '~/types/StoreTypes';
+import type { APIData } from '~/types/StoreTypes';
 import { roomRequestSchema, type RoomItem } from './roomsTypes';
 
 export const useRoomsStore = defineStore('Rooms', () => {
   // Variables
-  const rooms = ref<APIDataResponse<RoomItem[]> | null>();
+  const rooms = ref<APIData<RoomItem[]> | null>();
 
   // Computed
   const getRoomsSelect = computed(() => filterInListRoom(rooms.value?.data?.response ?? []));
@@ -27,7 +27,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
         roomRequestSchema,
       );
 
-      rooms.value = data as APIDataResponse<RoomItem[]>;
+      rooms.value = data as APIData<RoomItem[]>;
     }
   };
 

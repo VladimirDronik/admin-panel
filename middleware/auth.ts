@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware((_to, _from) => {
   // Composable
   const storeUser = useUserStore();
 
-  if (!storeUser.user) {
+  if (!storeUser.userLocal) {
     if (!localStorage.getItem('touchOn')) {
       return navigateTo('/auth/login');
     }

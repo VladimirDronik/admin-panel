@@ -2,8 +2,16 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import type { Devices } from '~/types/DevicesTypes';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
+// Types
+import { TablePortListSchema, type TablePortData } from '~/stores/devices/devicesTypes';
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { objectManager, paths } from '~/staticData/endpoints';
+
+import type {
+  ModelProps, Devices,
+} from '~/types/DevicesTypes';
 
 // Composables
 const { t } = useI18n();
@@ -22,16 +30,57 @@ const active = ref(false);
 const loading = ref(false);
 const loadingDelete = ref(false);
 
-const isUpdate = defineModel<boolean>('isUpdate', {
-  required: true,
-});
+const apiPorts = ref<APIData<TablePortData[]>>();
+const apiDevice = ref<APIData<any>>();
+
+// const isUpdate = defineModel<boolean>('isUpdate', {
+//   required: true,
+// });
 
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
-
-const form = defineModel<Devices | undefined>('form', {
+const selectedId = defineModel<number | undefined>('id', {
   required: true,
+});
+
+// const form = defineModel<Devices | undefined>('form', {
+//   required: true,
+// });
+
+const createFunction = (functionBody: string, props = {}) => {
+  const func = new Function('userAccessLevel', 'props', functionBody);
+  return {
+    func,
+    funcText: String(func),
+    value: func(4, props),
+  };
+};
+
+const propsModel = (props: ModelProps | undefined): ModelProps[] => {
+  if (!props) return [];
+  const result = Object.values(props).map((item) => ({
+    ...item,
+    required: item.required ? createFunction(item.required, props) : false,
+    editable: item.editable ? createFunction(item.editable, props) : false,
+    visible: item.visible ? createFunction(item.visible, props) : false,
+  }));
+  return result;
+};
+
+const form = ref();
+
+watchEffect(() => {
+  const result = {
+    ...apiDevice.value?.data?.response,
+    props: propsModel(apiDevice.value?.data?.response.props),
+    children: apiDevice.value?.data?.response.children?.map((item: any) => ({
+      ...item,
+      props: propsModel(item.props) ?? [],
+    })),
+  };
+
+  form.value = result;
 });
 
 // Methods
@@ -89,6 +138,28 @@ watch(() => form.value?.name, () => {
 watch(() => form.value?.category, () => {
   if (form.value?.category !== 'controller') tabs.value = 'features';
 });
+
+onBeforeMount(async () => {
+  const dataDevice: unknown = await useAPI(
+    () => `${paths.objects}/${selectedId.value}`,
+    {
+      immediate: false,
+    },
+  );
+  apiDevice.value = dataDevice as APIData<any>;
+
+  const dataPorts: unknown = await useAPI(
+    () => `${objectManager}/controllers/${selectedId.value}/ports`,
+    {
+      immediate: false,
+    },
+    TablePortListSchema,
+  );
+
+  apiPorts.value = dataPorts as APIData<TablePortData[]>;
+});
+
+const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
 
 </script>
 
@@ -195,8 +266,8 @@ watch(() => form.value?.category, () => {
               </div>
             </TabPanel>
             <TabPanel value="ports">
-              <div v-if="form">
-                <DevicesPortsForm v-model="form" :id="storeDevices.object?.id ?? 0" />
+              <div v-if="apiPorts?.data?.response">
+                <DevicesPortsForm v-model:ports="apiPorts.data.response" :id="storeDevices.object?.id ?? 0" />
               </div>
             </TabPanel>
           </TabPanels>

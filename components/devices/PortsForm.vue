@@ -1,13 +1,17 @@
 <script lang="ts" setup>
 import _ from 'lodash';
+// Types
+import type { TablePortData } from '~/stores/devices/devicesTypes';
 
-const storeDevices = useDevicesStore();
+const ports = defineModel<TablePortData[]>('ports', {
+  required: true,
+});
 
 </script>
 
 <template>
   <div>
-    <div v-for="item in storeDevices.ports" :key="item.id">
+    <div v-for="item in ports" :key="item.group">
       <h3 class="tw-mb-2 tw-text-lg">
         {{ _.startCase(_.toLower(item.group)) }}
       </h3>

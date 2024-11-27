@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { ZodArray, ZodObject } from 'zod';
+import { ZodArray, ZodObject, ZodRecord } from 'zod';
 import type { UseFetchOptions } from 'nuxt/app';
 
 interface MyOptions {
@@ -13,13 +13,12 @@ export function useAPI<T>(
   Schema?: unknown | null,
 ) {
   return useFetch(url, {
-    watch: false,
     ...options,
     $fetch: useNuxtApp().$api as typeof $fetch,
     onResponse({ response, request, error }) {
       // Обрабатывает данные ответа
       if (response.status < 400) {
-        if (Schema instanceof ZodObject || Schema instanceof ZodArray) {
+        if (Schema instanceof ZodObject || Schema instanceof ZodArray || Schema instanceof ZodRecord) {
           try {
             Schema.parse(response._data.response);
           } catch (err: any) {

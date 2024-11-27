@@ -38,11 +38,11 @@ const loading = ref(false);
 // Computed Properties
 const types = computed(() => _.uniq(
   _.map(
-    _.filter(storeDevices.types, ['category', form.value.category]),
+    _.filter(storeDevices.types?.data?.response, ['category', form.value.category]),
     'type',
   ),
 ));
-const categories = computed(() => _.uniq(_.map(storeDevices.types, 'category')));
+const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
 
 const valid = computed(() => {
   const main = checkValidInput(form.value.zone_id)

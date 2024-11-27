@@ -52,7 +52,7 @@ const data = computed(() => storeScript.scripts);
       <BaseTable
         class="data-table"
         :headers="headers"
-        :items="data.data?.data.list"
+        :items="data.data?.response.list"
       >
         <Column field="actions" style="width: 200px">
           <template #header>
