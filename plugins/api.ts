@@ -1,10 +1,10 @@
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const storeUser = useUserStore();
 
   const router = useRouter();
 
   const api = $fetch.create({
-    onRequest({ request, options, error }) {
+    onRequest({ options }) {
       if (storeUser.userLocal?.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
       if (storeUser.userLocal?.token) options.headers.set('token', storeUser.userLocal?.token);
     },

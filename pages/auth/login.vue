@@ -33,8 +33,6 @@ useHead({
 });
 
 // Variables
-const loading = ref(true);
-
 const user = ref<APIData<any> | null>();
 
 const params = ref({
@@ -69,19 +67,21 @@ const success = (response: any) => {
   router.push({ name: 'general' });
 };
 
+const error = () => {
+  toast.add({
+    severity: 'error',
+    summary: 'Ошибка входа',
+    life: 5000,
+  });
+};
+
 const data: unknown = await useAPI(
   auth,
   {
     params,
     immediate: false,
     success,
-    error: () => {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка входа',
-        life: 5000,
-      });
-    },
+    error,
     headers: {
       'api-key': 'c041d36e381a835afce48c91686370c8',
     },
