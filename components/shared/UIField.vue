@@ -2,23 +2,19 @@
 defineProps({
   title: {
     type: String,
-    required: true,
+    default: '',
   },
   required: {
     type: Boolean,
-    default: false,
   },
 });
 </script>
 
 <template>
-  <div
-    v-if="$slots.label || $slots.input"
-    class="tw-flex tw-flex-col tw-gap-4 tw-w-full"
-  >
-    <div class="tw-flex tw-items-center tw-w-full tw-mb-4">
-      <div class="tw-flex-1 tw-text-right tw-pr-2">
-        <slot name="label" />
+  <div v-if="$slots.label || $slots.input" class="tw-flex tw-w-full tw-flex-col tw-gap-4">
+    <div class="tw-mb-4 tw-flex tw-w-full tw-items-center">
+      <div class="tw-flex-1 tw-pr-2 tw-text-right">
+        <p class="tw-mb-1.5 tw-text-lg tw-font-semibold"><slot name="label" /> <span v-if="required" class="tw-text-primary">*</span></p>
       </div>
       <div class="tw-flex-1 tw-text-left">
         <slot name="input" />
