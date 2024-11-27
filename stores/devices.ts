@@ -72,37 +72,37 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getTypesApi = async (params = {}) => {
-    const { data }: { data: { data: Type[] } } = await api.get(paths.objectsTypes, {
+    const { data }: { data: { response: Type[] } } = await api.get(paths.objectsTypes, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
       },
     });
 
-    types.value = data.data;
+    types.value = data.response;
     return data;
   };
 
   const getTagsApi = async (params = {}) => {
-    const { data }: { data: { data: any[] } } = await api.get(paths.objectsTags, {
+    const { data }: { data: { response: any[] } } = await api.get(paths.objectsTags, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
       },
     });
 
-    tags.value = data.data;
+    tags.value = data.response;
     return data;
   };
 
   const getPortsApi = async (id: number) => {
-    const { data }: { data: { data: any[] } } = await api.get(`${objectManager}/controllers/${id}/ports`, {
+    const { data }: { data: { response: any[] } } = await api.get(`${objectManager}/controllers/${id}/ports`, {
       headers: {
         token: storeUser.userLocal?.token,
       },
     });
 
-    ports.value = data.data;
+    ports.value = data.response;
     return data;
   };
 
@@ -126,7 +126,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getModelApi = async (params = {}) => {
-    const data: { data: { data: RequestDevices }} = await api.get(paths.objectModel, {
+    const data: { data: { response: RequestDevices }} = await api.get(paths.objectModel, {
       params,
       headers: {
         token: storeUser.userLocal?.token,
@@ -134,9 +134,9 @@ export const useDevicesStore = defineStore('Devices', () => {
     });
 
     const result = {
-      ...data.data.data,
-      props: propsModel(data.data.data.props),
-      children: data.data.data.children?.map((item) => ({
+      ...data.data.response,
+      props: propsModel(data.data.response.props),
+      children: data.data.response.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),
@@ -179,7 +179,7 @@ export const useDevicesStore = defineStore('Devices', () => {
   };
 
   const getControllerDetailsApi = async (id: number, params: any = {}) => {
-    const { data }: {data: {data: RequestDevices}} = await api.get(
+    const { data }: {data: {response: RequestDevices}} = await api.get(
       `${paths.objects}/${id}`,
       {
         params,
@@ -190,9 +190,9 @@ export const useDevicesStore = defineStore('Devices', () => {
     );
 
     const result = {
-      ...data.data,
-      props: propsModel(data.data.props),
-      children: data.data.children?.map((item) => ({
+      ...data.response,
+      props: propsModel(data.response.props),
+      children: data.response.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),

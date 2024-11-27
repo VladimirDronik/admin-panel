@@ -26,7 +26,7 @@ const filterEvents = async (object: Devices) => {
 
   const responce: any[] = await Promise.all(requests);
 
-  const filteredResponce = responce.map((item) => item.data);
+  const filteredResponce = responce.map((item) => item.response);
 
   const result = objectEvents.map((item, index) => ({
     ...item,
