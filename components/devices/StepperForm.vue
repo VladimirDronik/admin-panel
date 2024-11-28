@@ -42,18 +42,6 @@ const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 't
 const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
 const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.keys(storeDevices.tags?.data?.response)) : []));
 
-const toggleTag = (tag: string) => {
-  if (!form.value.tags) {
-    form.value.tags = [];
-  }
-  const index = form.value.tags.indexOf(tag);
-  if (index === -1) {
-    form.value.tags.push(tag);
-  } else {
-    form.value.tags.splice(index, 1);
-  }
-};
-
 watch(
   () => form.value.tags,
   (updatedTags) => {
@@ -141,22 +129,10 @@ const createDevice = async () => {
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
         <form>
-          <div class="tw-mb-4 tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
-            <Tag
-              v-for="tag in tags"
-              :key="tag"
-              @click="toggleTag(tag)"
-              :value="tag"
-              :severity="isSelected(tag) ? 'success' : undefined"
-              class="tw-cursor-pointer tw-rounded-md tw-px-3 tw-py-1 tw-text-sm"
-            >
-              <p class="tw-font-normal">{{ tag }}</p>
-            </Tag>
-          </div>
           <div class="-tw-ml-[50%] tw-pr-[5%]">
             <SharedUIField :required="true">
               <template #label>
-                {{ t('devices.category') }}
+                {{ t('devices.tags') }}
               </template>
               <template #input>
                 <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />

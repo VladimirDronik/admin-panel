@@ -16,7 +16,7 @@ defineProps({
       <div class="tw-flex-1 tw-pr-2 tw-text-right">
         <p class="tw-mb-1.5 tw-text-lg tw-font-semibold">
           <slot name="label" />
-          <span v-if="required" class="tw-text-primary">*</span>
+          <span v-if="required" class="tw-text-primary"> *</span>
         </p>
       </div>
       <div class="tw-flex-1 tw-text-left">
