@@ -57,8 +57,7 @@ const toggleTag = (tag: string) => {
 watch(
   () => form.value.tags,
   (updatedTags) => {
-    console.log(updatedTags, ' yay');
-    storeDevices.getTypesApi({ tags: updatedTags.join(';') });
+    storeDevices.getTypesApi({ tags: updatedTags.join(';') }, false);
   },
   { deep: true },
 );
@@ -66,11 +65,12 @@ watch(
 const isSelected = (tagName: string): boolean => Boolean((form.value.tags ?? []).find((tag) => tag === tagName));
 
 const valid = computed(() => {
-  const main = checkValidInput(form.value.zone_id)
-    && checkValidInput(form.value.tags)
-    && checkValidInput(form.value.category)
-    && checkValidInput(form.value.type)
-    && checkValidInput(form.value.name);
+  const main =
+    checkValidInput(form.value.zone_id) &&
+    checkValidInput(form.value.tags) &&
+    checkValidInput(form.value.category) &&
+    checkValidInput(form.value.type) &&
+    checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -159,7 +159,7 @@ const createDevice = async () => {
                 {{ t('devices.category') }}
               </template>
               <template #input>
-                <MultiSelect v-model="form.tags" :options="categories" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
+                <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
               </template>
             </SharedUIField>
 
