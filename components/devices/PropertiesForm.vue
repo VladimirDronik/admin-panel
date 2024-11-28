@@ -65,9 +65,10 @@ const getFormattedOptions = (values: Record<string, any>) => Object.keys(values)
       <!-- MegaDForm -->
       <div v-if="deviceObject?.category === 'controller' && deviceObject?.type === 'mega_d'">
         <div v-for="item in sortedPropsForMegaD" :key="item.code">
+          {{ item }}
           <SharedUIField v-if="item.visible.value">
             <template #label>
-              <SharedUILabel :title="t(`devices.${item.code}`)" :required="item.required.value" />
+              <SharedUILabel :title="item.name" :required="item.required.value" />
             </template>
 
             <template #input>

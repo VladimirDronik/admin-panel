@@ -14,26 +14,22 @@ defineProps({
 </script>
 
 <template>
-  <div>
-    <div
-      v-show="!isLoading"
-      class="tw-relative tw-w-full"
+  <div class="tw-relative tw-w-full">
+
+    <transition
+      name="smooth-loader"
+      mode="out-in"
     >
-      <transition
-        name="smooth-loader"
-        mode="out-in"
+      <div
+        v-if="isUpdate"
+        data-test="loader"
+        class="tw-absolute tw-inset-0 tw-z-40 tw-w-full tw-overflow-hidden tw-bg-white"
       >
-        <div
-          v-if="isUpdate"
-          data-test="loader"
-          class="tw-absolute tw-inset-0 tw-z-40 tw-w-full tw-overflow-hidden tw-bg-white"
-        >
-          <div class="tw-flex tw-h-full tw-items-center tw-justify-center">
-            <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" stroke="#19B58F" />
-          </div>
+        <div class="tw-flex tw-h-full tw-items-center tw-justify-center">
+          <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" stroke="#19B58F" />
         </div>
-      </transition>
-      <slot />
-    </div>
+      </div>
+    </transition>
+    <slot />
   </div>
 </template>

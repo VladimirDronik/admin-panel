@@ -6,7 +6,7 @@ import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
-import type { TablePortData } from '~/stores/devices/devicesTypes';
+import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { objectManager } from '~/staticData/endpoints';
@@ -40,7 +40,7 @@ const popoverType = ref();
 const popoverRoom = ref();
 const popoverStatus = ref();
 
-const selectedId = ref<number>();
+const selectedObject = ref<FullDevice>();
 
 const selectedDevice = ref();
 
@@ -151,7 +151,7 @@ const update = async (params: any = {}) => {
 const clickRow = async (item: any) => {
   if (storeDevices.object?.id === item.data.id && isActiveRightSidebar.value) return;
   isActiveRightSidebar.value = true;
-  selectedId.value = item.data.id;
+  selectedObject.value = item.data;
 };
 
 onBeforeMount(() => {
@@ -356,6 +356,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
                   prepend-inner-icon="mdi-magnify"
                   clearable
                 />
+                {{ filters[5].options }}
               </div>
             </Popover>
           </div>
@@ -445,7 +446,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       <RightBarDevices
         v-model:is-open="isActiveRightSidebar"
         v-model:form="selectedDevice"
-        v-model:id="selectedId"
+        v-model:selectedObject="selectedObject"
       />
     </template>
   </SharedUIPanel>

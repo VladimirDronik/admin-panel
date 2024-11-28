@@ -4,8 +4,9 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
 // Types
-import { TablePortListSchema, type TablePortData } from '~/stores/devices/devicesTypes';
+import { TablePortListSchema, type TablePortData, FullDevice } from '~/stores/devices/devicesTypes';
 import type { APIData } from '~/types/StoreTypes';
+
 // Static Data modules
 import { objectManager, paths } from '~/staticData/endpoints';
 
@@ -33,20 +34,13 @@ const loadingDelete = ref(false);
 const apiPorts = ref<APIData<TablePortData[]>>();
 const apiDevice = ref<APIData<any>>();
 
-// const isUpdate = defineModel<boolean>('isUpdate', {
-//   required: true,
-// });
-
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
-const selectedId = defineModel<number | undefined>('id', {
+
+const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
   required: true,
 });
-
-// const form = defineModel<Devices | undefined>('form', {
-//   required: true,
-// });
 
 const createFunction = (functionBody: string, props = {}) => {
   const func = new Function('userAccessLevel', 'props', functionBody);
@@ -136,12 +130,12 @@ watch(() => form.value?.name, () => {
 });
 
 watch(() => form.value?.category, () => {
-  if (form.value?.category !== 'controller') tabs.value = 'features';
+  tabs.value = 'features';
 });
 
 onBeforeMount(async () => {
   const dataDevice: unknown = await useAPI(
-    () => `${paths.objects}/${selectedId.value}`,
+    () => `${paths.objects}/${selectedObject.value?.id}`,
     {
       immediate: false,
     },
@@ -149,14 +143,20 @@ onBeforeMount(async () => {
   apiDevice.value = dataDevice as APIData<any>;
 
   const dataPorts: unknown = await useAPI(
-    () => `${objectManager}/controllers/${selectedId.value}/ports`,
+    () => `${objectManager}/controllers/${selectedObject.value?.id}/ports`,
     {
       immediate: false,
+      watch: false,
     },
     TablePortListSchema,
   );
 
   apiPorts.value = dataPorts as APIData<TablePortData[]>;
+});
+
+watch(() => selectedObject.value?.id, () => {
+  console.log(selectedObject);
+  if (selectedObject.value?.category === 'contoller') apiDevice.value?.refresh();
 });
 
 const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
@@ -167,6 +167,7 @@ const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pend
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+
         <Inplace v-model:active="active" v-if="form" class="tw-w-full" @open="updateName">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
