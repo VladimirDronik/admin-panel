@@ -155,7 +155,8 @@ onBeforeMount(async () => {
 });
 
 watch(() => selectedObject.value?.id, () => {
-  if (selectedObject.value?.category === 'contoller') apiDevice.value?.refresh();
+  console.log(selectedObject.value);
+  if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
 });
 
 const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
