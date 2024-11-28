@@ -155,7 +155,6 @@ onBeforeMount(async () => {
 });
 
 watch(() => selectedObject.value?.id, () => {
-  console.log(selectedObject);
   if (selectedObject.value?.category === 'contoller') apiDevice.value?.refresh();
 });
 

@@ -356,7 +356,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
                   prepend-inner-icon="mdi-magnify"
                   clearable
                 />
-                {{ filters[5].options }}
               </div>
             </Popover>
           </div>
