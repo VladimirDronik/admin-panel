@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 // Composable modules
 import { useApiInstant } from '~/composables/Api';
 import { useUserStore } from '~/stores/user';

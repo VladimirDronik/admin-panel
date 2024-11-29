@@ -18,6 +18,7 @@ export const Components = [
   'StepPanel',
   'StepPanels',
   'Divider',
+  'MultiSelect',
   'StepList',
   'Step',
   'Card',

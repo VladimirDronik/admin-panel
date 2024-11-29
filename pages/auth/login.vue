@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '~/stores/user';
 // Static Data
-import { auth } from '~/staticData/endpoints';
+import { auth } from '~/utils/endpoints';
 // Types
 import { loginSchema, type loginData } from '~/types/UserTypes';
 import type { APIData } from '~/types/StoreTypes';

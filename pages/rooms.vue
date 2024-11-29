@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
 // Static Data
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 // Helpers
 import { roomColor } from '~/helpers/rooms';
 // Types

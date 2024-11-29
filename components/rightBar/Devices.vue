@@ -12,7 +12,7 @@ import type {
   ModelProps,
 } from '~/types/DevicesTypes';
 // Static Data modules
-import { objectManager, paths } from '~/staticData/endpoints';
+import { objectManager, paths } from '~/utils/endpoints';
 
 // Composables
 const { t } = useI18n();

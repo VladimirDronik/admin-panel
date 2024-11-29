@@ -2,14 +2,12 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import MultiSelect from 'primevue/multiselect';
 import { updateParamsForApi } from '~/helpers/devices';
 import { type Devices } from '~/types/DevicesTypes';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
-
+import { paths } from '~/utils/endpoints';
 // Types
 interface DeviceCreateForm {
   name: string;

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 // Composables modules
 import { useAPI } from '~/composables/NewApi';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import { scriptRequestSchema, type ScriptData } from './scriptTypes';
