@@ -9,15 +9,15 @@ import { roomRequestSchema, type RoomItem } from './roomsTypes';
 
 export const useRoomsStore = defineStore('Rooms', () => {
   // Variables
-  const rooms = ref<APIData<RoomItem[]> | null>();
+  const apiRooms = ref<APIData<RoomItem[]> | null>();
 
   // Computed
-  const getRoomsSelect = computed(() => filterInListRoom(rooms.value?.data?.response ?? []));
+  const getRoomsSelect = computed(() => filterInListRoom(apiRooms.value?.data?.response ?? []));
 
   // Methods
   const getRoomsApi = async (params = {}) => {
-    if (rooms.value) {
-      rooms.value.refresh();
+    if (apiRooms.value) {
+      apiRooms.value.refresh();
     } else {
       const data: unknown = await useAPI(
         paths.privateRoomsList,
@@ -27,12 +27,12 @@ export const useRoomsStore = defineStore('Rooms', () => {
         roomRequestSchema,
       );
 
-      rooms.value = data as APIData<RoomItem[]>;
+      apiRooms.value = data as APIData<RoomItem[]>;
     }
   };
 
   return {
-    rooms,
+    apiRooms,
     getRoomsApi,
     getRoomsSelect,
   };

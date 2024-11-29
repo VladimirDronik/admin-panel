@@ -2,6 +2,10 @@
 import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
+// Types and Schemes
+import type { APIData } from '~/types/StoreTypes';
 
 const storeDevice = useDevicesStore();
 
@@ -34,6 +38,9 @@ const updateActions = () => {
 
 const actionsList = ref<any[]>([]);
 
+const apiOrderMethods = ref<APIData<any>>();
+const apiDeleteMethods = ref<APIData<any>>();
+
 const loading = ref(false);
 
 // const updateActions = async () => {
@@ -58,7 +65,6 @@ const dialogScript = ref(false);
 const dialogNotification = ref(false);
 
 const dialogDelete = ref(false);
-const loadingDelete = ref(false);
 
 const selectedId = ref(0);
 
@@ -69,18 +75,17 @@ const deleteItem = (id: number) => {
   dialogDelete.value = true;
 };
 
-const confirmDelete = async (id: number) => {
-  loadingDelete.value = true;
-  await storeDevice.deleteActionApi(id);
+const confirmDelete = async () => {
+  await apiDeleteMethods.value?.execute();
   await updateActions();
-  loadingDelete.value = true;
 };
 
-watch(() => form.value?.actions, async (newValue, oldValue) => {
+const idList = computed(() => form.value?.actions?.map((item: any) => item.id));
+
+watch(idList, async (newValue, oldValue) => {
   if (!_.isEqual(oldValue, newValue)) {
-    if (oldValue && form.value) {
-      const params = form.value?.actions?.map((item: any) => item.id);
-      await storeDevice.changeActionOrderApi(params);
+    if (newValue.length === oldValue.length) {
+      await apiOrderMethods.value?.execute();
       await updateActions();
     }
   }
@@ -93,6 +98,34 @@ const openEdit = (event: any) => {
   if (event.type === 'notification') dialogNotification.value = true;
   editAction.value = true;
 };
+
+onBeforeMount(async () => {
+  // Create Action
+  const dataCreateDevice: unknown = await useAPI(
+    () => paths.eventsActionsOrder,
+    {
+      body: idList,
+      method: 'PUT',
+      immediate: false,
+      watch: false,
+    },
+  );
+  apiOrderMethods.value = dataCreateDevice as APIData<any>;
+  //
+
+  // Delete Action
+  const dataDeleteDevice: unknown = await useAPI(
+    () => `${paths.eventsActions}/${selectedId.value}`,
+    {
+      body: idList,
+      method: 'DELETE',
+      immediate: false,
+      watch: false,
+    },
+  );
+  apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
+  //
+});
 </script>
 
 <template>
@@ -234,17 +267,8 @@ const openEdit = (event: any) => {
           v-model="dialogDelete"
           :id="selectedId"
           :showBtn="false"
-          :loading="loadingDelete"
+          :loading="apiDeleteMethods?.pending && apiDeleteMethods.status !== 'idle'"
         />
-
-        <!-- <div class="tw-pt-4">
-          <Button class="tw-mr-4">
-            Сохранить
-          </Button>
-          <Button outlined>
-            Отменить
-          </Button>
-        </div> -->
       </SharedUILoader>
     </Dialog>
   </div>

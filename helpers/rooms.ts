@@ -1,10 +1,15 @@
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import { colors } from '~/staticData/rooms';
 
+interface SelectRoom {
+  name: string;
+  code: number;
+}
+
 // API
-export const filterInListRoom = (rooms: RoomItem[] | undefined): any => {
+export const filterInListRoom = (rooms: RoomItem[] | undefined) => {
   if (!rooms) return [];
-  let result: any[] = [];
+  let result: SelectRoom[] = [];
   rooms.forEach((item) => {
     if (item.rooms_in_group?.length) {
       result = result.concat(result, item.rooms_in_group.map((item) => ({

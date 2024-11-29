@@ -10,13 +10,8 @@ const dialog = defineModel({
   default: false,
 });
 
-const loading = ref(false);
-
 // Methods
 const createRoom = async () => {
-  loading.value = true;
-  // await storeDevices.createDeviceApi(form.value);
-  loading.value = false;
 };
 
 const form = ref({

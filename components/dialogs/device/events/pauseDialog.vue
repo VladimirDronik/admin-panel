@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+// Types Modules
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
 
 const { t } = useI18n();
 const { updateData } = useUtils();
 
 const storeDevices = useDevicesStore();
-
-const form = ref({
-  duration: '0',
-});
-
-const loading = ref(false);
 
 const dialog = defineModel({
   default: false,
@@ -24,6 +22,12 @@ const event = defineModel<any>('event', {
   default: false,
 });
 
+const form = ref({
+  duration: '0',
+});
+
+const apiCreateMethod = ref<APIData<any>>();
+
 defineProps({
   edit: {
     type: Boolean,
@@ -36,10 +40,30 @@ const emit = defineEmits<{
 }>();
 
 const createAction = async () => {
-  loading.value = true;
   await updateData({
     update: async () => {
-      await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+      await apiCreateMethod.value?.execute();
+      emit('updateActions');
+    },
+    success: () => {
+      dialog.value = false;
+    },
+    successMessage: 'Пауза успешно сохранена',
+    errorMessage: 'Ошибка добавления Паузы',
+  });
+};
+
+onBeforeMount(async () => {
+  // Create Action
+  const dataDevice: unknown = await useAPI(
+    () => paths.eventsActions,
+    {
+      params: computed(() => ({
+        target_type: event.value.target_type,
+        target_id: object.value.id,
+        event_name: event.value.code,
+      })),
+      body: computed(() => ({
         args: {
           duration: `${Number(form.value.duration)}s`,
         },
@@ -50,17 +74,15 @@ const createAction = async () => {
         type: 'delay',
         sort: 0,
         qos: 0,
-      });
-      emit('updateActions');
+      })),
+      method: 'POST',
+      watch: false,
+      immediate: false,
     },
-    success: () => {
-      dialog.value = false;
-    },
-    successMessage: 'Пауза успешно сохранена',
-    errorMessage: 'Ошибка добавления Паузы',
-  });
-  loading.value = false;
-};
+  );
+  apiCreateMethod.value = dataDevice as APIData<any>;
+  //
+});
 </script>
 
 <template>
@@ -91,7 +113,7 @@ const createAction = async () => {
       <div class="tw-pt-3">
         <Button
           @click="createAction"
-          :loading="loading"
+          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
           class="tw-mr-2"
         >
           {{ t('save') }}

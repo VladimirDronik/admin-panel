@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
+// Types modules
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
+import { type Devices } from '~/types/DevicesTypes';
 
 const visible = defineModel({
   default: false,
@@ -15,41 +20,49 @@ const storeDevices = useDevicesStore();
 
 const { t } = useI18n();
 
-const emit = defineEmits<{
-  (e: 'created'): void
-}>();
-
 // Variables
-const loadingModel = ref(false);
+const model = ref<Devices>();
+
+const apiDeviceModel = ref<APIData<any>>();
 
 const form = ref({
   name: '',
   type: '',
   zone_id: null,
   category: 'controller',
+  tags: [],
 });
 
 const props = computed(() => {
-  if (storeDevices.model?.props) {
-    return storeDevices.model.props.map((item) => item.value);
+  if (model.value?.props) {
+    return model.value.props.map((item) => item.value);
   }
 });
 const childrenProps = computed(() => {
-  if (storeDevices.model?.children) {
-    return storeDevices.model?.children.map((item) => item?.props.map((item) => item.value))[0];
+  if (model.value?.children) {
+    return model.value?.children.map((item) => item?.props.map((item) => item.value))[0];
   }
+});
+
+watchEffect(() => {
+  // const result = {
+  //   ...apiDeviceModel.value?.data?.response,
+  //   props: propsModel(apiDeviceModel.value?.data?.response.props),
+  //   children: apiDeviceModel.value?.data?.response.children?.map((item: any) => ({
+  //     ...item,
+  //     props: propsModel(item.props) ?? [],
+  //   })),
+  // };
+
+  // model.value = result;
+  model.value = apiDeviceModel.value?.data?.response;
 });
 
 // Methods
 const getModel = async () => {
-  loadingModel.value = true;
   if (form.value.type && form.value.category) {
-    await storeDevices.getModelApi({
-      type: form.value.type,
-      category: form.value.category,
-    });
+    apiDeviceModel.value?.execute();
   }
-  loadingModel.value = false;
 };
 
 const propsModel = (props: any[] | undefined) => {
@@ -76,11 +89,11 @@ const propsModel = (props: any[] | undefined) => {
 };
 
 const updateFields = () => {
-  if (storeDevices.model) {
-    storeDevices.model = {
-      ...storeDevices.model,
-      props: propsModel(storeDevices.model.props),
-      children: storeDevices.model.children?.map((item) => ({
+  if (model.value) {
+    model.value = {
+      ...model.value,
+      props: propsModel(model.value.props),
+      children: model.value.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),
@@ -91,9 +104,9 @@ const updateFields = () => {
 // Watchers
 watch(() => form.value.type, getModel);
 
-watch(() => form.value.category, async () => {
+watch(() => form.value.category, () => {
   form.value.type = '';
-  storeDevices.model = null;
+  apiDeviceModel.value?.clear();
   getModel();
 });
 
@@ -103,6 +116,24 @@ watch([props, childrenProps], (newValue, oldValue) => {
   }
 }, {
   immediate: true,
+});
+
+onBeforeMount(async () => {
+  // Get Device Model
+  const data: unknown = await useAPI(
+    paths.objectModel,
+    {
+      body: computed(() => ({
+        type: form.value.type,
+        category: form.value.tags,
+      })),
+      immediate: false,
+      watch: false,
+    },
+  );
+
+  apiDeviceModel.value = data as APIData<any>;
+  //
 });
 </script>
 
@@ -124,8 +155,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
     >
       <DevicesStepperForm
         v-model:form="form"
+        v-model:model="model"
         v-model:dialog="visible"
-        :loadingModal="loadingModel"
+        :loadingModal="apiDeviceModel?.pending && apiDeviceModel.status !== 'idle'"
         disableRoomSelect
       />
     </Dialog>

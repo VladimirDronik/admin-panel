@@ -4,6 +4,11 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import MultiSelect from 'primevue/multiselect';
 import { updateParamsForApi } from '~/helpers/devices';
+import { type Devices } from '~/types/DevicesTypes';
+// Types and Schemes
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
 
 // Types
 interface DeviceCreateForm {
@@ -23,6 +28,11 @@ const storeDevices = useDevicesStore();
 const form = defineModel<DeviceCreateForm>('form', {
   required: true,
 });
+
+const model = defineModel<Devices | undefined>('model', {
+  required: true,
+});
+
 const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
@@ -35,7 +45,7 @@ defineProps({
 });
 
 // Variables
-const loading = ref(false);
+const apiCreateDevice = ref<APIData<any>>();
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
@@ -53,25 +63,24 @@ watch(
 const isSelected = (tagName: string): boolean => Boolean((form.value.tags ?? []).find((tag) => tag === tagName));
 
 const valid = computed(() => {
-  const main =
-    checkValidInput(form.value.zone_id) &&
-    checkValidInput(form.value.tags) &&
-    checkValidInput(form.value.category) &&
-    checkValidInput(form.value.type) &&
-    checkValidInput(form.value.name);
+  const main = checkValidInput(form.value.zone_id)
+    && checkValidInput(form.value.tags)
+    && checkValidInput(form.value.category)
+    && checkValidInput(form.value.type)
+    && checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
 
-  if (storeDevices.model?.props.length) {
-    props = storeDevices.model.props.every((item) => {
+  if (model.value?.props.length) {
+    props = model.value.props.every((item) => {
       if (item.required) return true;
       return checkValidInput(item.value);
     });
   }
 
-  if (storeDevices.model?.children?.length) {
-    children = storeDevices.model.children.every((child) => {
+  if (model.value?.children?.length) {
+    children = model.value.children.every((child) => {
       if (child.props.length) return true;
       return child.props.every((item) => checkValidInput(item.value));
     });
@@ -84,38 +93,48 @@ const valid = computed(() => {
 const checkValidInput = (value: any) => value || value === false;
 
 const createDevice = async () => {
-  loading.value = true;
-  if (storeDevices.model) {
-    const params = updateParamsForApi({
-      ...storeDevices.model,
-      ...form.value,
-    });
-
-    await updateData({
-      update: async () => {
-        await storeDevices.createDeviceApi(params);
-        await storeDevices.getDevicesApi({
-          limit: 10000,
-          offset: 0,
-        });
-      },
-      success: () => {
-        dialog.value = false;
-        storeDevices.model = null;
-        form.value = {
-          name: '',
-          zone_id: null,
-          type: '',
-          tags: [],
-          category: 'controller',
-        };
-      },
-      successMessage: 'Устройство успешно создано',
-      errorMessage: 'Устройство не было создано',
-    });
-  }
-  loading.value = false;
+  await updateData({
+    update: async () => {
+      await apiCreateDevice.value?.execute();
+      await storeDevices.getDevicesApi({
+        limit: 10000,
+        offset: 0,
+      });
+    },
+    success: () => {
+      dialog.value = false;
+      model.value = undefined;
+      form.value = {
+        name: '',
+        zone_id: null,
+        type: '',
+        tags: [],
+        category: 'controller',
+      };
+    },
+    successMessage: 'Устройство успешно создано',
+    errorMessage: 'Устройство не было создано',
+  });
 };
+
+onBeforeMount(async () => {
+  // Create Device
+  const data: unknown = await useAPI(
+    paths.objectModel,
+    {
+      body: computed(() => ({
+        ...model.value,
+        ...form.value,
+      })),
+      method: 'POST',
+      immediate: false,
+      watch: false,
+    },
+  );
+
+  apiCreateDevice.value = data as APIData<any>;
+  //
+});
 </script>
 
 <template>
@@ -173,7 +192,11 @@ const createDevice = async () => {
 
           <Divider class="tw-pb-3" />
 
-          <DevicesPropertiesForm disableRoomSelect v-model="storeDevices.model" :loadingModal="loadingModal" />
+          <DevicesPropertiesForm
+            v-model="model"
+            :loadingModal="loadingModal"
+            disableRoomSelect
+          />
         </form>
 
         <div class="tw-flex tw-justify-end">
@@ -183,7 +206,7 @@ const createDevice = async () => {
         </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
-        <DevicesEventsForm v-if="storeDevices.model" v-model="storeDevices.model" />
+        <DevicesEventsForm v-if="model" v-model="model" />
         <div class="tw-flex tw-justify-between">
           <Button @click="activateCallback('1')">
             {{ t('goBack') }}
@@ -199,7 +222,7 @@ const createDevice = async () => {
           <Button @click="activateCallback('2')">
             {{ t('goBack') }}
           </Button>
-          <Button color="primary" @click="createDevice" :loading="loading" :label="t('save')" />
+          <Button color="primary" @click="createDevice" :loading="apiCreateDevice?.pending && apiCreateDevice.status !== 'idle'" :label="t('save')" />
         </div>
       </StepPanel>
     </StepPanels>

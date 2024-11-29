@@ -73,6 +73,7 @@ export function updateParamsForApi(params: Devices) {
 
   newParams.children = children;
 
+  console.log(newParams);
   return newParams;
 }
 //

@@ -7,7 +7,7 @@ const { t } = useI18n();
 
 const storeRooms = useRoomsStore();
 
-const deviceObject = defineModel<Devices | null | undefined>({
+const deviceObject = defineModel<Devices | undefined>({
   required: true,
 });
 
@@ -155,6 +155,7 @@ const getFormattedOptions = (values: Record<string, any>) => Object.keys(values)
           </div>
         </div>
       </div>
+      <slot name="footer" />
     </div>
 
     <div v-else>

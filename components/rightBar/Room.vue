@@ -7,14 +7,7 @@ import { getRoomColorByValue } from '~/helpers/rooms';
 
 const { t } = useI18n();
 
-const storeRoom = useRoomsStore();
-const storeDevices = useDevicesStore();
-
 const form = defineModel<any>('form', {
-  required: false,
-});
-
-const isUpdate = defineModel<boolean>('isUpdate', {
   required: false,
 });
 
@@ -26,19 +19,6 @@ const dialog = ref(false);
 
 const loading = ref(false);
 const loadingDelete = ref(false);
-
-const confirmDelete = async () => {
-  loadingDelete.value = true;
-  if (storeDevices.object?.id) await storeDevices.deleteDeviceApi(storeDevices.object?.id);
-  await storeDevices.getDevicesApi({
-    limit: 10000,
-    offset: 0,
-  });
-  dialog.value = false;
-  isOpen.value = false;
-  loadingDelete.value = false;
-};
-
 </script>
 
 <template>
@@ -82,7 +62,6 @@ const confirmDelete = async () => {
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">
         <DialogsDeleteDialog
-          @delete="confirmDelete"
           v-model="dialog"
           :loading="loadingDelete"
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"

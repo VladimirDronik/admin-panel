@@ -33,7 +33,7 @@ const form = ref<RoomItem | null>();
 const isUpdateRightBar = ref(false);
 
 // Computed
-const roomIds = computed(() => storeRooms.rooms?.data?.response.map((item) => {
+const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => {
   if (item.is_group) {
     // return {
     //   id: item.id,
@@ -76,13 +76,13 @@ watch(roomIds, (newValue, oldValue) => {
 </script>
 
 <template>
-  <SharedUIPanel :isUpdate="storeRooms.rooms?.pending">
+  <SharedUIPanel :isUpdate="storeRooms.apiRooms?.pending">
     <SharedUIBreadcrumb title="pages.rooms">
       <DialogsRoomCreateDialog />
     </SharedUIBreadcrumb>
-    <div v-if="storeRooms.rooms?.data">
-      <VueDraggableNext v-model="storeRooms.rooms.data.response" handle=".handle-list" :animation="300">
-        <div v-for="place in storeRooms.rooms.data.response" :key="place.id">
+    <div v-if="storeRooms.apiRooms?.data">
+      <VueDraggableNext v-model="storeRooms.apiRooms.data.response" handle=".handle-list" :animation="300">
+        <div v-for="place in storeRooms.apiRooms.data.response" :key="place.id">
           <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
             <AccordionPanel :value="place.id">
               <AccordionHeader>

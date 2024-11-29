@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import { IconFilterFilled, IconSearch } from '@tabler/icons-vue';
 // Helpers
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
-import type { APIData } from '~/types/StoreTypes';
-// Static Data modules
-import { objectManager } from '~/staticData/endpoints';
+import type { Filter, Options } from '~/types/MainTypes';
 
 // Composables
 const { t } = useI18n();
@@ -30,52 +27,31 @@ const perPage = 10000;
 
 const page = ref(1);
 
+const typeOptions = ref<Options[]>([]);
+
 const isUpdate = ref(true);
 const isActiveRightSidebar = ref(false);
 
-const popoverId = ref();
-const popoverTags = ref();
-const popoverName = ref();
-const popoverType = ref();
-const popoverRoom = ref();
-const popoverStatus = ref();
-
 const selectedObject = ref<FullDevice>();
 
-const selectedDevice = ref();
-
 // Computed Properties
-const getTypes = computed(() => storeDevices.types?.data?.response
-  .filter((item) => getCategoriesOption.value.includes(item.category))
-  .map((item) => ({
-    title: item.name,
-    props: {
-      value: item.type,
-    },
-  })));
-
 const props = computed(() => {
-  if (storeDevices.object?.props) {
-    return storeDevices.object.props.map((item) => item.value);
+  if (selectedObject.value?.props) {
+    return selectedObject.value.props.map((item) => item.value);
   }
 });
 const childrenProps = computed(() => {
-  if (storeDevices.object?.children) {
-    return storeDevices.object?.children.map((item) => item?.props.map((item) => item.value))[0];
+  if (selectedObject.value?.children) {
+    return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];
   }
 });
 
-const tags = computed(() => {
+const tags = computed<(Options | string)[]>(() => {
   if (storeDevices.tags?.data?.response) return Object.keys(storeDevices.tags?.data?.response).map((item) => item);
+  return [];
 });
 
-const filters = ref<any[]>([
-  {
-    label: 'Теги',
-    key: 'tags',
-    value: [],
-    options: tags,
-  },
+const filters = ref<Filter[]>([
   {
     label: 'ID обьекта',
     key: 'filter_by_id',
@@ -95,19 +71,24 @@ const filters = ref<any[]>([
     label: 'Тип',
     key: 'filter_by_type',
     value: null,
-    options: getTypes,
+    options: typeOptions.value,
   },
   {
     label: 'Помещения',
     key: 'id',
     value: null,
-    options: ['Гостинная', 'Двор'],
   },
   {
     label: 'Статус',
     key: 'filter_by_status',
     value: null,
     options: ['ON', 'OFF', 'Enable', 'N/A'],
+  },
+  {
+    label: 'Теги',
+    key: 'tags',
+    value: null,
+    options: tags.value,
   },
 ]);
 
@@ -117,25 +98,6 @@ const getCategoriesOption: any = computed(() => filters.value.find((item) => ite
 const checkRoom = (item: RoomItem | undefined) => {
   if (item) return item.name;
   return '-';
-};
-
-const toggleTags = (event: any) => {
-  popoverTags.value.toggle(event);
-};
-const toggleStatus = (event: any) => {
-  popoverStatus.value.toggle(event);
-};
-const toggleId = (event: any) => {
-  popoverId.value.toggle(event);
-};
-const toggleName = (event: any) => {
-  popoverName.value.toggle(event);
-};
-const toggleType = (event: any) => {
-  popoverType.value.toggle(event);
-};
-const toggleRoom = (event: any) => {
-  popoverRoom.value.toggle(event);
 };
 
 const update = async (params: any = {}) => {
@@ -149,18 +111,15 @@ const update = async (params: any = {}) => {
 };
 
 const clickRow = async (item: any) => {
-  if (storeDevices.object?.id === item.data.id && isActiveRightSidebar.value) return;
+  if (selectedObject.value?.id === item.data.id && isActiveRightSidebar.value) return;
   isActiveRightSidebar.value = true;
   selectedObject.value = item.data;
 };
 
-onBeforeMount(() => {
+const created = async () => {
   storeRooms.getRoomsApi();
   storeDevices.getTypesApi();
   storeDevices.getTagsApi();
-});
-
-const created = async () => {
   await Promise.all([
     storeDevices.getDevicesApi({
       limit: perPage,
@@ -209,11 +168,11 @@ const findRoom = (list: RoomItem[] | undefined, id: number) => {
 };
 
 const updateFields = () => {
-  if (storeDevices.object) {
-    storeDevices.object = {
-      ...storeDevices.object,
-      props: propsModel(storeDevices.object.props),
-      children: storeDevices.object.children?.map((item) => ({
+  if (selectedObject.value) {
+    selectedObject.value = {
+      ...selectedObject.value,
+      props: propsModel(selectedObject.value.props),
+      children: selectedObject.value.children?.map((item) => ({
         ...item,
         props: propsModel(item.props) ?? [],
       })),
@@ -226,6 +185,17 @@ watch([props, childrenProps], (newValue, oldValue) => {
   if (!_.isEqual(newValue, oldValue)) {
     updateFields();
   }
+});
+
+watchEffect(() => {
+  typeOptions.value = storeDevices.types?.data?.response
+    .filter((item) => getCategoriesOption.value.includes(item.category))
+    .map((item) => ({
+      title: item.name,
+      props: {
+        value: item.type,
+      },
+    })) ?? [];
 });
 
 </script>
@@ -247,62 +217,41 @@ watch([props, childrenProps], (newValue, oldValue) => {
     >
       <Column field="id" expander style="width: 100px">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.id') }}
-            </p>
-            <button @click="toggleId" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button>
-            <Popover ref="popoverId">
-              <div class="category tw-flex tw-flex-col tw-gap-2 tw-p-2">
-                <InputText
-                  v-model.number="filters[1].value"
-                  :placeholder="filters[1].label"
-                  hide-details
-                  class="tw-mb-1 tw-min-w-80"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  compact
-                  type="number"
-                />
-                <InputText
-                  v-model.number="filters[2].value"
-                  :placeholder="filters[2].label"
-                  hide-details
-                  class="tw-min-w-80"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                  type="number"
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.id">
+            <InputText
+              v-model.number="filters[0].value"
+              :placeholder="filters[0].label"
+              hide-details
+              class="tw-mb-1 tw-min-w-80"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+              compact
+              type="number"
+            />
+            <InputText
+              v-model.number="filters[1].value"
+              :placeholder="filters[1].label"
+              hide-details
+              class="tw-min-w-80"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+              type="number"
+            />
+          </DevicesTableHeader>
         </template>
       </Column>
       <Column field="name">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.title') }}
-            </p>
-            <button @click="toggleName" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconSearch class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button>
-
-            <Popover ref="popoverName">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <InputText
-                  v-model.number="filters[3].value"
-                  :placeholder="filters[3].label"
-                  hide-details
-                  class="tw-min-w-96"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.title">
+            <InputText
+              v-model.number="filters[2].value"
+              :placeholder="filters[2].label"
+              hide-details
+              class="tw-min-w-96"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+            />
+          </DevicesTableHeader>
         </template>
         <template #body="{ node }">
           <p class="tw-max-w-48 tw-truncate">
@@ -312,80 +261,50 @@ watch([props, childrenProps], (newValue, oldValue) => {
       </Column>
       <Column field="type">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.type') }}
-            </p>
-            <button @click="toggleType" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button>
-
-            <Popover ref="popoverType">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <InputText
-                  v-model.number="filters[4].value"
-                  :placeholder="filters[4].label"
-                  hide-details
-                  class="tw-min-w-80"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.type">
+            <InputText
+              v-model.number="filters[3].value"
+              :placeholder="filters[3].label"
+              hide-details
+              class="tw-min-w-80"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+            />
+          </DevicesTableHeader>
         </template>
       </Column>
       <Column v-if="!isActiveRightSidebar" field="address">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.room') }}
-            </p>
-            <button @click="toggleRoom" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button>
-
-            <Popover ref="popoverRoom">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <Select
-                  v-model.number="filters[5].value"
-                  :placeholder="filters[5].label"
-                  :options="filters[5].options"
-                  hide-details
-                  class="tw-min-w-80"
-                  prepend-inner-icon="mdi-magnify"
-                  clearable
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.room">
+            <Select
+              v-model.number="filters[4].value"
+              :placeholder="filters[4].label"
+              :options="storeRooms.getRoomsSelect"
+              optionLabel="name"
+              optionValue="code"
+              class="tw-min-w-80"
+              prepend-inner-icon="mdi-magnify"
+              hide-details
+              clearable
+            />
+          </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          {{ checkRoom(findRoom(storeRooms.rooms?.data?.response, node.data.address)) }}
+          {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
         </template>
       </Column>
       <Column v-if="!isActiveRightSidebar" field="status">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.status') }}
-            </p>
-            <button @click="toggleStatus" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
-            </button>
-            <Popover :dismissable="false" ref="popoverStatus">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <Select
-                  v-model="filters[6].value"
-                  :options="filters[6].options"
-                  :placeholder="filters[6].label"
-                  class="tw-min-w-80"
-                  color="primary"
-                  hide-details
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.status">
+            <Select
+              v-model="filters[5].value"
+              :options="filters[5].options"
+              :placeholder="filters[5].label"
+              class="tw-min-w-80"
+              color="primary"
+              hide-details
+            />
+          </DevicesTableHeader>
         </template>
         <template #body="{ node }">
           <div
@@ -397,28 +316,18 @@ watch([props, childrenProps], (newValue, oldValue) => {
       </Column>
       <Column v-if="!isActiveRightSidebar" field="tags" style="width: 200px">
         <template #header>
-          <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-            <p class="tw-font-semibold">
-              {{ t('devices.tags') }}
-            </p>
-            <button @click="toggleTags" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
-              <IconFilterFilled class="tw-h-4 tw-w-4" />
-            </button>
-            <Popover :dismissable="false" ref="popoverTags">
-              <div class="flex flex-col gap-4 category tw-p-2">
-                <Select
-                  v-model="filters[0].value"
-                  :options="filters[0].options"
-                  :placeholder="filters[0].label"
-                  class="tw-min-w-80"
-                  color="primary"
-                  chips
-                  multiple
-                  hide-details
-                />
-              </div>
-            </Popover>
-          </div>
+          <DevicesTableHeader title="devices.tags">
+            <Select
+              v-model="filters[6].value"
+              :options="filters[6].options"
+              :placeholder="filters[6].label"
+              class="tw-min-w-80"
+              color="primary"
+              chips
+              multiple
+              hide-details
+            />
+          </DevicesTableHeader>
         </template>
         <template #body="{ node }">
           <div class="tags">
@@ -444,14 +353,13 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <template #rightbar>
       <RightBarDevices
         v-model:is-open="isActiveRightSidebar"
-        v-model:form="selectedDevice"
         v-model:selectedObject="selectedObject"
       />
     </template>
   </SharedUIPanel>
 </template>
 
-<style>
+<style lang="scss">
 .tags .ps__rail-x {
   display: none;
 }

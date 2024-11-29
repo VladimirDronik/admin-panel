@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+// Types Modules
+import type { APIData } from '~/types/StoreTypes';
+// Static Data modules
+import { paths } from '~/staticData/endpoints';
 
 const { t } = useI18n();
 const { updateData } = useUtils();
@@ -28,12 +32,11 @@ const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
-const objects = ref<any[]>([]);
+const apiCreateMethod = ref<APIData<any>>();
+const apiDevicesList = ref<APIData<any>>();
 
 const selectedObject = ref<any>();
 const selectedMethod = ref<any>();
-
-const loading = ref(false);
 
 const search = ref('');
 
@@ -49,13 +52,64 @@ const selectMethod = (method: any) => {
   selectedMethod.value = method;
 };
 
-const filteredObjects = computed(() => objects.value.filter((item) => item.name.includes(search.value)));
+const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.includes(search.value)));
 
 const createAction = async () => {
-  loading.value = true;
   await updateData({
     update: async () => {
-      await storeDevices.createEventApi(event.value.target_type, object.value.id, event.value.code, {
+      await apiCreateMethod.value?.execute();
+      emit('updateActions');
+    },
+    success: () => {
+      dialog.value = false;
+    },
+    successMessage: 'Метод успешно сохранен',
+    errorMessage: 'Ошибка добавления Метода',
+  });
+};
+
+watch(dialog, () => {
+  if (dialog.value) {
+    selectedObject.value = null;
+    selectedMethod.value = null;
+  }
+});
+
+// storeDevices.getDevicesApi({
+//   type_struct: 'easy',
+//   with_methods: true,
+//   limit: 9999,
+// }, false)
+//   .then((response) => {
+//     objects.value = response.response.list;
+//   });
+
+onBeforeMount(async () => {
+  // Get Device List
+  const data: unknown = await useAPI(
+    paths.objects,
+    {
+      params: {
+        type_struct: 'easy',
+        with_methods: true,
+        limit: 9999,
+      },
+    },
+  );
+
+  apiDevicesList.value = data as APIData<any>;
+  //
+
+  // Create Action
+  const dataDevice: unknown = await useAPI(
+    () => paths.eventsActions,
+    {
+      params: computed(() => ({
+        target_type: event.value.target_type,
+        target_id: object.value.id,
+        event_name: event.value.code,
+      })),
+      body: computed(() => ({
         args: {
           ...selectedMethod.value,
           object: selectedObject.value.name,
@@ -67,33 +121,15 @@ const createAction = async () => {
         type: 'method',
         sort: 0,
         qos: 0,
-      });
-      emit('updateActions');
+      })),
+      method: 'POST',
+      watch: false,
+      immediate: false,
     },
-    success: () => {
-      dialog.value = false;
-    },
-    successMessage: 'Метод успешно сохранен',
-    errorMessage: 'Ошибка добавления Метода',
-  });
-  loading.value = false;
-};
-
-watch(dialog, () => {
-  if (dialog.value) {
-    selectedObject.value = null;
-    selectedMethod.value = null;
-  }
+  );
+  apiCreateMethod.value = dataDevice as APIData<any>;
+  //
 });
-
-storeDevices.getDevicesApi({
-  type_struct: 'easy',
-  with_methods: true,
-  limit: 9999,
-}, false)
-  .then((response) => {
-    objects.value = response.response.list;
-  });
 </script>
 
 <template>
@@ -121,12 +157,18 @@ storeDevices.getDevicesApi({
           Список Методов
         </h3>
       </div>
-      <div v-if="objects?.length" class="tw-flex">
+      <div v-if="filteredObjects?.length" class="tw-flex">
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
-          <div v-if="objects?.length">
+          <div v-if="filteredObjects?.length">
             <InputText v-model="search" class="tw-mb-2 tw-w-full" />
             <ScrollPanel style="height: 300px">
-              <button @click="selectObject(object)" type="button" class="tw-block" v-for="object in filteredObjects" :key="object.id">
+              <button
+                v-for="object in filteredObjects"
+                :key="object.id"
+                @click="selectObject(object)"
+                type="button"
+                class="tw-block"
+              >
                 <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
                   <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
                     {{ object.name }}
@@ -142,8 +184,17 @@ storeDevices.getDevicesApi({
         <div class="tw-w-6/12">
           <div class="tw-mb-2 tw-rounded tw-border tw-p-3">
             <div v-if="selectedObject?.methods?.length">
-              <button @click="selectMethod(method)" type="button" v-for="method in selectedObject.methods" :key="method.name" class="tw-flex tw-items-center tw-justify-between">
-                <p :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }" class="tw-text-lg">
+              <button
+                v-for="method in selectedObject.methods"
+                :key="method.name"
+                @click="selectMethod(method)"
+                type="button"
+                class="tw-flex tw-items-center tw-justify-between"
+              >
+                <p
+                  :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }"
+                  class="tw-text-lg"
+                >
                   {{ method.name }}
                 </p>
               </button>
@@ -154,15 +205,21 @@ storeDevices.getDevicesApi({
           </div>
         </div>
       </div>
-      <!-- <div class="tw-rounded tw-border tw-p-3">
-        Выбор параметра метода
-      </div> -->
 
       <div class="tw-pt-4">
-        <Button @click="createAction" :loading="loading" class="tw-mr-2" :disabled="!selectedMethod">
+        <Button
+          @click="createAction"
+          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
+          class="tw-mr-2"
+          :disabled="!selectedMethod"
+        >
           {{ t('save') }}
         </Button>
-        <Button variant="outlined" @click="dialog = false" outlined>
+        <Button
+          variant="outlined"
+          @click="dialog = false"
+          outlined
+        >
           {{ t('cancel') }}
         </Button>
       </div>

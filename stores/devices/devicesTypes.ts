@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 // Devices
 
-// export const deviceProps = z.object({
-
-// })
+export const deviceProps = z.object({
+  value: z.string(),
+});
 
 export const deviceEvents = z.object({
   code: z.string(),
@@ -23,7 +23,7 @@ export const deviceSchema = z.object({
   tags: z.array(z.string()),
   zone_id: z.string().optional(),
   events: z.record(deviceEvents),
-  // props: z.array().optional()
+  props: z.array(deviceProps).optional(),
 });
 
 type Device = z.infer<typeof deviceSchema> & {
