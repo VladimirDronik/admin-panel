@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 // Types Modules
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 
 const { t } = useI18n();
 const { updateData } = useUtils();

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 import { type Devices } from '~/types/DevicesTypes';
 
 const visible = defineModel({

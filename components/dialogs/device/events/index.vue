@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 // Static Data modules
-import { paths } from '~/staticData/endpoints';
+import { paths } from '~/utils/endpoints';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 
