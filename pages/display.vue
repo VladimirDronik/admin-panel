@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
+import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 // Helpers modules
 import { roomColor } from '~/helpers/rooms';
 
@@ -11,7 +12,7 @@ useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
 
-const apiDisplays = ref<APIData<any>>();
+const apiDisplays = ref<APIData<DisplayData>>();
 
 onBeforeMount(async () => {
   // Get Buttons
@@ -20,9 +21,10 @@ onBeforeMount(async () => {
     {
       watch: false,
     },
+    displayRequestSchema,
   );
 
-  apiDisplays.value = dataDeleteDevice as APIData<any>;
+  apiDisplays.value = dataDeleteDevice as APIData<DisplayData>;
   //
 });
 
@@ -61,29 +63,34 @@ onBeforeMount(async () => {
             size="small"
           />
         </div>
-        <div class="tw-flex tw-flex-wrap">
-          <button type="button" v-for="items in rooms.items" :key="items.id" class="tw-mr-3">
-            <div
-              class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
-              :class="{ '!tw-border-inherit': !(items.status === 'on') }"
-              :style="{ borderColor: roomColor(rooms.style) }"
-            >
-              <img :src="`items/${items.icon}.png`" alt="">
-              <Badge
-                v-if="items.group_elements"
-                :style="{ backgroundColor: roomColor(rooms.style) }"
-                :class="{ '!tw-bg-black': !(items.status === 'on') }"
-                class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
-                rounded
+        <ScrollPanel
+          style="width: 100%;"
+          pt:barX:class="tw-opacity-0"
+        >
+          <div class="tw-flex tw-gap-3 tw-pt-2">
+            <button type="button" v-for="items in rooms.items" :key="items.item_id">
+              <div
+                class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
+                :class="{ '!tw-border-inherit': !(items.status === 'on') }"
+                :style="{ borderColor: roomColor(rooms.style) }"
               >
-                {{ items.group_elements.length }}
-              </Badge>
-            </div>
-            <h5 class="tw-w-24 tw-truncate tw-text-center">
-              {{ items.title }}
-            </h5>
-          </button>
-        </div>
+                <img :src="`items/${items.icon}.png`" alt="">
+                <Badge
+                  v-if="items.group_elements"
+                  :style="{ backgroundColor: roomColor(rooms.style) }"
+                  :class="{ '!tw-bg-black': !(items.status === 'on') }"
+                  class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
+                  rounded
+                >
+                  {{ items.group_elements.length }}
+                </Badge>
+              </div>
+              <h5 class="tw-w-24 tw-truncate tw-text-center">
+                {{ items.title }}
+              </h5>
+            </button>
+          </div>
+        </ScrollPanel>
       </div>
     </div>
 
