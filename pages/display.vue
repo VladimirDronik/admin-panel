@@ -2,17 +2,46 @@
 import { useI18n } from 'vue-i18n';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
-import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
+import { type DisplayData, displayRequestSchema, type RoomBtnsData } from '~/types/DisplayTypes';
 // Helpers modules
 import { roomColor } from '~/helpers/rooms';
 
+// Composables
 const { t } = useI18n();
 
 useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
 
+// Variables
 const apiDisplays = ref<APIData<DisplayData>>();
+
+const form = ref<RoomBtnsData>();
+const edit = ref(false);
+const isShow = ref(false);
+
+const showPanel = (item: RoomBtnsData | null = null) => {
+  isShow.value = true;
+  if (item) {
+    edit.value = true;
+    form.value = item;
+  } else {
+    edit.value = false;
+    form.value = {
+      description: '',
+      icon: '',
+      item_id: 0,
+      position_left: 0,
+      position_top: 0,
+      scene: 0,
+      sort: 0,
+      status: '',
+      title: '',
+      type: '',
+    };
+  }
+  isShow.value = true;
+};
 
 onBeforeMount(async () => {
   // Get Buttons
@@ -33,11 +62,7 @@ onBeforeMount(async () => {
 <template>
   <SharedUIPanel>
     <SharedUIBreadcrumb title="pages.display">
-      <Button
-        class="text-capitalize"
-        icon="pi pi-plus"
-        label="Добавить помещение"
-      />
+      <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
       <div v-for="rooms in apiDisplays?.data?.response.room_items" :key="rooms.id" class="tw-rounded-md tw-border tw-p-3 ">
@@ -58,42 +83,55 @@ onBeforeMount(async () => {
             </div>
           </div>
           <Button
+            @click="showPanel()"
             label="Добавить кнопку"
             icon="pi pi-plus"
             size="small"
           />
         </div>
-        <ScrollPanel
+        <!-- <ScrollPanel
           style="width: 100%;"
           pt:barX:class="tw-opacity-0"
-        >
-          <div class="tw-flex tw-gap-3 tw-pt-2">
-            <button type="button" v-for="items in rooms.items" :key="items.item_id">
-              <div
-                class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
-                :class="{ '!tw-border-inherit': !(items.status === 'on') }"
-                :style="{ borderColor: roomColor(rooms.style) }"
+        > -->
+        <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2">
+          <button
+            v-for="items in rooms.items"
+            @click="showPanel(items)"
+            :key="items.item_id"
+            type="button"
+          >
+            <div
+              class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
+              :class="{ '!tw-border-inherit': !(items.status === 'on') }"
+              :style="{ borderColor: roomColor(rooms.style) }"
+            >
+              <img :src="`items/${items.icon}.png`" alt="">
+              <Badge
+                v-if="items.group_elements"
+                :style="{ backgroundColor: roomColor(rooms.style) }"
+                :class="{ '!tw-bg-black': !(items.status === 'on') }"
+                class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
+                rounded
               >
-                <img :src="`items/${items.icon}.png`" alt="">
-                <Badge
-                  v-if="items.group_elements"
-                  :style="{ backgroundColor: roomColor(rooms.style) }"
-                  :class="{ '!tw-bg-black': !(items.status === 'on') }"
-                  class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
-                  rounded
-                >
-                  {{ items.group_elements.length }}
-                </Badge>
-              </div>
-              <h5 class="tw-w-24 tw-truncate tw-text-center">
-                {{ items.title }}
-              </h5>
-            </button>
-          </div>
-        </ScrollPanel>
+                {{ items.group_elements.length }}
+              </Badge>
+            </div>
+            <h5 class="tw-w-24 tw-truncate tw-text-center">
+              {{ items.title }}
+            </h5>
+          </button>
+        </div>
+        <!-- </ScrollPanel> -->
       </div>
     </div>
 
+    <template #rightbar>
+      <RightBarDisplay
+        v-model:edit="edit"
+        v-model:form="form"
+        v-model:is-show="isShow"
+      />
+    </template>
   </SharedUIPanel>
 </template>
 
