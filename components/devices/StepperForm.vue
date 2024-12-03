@@ -47,8 +47,9 @@ const apiCreateDevice = ref<APIData<any>>();
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
-const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
 const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.keys(storeDevices.tags?.data?.response)) : []));
+
+// const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
 
 watch(
   () => form.value.tags,
@@ -58,14 +59,13 @@ watch(
   { deep: true },
 );
 
-const isSelected = (tagName: string): boolean => Boolean((form.value.tags ?? []).find((tag) => tag === tagName));
-
 const valid = computed(() => {
-  const main = checkValidInput(form.value.zone_id)
-    && checkValidInput(form.value.tags)
-    && checkValidInput(form.value.category)
-    && checkValidInput(form.value.type)
-    && checkValidInput(form.value.name);
+  const main =
+    checkValidInput(form.value.zone_id) &&
+    checkValidInput(form.value.tags) &&
+    checkValidInput(form.value.category) &&
+    checkValidInput(form.value.type) &&
+    checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -117,18 +117,15 @@ const createDevice = async () => {
 
 onBeforeMount(async () => {
   // Create Device
-  const data: unknown = await useAPI(
-    paths.objectModel,
-    {
-      body: computed(() => ({
-        ...model.value,
-        ...form.value,
-      })),
-      method: 'POST',
-      immediate: false,
-      watch: false,
-    },
-  );
+  const data: unknown = await useAPI(paths.objectModel, {
+    body: computed(() => ({
+      ...model.value,
+      ...form.value,
+    })),
+    method: 'POST',
+    immediate: false,
+    watch: false,
+  });
 
   apiCreateDevice.value = data as APIData<any>;
   //
@@ -190,11 +187,10 @@ onBeforeMount(async () => {
 
           <Divider class="tw-pb-3" />
 
-          <DevicesPropertiesForm
-            v-model="model"
-            :loadingModal="loadingModal"
-            disableRoomSelect
-          />
+          <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect />
+
+          <!-- Dynamically renders the form component based on the selected device type -->
+          <DevicesDynamicDeviceForm :deviceType="form.type" />
         </form>
 
         <div class="tw-flex tw-justify-end">

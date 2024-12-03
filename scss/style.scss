@@ -15,4 +15,13 @@
   @tailwind utilities;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap");
+@layer components {
+  .custom-grid {
+    @apply tw-grid tw-grid-cols-[1fr_4fr] tw-items-center tw-gap-4;
+  }
+
+  .custom-grid > * {
+    @apply tw-mb-2;
+  }
+}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
