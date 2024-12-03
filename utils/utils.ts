@@ -1,16 +1,7 @@
-// import { type Component } from 'vue';
-// import { ObjectsCategory } from './enums';
-// import { deviceFormMapping } from './mappings';
-// import DefaultForm from '@/components/forms/DefaultForm.vue';
+import { type Component } from 'vue';
+import { deviceFormMapping } from './mappings';
 
-// export function getDeviceFormComponent(category: ObjectsCategory, type: string): Component {
-//   const mapping = deviceFormMapping.find((item) => item.category === category && item.type === type);
-
-//   if (!mapping) {
-//     const defaultMapping = deviceFormMapping.find((item) => item.category === ObjectsCategory.Default) as { component: Component } | undefined;
-
-//     return defaultMapping?.component || DefaultForm;
-//   }
-
-//   return mapping.component;
-// }
+export function getDeviceFormComponent(type: string): Component | null {
+  const mapping = deviceFormMapping.find((item) => item.type === type);
+  return mapping?.component || null;
+}
