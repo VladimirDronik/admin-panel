@@ -65,14 +65,26 @@ onBeforeMount(async () => {
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
-      <div v-for="rooms in apiDisplays?.data?.response.room_items" :key="rooms.id" class="tw-rounded-md tw-border tw-p-3 ">
+      <div
+        v-for="rooms in apiDisplays?.data?.response.room_items"
+        :key="rooms.id"
+        class="tw-rounded-md tw-border tw-p-3"
+      >
         <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-justify-between">
           <div class=" tw-flex tw-items-center">
             <h4 class="tw-mr-2 tw-text-xl" :style="{ color: roomColor(rooms.style) }">
               {{ rooms.name }}
             </h4>
-            <div v-for="sensor in rooms.sensors" :key="sensor.id_item" class="tw-mr-2 tw-flex tw-items-center">
-              <img :src="`scenario_items/${sensor.icon}.png`" alt="" class="tw-mr-0.5">
+            <div
+              v-for="sensor in rooms.sensors"
+              :key="sensor.id_item"
+              class="tw-mr-2 tw-flex tw-items-center"
+            >
+              <img
+                :src="`scenario_items/${sensor.icon}.png`"
+                alt=""
+                class="tw-mr-0.5"
+              >
               {{sensor.current}}
               <span v-if="sensor.type === 'temperature'">
                 °
@@ -105,7 +117,10 @@ onBeforeMount(async () => {
               :class="{ '!tw-border-inherit': !(items.status === 'on') }"
               :style="{ borderColor: roomColor(rooms.style) }"
             >
-              <img :src="`items/${items.icon}.png`" alt="">
+              <img
+                :src="`items/${items.icon}.png`"
+                alt=""
+              >
               <Badge
                 v-if="items.group_elements"
                 :style="{ backgroundColor: roomColor(rooms.style) }"
@@ -134,7 +149,3 @@ onBeforeMount(async () => {
     </template>
   </SharedUIPanel>
 </template>
-
-<style>
-
-</style>
