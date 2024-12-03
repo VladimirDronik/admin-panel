@@ -71,8 +71,8 @@ onBeforeMount(async () => {
             <h4 class="tw-mr-2 tw-text-xl" :style="{ color: roomColor(rooms.style) }">
               {{ rooms.name }}
             </h4>
-            <div v-for="sensor in rooms.sensors" :key="sensor.id_item" class="tw-mr-2">
-              <img :src="`scenario_items/${sensor.icon}.png`" alt="">
+            <div v-for="sensor in rooms.sensors" :key="sensor.id_item" class="tw-mr-2 tw-flex tw-items-center">
+              <img :src="`scenario_items/${sensor.icon}.png`" alt="" class="tw-mr-0.5">
               {{sensor.current}}
               <span v-if="sensor.type === 'temperature'">
                 °
