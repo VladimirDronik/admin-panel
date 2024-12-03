@@ -21,31 +21,6 @@ defineProps({
     default: false,
   },
 });
-
-const fieldOrder = ['id', 'address', 'password', 'protocol'];
-
-const sortedPropsForMegaD = computed(() => {
-  if (deviceObject.value?.category === 'controller' && deviceObject.value?.type === 'mega_d' && deviceObject.value?.props) {
-    return [...deviceObject.value.props].sort((a, b) => fieldOrder.indexOf(a.code) - fieldOrder.indexOf(b.code));
-  }
-  return [];
-});
-
-const getFieldSettingsForMegaD = (code: string) => {
-  switch (code) {
-    case 'id':
-    case 'address':
-      return { maxLength: 15, inputWidth: '18ch' };
-    case 'password':
-      return { maxLength: 6, inputWidth: '12ch' };
-    case 'protocol':
-      return { maxLength: 4, inputWidth: '12ch' };
-    default:
-      return { maxLength: 255, inputWidth: '100%' };
-  }
-};
-
-const getFormattedOptions = (values: Record<string, any>) => Object.keys(values).map((option) => option.toUpperCase());
 </script>
 
 <template>
@@ -61,45 +36,6 @@ const getFormattedOptions = (values: Record<string, any>) => Object.keys(values)
           required
         />
       </SharedUILabel>
-
-      <!-- MegaDForm -->
-      <div v-if="deviceObject?.category === 'controller' && deviceObject?.type === 'mega_d'">
-        <div v-for="item in sortedPropsForMegaD" :key="item.code">
-          <SharedUIField v-if="item.visible.value">
-            <template #label>
-              <SharedUILabel :title="item.name" :required="item.required.value" />
-            </template>
-
-            <template #input>
-              <template v-if="item.code === 'protocol'">
-                <Select
-                  v-model="item.value"
-                  :options="getFormattedOptions(item.values)"
-                  :style="{
-                    width: getFieldSettingsForMegaD(item.code).inputWidth,
-                  }"
-                  :disabled="!item.editable.value"
-                  class="tw-w-full"
-                  required
-                />
-              </template>
-              <template v-else>
-                <InputText
-                  v-model="item.value"
-                  :maxlength="getFieldSettingsForMegaD(item.code).maxLength"
-                  :style="{
-                    width: getFieldSettingsForMegaD(item.code).inputWidth,
-                  }"
-                  :disabled="!item.editable.value"
-                  class="tw-w-full tw-rounded tw-border tw-border-gray-300 tw-px-3"
-                  required
-                  :type="item.type === 'int' || item.type === 'float' ? 'number' : 'text'"
-                />
-              </template>
-            </template>
-          </SharedUIField>
-        </div>
-      </div>
 
       <div v-else>
         <div v-for="item in deviceObject.props" :key="item.code">

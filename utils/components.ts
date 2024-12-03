@@ -32,4 +32,7 @@ export const Components = [
   'AccordionHeader',
   'AccordionContent',
   'ScrollPanel',
+  'RadioButton',
+  'InputNumber',
+  'InputSwitch',
 ];
