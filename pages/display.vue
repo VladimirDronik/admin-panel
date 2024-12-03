@@ -120,11 +120,12 @@ onBeforeMount(async () => {
               <img
                 :src="`items/${items.icon}.png`"
                 alt=""
+                :class="{ '!tw-opacity-60': !(items.status === 'on') }"
               >
               <Badge
                 v-if="items.group_elements"
                 :style="{ backgroundColor: roomColor(rooms.style) }"
-                :class="{ '!tw-bg-black': !(items.status === 'on') }"
+                :class="{ '!tw-bg-gray-400': !(items.status === 'on') }"
                 class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
                 rounded
               >
