@@ -33,8 +33,14 @@ export default {
     address16: 'Address',
     port: 'Port',
     tooltipMinAlarm:
-      'Minimum alarm value. If the value exceeds the specified range, an on_alarm event will be triggered. The sensor values will be considered valid but will not be displayed in the system or on graphs.',
+      'Minimum alarm value. If the value exceeds the specified range, an on_alarm event will be triggered. The sensor values will be considered valid and will be displayed in the system or on graphs.',
     tooltipMinAvailability:
       'Minimum sensor availability value. If the value exceeds the specified range, the sensor will be considered non-operational, and an on_error event will be triggered during polling. The sensor values will not be considered valid and will not be displayed in the system or on graphs.',
+    humidity: 'Humidity',
+    illumination: 'Illumination',
+    pressure: 'Pressure',
+    co2: 'CO2',
+    portSDA: 'Port SDA',
+    portSCL: 'Port SCL',
   },
 };

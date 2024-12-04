@@ -4,16 +4,28 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
-const formData = reactive({
+interface MegaDFormData {
+  id: string;
+  address: string;
+  password: string;
+  protocol: 'HTTP' | 'MQTT';
+}
+
+const formData = reactive<MegaDFormData>({
   id: '',
   address: '',
   password: '',
   protocol: 'HTTP',
 });
 
-const protocolOptions = ['HTTP', 'MQTT'];
+interface FieldSettings {
+  maxLength: number;
+  inputWidth: string;
+}
 
-const getFieldSettingsForMegaD = (code: string) => {
+const protocolOptions: MegaDFormData['protocol'][] = ['HTTP', 'MQTT'];
+
+const getFieldSettingsForMegaD = (code: keyof MegaDFormData): FieldSettings => {
   switch (code) {
     case 'id':
     case 'address':
@@ -35,7 +47,7 @@ const submitForm = () => {
 <template>
   <form @submit.prevent="submitForm" class="tw-ml-[25%] tw-mt-4 tw-text-lg tw-font-semibold">
     <div class="custom-grid">
-      <span>{{ t('devices.id') }}</span>
+      <SharedUIFormLabel :label="t('devices.id')" />
       <InputText
         id="id"
         v-model="formData.id"
@@ -45,7 +57,7 @@ const submitForm = () => {
       />
     </div>
     <div class="custom-grid">
-      <span>{{ t('devices.address') }}</span>
+      <SharedUIFormLabel :label="t('devices.address')" />
       <InputText
         id="address"
         v-model="formData.address"
@@ -55,7 +67,7 @@ const submitForm = () => {
       />
     </div>
     <div class="custom-grid">
-      <span>{{ t('devices.password') }}</span>
+      <SharedUIFormLabel :label="t('devices.password')" />
       <InputText
         id="password"
         v-model="formData.password"
@@ -65,7 +77,7 @@ const submitForm = () => {
       />
     </div>
     <div class="custom-grid">
-      <span>{{ t('devices.protocol') }}</span>
+      <SharedUIFormLabel :label="t('devices.protocol')" />
       <Select
         :options="protocolOptions"
         v-model="formData.protocol"

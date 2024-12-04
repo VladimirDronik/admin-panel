@@ -60,12 +60,8 @@ watch(
 );
 
 const valid = computed(() => {
-  const main =
-    checkValidInput(form.value.zone_id) &&
-    checkValidInput(form.value.tags) &&
-    checkValidInput(form.value.category) &&
-    checkValidInput(form.value.type) &&
-    checkValidInput(form.value.name);
+  const main = // checkValidInput(form.value.zone_id) &&
+    checkValidInput(form.value.tags) && checkValidInput(form.value.category) && checkValidInput(form.value.type) && checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -175,19 +171,19 @@ onBeforeMount(async () => {
               </template>
             </SharedUIField>
 
-            <SharedUIField :required="true">
+            <SharedUIField :required="false">
               <template #label>
                 {{ t('devices.room') }}
               </template>
               <template #input>
-                <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" required />
+                <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
               </template>
             </SharedUIField>
           </div>
 
           <Divider class="tw-pb-3" />
 
-          <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect />
+          <!-- <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect /> -->
 
           <!-- Dynamically renders the form component based on the selected device type -->
           <DevicesDynamicDeviceForm :deviceType="form.type" />
