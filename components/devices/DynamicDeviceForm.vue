@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { getDeviceFormComponent } from '@/utils/utils';
-
-const { t } = useI18n();
+import { computed, defineProps } from 'vue';
+import { deviceFormMapping } from '@/components/forms/FormMappings';
+import DefaultFormComponent from '../forms/byTypes/DefaultForm.vue';
 
 const props = defineProps({
   deviceType: {
     type: String,
-    required: true, // Передаем тип устройства
+    required: true,
   },
 });
 
-// Определяем компонент формы на основе типа устройства
-const FormComponent = computed(() => getDeviceFormComponent(props.deviceType));
+const FormComponent = computed(() => {
+  const mapping = deviceFormMapping.find((item) => item.type === props.deviceType);
+  return mapping?.component || DefaultFormComponent;
+});
 </script>
 
 <template>
   <div>
-    <component :is="FormComponent" v-if="FormComponent" />
-    <!-- <p v-else class="tw-mb-1.5tw-font-semibold tw-text-center tw-text-xl">{{ t('devices.formNotFound') }}</p> -->
+    <component :is="FormComponent" />
   </div>
 </template>
