@@ -44,11 +44,10 @@ const form = ref({
   color: null,
   zone_id: null,
 });
-const editForm = ref();
 
 const resolver = ref(zodResolver(
   z.object({
-    title: z.string(),
+    title: z.string().min(1),
     type: z.string(),
     zone_id: z.number(),
   }),
@@ -59,10 +58,6 @@ const apiItem = ref<APIData<any>>();
 const loadingDelete = ref(false);
 
 storeRooms.getRoomsApi();
-
-watchEffect(() => {
-  editForm.value = apiItem.value?.data?.response;
-});
 
 onBeforeMount(async () => {
   // Get Item
@@ -97,7 +92,7 @@ onBeforeMount(async () => {
         </Button>
       </div>
 
-      <div v-if="editForm && edit" class="!tw-px-0 !tw-pt-1">
+      <div v-if="apiItem?.data?.response && edit" class="!tw-px-0 !tw-pt-1">
         <Tabs value="features">
           <!-- Header -->
           <TabList>
@@ -121,22 +116,22 @@ onBeforeMount(async () => {
               >
                 <SharedUILabel
                   :title="'Название'"
-                  :value="editForm.title"
+                  :value="apiItem.data.response.title"
                   name="title"
                   class="tw-mb-2"
                   required
                 >
-                  <InputText v-model="editForm.title" class="tw-w-full" />
+                  <InputText v-model="apiItem.data.response.title" class="tw-w-full" />
                 </SharedUILabel>
                 <SharedUILabel
                   :title="'Тип'"
-                  :value="editForm.type"
+                  :value="apiItem.data.response.type"
                   name="type"
                   class="tw-mb-2"
                   required
                 >
                   <Select
-                    v-model="editForm.type"
+                    v-model="apiItem.data.response.type"
                     :options="Devices"
                     class="tw-w-full"
                     show-clear
@@ -144,13 +139,13 @@ onBeforeMount(async () => {
                 </SharedUILabel>
                 <SharedUILabel
                   :title="'Помещение'"
-                  :value="editForm.zone_id"
+                  :value="apiItem.data.response.zone_id"
                   name="zone_id"
                   class="tw-mb-2"
                   required
                 >
                   <Select
-                    v-model="editForm.zone_id"
+                    v-model="apiItem.data.response.zone_id"
                     :options="storeRooms.getRoomsSelect"
                     optionLabel="name"
                     optionValue="code"
@@ -163,7 +158,7 @@ onBeforeMount(async () => {
                   :title="'Цвет'"
                   class="tw-mb-2"
                 >
-                  <SharedUIColorSelect v-model="editForm.color" />
+                  <SharedUIColorSelect v-model="apiItem.data.response.color" />
                 </SharedUILabel>
                 <div class="tw-flex tw-justify-end tw-pt-2">
                   <DialogsDeleteDialog
