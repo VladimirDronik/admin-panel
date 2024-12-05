@@ -189,11 +189,11 @@ onBeforeMount(async () => {
           <DevicesDynamicDeviceForm :deviceType="form.type" />
         </form>
 
-        <div class="tw-flex tw-justify-end">
+        <!-- <div class="tw-flex tw-justify-end">
           <Button :disabled="!valid" @click="activateCallback('2')">
             {{ t('next') }}
           </Button>
-        </div>
+        </div> -->
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
         <DevicesEventsForm v-if="model" v-model="model" />

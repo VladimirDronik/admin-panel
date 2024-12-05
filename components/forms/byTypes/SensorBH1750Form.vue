@@ -1,129 +1,120 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { useForm, useField } from 'vee-validate';
 import { z } from 'zod';
-import { toTypedSchema } from '@vee-validate/zod';
+import { Form } from '@primevue/forms';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Sensor } from '~/types/DevicesEnums';
 import { useControllersViaType } from '~/composables/useControllersViaType';
 
 const { t } = useI18n();
 
-const schema = z.object({
-  sdaPort: z.string().nullable(),
-  sclPort: z.string().nullable(),
-  pollInterval: z.number().nullable().default(0),
-  minAvailableIllumination: z.number().nullable().default(0),
-  maxAvailableIllumination: z.number().nullable().default(0),
-  minAlarmIllumination: z.number().nullable().default(0),
-  maxAlarmIllumination: z.number().nullable().default(0),
-  enableGraphingIllumination: z.boolean(),
+const form = ref({
+  controller: null,
+  sdaPort: null,
+  sclPort: null,
+  pollInterval: 300,
+  enableGraphingIllumination: false,
+  minAvailableIllumination: 0,
+  maxAvailableIllumination: 65535,
+  minAlarmIllumination: 0,
+  maxAlarmIllumination: 0,
 });
 
-type FormSchema = z.infer<typeof schema>;
-
-const { handleSubmit } = useForm<FormSchema>({
-  validationSchema: toTypedSchema(schema),
-});
-
-const { value: sdaPort, errorMessage: sdaPortError } = useField<FormSchema['sdaPort']>('sdaPort');
-const { value: sclPort, errorMessage: sclPortError } = useField<FormSchema['sclPort']>('sclPort');
-const { value: pollInterval, errorMessage: pollIntervalError } = useField<FormSchema['pollInterval']>('pollInterval');
-const { value: minAvailableIllumination } = useField<FormSchema['minAvailableIllumination']>('minAvailableIllumination');
-const { value: maxAvailableIllumination } = useField<FormSchema['maxAvailableIllumination']>('maxAvailableIllumination');
-const { value: minAlarmIllumination } = useField<FormSchema['minAlarmIllumination']>('minAlarmIllumination');
-const { value: maxAlarmIllumination } = useField<FormSchema['maxAlarmIllumination']>('maxAlarmIllumination');
-const { value: enableGraphingIllumination } = useField<FormSchema['enableGraphingIllumination']>('enableGraphingIllumination');
-
-// const address = computed(() => {
-//   const sda = ports.value.find((port) => port.name === sdaPort.value)?.id;
-//   const scl = ports.value.find((port) => port.name === sclPort.value)?.id;
-//   return sda && scl ? `${sda};${scl}` : null;
-// });
-
-// Сохранение данных формы
-const submitForm = (values: FormSchema) => {
-  const dataToSave = {
-    // address: address.value,
-    pollInterval: values.pollInterval,
-    illuminationSettings: {
-      minAvailable: values.minAvailableIllumination,
-      maxAvailable: values.maxAvailableIllumination,
-      minAlarm: values.minAlarmIllumination,
-      maxAlarm: values.maxAlarmIllumination,
-      enableGraphing: values.enableGraphingIllumination,
-    },
-    ports: {
-      sda: values.sdaPort,
-      scl: values.sclPort,
-    },
-  };
-
-  console.log('Validated Values:', values);
-  //   console.log('Generated Address:', address.value);
-  console.log('Data to Save:', dataToSave);
-
-  // Логика отправки на сервер
-};
+const resolver = ref(
+  zodResolver(
+    z.object({
+      controller: z.string().min(1),
+      sdaPort: z.string().min(1),
+      sclPort: z.string().min(1),
+      pollInterval: z.number().min(300),
+      minAvailableIllumination: z.number().min(0),
+      maxAvailableIllumination: z.number().min(65535),
+    }),
+  ),
+);
 
 const ports = ref<{ name: string }[]>([]);
 
 const { controllers, getControllersViaType } = useControllersViaType();
 getControllersViaType(Sensor.BH1750);
+const controllerIds = computed(() => controllers.value.map((controller) => controller.id));
+const controllerNames = computed(() => controllers.value.map((controller) => controller.name));
+
+const handleSubmit = ({ valid, values }: { valid: boolean; values: any }) => {
+  if (valid) {
+    console.log('Форма успешно отправлена:', values);
+    // Логика отправки данных на сервер
+  } else {
+    console.log('Форма содержит ошибки');
+  }
+};
 </script>
 
 <template>
-  <form class="tw-text-lg tw-font-semibold" @submit.prevent="handleSubmit(submitForm)">
-    <p class="tw-mb-4">{{ t('devices.placement') }}</p>
+  <Form :resolver="resolver" @submit="handleSubmit">
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
 
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.controller')" />
-      <Select :options="controllers" optionLabel="name" class="tw-w-full" />
-    </div>
+    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="form.controller" name="controller">
+      <Select :options="controllerNames" class="tw-w-full" v-model="form.controller" />
+    </SharedUILabel>
 
     <!-- Порт SDA -->
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.portSDA')" />
-      <Select id="sdaPort" v-model="sdaPort" :options="ports" optionLabel="name" class="tw-w-full" />
-      <p v-if="sdaPortError" class="tw-text-red-500">{{ sdaPortError }}</p>
-    </div>
+    <SharedUILabel class="tw-mb-2" :title="t('devices.portSDA')" required :value="form.controller" name="controller">
+      <Select v-model="form.sdaPort" :options="ports" optionLabel="name" class="tw-w-full" />
+    </SharedUILabel>
 
     <!-- Порт SCL -->
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.portSCL')" />
-      <Select id="sclPort" v-model="sclPort" :options="ports" optionLabel="name" class="tw-w-full" />
-      <p v-if="sclPortError" class="tw-text-red-500">{{ sclPortError }}</p>
-    </div>
+    <SharedUILabel class="tw-mb-2" :title="t('devices.portSCL')" required :value="form.sclPort" name="sclPort">
+      <Select v-model="form.sclPort" :options="ports" optionLabel="name" class="tw-w-full" />
+    </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
     <!-- Интервал опроса -->
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.polling')" />
-      <InputNumber suffix=" sec" id="pollInterval" v-model="pollInterval" class="tw-w-1/4" />
-      <p v-if="pollIntervalError" class="tw-text-red-500">{{ pollIntervalError }}</p>
-    </div>
+
+    <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required :value="form.pollInterval" name="pollInterval">
+      <InputNumber suffix=" sec" id="pollInterval" v-model="form.pollInterval" class="tw-mr-10 tw-w-1/4" />
+    </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
-    <p class="tw-mb-4">{{ t('devices.illumination') }}</p>
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.illumination') }}</p>
 
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.graphing')" />
-      <ToggleSwitch v-model="enableGraphingIllumination" />
+    <SharedUILabel :title="t('devices.graphing')">
+      <ToggleSwitch v-model="form.enableGraphingIllumination" />
+    </SharedUILabel>
+
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+      <SharedUILabel
+        required
+        :value="form.minAvailableIllumination"
+        name="minAvailableIllumination"
+        :title="`${t('devices.minAvailability')}:`"
+        :tooltip="t('devices.tooltipMinAvailability')"
+      >
+        <InputNumber v-model="form.minAvailableIllumination" suffix=" lx" />
+      </SharedUILabel>
+      <SharedUILabel required :value="form.maxAvailableIllumination" name="maxAvailableIllumination" :title="`${t('devices.maxAvailability')}:`">
+        <InputNumber v-model="form.maxAvailableIllumination" suffix=" lx" />
+      </SharedUILabel>
     </div>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1.4fr_2fr_1.4fr_2fr] tw-gap-4">
-      <SharedUIFormLabel :label="`${t('devices.minAvailability')}:`" :tooltip="t('devices.tooltipMinAvailability')" />
-      <InputNumber v-model="minAvailableIllumination" suffix=" lx" />
-      <SharedUIFormLabel :label="t('devices.maxAvailability')" />
-      <InputNumber v-model="maxAvailableIllumination" suffix=" lx" />
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+      <SharedUILabel
+        :value="form.minAlarmIllumination"
+        name="minAlarmIllumination"
+        :title="`${t('devices.minAlarm')}:`"
+        :tooltip="t('devices.tooltipMinAlarm')"
+      >
+        <InputNumber class="tw-ml-8" v-model="form.minAlarmIllumination" suffix=" lx" />
+      </SharedUILabel>
+      <SharedUILabel :value="form.maxAlarmIllumination" name="maxAlarmIllumination" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber class="tw-ml-2" v-model="form.maxAlarmIllumination" suffix=" lx" />
+      </SharedUILabel>
     </div>
 
-    <div class="tw-mb-4 tw-grid tw-grid-cols-[1.4fr_2fr_1.4fr_2fr] tw-gap-4">
-      <SharedUIFormLabel :label="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')" />
-      <InputNumber v-model="minAlarmIllumination" suffix=" lx" />
-      <SharedUIFormLabel :label="t('devices.maxAlarm')" />
-      <InputNumber v-model="maxAlarmIllumination" suffix=" lx" />
+    <div class="tw-mt-4 tw-flex tw-justify-end">
+      <Button type="submit" :label="t('next')" class="tw-mt-4" />
     </div>
-  </form>
+  </Form>
 </template>
