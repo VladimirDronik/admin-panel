@@ -16,29 +16,17 @@ useHead({
 // Variables
 const apiDisplays = ref<APIData<DisplayData>>();
 
-const form = ref<RoomBtnsData>();
+const id = ref<number>(0);
 const edit = ref(false);
 const isShow = ref(false);
 
-const showPanel = (item: RoomBtnsData | null = null) => {
+const showPanel = (item_id: number | null = null) => {
   isShow.value = true;
-  if (item) {
+  if (item_id) {
     edit.value = true;
-    form.value = item;
+    id.value = item_id;
   } else {
     edit.value = false;
-    form.value = {
-      description: '',
-      icon: '',
-      item_id: 0,
-      position_left: 0,
-      position_top: 0,
-      scene: 0,
-      sort: 0,
-      status: '',
-      title: '',
-      type: '',
-    };
   }
   isShow.value = true;
 };
@@ -101,14 +89,10 @@ onBeforeMount(async () => {
             size="small"
           />
         </div>
-        <!-- <ScrollPanel
-          style="width: 100%;"
-          pt:barX:class="tw-opacity-0"
-        > -->
         <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2">
           <button
             v-for="items in rooms.items"
-            @click="showPanel(items)"
+            @click="showPanel(items.item_id)"
             :key="items.item_id"
             type="button"
           >
@@ -137,14 +121,13 @@ onBeforeMount(async () => {
             </h5>
           </button>
         </div>
-        <!-- </ScrollPanel> -->
       </div>
     </div>
 
     <template #rightbar>
       <RightBarDisplay
         v-model:edit="edit"
-        v-model:form="form"
+        v-model:id="id"
         v-model:is-show="isShow"
       />
     </template>

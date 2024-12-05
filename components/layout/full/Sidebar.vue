@@ -31,6 +31,11 @@ const to = computed(() => route.path);
           <div v-if="!item.header">
             <Button
               :text="to !== item.to"
+              v-tooltip="{
+                value: t(item.title),
+                disabled: open,
+                background: ' #000000',
+              }"
               :to="item.to"
               :class="{ '!tw-justify-center': !open }"
               as="router-link"

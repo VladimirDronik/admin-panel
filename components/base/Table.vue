@@ -1,8 +1,5 @@
 <script lang="ts" setup>
 // Builtin modules
-import {
-  type PropType, ref, watch, computed,
-} from 'vue';
 import { useRoute } from 'vue-router';
 // External modules
 import moment from 'moment';

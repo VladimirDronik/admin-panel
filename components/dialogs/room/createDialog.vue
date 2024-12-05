@@ -44,26 +44,7 @@ const form = ref({
           <InputText v-model="form.name" class="tw-w-full" />
         </SharedUILabel>
         <SharedUILabel :title="'Цвет Категории'" required>
-          <Select
-            :options="colors"
-            class="tw-w-full"
-            optionLabel="name"
-            optionValue="code"
-            v-model="form.color"
-          >
-            <template #value="slotProps">
-              <div class="tw-flex tw-items-center">
-                <div :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
-              </div>
-            </template>
-            <template #option="slotProps">
-              <div class="tw-flex tw-items-center">
-                <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                <div>{{ slotProps.option.name }}</div>
-              </div>
-            </template>
-          </Select>
+          <SharedUIColorSelect v-model="form.color" />
         </SharedUILabel>
       </div>
 
