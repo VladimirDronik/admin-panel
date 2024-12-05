@@ -23,35 +23,24 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  tooltip: {
+    type: String,
+    default: false,
+  },
 });
 </script>
 
 <template>
-  <FormField
-    v-slot="$field"
-    :name
-    :initialValue="value"
-    :class="{ 'tw-flex': !colomn }"
-    class="tw-w-full tw-items-center"
-  >
-    <p
-      v-if="title"
-      class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg tw-font-semibold"
-      :style="{ width: `${width}px` }"
-    >
-      <span>
+  <FormField v-slot="$field" :name :initialValue="value" :class="{ 'tw-flex': !colomn }" class="tw-w-full tw-items-center">
+    <p v-if="title" class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg tw-font-semibold" :style="{ width: `${width}px` }">
+      <span v-tooltip="tooltip">
         {{ title }}
       </span>
       <span v-if="required" class="tw-text-primary"> *</span>
     </p>
     <div class="tw-w-full">
       <slot />
-      <Message
-        v-if="$field?.invalid"
-        severity="error"
-        size="small"
-        variant="simple"
-      >
+      <Message class="tw-text-danger tw-text-sm" v-if="$field?.invalid" severity="error" size="small" variant="simple">
         {{ $field.error?.message }}
       </Message>
     </div>
