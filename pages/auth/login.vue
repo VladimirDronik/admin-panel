@@ -106,18 +106,22 @@ user.value = data as APIData<loginData>;
         <form>
           <SharedUILabel
             :title="t('auth.login')"
+            class="tw-mb-3"
+            colomn
           >
             <InputText
               v-model="params.login"
-              class="tw-mb-3 tw-w-full"
+              class=" tw-w-full"
             />
           </SharedUILabel>
           <SharedUILabel
             :title="t('auth.password')"
+            class="tw-mb-3"
+            colomn
           >
             <InputText
               v-model="params.password"
-              class="tw-mb-3 tw-w-full"
+              class="tw-w-full"
             />
           </SharedUILabel>
           <Button

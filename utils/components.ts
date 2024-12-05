@@ -9,6 +9,7 @@ export const Components = [
   'TreeTable',
   'Tab',
   'Tabs',
+  'Message',
   'TabList',
   'TabPanel',
   'TabPanels',

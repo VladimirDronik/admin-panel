@@ -39,26 +39,7 @@ const loadingDelete = ref(false);
           <InputText v-model="form.name" class="tw-w-full" />
         </SharedUILabel>
         <SharedUILabel :title="'Цвет категории'" required class="tw-mb-2">
-          <Select
-            v-model="form.style"
-            :options="colors"
-            optionLabel="name"
-            optionValue="code"
-            class="tw-w-full"
-          >
-            <template #value="slotProps">
-              <div class="tw-flex tw-items-center">
-                <div :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
-              </div>
-            </template>
-            <template #option="slotProps">
-              <div class="tw-flex tw-items-center">
-                <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
-                <div>{{ slotProps.option.name }}</div>
-              </div>
-            </template>
-          </Select>
+          <SharedUIColorSelect v-model="form.color" />
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">

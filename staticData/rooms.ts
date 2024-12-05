@@ -19,4 +19,9 @@ export const colors = [
     code: 'green',
     color: '#19B58F',
   },
+  {
+    name: 'Красный',
+    code: 'red',
+    color: '#FF634E',
+  },
 ];

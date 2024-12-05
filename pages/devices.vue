@@ -30,7 +30,7 @@ const page = ref(1);
 const typeOptions = ref<Options[]>([]);
 
 const isUpdate = ref(true);
-const isActiveRightSidebar = ref(false);
+const isOpen = ref(false);
 
 const selectedObject = ref<FullDevice>();
 
@@ -111,8 +111,8 @@ const update = async (params: any = {}) => {
 };
 
 const clickRow = async (item: any) => {
-  if (selectedObject.value?.id === item.data.id && isActiveRightSidebar.value) return;
-  isActiveRightSidebar.value = true;
+  if (selectedObject.value?.id === item.data.id && isOpen.value) return;
+  isOpen.value = true;
   selectedObject.value = item.data;
 };
 
@@ -273,7 +273,7 @@ watchEffect(() => {
           </DevicesTableHeader>
         </template>
       </Column>
-      <Column v-if="!isActiveRightSidebar" field="address">
+      <Column v-if="!isOpen" field="address">
         <template #header>
           <DevicesTableHeader title="devices.room">
             <Select
@@ -293,7 +293,7 @@ watchEffect(() => {
           {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
         </template>
       </Column>
-      <Column v-if="!isActiveRightSidebar" field="status">
+      <Column v-if="!isOpen" field="status">
         <template #header>
           <DevicesTableHeader title="devices.status">
             <Select
@@ -314,7 +314,7 @@ watchEffect(() => {
           {{ checkStatusText(node.data.status)}}
         </template>
       </Column>
-      <Column v-if="!isActiveRightSidebar" field="tags" style="width: 200px">
+      <Column v-if="!isOpen" field="tags" style="width: 200px">
         <template #header>
           <DevicesTableHeader title="devices.tags">
             <Select
@@ -352,7 +352,7 @@ watchEffect(() => {
 
     <template #rightbar>
       <RightBarDevices
-        v-model:is-open="isActiveRightSidebar"
+        v-model:is-open="isOpen"
         v-model:selectedObject="selectedObject"
       />
     </template>
