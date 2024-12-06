@@ -9,7 +9,7 @@ import { useUserStore } from '~/stores/user';
 import { filterInListDevices } from '~/helpers/devices';
 // Types modules
 import type {
-  Devices, RequestData, ModelProps,
+  Devices, RequestData, ModelProps, GetDevicesPortsResponse,
 } from '~/types/DevicesTypes';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
@@ -103,6 +103,19 @@ export const useDevicesStore = defineStore('Devices', () => {
     return data;
   };
 
+  const getPortsApi = async (id: number, group: string = 'inputs,digital') => {
+    try {
+      const { data }: GetDevicesPortsResponse = await api.get(`${paths.controllers}/${id}/ports`, {
+        params: { group },
+      });
+
+      return data.response || [];
+    } catch (error) {
+      console.error('Ошибка при получении портов:', error);
+      throw error;
+    }
+  };
+
   return {
     list,
     tags,
@@ -115,5 +128,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     getTagsApi,
     propsModel,
     createFunction,
+    getPortsApi,
   };
 });

@@ -3,8 +3,9 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { Sensor } from '~/types/DevicesEnums';
+import { Controller } from '~/types/DevicesEnums';
 import { useControllersViaType } from '~/composables/useControllersViaType';
+import { useControllerPortsViaId } from '~/composables/useControllerPortsViaId';
 
 const { t } = useI18n();
 
@@ -23,27 +24,26 @@ const form = ref({
 const resolver = ref(
   zodResolver(
     z.object({
-      controller: z.string().min(1),
-      sdaPort: z.string().min(1),
-      sclPort: z.string().min(1),
+      controller: z.number().min(1),
+      sdaPort: z.number().min(1),
+      sclPort: z.number().min(1),
       pollInterval: z.number().min(300),
       minAvailableIllumination: z.number().min(0),
-      maxAvailableIllumination: z.number().min(65535),
+      maxAvailableIllumination: z.number().max(65535),
     }),
   ),
 );
 
-const ports = ref<{ name: string }[]>([]);
-
 const { controllers, getControllersViaType } = useControllersViaType();
-getControllersViaType(Sensor.BH1750);
-const controllerIds = computed(() => controllers.value.map((controller) => controller.id));
-const controllerNames = computed(() => controllers.value.map((controller) => controller.name));
+getControllersViaType(Controller.MegaD);
+const controllerIdRef = computed(() => form.value.controller);
+const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
 
-const handleSubmit = ({ valid, values }: { valid: boolean; values: any }) => {
+const handleSubmit = ({ valid }: { valid: boolean;}) => {
   if (valid) {
-    console.log('Форма успешно отправлена:', values);
-    // Логика отправки данных на сервер
+    console.log('Форма успешно отправлена:', form.value);
+    console.log('SDA Port ID:', form.value.sdaPort);
+    console.log('SCL Port ID:', form.value.sclPort);
   } else {
     console.log('Форма содержит ошибки');
   }
@@ -55,17 +55,17 @@ const handleSubmit = ({ valid, values }: { valid: boolean; values: any }) => {
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
 
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="form.controller" name="controller">
-      <Select :options="controllerNames" class="tw-w-full" v-model="form.controller" />
+      <Select :options="controllers" optionLabel="name" optionValue="id" class="tw-w-full" v-model="form.controller" />
     </SharedUILabel>
 
     <!-- Порт SDA -->
     <SharedUILabel class="tw-mb-2" :title="t('devices.portSDA')" required :value="form.controller" name="controller">
-      <Select v-model="form.sdaPort" :options="ports" optionLabel="name" class="tw-w-full" />
+      <Select v-model="form.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-full" />
     </SharedUILabel>
 
     <!-- Порт SCL -->
     <SharedUILabel class="tw-mb-2" :title="t('devices.portSCL')" required :value="form.sclPort" name="sclPort">
-      <Select v-model="form.sclPort" :options="ports" optionLabel="name" class="tw-w-full" />
+      <Select v-model="form.sclPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-full" />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
