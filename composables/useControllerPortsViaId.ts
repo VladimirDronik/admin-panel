@@ -3,7 +3,7 @@ import { useDevicesStore } from '~/stores/devices/devices';
 
 export function useControllerPortsViaId(controllerId: Ref<number | null>) {
   const deviceStore = useDevicesStore();
-  const formattedPorts = ref<{ label: string; value: number }[]>([]);
+  const formattedPorts = ref<{ label: string; value: number; number: number }[]>([]);
 
   const loadPorts = async () => {
     if (!controllerId.value) {
@@ -24,6 +24,7 @@ export function useControllerPortsViaId(controllerId: Ref<number | null>) {
       return {
         label: `${port.type}${modeText} [${port.number}] ${objectsText}`,
         value: port.object_id,
+        number: port.number,
       };
     }));
   };
