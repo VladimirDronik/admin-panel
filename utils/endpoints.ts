@@ -15,6 +15,7 @@ export const paths = {
   objectsTags: `${objectManager}/objects/tags`,
   objectModel: `${objectManager}/objects/model`,
   objectsTypes: `${objectManager}/objects/types`,
+  controllers: `${objectManager}/controllers`,
 
   // Action Router
   eventsActions: `${actionRouter}/events/actions`,

@@ -1,11 +1,11 @@
 import { ref } from 'vue';
 import { useDevicesStore } from '~/stores/devices/devices';
-import type { Sensor } from '~/types/DevicesEnums';
+import type { Controller } from '~/types/DevicesEnums';
 
 export function useControllersViaType() {
-  const controllers = ref<{ id: number; name: string }[]>([]); // Указываем id как number
+  const controllers = ref<{ id: number; name: string }[]>([]);
 
-  const getControllersViaType = async (type: Sensor) => {
+  const getControllersViaType = async (type: Controller) => {
     const storeDevices = useDevicesStore();
 
     const { response } = await storeDevices.getDevicesApi({
