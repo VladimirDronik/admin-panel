@@ -110,7 +110,8 @@ const form = ref({
         <!-- Event Form -->
         <DisplayEventsForm
           v-if="form.type"
-          :type="form.type"
+          targetType="item"
+          :modelType="form.type"
           :eventTypes="itemEventTypes"
         />
         <!-- Actions -->

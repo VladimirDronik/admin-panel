@@ -199,7 +199,8 @@ onBeforeMount(async () => {
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
         <DisplayEventsForm
-          :type="form.type"
+          targetType="object"
+          :modelType="form.type"
           :eventTypes="deviceEventTypes"
         />
         <div class="tw-flex tw-justify-between">

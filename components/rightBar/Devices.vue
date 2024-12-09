@@ -13,6 +13,7 @@ import type {
 } from '~/types/DevicesTypes';
 // Static Data modules
 import { objectManager, paths } from '~/utils/endpoints';
+import { deviceEventTypes } from '~/staticData/modelEvents';
 
 // Composables
 const { t } = useI18n();
@@ -286,7 +287,12 @@ onBeforeMount(async () => {
             </DevicesPropertiesForm>
           </TabPanel>
           <TabPanel value="events">
-            <DevicesEventsForm v-if="form" v-model="form" />
+            <DisplayEventsForm
+              targetType="object"
+              :id="form.id"
+              :modelType="form.type"
+              :eventTypes="deviceEventTypes"
+            />
           </TabPanel>
           <TabPanel value="ports">
             <DevicesPortsForm

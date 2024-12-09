@@ -121,7 +121,9 @@ const resolver = ref(zodResolver(
       </TabPanel>
       <TabPanel value="events">
         <DisplayEventsForm
-          :type="form.type"
+          :id="form.item_id"
+          targetType="item"
+          :modelType="form.type"
           :eventTypes="itemEventTypes"
         />
       </TabPanel>

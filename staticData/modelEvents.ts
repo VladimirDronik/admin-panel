@@ -11,13 +11,13 @@ export const itemEventTypes: EventsObject = {
   ],
   switch: [
     {
-      code: 'on.change.state.on',
+      code: 'item.on_change_state_on',
       name: 'change_state_on',
       description: 'Описание',
       actions: [],
     },
     {
-      code: 'on.change.state.off',
+      code: 'item.on_change_state_off',
       name: 'change_state_off',
       description: 'Описание',
       actions: [],

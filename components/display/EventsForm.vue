@@ -2,11 +2,14 @@
 import type { Devices } from '~/types/DevicesTypes';
 // Types and Schemes modules
 import { type itemType } from '~/types/DisplayTypes';
-import type { Event, EventsObject } from '@/types/ModelEventTypes';
+import type { Event, EventsObject, Action } from '@/types/ModelEventTypes';
+import type { Request } from '~/types/StoreTypes';
 
 const props = defineProps<{
-  eventTypes: EventsObject
-  type: string
+  eventTypes: EventsObject,
+  modelType: string,
+  targetType: string,
+  id?: number,
 }>();
 
 const form = ref();
@@ -18,30 +21,33 @@ const edit = ref(false);
 const events = ref<Event[]>([]);
 
 const filterEvents = async (type: string) => {
-  const eventsProps = props.eventTypes;
-  const objectEvents = eventsProps[type];
+  const objectEvents = props.eventTypes[type];
   if (objectEvents) {
-    events.value = objectEvents;
+    if (props.id) {
+      const requests: Request<{
+        [key: string]: Action[]
+      }> = await $fetch('http://10.35.16.1:8083/events/actions', {
+        params: {
+          target_id: props.id,
+          target_type: props.targetType,
+        },
+      });
 
-    // const requests = objectEvents.map((item) => $fetch('http://10.35.16.1:8083/events/actions', {
-    //   params: {
-    //     target_id: object.item_id,
-    //     target_type: object.type,
-    //   },
-    // }));
+      const result = objectEvents.map((item) => {
+        if (requests.response[item.code]) {
+          return {
+            ...item,
+            actions: requests.response[item.code],
+            actionTypes: actionsType(requests.response[item.code]),
+          };
+        }
+        return item;
+      });
 
-    // const responce: any[] = await Promise.all(requests);
-
-    // const filteredResponce = responce.map((item) => item.response);
-    // console.log(filteredResponce);
-
-    // const result = objectEvents.map((item, index) => ({
-    //   ...item,
-    //   actions: filteredResponce[index][item.code],
-    //   actionTypes: actionsType(filteredResponce[index][item.code]),
-    // }));
-
-  // events.value = result;
+      events.value = result;
+    } else {
+      events.value = props.eventTypes[type];
+    }
   } else {
     events.value = [];
   }
@@ -54,10 +60,10 @@ watch(events, () => {
 const actionsType = (actions: any[]) => {
   if (actions) {
     return {
-      method: actions.filter((item) => item.target_type === 'method').length,
-      delay: actions.filter((item) => item.target_type === 'delay').length,
-      script: actions.filter((item) => item.target_type === 'script').length,
-      notification: actions.filter((item) => item.target_type === 'notification').length,
+      method: actions.filter((item) => item.type === 'method').length,
+      delay: actions.filter((item) => item.type === 'delay').length,
+      script: actions.filter((item) => item.type === 'script').length,
+      notification: actions.filter((item) => item.type === 'notification').length,
     };
   }
   return {
@@ -69,12 +75,12 @@ const actionsType = (actions: any[]) => {
 };
 
 const updateEvents = () => {
-  filterEvents(props.type);
+  filterEvents(props.modelType);
 };
 
 updateEvents();
 
-watch(() => props.type, updateEvents);
+watch(() => [props.modelType, props.id], updateEvents);
 
 const createEvents = (event: Event) => {
   selectedEvent.value = event;
@@ -123,20 +129,20 @@ const editEvents = (event: Event) => {
         <p class="tw-mb-2">
           {{ event.description }}
         </p>
-        <!-- <p :class="{ 'tw-opacity-0': !event.actions?.length }">
+        <p :class="{ 'tw-opacity-0': !event.actions?.length }">
           <span class="tw-mr-2 tw-text-primary">
-            Метод {{ event.actionTypes.method }}
+            Метод {{ event.actionTypes?.method }}
           </span>
           <span class="tw-text-warn tw-mr-2">
-            Пауза {{ event.actionTypes.delay }}
+            Пауза {{ event.actionTypes?.delay }}
           </span>
           <span class="tw-text-info tw-mr-2">
-            Скрипт {{ event.actionTypes.script }}
+            Скрипт {{ event.actionTypes?.script }}
           </span>
           <span class="tw-text-danger">
-            Уведомление {{ event.actionTypes.notification }}
+            Уведомление {{ event.actionTypes?.notification }}
           </span>
-        </p> -->
+        </p>
       </div>
 
       <DialogsDeviceEvents
