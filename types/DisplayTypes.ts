@@ -61,3 +61,23 @@ export const displayRequestSchema = z.object({
 export type RoomBtnsData = z.infer<typeof roomBtns>;
 
 export type DisplayData = z.infer<typeof displayRequestSchema>;
+
+// Get Item
+export const itemSchema = z.object({
+  description: z.string(),
+  enabled: z.boolean(),
+  icon: z.string(),
+  item_id: z.number(),
+  position_left: z.number(),
+  position_top: z.number(),
+  scene: z.number(),
+  sort: z.number(),
+  status: z.string(),
+  title: z.string(),
+  type: z.string(),
+  zone_id: z.number(),
+  color: z.string().optional(),
+});
+
+export type itemType = z.infer<typeof itemSchema>;
+//
