@@ -23,10 +23,7 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  tooltip: {
-    type: String,
-    default: false,
-  },
+  tooltip: {},
 });
 </script>
 

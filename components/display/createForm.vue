@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form } from '@primevue/forms';
+// Static modules
+import { itemEventTypes } from '~/staticData/modelEvents';
 
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
@@ -106,7 +108,11 @@ const form = ref({
 
       <StepPanel v-slot="{ activateCallback }" value="2">
         <!-- Event Form -->
-        <!--  -->
+        <DisplayEventsForm
+          v-if="form.type"
+          :type="form.type"
+          :eventTypes="itemEventTypes"
+        />
         <!-- Actions -->
         <div class="tw-flex tw-justify-between tw-pt-2">
           <Button

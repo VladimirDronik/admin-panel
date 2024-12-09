@@ -8,6 +8,8 @@ import { type Devices } from '~/types/DevicesTypes';
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+import { deviceEventTypes } from '~/staticData/modelEvents';
+import DisplayEventsForm from '~/components/display/EventsForm.vue';
 // Types
 interface DeviceCreateForm {
   name: string;
@@ -60,8 +62,8 @@ watch(
 );
 
 const valid = computed(() => {
-  const main = // checkValidInput(form.value.zone_id) &&
-    checkValidInput(form.value.tags) && checkValidInput(form.value.category) && checkValidInput(form.value.type) && checkValidInput(form.value.name);
+  // checkValidInput(form.value.zone_id) &&
+  const main = checkValidInput(form.value.tags) && checkValidInput(form.value.category) && checkValidInput(form.value.type) && checkValidInput(form.value.name);
 
   let props = true;
   let children = true;
@@ -189,14 +191,17 @@ onBeforeMount(async () => {
           <DevicesDynamicDeviceForm :deviceType="form.type" />
         </form>
 
-        <!-- <div class="tw-flex tw-justify-end">
+        <div class="tw-flex tw-justify-end">
           <Button :disabled="!valid" @click="activateCallback('2')">
             {{ t('next') }}
           </Button>
-        </div> -->
+        </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
-        <DevicesEventsForm v-if="model" v-model="model" />
+        <DisplayEventsForm
+          :type="form.type"
+          :eventTypes="deviceEventTypes"
+        />
         <div class="tw-flex tw-justify-between">
           <Button @click="activateCallback('1')">
             {{ t('goBack') }}

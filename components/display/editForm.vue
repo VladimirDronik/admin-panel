@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form } from '@primevue/forms';
+// Static modules
+import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import { type itemType } from '~/types/DisplayTypes';
 
@@ -118,7 +120,10 @@ const resolver = ref(zodResolver(
         </Form>
       </TabPanel>
       <TabPanel value="events">
-        Скоро...
+        <DisplayEventsForm
+          :type="form.type"
+          :eventTypes="itemEventTypes"
+        />
       </TabPanel>
     </TabPanels>
     <!--  -->
