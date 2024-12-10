@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  isEditing: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const FormComponent = computed(() => {
@@ -18,6 +22,7 @@ const FormComponent = computed(() => {
 
 <template>
   <div>
-    <component :is="FormComponent" />
+    <component :is="FormComponent" :isEditing="props.isEditing" />
+    <slot name="footer" />
   </div>
 </template>

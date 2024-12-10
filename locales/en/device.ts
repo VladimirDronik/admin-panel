@@ -42,5 +42,6 @@ export default {
     co2: 'CO2',
     portSDA: 'Port SDA',
     portSCL: 'Port SCL',
+    dataUpdated: 'Data updated',
   },
 };
