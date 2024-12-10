@@ -154,7 +154,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
       </SharedUILabel>
     </div>
 
-    <!-- Давление -->
+    <!-- CO2 -->
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.co2') }}</p>
 
     <SharedUILabel :title="t('devices.graphing')">
@@ -175,6 +175,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
         <InputNumber v-model="form.maxAvailableCO2" suffix=" ppm" />
       </SharedUILabel>
     </div>
+
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel :value="form.minAlarmCO2" name="minAlarmPressure" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
         <InputNumber class="tw-ml-8" v-model="form.minAlarmCO2" suffix=" ppm" />

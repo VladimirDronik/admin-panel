@@ -29,7 +29,7 @@ defineProps({
 
 <template>
   <FormField v-slot="$field" :name :initialValue="value" :class="{ 'tw-flex': !colomn }" class="tw-w-full tw-items-center">
-    <p v-if="title" class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg tw-font-semibold" :style="{ width: `${width}px` }">
+    <p v-if="title" class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg" :style="{ width: `${width}px` }">
       <span v-tooltip="tooltip">
         {{ title }}
       </span>

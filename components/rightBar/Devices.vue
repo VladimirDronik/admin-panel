@@ -194,7 +194,7 @@ onBeforeMount(async () => {
         <Inplace v-model:active="active" v-if="form" class="tw-w-full" @open="updateName">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-              {{ form?.name }}
+              {{ form?.name }} ({{ form.type}})
             </h3>
           </template>
           <template #content="{ closeCallback }">
@@ -262,7 +262,29 @@ onBeforeMount(async () => {
         <!-- Container -->
         <TabPanels>
           <TabPanel value="features">
-            <DevicesPropertiesForm v-if="form" v-model="form">
+            <DevicesDynamicDeviceForm :deviceType="form.type" is-editing>
+              <template #footer>
+                <div class="tw-mt-4 tw-flex tw-justify-end">
+                  <DialogsDeleteDialog
+                    @delete="confirmDelete"
+                    v-model="dialogDelete"
+                    :id="form?.id ?? -1"
+                    :loading="apiDeleteDevice?.pending"
+                    :subtitle="`Вы уверены, что хотите удалить «${form?.name}»`"
+                    class="tw-mr-2"
+                    title="Удалить категорию"
+                  />
+
+                  <Button
+                    :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
+                    class="tw-mr-2"
+                    @click="changeDevice"
+                    :label="t('save')"
+                  />
+                </div>
+              </template>
+            </DevicesDynamicDeviceForm>
+            <!-- <DevicesPropertiesForm v-if="form" v-model="form">
               <template #footer>
                 <div class="tw-flex tw-justify-end">
                   <DialogsDeleteDialog
@@ -283,7 +305,7 @@ onBeforeMount(async () => {
                   />
                 </div>
               </template>
-            </DevicesPropertiesForm>
+            </DevicesPropertiesForm> -->
           </TabPanel>
           <TabPanel value="events">
             <DevicesEventsForm v-if="form" v-model="form" />

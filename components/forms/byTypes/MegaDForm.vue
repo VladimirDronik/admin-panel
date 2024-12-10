@@ -1,89 +1,116 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { z } from 'zod';
+import { Form } from '@primevue/forms';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+
+const storeRooms = useRoomsStore();
+
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 const { t } = useI18n();
 
-interface MegaDFormData {
-  id: string;
-  address: string;
-  password: string;
-  protocol: 'HTTP' | 'MQTT';
-}
+const megaDFormSchema = z.object({
+  title: z.string().min(1),
+  id: z.string().max(15),
+  address: z.string().max(15),
+  password: z.string().max(6),
+  protocol: z.enum(['HTTP', 'MQTT']),
+  room: z.string().min(1),
+});
 
-const formData = reactive<MegaDFormData>({
+type MegaDForm = z.infer<typeof megaDFormSchema>;
+
+const form = reactive<MegaDForm>({
+  title: '',
   id: '',
   address: '',
   password: '',
   protocol: 'HTTP',
+  room: '',
 });
 
+const resolver = ref(zodResolver(megaDFormSchema));
+const protocolOptions = megaDFormSchema.shape.protocol.options;
+
 interface FieldSettings {
-  maxLength: number;
   inputWidth: string;
 }
 
-const protocolOptions: MegaDFormData['protocol'][] = ['HTTP', 'MQTT'];
-
-const getFieldSettingsForMegaD = (code: keyof MegaDFormData): FieldSettings => {
+const getFieldSettingsForMegaD = (code: keyof MegaDForm): FieldSettings => {
   switch (code) {
     case 'id':
     case 'address':
-      return { maxLength: 15, inputWidth: '18ch' };
+      return { inputWidth: '18ch' };
     case 'password':
-      return { maxLength: 6, inputWidth: '12ch' };
+      return { inputWidth: '12ch' };
     case 'protocol':
-      return { maxLength: 4, inputWidth: '12ch' };
+      return { inputWidth: '12ch' };
     default:
-      return { maxLength: 255, inputWidth: '100%' };
+      return { inputWidth: '18ch' };
   }
 };
 
-const submitForm = () => {
-  console.log('Form Data:', formData);
+const handleSubmit = () => {
+  console.log('Form Data:', form);
 };
+
 </script>
 
 <template>
-  <form @submit.prevent="submitForm" class="tw-ml-[25%] tw-mt-4 tw-text-lg tw-font-semibold">
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.id')" />
+  <Form :resolver="resolver" @submit="handleSubmit">
+
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required :value="form.title" name="title">
       <InputText
-        id="id"
-        v-model="formData.id"
-        :maxlength="getFieldSettingsForMegaD('id').maxLength"
+        v-model="form.title"
         :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
-        class="tw-w-full"
       />
-    </div>
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.address')" />
+    </SharedUILabel>
+
+    <SharedUILabel class="tw-mb-2" :title="t('devices.id')" required :value="form.id" name="id">
+      <InputText
+        v-model="form.id"
+        :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
+      />
+    </SharedUILabel>
+
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.address')" required :value="form.address" name="address">
       <InputText
         id="address"
-        v-model="formData.address"
-        :maxlength="getFieldSettingsForMegaD('address').maxLength"
+        v-model="form.address"
         :style="{ width: getFieldSettingsForMegaD('address').inputWidth }"
-        class="tw-w-full"
       />
-    </div>
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.password')" />
+    </SharedUILabel>
+
+    <SharedUILabel class="tw-mb-2" :title="t('devices.password')" required :value="form.password" name="password">
       <InputText
         id="password"
-        v-model="formData.password"
-        :maxlength="getFieldSettingsForMegaD('password').maxLength"
+        v-model="form.password"
         :style="{ width: getFieldSettingsForMegaD('password').inputWidth }"
-        class="tw-w-full"
       />
-    </div>
-    <div class="custom-grid">
-      <SharedUIFormLabel :label="t('devices.protocol')" />
+    </SharedUILabel>
+
+    <SharedUILabel class="tw-mb-2" :title="t('devices.protocol')" required :value="form.protocol" name="ptotocol">
       <Select
         :options="protocolOptions"
-        v-model="formData.protocol"
-        class="tw-w-full"
+        v-model="form.protocol"
         :style="{ width: getFieldSettingsForMegaD('protocol').inputWidth }"
       />
-    </div>
-  </form>
+    </SharedUILabel>
+
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.room')" name="room">
+      <Select
+        :value="form.room"
+        :options="storeRooms.getRoomsSelect"
+        optionLabel="name"
+        :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
+      />
+    </SharedUILabel>
+  </Form>
 </template>
