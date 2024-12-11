@@ -8,6 +8,7 @@ import { Form } from '@primevue/forms';
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import { type itemType } from '~/types/DisplayTypes';
+import type { Event } from '@/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
@@ -23,6 +24,8 @@ const form = defineModel<itemType>('form', {
 
 // Variables
 const loadingDelete = ref(false);
+
+const events = ref<Event[]>();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -120,9 +123,11 @@ const resolver = ref(zodResolver(
         </Form>
       </TabPanel>
       <TabPanel value="events">
-        <DisplayEventsForm
-          :id="form.item_id"
+        <FormsEventForm
+          v-model="events"
           targetType="item"
+          :object="form"
+          :id="form.item_id"
           :modelType="form.type"
           :eventTypes="itemEventTypes"
         />

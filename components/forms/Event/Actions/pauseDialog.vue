@@ -4,53 +4,62 @@ import { useI18n } from 'vue-i18n';
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+import type { Event } from '@/types/ModelEventTypes';
 
 const { t } = useI18n();
 const { updateData } = useUtils();
-
-const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
 });
 
-const object = defineModel<any>('object', {
-  default: false,
+const event = defineModel<Event>('event', {
+  required: true,
 });
 
-const event = defineModel<any>('event', {
-  default: false,
-});
-
-const form = ref({
-  duration: '0',
-});
+const duration = ref('0');
 
 const apiCreateMethod = ref<APIData<any>>();
 
-defineProps({
-  edit: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  id?: number;
+  edit: boolean;
+  targetType: string;
+}>();
 
 const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
 const createAction = async () => {
-  await updateData({
-    update: async () => {
-      await apiCreateMethod.value?.execute();
-      emit('updateActions');
-    },
-    success: () => {
-      dialog.value = false;
-    },
-    successMessage: 'Пауза успешно сохранена',
-    errorMessage: 'Ошибка добавления Паузы',
-  });
+  if (props.id) {
+    await updateData({
+      update: async () => {
+        await apiCreateMethod.value?.execute();
+        emit('updateActions');
+      },
+      success: () => {
+        dialog.value = false;
+      },
+      successMessage: 'Пауза успешно сохранена',
+      errorMessage: 'Ошибка добавления Паузы',
+    });
+  } else {
+    event.value.actions.push({
+      args: {
+        duration: `${Number(duration.value)}s`,
+      },
+      enabled: true,
+      name: `${Number(duration.value)} секунд`,
+      target_id: props.id,
+      target_type: 'delay',
+      type: 'delay',
+      sort: 0,
+      qos: 0,
+    });
+    emit('updateActions');
+    dialog.value = false;
+  }
 };
 
 onBeforeMount(async () => {
@@ -59,17 +68,17 @@ onBeforeMount(async () => {
     () => paths.eventsActions,
     {
       params: computed(() => ({
-        target_type: event.value.target_type,
-        target_id: object.value.id,
+        target_type: props.targetType,
+        target_id: props.id,
         event_name: event.value.code,
       })),
       body: computed(() => ({
         args: {
-          duration: `${Number(form.value.duration)}s`,
+          duration: `${Number(duration.value)}s`,
         },
         enabled: true,
-        name: `${Number(form.value.duration)} секунд`,
-        target_id: object.value.id,
+        name: `${Number(duration.value)} секунд`,
+        target_id: props.id,
         target_type: 'delay',
         type: 'delay',
         sort: 0,
@@ -104,7 +113,7 @@ onBeforeMount(async () => {
 
       <SharedUILabel :title="'Секунд'" class="tw-mb-2">
         <InputText
-          v-model="form.duration"
+          v-model="duration"
           type="number"
           class="tw-w-full"
         />

@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import type { Devices } from '~/types/DevicesTypes';
 // Types and Schemes modules
-import { type itemType } from '~/types/DisplayTypes';
 import type { Event, EventsObject, Action } from '@/types/ModelEventTypes';
 import type { Request } from '~/types/StoreTypes';
 
 const props = defineProps<{
-  eventTypes: EventsObject,
+  id?: number,
   modelType: string,
   targetType: string,
-  id?: number,
+  eventTypes: EventsObject,
 }>();
 
 const form = ref();
@@ -18,7 +16,9 @@ const selectedEvent = ref<Event>();
 const dialog = ref(false);
 const edit = ref(false);
 
-const events = ref<Event[]>([]);
+const events = defineModel<Event[]>({
+  default: [],
+});
 
 const filterEvents = async (type: string) => {
   const objectEvents = props.eventTypes[type];
@@ -46,10 +46,18 @@ const filterEvents = async (type: string) => {
 
       events.value = result;
     } else {
-      events.value = props.eventTypes[type];
+      const result = props.eventTypes[type].map((item) => ({
+        ...item,
+        actionTypes: actionsType(item.actions),
+      }));
+      events.value = result;
     }
   } else {
     events.value = [];
+  }
+  if (selectedEvent.value) {
+    const eventFind = events.value.find((item) => item.code === selectedEvent.value?.code);
+    if (eventFind) selectedEvent.value = eventFind;
   }
 };
 
@@ -145,12 +153,16 @@ const editEvents = (event: Event) => {
         </p>
       </div>
 
-      <DialogsDeviceEvents
+      <FormsEventActions
+        v-if="selectedEvent"
         @update-actions="updateEvents"
         v-model="dialog"
-        v-model:object="selectedEvent"
+        v-model:event="selectedEvent"
         v-model:form="form"
+        :id="id"
         :edit="edit"
+        :modelType="modelType"
+        :targetType="targetType"
       />
     </div>
     <div v-else>

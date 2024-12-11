@@ -6,6 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form } from '@primevue/forms';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
+import type { Event } from '@/types/ModelEventTypes';
 
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
@@ -14,6 +15,15 @@ defineProps<{
   devices: string[]
 }>();
 
+const form = ref({
+  title: null,
+  type: null,
+  color: null,
+  zone_id: null,
+});
+
+const events = ref<Event[]>();
+
 const resolver = ref(zodResolver(
   z.object({
     title: z.string().min(1),
@@ -21,13 +31,6 @@ const resolver = ref(zodResolver(
     zone_id: z.number(),
   }),
 ));
-
-const form = ref({
-  title: null,
-  type: null,
-  color: null,
-  zone_id: null,
-});
 
 </script>
 
@@ -108,8 +111,9 @@ const form = ref({
 
       <StepPanel v-slot="{ activateCallback }" value="2">
         <!-- Event Form -->
-        <DisplayEventsForm
+        <FormsEventForm
           v-if="form.type"
+          v-model="events"
           targetType="item"
           :modelType="form.type"
           :eventTypes="itemEventTypes"
