@@ -309,7 +309,7 @@ onBeforeMount(async () => {
             </DevicesPropertiesForm> -->
           </TabPanel>
           <TabPanel value="events">
-            <DisplayEventsForm
+            <FormsEventForm
               targetType="object"
               :id="form.id"
               :modelType="form.type"

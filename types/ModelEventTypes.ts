@@ -5,7 +5,7 @@ export interface Event {
   name: string;
   description: string;
   actions: Action[]
-  actionTypes: {
+  actionTypes?: {
     method: number
     delay: number
     script: number

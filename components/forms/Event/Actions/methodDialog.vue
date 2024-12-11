@@ -4,29 +4,29 @@ import { useI18n } from 'vue-i18n';
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+import type { Event } from '@/types/ModelEventTypes';
+
+interface Method {
+  name: string
+  description: string;
+}
 
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
 });
 
-const object = defineModel<any>('object', {
-  default: false,
+const event = defineModel<Event>('event', {
+  required: true,
 });
 
-const event = defineModel<any>('event', {
-  default: false,
-});
-
-defineProps({
-  edit: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  id?: number;
+  edit: boolean;
+  targetType: string;
+}>();
 
 const emit = defineEmits<{
   (e: 'updateActions'): void
@@ -36,7 +36,7 @@ const apiCreateMethod = ref<APIData<any>>();
 const apiDevicesList = ref<APIData<any>>();
 
 const selectedObject = ref<any>();
-const selectedMethod = ref<any>();
+const selectedMethod = ref<Method | null>();
 
 const search = ref('');
 
@@ -48,24 +48,42 @@ const selectObject = (object: any) => {
   selectedObject.value = object;
   selectedMethod.value = null;
 };
-const selectMethod = (method: any) => {
+const selectMethod = (method: Method) => {
   selectedMethod.value = method;
 };
 
 const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.includes(search.value)));
 
 const createAction = async () => {
-  await updateData({
-    update: async () => {
-      await apiCreateMethod.value?.execute();
-      emit('updateActions');
-    },
-    success: () => {
-      dialog.value = false;
-    },
-    successMessage: 'Метод успешно сохранен',
-    errorMessage: 'Ошибка добавления Метода',
-  });
+  if (props.id) {
+    await updateData({
+      update: async () => {
+        await apiCreateMethod.value?.execute();
+        emit('updateActions');
+      },
+      success: () => {
+        dialog.value = false;
+      },
+      successMessage: 'Метод успешно сохранен',
+      errorMessage: 'Ошибка добавления Метода',
+    });
+  } else {
+    event.value.actions.push({
+      args: {
+        ...selectedMethod.value,
+        object: selectedObject.value.name,
+      },
+      enabled: true,
+      name: selectedMethod.value?.name,
+      target_id: props.id,
+      target_type: 'method',
+      type: 'method',
+      sort: 0,
+      qos: 0,
+    });
+    emit('updateActions');
+    dialog.value = false;
+  }
 };
 
 watch(dialog, () => {
@@ -74,15 +92,6 @@ watch(dialog, () => {
     selectedMethod.value = null;
   }
 });
-
-// storeDevices.getDevicesApi({
-//   type_struct: 'easy',
-//   with_methods: true,
-//   limit: 9999,
-// }, false)
-//   .then((response) => {
-//     objects.value = response.response.list;
-//   });
 
 onBeforeMount(async () => {
   // Get Device List
@@ -105,8 +114,8 @@ onBeforeMount(async () => {
     () => paths.eventsActions,
     {
       params: computed(() => ({
-        target_type: event.value.target_type,
-        target_id: object.value.id,
+        target_type: props.targetType,
+        target_id: props.id,
         event_name: event.value.code,
       })),
       body: computed(() => ({
@@ -115,8 +124,8 @@ onBeforeMount(async () => {
           object: selectedObject.value.name,
         },
         enabled: true,
-        name: object.value.name,
-        target_id: object.value.id,
+        name: selectedMethod.value?.name,
+        target_id: props.id,
         target_type: 'method',
         type: 'method',
         sort: 0,

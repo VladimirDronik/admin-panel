@@ -87,7 +87,7 @@ export function getActionsColor(type: string): string {
 }
 
 export function getActionsTitle(type: string, args: any): string {
-  if (type === 'method') return `Метод ${args.name ?? '-'}`;
+  if (type === 'method') return `Метод ${args?.name ?? '-'}`;
   if (type === 'delay') return 'Пауза';
   if (type === 'script') return 'Скрипт';
   if (type === 'notification') return 'Уведомление';

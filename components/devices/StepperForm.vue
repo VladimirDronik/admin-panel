@@ -6,10 +6,10 @@ import { updateParamsForApi } from '~/helpers/devices';
 import { type Devices } from '~/types/DevicesTypes';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
+import type { Event } from '@/types/ModelEventTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
-import DisplayEventsForm from '~/components/display/EventsForm.vue';
 // Types
 interface DeviceCreateForm {
   name: string;
@@ -46,6 +46,8 @@ defineProps({
 
 // Variables
 const apiCreateDevice = ref<APIData<any>>();
+
+const events = ref<Event[]>();
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
@@ -198,7 +200,8 @@ onBeforeMount(async () => {
         </div>
       </StepPanel>
       <StepPanel v-slot="{ activateCallback }" value="2">
-        <DisplayEventsForm
+        <FormsEventForm
+          v-model="events"
           targetType="object"
           :modelType="form.type"
           :eventTypes="deviceEventTypes"

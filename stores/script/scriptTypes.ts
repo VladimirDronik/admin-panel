@@ -13,4 +13,6 @@ export const scriptRequestSchema = z.object({
   total: z.number(),
 });
 
+export type ScriptType = z.infer<typeof scriptSchema>;
+
 export type ScriptData = z.infer<typeof scriptRequestSchema>;

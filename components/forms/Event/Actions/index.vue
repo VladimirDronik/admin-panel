@@ -6,27 +6,22 @@ import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 import { paths } from '~/utils/endpoints';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
-
-const storeDevice = useDevicesStore();
+import type { Event } from '@/types/ModelEventTypes';
 
 const dialog = defineModel({
   default: false,
 });
 
-const selectedObject = defineModel<any>('object', {
+const event = defineModel<Event>('event', {
   required: true,
 });
 
-const form = defineModel<any>('form', {
-  required: true,
-});
-
-defineProps({
-  edit: {
-    type: Boolean,
-    required: true,
-  },
-});
+const props = defineProps<{
+  id?: number,
+  modelType: string,
+  targetType: string,
+  edit: boolean,
+}>();
 
 const emit = defineEmits<{
   (e: 'updateActions'): void
@@ -36,28 +31,10 @@ const updateActions = () => {
   emit('updateActions');
 };
 
-const actionsList = ref<any[]>([]);
-
 const apiOrderMethods = ref<APIData<any>>();
 const apiDeleteMethods = ref<APIData<any>>();
 
 const loading = ref(false);
-
-// const updateActions = async () => {
-//   loading.value = true;
-//   if (form.value) {
-//     const data: any = await $fetch('http://10.35.16.1:8083/events/actions', {
-//       params: {
-//         target_id: selectedObject.value.id,
-//         target_type: form.value.target_type,
-//       },
-//     });
-//     actionsList.value = data.data[form.value.code];
-//   }
-//   loading.value = true;
-// };
-
-// watch(form, updateActions, { immediate: true });
 
 const dialogMethod = ref(false);
 const dialogPause = ref(false);
@@ -80,11 +57,11 @@ const confirmDelete = async () => {
   await updateActions();
 };
 
-const idList = computed(() => form.value?.actions?.map((item: any) => item.id));
+const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
 
 watch(idList, async (newValue, oldValue) => {
-  if (!_.isEqual(oldValue, newValue)) {
-    if (newValue.length === oldValue.length) {
+  if (!_.isEqual(oldValue, newValue) && props.id) {
+    if (newValue?.length === oldValue?.length) {
       await apiOrderMethods.value?.execute();
       await updateActions();
     }
@@ -129,11 +106,10 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div v-if="form">
-
+  <div v-if="event">
     <Dialog
       v-model:visible="dialog"
-      :header="form.name"
+      :header="event.name"
       :style="{
         'max-width': '1000px',
         width: '100%',
@@ -144,7 +120,7 @@ onBeforeMount(async () => {
       :width="1000"
     >
       <p class="tw-mb-3">
-        {{ form.description }}
+        {{ event.description }}
       </p>
 
       <SharedUILoader :update="loading">
@@ -181,39 +157,42 @@ onBeforeMount(async () => {
           />
         </div>
 
-        <DialogsDeviceEventsMethodDialog
+        <FormsEventActionsMethodDialog
           @update-actions="updateActions"
           v-model="dialogMethod"
+          :id="id"
           :edit="edit"
-          v-model:object="selectedObject"
-          v-model:event="form"
+          :targetType="targetType"
+          v-model:event="event"
         />
-        <DialogsDeviceEventsPauseDialog
+        <FormsEventActionsPauseDialog
           @update-actions="updateActions"
           v-model="dialogPause"
-          :edit="editAction"
-          v-model:object="selectedObject"
-          v-model:event="form"
+          :id="id"
+          :edit="edit"
+          :targetType="targetType"
+          v-model:event="event"
         />
-        <DialogsDeviceEventsScriptDialog
+        <FormsEventActionsScriptDialog
           @update-actions="updateActions"
           v-model="dialogScript"
-          :edit="editAction"
-          v-model:object="selectedObject"
-          v-model:event="form"
+          :id="id"
+          :edit="edit"
+          :targetType="targetType"
+          v-model:event="event"
         />
-        <DialogsDeviceEventsNotificationDialog
+        <FormsEventActionsNotificationDialog
           v-model="dialogNotification"
         />
 
-        <div v-if="form">
+        <div v-if="event">
           <VueDraggableNext
-            v-model="form.actions"
+            v-model="event.actions"
             handle=".handle-item"
             :animation="300"
           >
             <div
-              v-for="event in form.actions"
+              v-for="event in event.actions"
               :key="event.id"
               @click="openEdit(event)"
               @keydown="openEdit(event)"
@@ -230,16 +209,16 @@ onBeforeMount(async () => {
                     </p>
                   </Tag>
                   <p v-if="event.type === 'delay'">
-                    {{ event.name ? event.name : '-'}}
+                    {{ event?.name ? event.name : '-'}}
                   </p>
                   <p v-else-if="event.type === 'script'">
-                    {{ event.args.name ? event.args.name : '-'}}
+                    {{ event?.args?.name ? event.args.name : '-'}}
                   </p>
                   <p v-else-if="event.type === 'method'">
-                    {{ event.args.object ? event.args.object : '-'}}
+                    {{ event?.args?.object ? event.args.object : '-'}}
                   </p>
                   <p v-else>
-                    {{ event.args.description ? event.args.description : '-'}}
+                    {{ event?.args?.description ? event.args.description : '-'}}
                   </p>
                 </div>
                 <div class="tw-flex tw-items-center">
@@ -257,7 +236,7 @@ onBeforeMount(async () => {
               </div>
             </div>
           </VueDraggableNext>
-          <div v-if="!form.actions?.length">
+          <div v-if="!event.actions?.length">
             Список событий пуст
           </div>
         </div>

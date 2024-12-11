@@ -4,30 +4,26 @@ import { useI18n } from 'vue-i18n';
 import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+import { type ScriptType } from '~/stores/script/scriptTypes';
+import type { Event } from '@/types/ModelEventTypes';
 
 const { t } = useI18n();
 const { updateData } = useUtils();
 const storeScript = useScriptStore();
-const storeDevices = useDevicesStore();
 
 const dialog = defineModel({
   default: false,
 });
 
-const object = defineModel<any>('object', {
-  default: false,
+const event = defineModel<Event>('event', {
+  required: true,
 });
 
-const event = defineModel<any>('event', {
-  default: false,
-});
-
-defineProps({
-  edit: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  id?: number;
+  edit: boolean;
+  targetType: string;
+}>();
 
 const emit = defineEmits<{
   (e: 'updateActions'): void
@@ -37,33 +33,44 @@ const apiCreateMethod = ref<APIData<any>>();
 
 const deleteDialog = ref(false);
 
-const selectedScript = ref({
-  id: 0,
-});
+const selectedScript = ref<ScriptType | null>();
 
 watch(dialog, () => {
   if (dialog.value) {
-    selectedScript.value = {
-      id: 0,
-    };
+    selectedScript.value = null;
   }
 });
 
 const createAction = async () => {
-  updateData({
-    update: async () => {
-      await apiCreateMethod.value?.execute();
-      emit('updateActions');
-    },
-    success: () => {
-      dialog.value = false;
-    },
-    successMessage: 'Скрипт успешно добавлен',
-    errorMessage: 'Ошибка добавления Скрипта',
-  });
+  if (props.id) {
+    updateData({
+      update: async () => {
+        await apiCreateMethod.value?.execute();
+        emit('updateActions');
+      },
+      success: () => {
+        dialog.value = false;
+      },
+      successMessage: 'Скрипт успешно добавлен',
+      errorMessage: 'Ошибка добавления Скрипта',
+    });
+  } else {
+    event.value.actions.push({
+      args: selectedScript.value,
+      enabled: true,
+      name: selectedScript.value?.name,
+      target_id: props.id,
+      target_type: 'script',
+      type: 'script',
+      sort: 0,
+      qos: 0,
+    });
+    emit('updateActions');
+    dialog.value = false;
+  }
 };
 
-const deleteScript = (script: any) => {
+const deleteScript = (script: ScriptType) => {
   selectedScript.value = script;
   deleteDialog.value = true;
 };
@@ -80,15 +87,15 @@ onBeforeMount(async () => {
     () => paths.eventsActions,
     {
       params: computed(() => ({
-        target_type: event.value.target_type,
-        target_id: object.value.id,
+        target_type: props.targetType,
+        target_id: props.id,
         event_name: event.value.code,
       })),
       body: computed(() => ({
         args: selectedScript.value,
         enabled: true,
-        name: object.value.name,
-        target_id: object.value.id,
+        name: selectedScript.value?.name,
+        target_id: props.id,
         target_type: 'script',
         type: 'script',
         sort: 0,
@@ -157,7 +164,7 @@ onBeforeMount(async () => {
       </div>
 
       <DialogsDeleteDialog
-        :id="selectedScript?.id"
+        :id="selectedScript?.id ?? -1"
         :showBtn="false"
         v-model="deleteDialog"
       />
