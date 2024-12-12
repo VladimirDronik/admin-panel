@@ -128,3 +128,37 @@ export interface GetDevicesPortsResponse {
     response: PortDataObject[];
   };
 }
+
+export interface DynamicFormData {
+    address: string;
+    controller: number | null;
+    sdaPort?: number | null;
+    sclPort?: number | null;
+    mode?: string;
+    update_interval?: number;
+    enableGraphingTemp?: boolean;
+    minAvailableTemp?: number;
+    maxAvailableTemp?: number;
+    minAlarmTemp?: number;
+    maxAlarmTemp?: number;
+    enableGraphingPressure?: boolean;
+    minAvailablePressure?: number;
+    maxAvailablePressure?: number;
+    minAlarmPressure?: number;
+    maxAlarmPressure?: number;
+    enableGraphingHumidity?: boolean;
+    minAvailableHumidity?: number;
+    maxAvailableHumidity?: number;
+    minAlarmHumidity?: number;
+    maxAlarmHumidity?: number;
+    enableGraphingIllumination?: boolean;
+    minAvailableIllumination?: number;
+    maxAvailableIllumination?: number;
+    minAlarmIllumination?: number;
+    maxAlarmIllumination?: number;
+    enableGraphingCO2?: boolean;
+    minAvailableCO2?: number;
+    maxAvailableCO2?: number;
+    minAlarmCO2?: number;
+    maxAlarmCO2?: number;
+}

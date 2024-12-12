@@ -3,13 +3,14 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { updateParamsForApi } from '~/helpers/devices';
-import { type Devices } from '~/types/DevicesTypes';
+import { type Devices, type DynamicFormData } from '~/types/DevicesTypes';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
+
 // Types
 interface DeviceCreateForm {
   name: string;
@@ -84,7 +85,7 @@ const valid = computed(() => {
     });
   }
 
-  return main && props && children;
+  return main && props && children && isDynamicFormValid.value;
 });
 
 // Methods
@@ -115,12 +116,24 @@ const createDevice = async () => {
   });
 };
 
+const isDynamicFormValid = ref(false);
+const dynamicFormData = ref<DynamicFormData>({} as DynamicFormData);
+const devicesDynamicFormUpdateHandler = (form: DynamicFormData) => {
+  dynamicFormData.value = form;
+};
+
+const devicesDynamicFormValidityHandler = (isValid: boolean) => {
+  isDynamicFormValid.value = isValid;
+  console.log('Форма валидна:', isValid);
+};
+
 onBeforeMount(async () => {
   // Create Device
-  const data: unknown = await useAPI(paths.objectModel, {
+  const data: unknown = await useAPI(paths.objects, {
     body: computed(() => ({
-      ...model.value,
       ...form.value,
+      props: dynamicFormData.value,
+      events: events.value,
     })),
     method: 'POST',
     immediate: false,
@@ -128,8 +141,8 @@ onBeforeMount(async () => {
   });
 
   apiCreateDevice.value = data as APIData<any>;
-  //
 });
+
 </script>
 
 <template>
@@ -143,46 +156,24 @@ onBeforeMount(async () => {
     <StepPanels>
       <StepPanel v-slot="{ activateCallback }" value="1">
         <form>
-          <div class="-tw-ml-[50%] tw-pr-[5%]">
-            <SharedUIField :required="true">
-              <template #label>
-                {{ t('devices.tags') }}
-              </template>
-              <template #input>
-                <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" required />
-              </template>
-            </SharedUIField>
-
-            <SharedUIField :required="true">
-              <template #label>
-                {{ t('devices.type') }}
-              </template>
-              <template #input>
-                <Select v-model="form.type" :options="types" required class="tw-w-2/4" />
-              </template>
-            </SharedUIField>
+          <div class="tw-ml-[20%] tw-mr-[5%]">
+            <SharedUILabel class="tw-mb-4" :title="t('devices.tags')" required>
+              <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" />
+            </SharedUILabel>
+            <SharedUILabel class="tw-mb-4" :title="t('devices.type') " required>
+              <Select v-model="form.type" :options="types" class="tw-w-2/4" />
+            </SharedUILabel>
           </div>
 
           <Divider class="tw-mt-0 tw-pb-3" />
 
-          <div class="-tw-ml-[50%] tw-pr-[5%]">
-            <SharedUIField :required="true">
-              <template #label>
-                {{ t('devices.title') }}
-              </template>
-              <template #input>
-                <InputText v-model="form.name" required class="tw-w-3/4" />
-              </template>
-            </SharedUIField>
-
-            <SharedUIField :required="false">
-              <template #label>
-                {{ t('devices.room') }}
-              </template>
-              <template #input>
-                <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
-              </template>
-            </SharedUIField>
+          <div class="tw-ml-[20%] tw-mr-[5%]">
+            <SharedUILabel class="tw-mb-4" :title="t('devices.title')" required>
+              <InputText v-model="form.name" class="tw-w-3/4" />
+            </SharedUILabel>
+            <SharedUILabel class="tw-mb-4" :title="t('devices.room')">
+              <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
+            </SharedUILabel>
           </div>
 
           <Divider class="tw-pb-3" />
@@ -190,7 +181,7 @@ onBeforeMount(async () => {
           <!-- <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect /> -->
 
           <!-- Dynamically renders the form component based on the selected device type -->
-          <DevicesDynamicDeviceForm :deviceType="form.type" />
+          <DevicesDynamicDeviceForm :deviceType="form.type" @update:model-value="devicesDynamicFormUpdateHandler" @update:valid="devicesDynamicFormValidityHandler" />
         </form>
 
         <div class="tw-flex tw-justify-end">

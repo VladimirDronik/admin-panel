@@ -10,7 +10,7 @@ const form = ref({
   controller: null,
   sdaPort: null,
   sclPort: null,
-  pollInterval: 300,
+  update_interval: 300,
   enableGraphingTemp: false,
   minAvailableTemp: -40,
   maxAvailableTemp: 105,
@@ -21,9 +21,54 @@ const form = ref({
   maxAvailableHumidity: 100,
   minAlarmHumidity: 0,
   maxAlarmHumidity: 0,
-  title: 'EXAMPLE',
-  room: '',
+  name: '',
+  zone_id: '',
+  address: '',
 });
+
+// const formHTU21D = reactive({
+//   name: '',
+//   zone_id: '',
+//   category: 'sensor',
+//   props: {
+//     interface: '',
+//     address: '',
+//     update_interval: 300,
+//   },
+//   children: [
+//     {
+//       type: 'temperature',
+//       props: {
+//         value: 0,
+//         value_updated_at: '',
+//         write_graph: false,
+//         unit: '°C',
+//         min_error_value: 0,
+//         min_threshold: -40,
+//         max_threshold: 105,
+//         max_error_value: 0,
+
+//       },
+//     },
+//     {
+//       type: 'humidity',
+//       props: {
+//         value: 0,
+//         value_updated_at: '',
+//         write_graph: false,
+//         unit: '%',
+//         min_error_value: 0,
+//         min_threshold: 0,
+//         max_threshold: 100,
+//         max_error_value: 0,
+
+//       },
+//     },
+//   ],
+//   controller: null,
+//   sdaPort: null,
+//   sclPort: null,
+// });
 
 const props = defineProps({
   isEditing: {
@@ -32,29 +77,32 @@ const props = defineProps({
   },
 });
 
-const resolver = ref(
-  zodResolver(
-    z.object({
-      controller: z.number().min(1),
-      sdaPort: z.number().min(1),
-      sclPort: z.number().min(1),
-      pollInterval: z.number().default(300),
-      minAvailableTemp: z.number().min(-40),
-      maxAvailableTemp: z.number().max(105),
-      minAvailableHumidity: z.number().min(0),
-      maxAvailableHumidity: z.number().max(100),
-    }),
-  ),
-);
+const emit = defineEmits(['update:modelValue', 'update:valid']);
 
-const handleSubmit = ({ valid }: { valid: boolean; }) => {
-  if (valid) {
-    console.log('Форма успешно отправлена:', form.value);
-    // Логика отправки данных на сервер
-  } else {
-    console.log('Форма содержит ошибки');
-  }
-};
+const schema = z.object({
+  controller: z.number().min(1),
+  sdaPort: z.number().min(1),
+  sclPort: z.number().min(1),
+  update_interval: z.number().default(300),
+  minAvailableTemp: z.number().min(-40),
+  maxAvailableTemp: z.number().max(105),
+  minAvailableHumidity: z.number().min(0),
+  maxAvailableHumidity: z.number().max(100),
+});
+
+const resolver = ref(zodResolver(schema));
+
+watch(
+  form,
+  (newValue) => {
+    emit('update:modelValue', newValue);
+
+    const validationResult = schema.safeParse(newValue);
+    const isValid = validationResult.success;
+    emit('update:valid', isValid);
+  },
+  { deep: true },
+);
 
 const sensorMockData = {
   data: [
@@ -67,14 +115,14 @@ const sensorMockData = {
 </script>
 
 <template>
-  <Form :resolver="resolver" @submit="handleSubmit">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" :form="{ pollInterval: form.pollInterval, title: form.title, room: form.room }" />
+  <Form :resolver="resolver" :form="form">
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" :form="{ update_interval: form.update_interval, name: form.name, zone_id: form.zone_id }" />
     <FormsSensorBasicPlacement v-model:form="form" />
 
     <!-- Интервал опроса -->
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="form.pollInterval" name="pollInterval">
-      <InputNumber suffix=" sec" id="pollInterval" v-model="form.pollInterval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="form.update_interval" name="update_interval">
+      <InputNumber suffix=" sec" id="update_interval" v-model="form.update_interval" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
     <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
