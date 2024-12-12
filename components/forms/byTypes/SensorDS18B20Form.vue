@@ -14,27 +14,37 @@ const form = ref({
   mode: '',
   port: '',
   address: '',
-  pollInterval: 300,
+  interface: '',
+  update_interval: 300,
   enableGraphingTemp: false,
   minAvailableTemp: -40,
   maxAvailableTemp: 100,
   minAlarmTemp: 0,
   maxAlarmTemp: 0,
+  name: '',
+  zone_id: '',
 });
 
-const resolver = ref(
-  zodResolver(
-    z.object({
-      controller: z.number().min(1),
-      mode: z.string().min(1),
-      port: z.number().min(1),
-      address: z.number().min(1),
-      pollInterval: z.number().min(300),
-      minAvailableTemp: z.number().min(-40),
-      maxAvailableTemp: z.number().max(100),
-    }),
-  ),
-);
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['update:modelValue', 'update:valid']);
+
+const schema = z.object({
+  controller: z.number().min(1),
+  mode: z.string().min(1),
+  port: z.number().min(1),
+  address: z.string().min(1),
+  update_interval: z.number().min(300),
+  minAvailableTemp: z.number().min(-40),
+  maxAvailableTemp: z.number().max(100),
+});
+
+const resolver = ref(zodResolver(schema));
 
 const { controllers, getControllersViaType } = useControllersViaType();
 getControllersViaType(Controller.MegaD);
@@ -43,21 +53,19 @@ const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
 
 const address = computed(() => {
   const { port, mode } = form.value;
-
-  if (!port) {
-    return ''; // Если порт не выбран, возвращаем пустую строку
-  }
-
   const selectedPort = formattedPorts.value.find((p) => p.value === Number(port));
 
   if (!selectedPort) {
     return '';
   }
-
   if (mode === '1WBUS') {
+    form.value.interface = '1WBUS';
     const sensorAddress = form.value.address.split(';')[1] || '';
     return `${selectedPort.number};${sensorAddress}`;
-  } if (mode === '1W') {
+  }
+
+  if (mode === '1W') {
+    form.value.interface = '1W';
     return `${selectedPort.number}`;
   }
 
@@ -74,18 +82,29 @@ watch(
   { immediate: true },
 );
 
-const handleSubmit = ({ valid }: { valid: boolean;}) => {
-  if (valid) {
-    console.log('Форма успешно отправлена:', form.value);
-    console.log('SDA Port ID:', form.value.port);
-  } else {
-    console.log('Форма содержит ошибки');
-  }
+watch(
+  form,
+  (newValue) => {
+    emit('update:modelValue', newValue);
+
+    const validationResult = schema.safeParse(newValue);
+    const isValid = validationResult.success;
+    emit('update:valid', isValid);
+  },
+  { deep: true },
+);
+
+const sensorMockData = {
+  data: [
+    { value: 23, unit: '°C', label: t('devices.temperature') },
+  ],
+  lastUpdate: '26.09.2024 15:27:59',
 };
 </script>
 
 <template>
-  <Form :resolver="resolver" @submit="handleSubmit">
+  <Form :resolver="resolver" :form="form">
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" :form="{ update_interval: form.update_interval, name: form.name, zone_id: form.zone_id }" />
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
 
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="form.controller" name="controller">
@@ -93,7 +112,7 @@ const handleSubmit = ({ valid }: { valid: boolean;}) => {
     </SharedUILabel>
 
     <!-- Режим -->
-    <SharedUILabel class="tw-mb-2" :title="t('devices.mode')" required :value="form.mode" name="mode">
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.mode')" required :value="form.mode" name="mode">
       <div class="tw-flex tw-items-center">
         <RadioButton class="tw-mr-1" id="single" v-model="form.mode" :value="'1W'" />
         <label for="single-mode" class="tw-mr-4"> {{ t('devices.single') }}</label>
@@ -108,18 +127,18 @@ const handleSubmit = ({ valid }: { valid: boolean;}) => {
     </SharedUILabel>
 
     <!-- Адрес (только для режима 'bus') -->
-    <SharedUILabel required class="tw-mb-2" v-if="form.mode === '1WBUS'" :title="t('devices.address16')">
+    <SharedUILabel required class="tw-mb-2" v-if="!props.isEditing && form.mode === '1WBUS'" :title="t('devices.address16')">
       <InputText id="address" v-model="form.address" class="tw-w-full" />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
     <!-- Интервал опроса -->
-    <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required :value="form.pollInterval" name="pollInterval">
-      <InputNumber suffix=" sec" id="pollInterval" v-model="form.pollInterval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="form.update_interval" name="update_interval">
+      <InputNumber suffix=" sec" id="update_interval" v-model="form.update_interval" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
-    <Divider class="tw-mt-0 tw-pb-3" />
+    <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
 
     <!-- Температурные настройки -->
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.temperature') }}</p>
@@ -130,6 +149,7 @@ const handleSubmit = ({ valid }: { valid: boolean;}) => {
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         required
         :value="form.minAvailableTemp"
         name="minAvailableTemp"
@@ -138,21 +158,24 @@ const handleSubmit = ({ valid }: { valid: boolean;}) => {
       >
         <InputNumber v-model="form.minAvailableTemp" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel required :value="form.maxAvailableTemp" name="maxAvailableTemp" :title="`${t('devices.maxAvailability')}:`">
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableTemp" name="maxAvailableTemp" :title="`${t('devices.maxAvailability')}:`">
         <InputNumber v-model="form.maxAvailableTemp" suffix=" °C" />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
-      <SharedUILabel :value="form.minAlarmTemp" name="minAlarmTemp" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber class="tw-ml-8" v-model="form.minAlarmTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col" :value="form.minAlarmTemp" name="minAlarmTemp" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
+        <InputNumber v-model="form.minAlarmTemp" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel :value="form.maxAlarmTemp" name="maxAlarmTemp" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber class="tw-ml-2" v-model="form.maxAlarmTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmTemp" name="maxAlarmTemp" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="form.maxAlarmTemp" suffix=" °C" />
       </SharedUILabel>
-    </div>
-
-    <div class="tw-mt-4 tw-flex tw-justify-end">
-      <Button type="submit" :label="t('next')" class="tw-mt-4" />
     </div>
   </Form>
 </template>
+
+<style scoped>
+
+::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+ width: 150px;
+}
+</style>

@@ -3,8 +3,6 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { Controller } from '~/types/DevicesEnums';
-import { useControllersViaType } from '~/composables/useControllersViaType';
 
 const { t } = useI18n();
 
@@ -12,7 +10,7 @@ const form = ref({
   controller: null,
   sdaPort: null,
   sclPort: null,
-  pollInterval: 300,
+  update_interval: 300,
   enableGraphingTemp: false,
   minAvailableTemp: -40,
   maxAvailableTemp: 85,
@@ -33,69 +31,72 @@ const form = ref({
   maxAvailableIllumination: 65535,
   minAlarmIllumination: 0,
   maxAlarmIllumination: 0,
+  name: '',
+  zone_id: '',
+  address: '',
 });
 
-const resolver = ref(
-  zodResolver(
-    z.object({
-      controller: z.number().min(1),
-      sdaPort: z.number().min(1),
-      sclPort: z.number().min(1),
-      pollInterval: z.number().min(300),
-      minAvailableTemp: z.number().min(-40),
-      maxAvailableTemp: z.number().max(85),
-      minAvailablePressure: z.number().min(225),
-      maxAvailablePressure: z.number().max(825),
-      minAvailableHumidity: z.number().min(0),
-      maxAvailableHumidity: z.number().max(100),
-      minAvailableIllumination: z.number().min(0),
-      maxAvailableIllumination: z.number().max(65535),
-    }),
-  ),
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['update:modelValue', 'update:valid']);
+
+const schema = z.object({
+  controller: z.number().min(1),
+  sdaPort: z.number().min(1),
+  sclPort: z.number().min(1),
+  update_interval: z.number().min(300),
+  minAvailableTemp: z.number().min(-40),
+  maxAvailableTemp: z.number().max(85),
+  minAvailablePressure: z.number().min(225),
+  maxAvailablePressure: z.number().max(825),
+  minAvailableHumidity: z.number().min(0),
+  maxAvailableHumidity: z.number().max(100),
+  minAvailableIllumination: z.number().min(0),
+  maxAvailableIllumination: z.number().max(65535),
+});
+
+const resolver = ref(zodResolver(schema));
+
+watch(
+  form,
+  (newValue) => {
+    emit('update:modelValue', newValue);
+
+    const validationResult = schema.safeParse(newValue);
+    const isValid = validationResult.success;
+    emit('update:valid', isValid);
+  },
+  { deep: true },
 );
 
-const { controllers, getControllersViaType } = useControllersViaType();
-getControllersViaType(Controller.MegaD);
-const controllerIdRef = computed(() => form.value.controller);
-const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
-
-const handleSubmit = ({ valid }: { valid: boolean; }) => {
-  if (valid) {
-    console.log('Форма успешно отправлена:', form.value);
-    // Логика отправки данных на сервер
-  } else {
-    console.log('Форма содержит ошибки');
-  }
+const sensorMockData = {
+  data: [
+    { value: 23, unit: '°C', label: t('devices.temperature') },
+    { value: 300, unit: 'mmHg', label: t('devices.pressure') },
+    { value: 40, unit: '%', label: t('devices.humidity') },
+    { value: 30000, unit: 'lx', label: t('devices.illumination') },
+  ],
+  lastUpdate: '26.09.2024 15:27:59',
 };
 </script>
 
 <template>
-  <Form :resolver="resolver" @submit="handleSubmit">
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
-
-    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="form.controller" name="controller">
-      <Select :options="controllers" optionLabel="name" optionValue="id" class="tw-w-full" v-model="form.controller" />
-    </SharedUILabel>
-
-    <!-- Порт SDA -->
-    <SharedUILabel class="tw-mb-2" :title="t('devices.portSDA')" required :value="form.controller" name="controller">
-      <Select v-model="form.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-full" />
-    </SharedUILabel>
-
-    <!-- Порт SCL -->
-    <SharedUILabel class="tw-mb-2" :title="t('devices.portSCL')" required :value="form.sclPort" name="sclPort">
-      <Select v-model="form.sclPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-full" />
-    </SharedUILabel>
-
-    <Divider class="tw-mt-0 tw-pb-3" />
+  <Form :resolver="resolver" :form="form">
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" :form="{ update_interval: form.update_interval, name: form.name, zone_id: form.zone_id }" />
+    <FormsSensorBasicPlacement v-model:form="form" />
 
     <!-- Интервал опроса -->
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required :value="form.pollInterval" name="pollInterval">
-      <InputNumber suffix=" sec" id="pollInterval" v-model="form.pollInterval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="form.update_interval" name="update_interval">
+      <InputNumber suffix=" sec" id="update_interval" v-model="form.update_interval" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
-    <Divider class="tw-mt-0 tw-pb-3" />
+    <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
 
     <!-- Температурные настройки -->
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.temperature') }}</p>
@@ -106,6 +107,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         required
         :value="form.minAvailableTemp"
         name="minAvailableTemp"
@@ -114,16 +116,16 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
       >
         <InputNumber v-model="form.minAvailableTemp" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel required :value="form.maxAvailableTemp" name="maxAvailableTemp" :title="`${t('devices.maxAvailability')}:`">
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableTemp" name="maxAvailableTemp" :title="`${t('devices.maxAvailability')}:`">
         <InputNumber v-model="form.maxAvailableTemp" suffix=" °C" />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
-      <SharedUILabel :value="form.minAlarmTemp" name="minAlarmTemp" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber class="tw-ml-8" v-model="form.minAlarmTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col" :value="form.minAlarmTemp" name="minAlarmTemp" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
+        <InputNumber v-model="form.minAlarmTemp" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel :value="form.maxAlarmTemp" name="maxAlarmTemp" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber class="tw-ml-2" v-model="form.maxAlarmTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmTemp" name="maxAlarmTemp" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="form.maxAlarmTemp" suffix=" °C" />
       </SharedUILabel>
     </div>
 
@@ -136,6 +138,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         required
         :value="form.minAvailablePressure"
         name="minAvailablePressure"
@@ -144,21 +147,22 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
       >
         <InputNumber v-model="form.minAvailablePressure" suffix=" mmHg" />
       </SharedUILabel>
-      <SharedUILabel required :value="form.maxAvailablePressure" name="maxAvailablePressure" :title="`${t('devices.maxAvailability')}:`">
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailablePressure" name="maxAvailablePressure" :title="`${t('devices.maxAvailability')}:`">
         <InputNumber v-model="form.maxAvailablePressure" suffix=" mmHg" />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col "
         :value="form.minAlarmPressure"
         name="minAlarmPressure"
         :title="`${t('devices.minAlarm')}:`"
         :tooltip="t('devices.tooltipMinAlarm')"
       >
-        <InputNumber class="tw-ml-8" v-model="form.minAlarmPressure" suffix=" mmHg" />
+        <InputNumber v-model="form.minAlarmPressure" suffix=" mmHg" />
       </SharedUILabel>
-      <SharedUILabel :value="form.maxAlarmPressure" name="maxAlarmPressure" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber class="tw-ml-2" v-model="form.maxAlarmPressure" suffix=" mmHg" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmPressure" name="maxAlarmPressure" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="form.maxAlarmPressure" suffix=" mmHg" />
       </SharedUILabel>
     </div>
 
@@ -170,6 +174,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         required
         :value="form.minAvailableHumidity"
         name="minAvailableHumidity"
@@ -178,21 +183,22 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
       >
         <InputNumber v-model="form.minAvailableHumidity" suffix=" %" />
       </SharedUILabel>
-      <SharedUILabel required :value="form.maxAvailableHumidity" name="maxAvailableHumidity" :title="`${t('devices.maxAvailability')}:`">
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableHumidity" name="maxAvailableHumidity" :title="`${t('devices.maxAvailability')}:`">
         <InputNumber v-model="form.maxAvailableHumidity" suffix=" %" />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         :value="form.minAlarmHumidity"
         name="minAlarmHumidity"
         :title="`${t('devices.minAlarm')}:`"
         :tooltip="t('devices.tooltipMinAlarm')"
       >
-        <InputNumber class="tw-ml-8" v-model="form.minAlarmHumidity" suffix=" %" />
+        <InputNumber v-model="form.minAlarmHumidity" suffix=" %" />
       </SharedUILabel>
-      <SharedUILabel :value="form.maxAlarmHumidity" name="maxAlarmHumidity" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber class="tw-ml-2" v-model="form.maxAlarmHumidity" suffix=" %" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmHumidity" name="maxAlarmHumidity" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="form.maxAlarmHumidity" suffix=" %" />
       </SharedUILabel>
     </div>
 
@@ -204,6 +210,7 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         required
         :value="form.minAvailableIllumination"
         name="minAvailableIllumination"
@@ -212,27 +219,31 @@ const handleSubmit = ({ valid }: { valid: boolean; }) => {
       >
         <InputNumber v-model="form.minAvailableIllumination" suffix=" lx" />
       </SharedUILabel>
-      <SharedUILabel required :value="form.maxAvailableIllumination" name="maxAvailableIllumination" :title="`${t('devices.maxAvailability')}:`">
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableIllumination" name="maxAvailableIllumination" :title="`${t('devices.maxAvailability')}:`">
         <InputNumber v-model="form.maxAvailableIllumination" suffix=" lx" />
       </SharedUILabel>
     </div>
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
+        class="tw-flex-col"
         :value="form.minAlarmIllumination"
         name="minAlarmIllumination"
         :title="`${t('devices.minAlarm')}:`"
         :tooltip="t('devices.tooltipMinAlarm')"
       >
-        <InputNumber class="tw-ml-8" v-model="form.minAlarmIllumination" suffix=" lx" />
+        <InputNumber v-model="form.minAlarmIllumination" suffix=" lx" />
       </SharedUILabel>
-      <SharedUILabel :value="form.maxAlarmIllumination" name="maxAlarmIllumination" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber class="tw-ml-2" v-model="form.maxAlarmIllumination" suffix=" lx" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmIllumination" name="maxAlarmIllumination" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="form.maxAlarmIllumination" suffix=" lx" />
       </SharedUILabel>
-    </div>
-
-    <div class="tw-mt-4 tw-flex tw-justify-end">
-      <Button type="submit" :label="t('next')" class="tw-mt-4" />
     </div>
   </Form>
 </template>
+
+<style scoped>
+
+::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+ width: 150px;
+}
+</style>
