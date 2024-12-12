@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
+import { VueDraggableNext } from 'vue-draggable-next';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema, type RoomBtnsData } from '~/types/DisplayTypes';
@@ -90,36 +91,43 @@ onBeforeMount(async () => {
           />
         </div>
         <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2">
-          <button
-            v-for="items in rooms.items"
-            @click="showPanel(items.item_id)"
-            :key="items.item_id"
-            type="button"
+          <VueDraggableNext
+            v-model="rooms.items"
+            :animation="300"
+            class="tw-gap-3"
           >
-            <div
-              class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
-              :class="{ '!tw-border-inherit': !(items.status === 'on') }"
-              :style="{ borderColor: roomColor(rooms.style) }"
+            <button
+              v-for="items in rooms.items"
+              @click="showPanel(items.item_id)"
+              :key="items.item_id"
+              type="button"
+              class="tw-m-1"
             >
-              <img
-                :src="`items/${items.icon}.png`"
-                alt=""
-                :class="{ '!tw-opacity-60': !(items.status === 'on') }"
+              <div
+                class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
+                :class="{ '!tw-border-inherit': !(items.status === 'on') }"
+                :style="{ borderColor: roomColor(rooms.style) }"
               >
-              <Badge
-                v-if="items.group_elements"
-                :style="{ backgroundColor: roomColor(rooms.style) }"
-                :class="{ '!tw-bg-gray-400': !(items.status === 'on') }"
-                class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
-                rounded
-              >
-                {{ items.group_elements.length }}
-              </Badge>
-            </div>
-            <h5 class="tw-w-24 tw-truncate tw-text-center">
-              {{ items.title }}
-            </h5>
-          </button>
+                <img
+                  :src="`items/${items.icon}.png`"
+                  alt=""
+                  :class="{ '!tw-opacity-60': !(items.status === 'on') }"
+                >
+                <Badge
+                  v-if="items.group_elements"
+                  :style="{ backgroundColor: roomColor(rooms.style) }"
+                  :class="{ '!tw-bg-gray-400': !(items.status === 'on') }"
+                  class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
+                  rounded
+                >
+                  {{ items.group_elements.length }}
+                </Badge>
+              </div>
+              <h5 class="tw-w-24 tw-truncate tw-text-center">
+                {{ items.title }}
+              </h5>
+            </button>
+          </VueDraggableNext>
         </div>
       </div>
     </div>
