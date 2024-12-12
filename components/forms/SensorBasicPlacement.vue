@@ -6,7 +6,7 @@ import { useControllersViaType } from '~/composables/useControllersViaType';
 
 const { t } = useI18n();
 
-const props = defineProps<{ form: { controller: number | null; sdaPort: number | null; sclPort: number | null } }>();
+const props = defineProps<{ form: { controller: number | null; sdaPort: number | null; sclPort: number | null; address?: string } }>();
 const emit = defineEmits(['update:form']);
 
 const { controllers, getControllersViaType } = useControllersViaType();
@@ -15,18 +15,30 @@ getControllersViaType(Controller.MegaD);
 const controllerIdRef = computed(() => props.form.controller);
 const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
 
-const updateFormField = (field: keyof typeof props.form, value: any) => {
-  emit('update:form', { ...props.form, [field]: value });
-};
+const form = ref(props.form);
+
+const address = computed(() => {
+  const { sdaPort, sclPort } = form.value;
+  return sdaPort && sclPort ? `${sdaPort};${sclPort}` : '';
+});
+
+watch(
+  [form, address],
+  () => {
+    form.value.address = address.value;
+    emit('update:form', form.value);
+  },
+  { deep: true, immediate: true },
+);
+
 </script>
 
 <template>
   <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="props.form.controller" name="controller">
+  <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="form.controller" name="controller">
     <Select
-      :value="props.form.controller"
-      @update:modelValue="value => updateFormField('controller', value)"
+      v-model="form.controller"
       :options="controllers"
       optionLabel="name"
       optionValue="id"
@@ -34,10 +46,9 @@ const updateFormField = (field: keyof typeof props.form, value: any) => {
     />
   </SharedUILabel>
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.portSDA')" required :value="props.form.sdaPort" name="sdaPort">
+  <SharedUILabel class="tw-mb-2" :title="t('devices.portSDA')" required :value="form.sdaPort" name="sdaPort">
     <Select
-      :value="props.form.sdaPort"
-      @update:modelValue="value => updateFormField('sdaPort', value)"
+      v-model="form.sdaPort"
       :options="formattedPorts"
       optionLabel="label"
       optionValue="value"
@@ -45,10 +56,9 @@ const updateFormField = (field: keyof typeof props.form, value: any) => {
     />
   </SharedUILabel>
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.portSCL')" required :value="props.form.sclPort" name="sclPort">
+  <SharedUILabel class="tw-mb-2" :title="t('devices.portSCL')" required :value="form.sclPort" name="sclPort">
     <Select
-      :value="props.form.sclPort"
-      @update:modelValue="value => updateFormField('sclPort', value)"
+      v-model="form.sclPort"
       :options="formattedPorts"
       optionLabel="label"
       optionValue="value"

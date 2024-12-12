@@ -9,9 +9,9 @@ interface SensorHeaderProps {
   data: { value: string | number; unit: string; label: string }[];
   lastUpdate: string;
   form: {
-    title: string;
-    room?: string;
-    pollInterval: number;
+    name: string;
+    zone_id?: string;
+    update_interval: number;
   }
 }
 const props = defineProps<SensorHeaderProps>();
@@ -32,17 +32,17 @@ watch(
 );
 
 const updateTitle = (value: string | undefined) => {
-  formSensorHeader.title = value || '';
+  formSensorHeader.name = value || '';
   emit('update:model-value', value);
 };
 
 const updateRoomSelection = (value: string | undefined) => {
-  formSensorHeader.room = value || '';
+  formSensorHeader.zone_id = value || '';
   emit('update:model-value', value);
 };
 
 const updatePollInterval = (value: number) => {
-  formSensorHeader.pollInterval = value;
+  formSensorHeader.update_interval = value;
   emit('update:model-value', value);
 };
 
@@ -72,7 +72,7 @@ const updatePollInterval = (value: number) => {
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.title')" required name="title">
     <InputText
-      :value="formSensorHeader.title"
+      :value="formSensorHeader.name"
       @update:modelValue="updateTitle"
       required
       class="tw-w-3/4" />
@@ -80,7 +80,7 @@ const updatePollInterval = (value: number) => {
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.room')" name="room">
     <Select
-      :value="formSensorHeader.room"
+      :value="formSensorHeader.zone_id"
       @update:modelValue="updateRoomSelection"
       :options="storeRooms.getRoomsSelect"
       optionLabel="name"
@@ -89,13 +89,15 @@ const updatePollInterval = (value: number) => {
     />
   </SharedUILabel>
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required name="pollInterval">
+  <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required name="update_interval">
     <InputNumber
-      :value="formSensorHeader.pollInterval"
+      :value="formSensorHeader.update_interval"
       @update:modelValue="updatePollInterval"
       suffix=" sec"
-      id="pollInterval"
+      id="update_interval"
       class="tw-mr-10 tw-w-1/4"
     />
   </SharedUILabel>
+
+  <Divider class="tw-mt-0 tw-pb-3" />
 </template>
