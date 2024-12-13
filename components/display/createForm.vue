@@ -4,25 +4,36 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form } from '@primevue/forms';
+// Types and Schemes
+import type { APIData } from '~/types/StoreTypes';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 import type { Event } from '@/types/ModelEventTypes';
 
+// Composables
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
+const { updateData } = useUtils();
 
-defineProps<{
-  devices: string[]
+const props = defineProps<{
+  devices: string[],
+  zoneId: number,
+}>();
+
+const emit = defineEmits<{
+  (e: 'update'): void
 }>();
 
 const form = ref({
   title: null,
   type: null,
   color: null,
-  zone_id: null,
+  item_id: null,
 });
 
 const events = ref<Event[]>();
+
+const apiCreateItem = ref<APIData<any>>();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -31,6 +42,39 @@ const resolver = ref(zodResolver(
     zone_id: z.number(),
   }),
 ));
+
+const createItem = async () => {
+  await updateData({
+    update: async () => {
+      await apiCreateItem.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+    },
+    successMessage: 'Кнопка была успешно создана',
+    errorMessage: 'Кнопка не была создана',
+  });
+};
+
+onBeforeMount(async () => {
+  // Create Device
+  const data: unknown = await useAPI(paths.privateWizard, {
+    body: computed(() => ({
+      ...form.value,
+      events: events.value?.map((item) => ({
+        actions: item.actions,
+        name: item.code,
+      }))
+        .filter((item) => item.actions.length > 0),
+      zone_id: props.zoneId,
+    })),
+    method: 'POST',
+    immediate: false,
+    watch: false,
+  });
+
+  apiCreateItem.value = data as APIData<any>;
+});
 
 </script>
 
@@ -76,13 +120,13 @@ const resolver = ref(zodResolver(
           </SharedUILabel>
           <SharedUILabel
             :title="'Помещение'"
-            :value="form.zone_id"
+            :value="form.item_id"
             name="zone_id"
             class="tw-mb-2"
             required
           >
             <Select
-              v-model="form.zone_id"
+              v-model="form.item_id"
               :options="storeRooms.getRoomsSelect"
               optionLabel="name"
               optionValue="code"
@@ -124,7 +168,11 @@ const resolver = ref(zodResolver(
             @click="activateCallback('1')"
             :label="t('goBack')"
           />
-          <Button :label="t('save')" />
+          <Button
+            @click="createItem"
+            :label="t('save')"
+            :loading="apiCreateItem?.pending && apiCreateItem.status !== 'idle'"
+          />
         </div>
         <!--  -->
       </StepPanel>
