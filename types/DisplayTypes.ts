@@ -15,6 +15,7 @@ export const roomBtns = z.object({
   status: z.string(),
   title: z.string(),
   type: z.string(),
+  color: z.string().optional(),
 });
 
 export const roomSensors = z.object({

@@ -7,15 +7,21 @@ import { Form } from '@primevue/forms';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
+import type { APIData } from '~/types/StoreTypes';
 import { type itemType } from '~/types/DisplayTypes';
 import type { Event } from '@/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
+const { updateData } = useUtils();
 
 defineProps<{
   devices: string[]
+}>();
+
+const emit = defineEmits<{
+  (e: 'update'): void
 }>();
 
 const form = defineModel<itemType>('form', {
@@ -27,6 +33,8 @@ const loadingDelete = ref(false);
 
 const events = ref<Event[]>();
 
+const apiChangeItem = ref<APIData<any>>();
+
 const resolver = ref(zodResolver(
   z.object({
     title: z.string().min(1),
@@ -34,6 +42,31 @@ const resolver = ref(zodResolver(
     zone_id: z.number(),
   }),
 ));
+
+const changeItem = async () => {
+  await updateData({
+    update: async () => {
+      await apiChangeItem.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+    },
+    successMessage: 'Кнопка была успешно создана',
+    errorMessage: 'Кнопка не была создана',
+  });
+};
+
+onBeforeMount(async () => {
+  // Create Device
+  const data: unknown = await useAPI(paths.privateItem, {
+    body: computed(() => form.value),
+    method: 'PATCH',
+    immediate: false,
+    watch: false,
+  });
+
+  apiChangeItem.value = data as APIData<any>;
+});
 
 </script>
 
@@ -59,7 +92,7 @@ const resolver = ref(zodResolver(
       <TabPanel value="features">
         <Form
           :resolver
-          @submit="({ valid }) => { if (valid) return }"
+          @submit="({ valid }) => { if (valid) changeItem() }"
         >
           <SharedUILabel
             :title="'Название'"
@@ -117,6 +150,7 @@ const resolver = ref(zodResolver(
 
             <Button
               :label="t('save')"
+              :loading="apiChangeItem?.pending && apiChangeItem.status !== 'idle'"
               type="submit"
             />
           </div>

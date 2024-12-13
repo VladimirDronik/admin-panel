@@ -5,7 +5,7 @@ import { VueDraggableNext } from 'vue-draggable-next';
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema, type RoomBtnsData } from '~/types/DisplayTypes';
 // Helpers modules
-import { roomColor } from '~/helpers/rooms';
+import { roomColor, itemColor } from '~/helpers/rooms';
 
 // Composables
 const { t } = useI18n();
@@ -18,10 +18,13 @@ useHead({
 const apiDisplays = ref<APIData<DisplayData>>();
 
 const id = ref<number>(0);
+const zoneId = ref<number>(0);
+
 const edit = ref(false);
 const isShow = ref(false);
 
-const showPanel = (item_id: number | null = null) => {
+const showPanel = (zone_id: number, item_id: number | null = null) => {
+  zoneId.value = zone_id;
   isShow.value = true;
   if (item_id) {
     edit.value = true;
@@ -84,7 +87,7 @@ onBeforeMount(async () => {
             </div>
           </div>
           <Button
-            @click="showPanel()"
+            @click="showPanel(rooms.id)"
             label="Добавить кнопку"
             icon="pi pi-plus"
             size="small"
@@ -98,7 +101,7 @@ onBeforeMount(async () => {
           >
             <button
               v-for="items in rooms.items"
-              @click="showPanel(items.item_id)"
+              @click="showPanel(rooms.id, items.item_id)"
               :key="items.item_id"
               type="button"
               class="tw-m-1"
@@ -106,7 +109,7 @@ onBeforeMount(async () => {
               <div
                 class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
                 :class="{ '!tw-border-inherit': !(items.status === 'on') }"
-                :style="{ borderColor: roomColor(rooms.style) }"
+                :style="{ borderColor: itemColor(rooms.style, items.color) }"
               >
                 <img
                   :src="`items/${items.icon}.png`"
@@ -115,7 +118,7 @@ onBeforeMount(async () => {
                 >
                 <Badge
                   v-if="items.group_elements"
-                  :style="{ backgroundColor: roomColor(rooms.style) }"
+                  :style="{ backgroundColor: itemColor(rooms.style, items.color) }"
                   :class="{ '!tw-bg-gray-400': !(items.status === 'on') }"
                   class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
                   rounded
@@ -134,8 +137,10 @@ onBeforeMount(async () => {
 
     <template #rightbar>
       <RightBarDisplay
+        @update="apiDisplays?.refresh"
         v-model:edit="edit"
         v-model:id="id"
+        v-model:zoneId="zoneId"
         v-model:is-show="isShow"
       />
     </template>

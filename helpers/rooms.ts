@@ -32,6 +32,24 @@ export const roomColor = (color: string) => {
   if (color === 'yellow') return '#FFD058';
   if (color === 'orange') return '#FF9E58';
   if (color === 'green') return '#19B58F';
+  if (color === 'red') return '#FF634E';
+  return '#EAEFF4';
+};
+
+export const itemColor = (colorRoom: string, colorBtn: string | undefined) => {
+  if (colorBtn) {
+    if (colorBtn === 'blue') return '#5398FF';
+    if (colorBtn === 'yellow') return '#FFD058';
+    if (colorBtn === 'orange') return '#FF9E58';
+    if (colorBtn === 'green') return '#19B58F';
+    if (colorBtn === 'red') return '#FF634E';
+  } else {
+    if (colorRoom === 'blue') return '#5398FF';
+    if (colorRoom === 'yellow') return '#FFD058';
+    if (colorRoom === 'orange') return '#FF9E58';
+    if (colorRoom === 'green') return '#19B58F';
+    if (colorRoom === 'red') return '#FF634E';
+  }
   return '#EAEFF4';
 };
 

@@ -13,7 +13,15 @@ defineProps({
     type: Boolean,
     required: true,
   },
+  zoneId: {
+    type: Number,
+    required: true,
+  },
 });
+
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
 
 const id = defineModel<number>('id', {
   required: false,
@@ -79,12 +87,15 @@ onBeforeMount(async () => {
         :isUpdate="apiItem.pending"
       >
         <DisplayEditForm
+          @update="emit('update')"
           v-model:form="apiItem.data.response"
           :devices="devices"
         />
       </SharedUILoader>
       <DisplayCreateForm
         v-else
+        @update="emit('update')"
+        :zoneId="zoneId"
         :devices="devices"
       />
     </div>

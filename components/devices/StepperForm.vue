@@ -212,7 +212,12 @@ onBeforeMount(async () => {
           <Button @click="activateCallback('2')">
             {{ t('goBack') }}
           </Button>
-          <Button color="primary" @click="createDevice" :loading="apiCreateDevice?.pending && apiCreateDevice.status !== 'idle'" :label="t('save')" />
+          <Button
+            @click="createDevice"
+            :label="t('save')"
+            :loading="apiCreateDevice?.pending && apiCreateDevice.status !== 'idle'"
+            color="primary"
+          />
         </div>
       </StepPanel>
     </StepPanels>
