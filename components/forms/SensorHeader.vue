@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { type DeviceZoneId } from '@/types/DevicesTypes';
 
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
@@ -8,44 +9,13 @@ const storeRooms = useRoomsStore();
 interface SensorHeaderProps {
   data: { value: string | number; unit: string; label: string }[];
   lastUpdate: string;
-  form: {
-    name: string;
-    zone_id?: string;
-    update_interval: number;
-  }
 }
+
+const updateInterval = defineModel<number>('update-interval');
+const zoneId = defineModel<DeviceZoneId>('zone-id');
+const name = defineModel<string>('name');
+
 const props = defineProps<SensorHeaderProps>();
-const emit = defineEmits<{
-  (event: 'update:model-value', value: string | number | undefined): void;
-}>();
-
-let formSensorHeader = reactive({
-  ...props.form,
-});
-
-watch(
-  () => props.form,
-  (newValue) => {
-    formSensorHeader = newValue;
-  },
-  { deep: true },
-);
-
-const updateTitle = (value: string | undefined) => {
-  formSensorHeader.name = value || '';
-  emit('update:model-value', value);
-};
-
-const updateRoomSelection = (value: string | undefined) => {
-  formSensorHeader.zone_id = value || '';
-  emit('update:model-value', value);
-};
-
-const updatePollInterval = (value: number) => {
-  formSensorHeader.update_interval = value;
-  emit('update:model-value', value);
-};
-
 </script>
 
 <template>
@@ -72,16 +42,14 @@ const updatePollInterval = (value: number) => {
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.title')" required name="title">
     <InputText
-      :value="formSensorHeader.name"
-      @update:modelValue="updateTitle"
+      v-model="name"
       required
       class="tw-w-3/4" />
   </SharedUILabel>
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.room')" name="room">
     <Select
-      :value="formSensorHeader.zone_id"
-      @update:modelValue="updateRoomSelection"
+      v-model="zoneId"
       :options="storeRooms.getRoomsSelect"
       optionLabel="name"
       optionValue="code"
@@ -91,8 +59,7 @@ const updatePollInterval = (value: number) => {
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required name="update_interval">
     <InputNumber
-      :value="formSensorHeader.update_interval"
-      @update:modelValue="updatePollInterval"
+      v-model="updateInterval"
       suffix=" sec"
       id="update_interval"
       class="tw-mr-10 tw-w-1/4"

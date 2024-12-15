@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';

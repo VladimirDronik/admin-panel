@@ -2,23 +2,20 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import { updateParamsForApi } from '~/helpers/devices';
-import { type Devices, type DynamicFormData } from '~/types/DevicesTypes';
+import {
+  type Devices,
+} from '~/types/DevicesTypes';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
-
-// Types
-interface DeviceCreateForm {
-  name: string;
-  type: string;
-  zone_id: number | null;
-  category: string;
-  tags: string[];
-}
+import {
+  type CreateDeviceInitialForm, type DynamicFormData, type DeviceCreateFormPayload, type AddFieldToDynamicFormPayload,
+} from './form.types';
+import { DeviceInterface, ObjectsCategory } from '~/types/DevicesEnums';
+import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
 
 // Composables
 const { t } = useI18n();
@@ -26,9 +23,29 @@ const { updateData } = useUtils();
 const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 
-const form = defineModel<DeviceCreateForm>('form', {
+const initialForm = defineModel<CreateDeviceInitialForm>('form', {
   required: true,
 });
+
+const dynamicForm = reactive<DynamicFormData>({
+  sdaPort: null,
+  sclPort: null,
+  busAdress: null,
+  parent_id: 0,
+  category: ObjectsCategory.Sensor,
+  name: initialForm.value.name,
+  zone_id: initialForm.value.zone_id,
+  props: {
+    update_interval: 300,
+    interface: DeviceInterface['1W'],
+    address: '',
+  },
+  children: {},
+});
+
+const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
+  dynamicForm.children[key] = value;
+};
 
 const model = defineModel<Devices | undefined>('model', {
   required: true,
@@ -57,7 +74,7 @@ const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.k
 // const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
 
 watch(
-  () => form.value.tags,
+  () => initialForm.value.tags,
   (updatedTags) => {
     storeDevices.getTypesApi({ tags: updatedTags.join(';') }, false);
   },
@@ -66,7 +83,7 @@ watch(
 
 const valid = computed(() => {
   // checkValidInput(form.value.zone_id) &&
-  const main = checkValidInput(form.value.tags) && checkValidInput(form.value.category) && checkValidInput(form.value.type) && checkValidInput(form.value.name);
+  const main = checkValidInput(initialForm.value.tags) && checkValidInput(initialForm.value.category) && checkValidInput(initialForm.value.type) && checkValidInput(dynamicForm.name);
 
   let props = true;
   let children = true;
@@ -103,7 +120,7 @@ const createDevice = async () => {
     success: () => {
       dialog.value = false;
       model.value = undefined;
-      form.value = {
+      initialForm.value = {
         name: '',
         zone_id: null,
         type: '',
@@ -117,10 +134,6 @@ const createDevice = async () => {
 };
 
 const isDynamicFormValid = ref(false);
-const dynamicFormData = ref<DynamicFormData>({} as DynamicFormData);
-const devicesDynamicFormUpdateHandler = (form: DynamicFormData) => {
-  dynamicFormData.value = form;
-};
 
 const devicesDynamicFormValidityHandler = (isValid: boolean) => {
   isDynamicFormValid.value = isValid;
@@ -129,12 +142,11 @@ const devicesDynamicFormValidityHandler = (isValid: boolean) => {
 
 onBeforeMount(async () => {
   // Create Device
+  const body = computed<DeviceCreateFormPayload>(() => transformToDeviceCreateFormPayload({
+    ...initialForm.value, ...dynamicForm,
+  }));
   const data: unknown = await useAPI(paths.objects, {
-    body: computed(() => ({
-      ...form.value,
-      props: dynamicFormData.value,
-      events: events.value,
-    })),
+    body,
     method: 'POST',
     immediate: false,
     watch: false,
@@ -158,10 +170,10 @@ onBeforeMount(async () => {
         <form>
           <div class="tw-ml-[20%] tw-mr-[5%]">
             <SharedUILabel class="tw-mb-4" :title="t('devices.tags')" required>
-              <MultiSelect v-model="form.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" />
+              <MultiSelect v-model="initialForm.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" />
             </SharedUILabel>
             <SharedUILabel class="tw-mb-4" :title="t('devices.type') " required>
-              <Select v-model="form.type" :options="types" class="tw-w-2/4" />
+              <Select v-model="initialForm.type" :options="types" class="tw-w-2/4" />
             </SharedUILabel>
           </div>
 
@@ -169,10 +181,10 @@ onBeforeMount(async () => {
 
           <div class="tw-ml-[20%] tw-mr-[5%]">
             <SharedUILabel class="tw-mb-4" :title="t('devices.title')" required>
-              <InputText v-model="form.name" class="tw-w-3/4" />
+              <InputText v-model="dynamicForm.name" class="tw-w-3/4" />
             </SharedUILabel>
             <SharedUILabel class="tw-mb-4" :title="t('devices.room')">
-              <Select v-model="form.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
+              <Select v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
             </SharedUILabel>
           </div>
 
@@ -181,7 +193,11 @@ onBeforeMount(async () => {
           <!-- <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect /> -->
 
           <!-- Dynamically renders the form component based on the selected device type -->
-          <DevicesDynamicDeviceForm :deviceType="form.type" @update:model-value="devicesDynamicFormUpdateHandler" @update:valid="devicesDynamicFormValidityHandler" />
+          <DevicesDynamicDeviceForm
+            v-model:dynamic-form="dynamicForm"
+            :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
+            :deviceType="initialForm.type"
+            @update:valid="devicesDynamicFormValidityHandler" />
         </form>
 
         <div class="tw-flex tw-justify-end">
@@ -194,7 +210,7 @@ onBeforeMount(async () => {
         <FormsEventForm
           v-model="events"
           targetType="object"
-          :modelType="form.type"
+          :modelType="initialForm.type"
           :eventTypes="deviceEventTypes"
         />
         <div class="tw-flex tw-justify-between">

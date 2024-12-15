@@ -36,4 +36,5 @@ export const Components = [
   'RadioButton',
   'InputNumber',
   'InputSwitch',
+  'InputMask',
 ];

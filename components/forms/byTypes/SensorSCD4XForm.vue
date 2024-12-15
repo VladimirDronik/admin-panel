@@ -3,64 +3,90 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { DevicePropertyKey } from '~/types/DevicesEnums';
+import type {
+  DynamicFormData, AddFieldToDynamicFormPayload, DeviceChildrenRequired, DeviceChildren,
+} from '~/components/devices/form.types';
+
+const props = defineProps<{
+  isEditing: boolean;
+  addFieldToDynamicForm: AddFieldToDynamicFormPayload;
+}>();
+
+const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
+
+const initialForm: DeviceChildren = {
+  [DevicePropertyKey.Temperature]: {
+    value: 0,
+    value_updated_at: '',
+    min_error_value: -11,
+    min_threshold: -10,
+    max_threshold: 60,
+    max_error_value: 61,
+    unit: '°C',
+    write_graph: false,
+  },
+  [DevicePropertyKey.Humidity]: {
+    value: 0,
+    value_updated_at: '',
+    min_error_value: -1,
+    min_threshold: 0,
+    max_threshold: 95,
+    max_error_value: 96,
+    unit: '%',
+    write_graph: false,
+  },
+  [DevicePropertyKey.CO2]: {
+    value: 0,
+    value_updated_at: '',
+    min_error_value: 399,
+    min_threshold: 400,
+    max_threshold: 2000,
+    max_error_value: 2001,
+    unit: 'ppm',
+    write_graph: false,
+  },
+};
+
+Object.entries(initialForm).forEach(([key, value]) => props.addFieldToDynamicForm(key as DevicePropertyKey, value));
 
 const { t } = useI18n();
 
-const form = ref({
-  controller: null,
-  sdaPort: null,
-  sclPort: null,
-  update_interval: 300,
-  enableGraphingTemp: false,
-  minAvailableTemp: -10,
-  maxAvailableTemp: 60,
-  minAlarmTemp: 0,
-  maxAlarmTemp: 0,
-  enableGraphingHumidity: false,
-  minAvailableHumidity: 0,
-  maxAvailableHumidity: 95,
-  minAlarmHumidity: 0,
-  maxAlarmHumidity: 0,
-  enableGraphingCO2: false,
-  minAvailableCO2: 400,
-  maxAvailableCO2: 2000,
-  minAlarmCO2: 0,
-  maxAlarmCO2: 0,
-  name: '',
-  zone_id: '',
-  address: '',
-});
+const emit = defineEmits(['update:valid']);
 
-const props = defineProps({
-  isEditing: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-const emit = defineEmits(['update:modelValue', 'update:valid']);
+const flatForm = computed(() => ({
+  parent_id: dynamicForm.value.parent_id,
+  sdaPort: dynamicForm.value.sdaPort,
+  sclPort: dynamicForm.value.sclPort,
+  update_interval: dynamicForm.value.props.update_interval,
+  minThresholdTemp: dynamicForm.value.children.temperature.min_threshold,
+  maxThresholdTemp: dynamicForm.value.children.temperature.max_threshold,
+  minThresholdHumidity: dynamicForm.value.children.humidity.min_threshold,
+  maxThresholdHumidity: dynamicForm.value.children.humidity.max_threshold,
+  minThresholdCO2: dynamicForm.value.children.co2.min_threshold,
+  maxThresholdCO2: dynamicForm.value.children.co2.max_threshold,
+}));
 
 const schema = z.object({
-  controller: z.number().min(1),
+  parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   sclPort: z.number().min(1),
-  update_interval: z.number().min(300),
-  minAvailableTemp: z.number().min(-10),
-  maxAvailableTemp: z.number().max(60),
-  minAvailableHumidity: z.number().min(0),
-  maxAvailableHumidity: z.number().max(95),
-  minAvailableCO2: z.number().min(400),
-  maxAvailableCO2: z.number().max(2000),
+  update_interval: z.number().default(300),
+  minThresholdTemp: z.number().min(-10),
+  maxThresholdTemp: z.number().max(60),
+  minThresholdHumidity: z.number().min(0),
+  maxThresholdHumidity: z.number().max(95),
+  minThresholdCO2: z.number().min(400),
+  maxThresholdCO2: z.number().max(2000),
 });
 
 const resolver = ref(zodResolver(schema));
 
 watch(
-  form,
-  (newValue) => {
-    emit('update:modelValue', newValue);
-
-    const validationResult = schema.safeParse(newValue);
+  () => dynamicForm.value,
+  () => {
+    const flatFormData = flatForm.value;
+    const validationResult = schema.safeParse(flatFormData);
     const isValid = validationResult.success;
     emit('update:valid', isValid);
   },
@@ -78,14 +104,14 @@ const sensorMockData = {
 </script>
 
 <template>
-  <Form :resolver="resolver" :form="form">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" :form="{ update_interval: form.update_interval, name: form.name, zone_id: form.zone_id }" />
-    <FormsSensorBasicPlacement v-model:form="form" />
+  <Form :resolver="resolver" :form="dynamicForm">
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
+    <FormsSensorBasicPlacement v-model:parent-id="dynamicForm.parent_id" v-model:sda-port="dynamicForm.sdaPort" v-model:scl-port="dynamicForm.sclPort" />
 
     <!-- Интервал опроса -->
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="form.update_interval" name="update_interval">
-      <InputNumber suffix=" sec" id="update_interval" v-model="form.update_interval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="dynamicForm.props.update_interval" name="update_interval">
+      <InputNumber suffix=" sec" id="update_interval" v-model="dynamicForm.props.update_interval" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
     <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
@@ -94,66 +120,65 @@ const sensorMockData = {
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.temperature') }}</p>
 
     <SharedUILabel :title="t('devices.graphing')">
-      <ToggleSwitch v-model="form.enableGraphingTemp" />
+      <ToggleSwitch v-model="dynamicForm.children.temperature.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
         required
-        :value="form.minAvailableTemp"
-        name="minAvailableTemp"
+        :value="dynamicForm.children.temperature.min_threshold"
+        name="minThresholdTemp"
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
       >
-        <InputNumber v-model="form.minAvailableTemp" suffix=" °C" />
+        <InputNumber v-model="dynamicForm.children.temperature.min_threshold" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableTemp" name="maxAvailableTemp" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="form.maxAvailableTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.temperature.max_threshold" name="maxThresholdTemp" :title="`${t('devices.maxAvailability')}:`">
+        <InputNumber v-model="dynamicForm.children.temperature.max_threshold" suffix=" °C" />
       </SharedUILabel>
     </div>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
-      <SharedUILabel class="tw-flex-col" :value="form.minAlarmTemp" name="minAlarmTemp" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber v-model="form.minAlarmTemp" suffix=" °C" />
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
+      <SharedUILabel class="tw-flex-col" :value="dynamicForm.children.temperature.min_error_value" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
+        <InputNumber v-model="dynamicForm.children.temperature.min_error_value" suffix=" °C" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmTemp" name="maxAlarmTemp" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="form.maxAlarmTemp" suffix=" °C" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.temperature.max_error_value" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="dynamicForm.children.temperature.max_error_value" suffix=" °C" />
       </SharedUILabel>
     </div>
 
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.humidity') }}</p>
 
     <SharedUILabel :title="t('devices.graphing')">
-      <ToggleSwitch v-model="form.enableGraphingHumidity" />
+      <ToggleSwitch v-model="dynamicForm.children.humidity.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
         required
-        :value="form.minAvailableHumidity"
-        name="minAvailableHumidity"
+        :value="dynamicForm.children.humidity.min_threshold"
+        name="minThresholdHumidity"
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
       >
-        <InputNumber v-model="form.minAvailableHumidity" suffix=" %" />
+        <InputNumber v-model="dynamicForm.children.humidity.min_threshold" suffix=" %" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableHumidity" name="maxAvailableHumidity" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="form.maxAvailableHumidity" suffix=" %" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.humidity.max_threshold" name="maxThresholdHumidity" :title="`${t('devices.maxAvailability')}:`">
+        <InputNumber v-model="dynamicForm.children.humidity.max_threshold" suffix=" %" />
       </SharedUILabel>
     </div>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
-        :value="form.minAlarmHumidity"
-        name="minAlarmHumidity"
+        :value="dynamicForm.children.humidity.min_error_value"
         :title="`${t('devices.minAlarm')}:`"
         :tooltip="t('devices.tooltipMinAlarm')"
       >
-        <InputNumber v-model="form.minAlarmHumidity" suffix=" %" />
+        <InputNumber v-model="dynamicForm.children.humidity.min_error_value" suffix=" %" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmHumidity" name="maxAlarmHumidity" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="form.maxAlarmHumidity" suffix=" %" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.humidity.max_error_value" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="dynamicForm.children.humidity.max_error_value" suffix=" %" />
       </SharedUILabel>
     </div>
 
@@ -161,31 +186,31 @@ const sensorMockData = {
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.co2') }}</p>
 
     <SharedUILabel :title="t('devices.graphing')">
-      <ToggleSwitch v-model="form.enableGraphingCO2" />
+      <ToggleSwitch v-model="dynamicForm.children.co2.write_graph" />
     </SharedUILabel>
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col"
         required
-        :value="form.minAvailableCO2"
-        name="minAvailableCO2"
+        :value="dynamicForm.children.co2.min_threshold"
+        name="minThresholdCO2"
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
       >
-        <InputNumber v-model="form.minAvailableCO2" suffix=" ppm" />
+        <InputNumber v-model="dynamicForm.children.co2.min_threshold" suffix=" ppm" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="form.maxAvailableCO2" name="maxAvailablePressure" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="form.maxAvailableCO2" suffix=" ppm" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.co2.max_threshold" name="maxThresholdCO2" :title="`${t('devices.maxAvailability')}:`">
+        <InputNumber v-model="dynamicForm.children.co2.max_threshold" suffix=" ppm" />
       </SharedUILabel>
     </div>
 
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
-      <SharedUILabel class="tw-flex-col" :value="form.minAlarmCO2" name="minAlarmPressure" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber v-model="form.minAlarmCO2" suffix=" ppm" />
+      <SharedUILabel class="tw-flex-col" :value="dynamicForm.children.co2.min_error_value" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
+        <InputNumber v-model="dynamicForm.children.co2.min_error_value" suffix=" ppm" />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="form.maxAlarmCO2" name="maxAlarmPressure" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="form.maxAlarmCO2" suffix=" ppm" />
+      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.co2.max_error_value" :title="`${t('devices.maxAlarm')}:`">
+        <InputNumber v-model="dynamicForm.children.co2.max_error_value" suffix=" ppm" />
       </SharedUILabel>
     </div>
   </Form>
