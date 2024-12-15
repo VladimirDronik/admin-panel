@@ -3,10 +3,13 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Helper modules
+import { ClockCogIcon } from 'vue-tabler-icons';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
 import { updateParamsForApi } from '~/helpers/devices';
 // Types
-import { TablePortListSchema, type TablePortData, type FullDevice } from '~/stores/devices/devicesTypes';
+import {
+  TablePortListSchema, type TablePortData, type FullDevice,
+} from '~/stores/devices/devicesTypes';
 import type { APIData } from '~/types/StoreTypes';
 import type {
   ModelProps,
@@ -14,6 +17,15 @@ import type {
 // Static Data modules
 import { objectManager, paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
+import type {
+  AddFieldToDynamicFormPayload, DeviceEditFormPayload, DeviceChildren, DevicePropertyData, EditDeviceForm, DeviceCreateFormPayload,
+} from '~/components/devices/form.types';
+import {
+  ObjectsCategory, DevicePropertyKey, DeviceInterface,
+} from '~/types/DevicesEnums';
+import api from '~/plugins/api';
+import type { GetCurrentDeviceResponse } from './right-bar.types.ts';
+import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
 
 // Composables
 const { t } = useI18n();
@@ -30,6 +42,7 @@ const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
 });
 
 // Variables
+
 const name = ref('');
 
 const tabs = ref('features');
@@ -38,21 +51,42 @@ const active = ref(false);
 
 const dialogDelete = ref(false);
 
+const asideEditingForm = reactive<EditDeviceForm>({
+  id: 0,
+  sdaPort: null,
+  sclPort: null,
+  parent_id: 0,
+  category: ObjectsCategory.Sensor,
+  name: '',
+  zone_id: null,
+  props: {
+    update_interval: 300,
+    interface: DeviceInterface['1W'],
+    address: '',
+  },
+  children: {},
+  type: '',
+  status: 'N/A',
+});
+
+const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
+  asideEditingForm.children[key] = value;
+};
+
 // Apis
 const apiPorts = ref<APIData<TablePortData[]>>();
-
 const apiDevice = ref<APIData<any>>();
 const apiUpdateDevice = ref<APIData<any>>();
 const apiDeleteDevice = ref<APIData<any>>();
 
-const form = ref();
+const form = ref({});
 
 // Computed Properties
 const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
 
 // Methods
 const updateName = () => {
-  if (form.value) name.value = form.value?.name;
+  // if (form.value) name.value = form.value?.name;
 };
 
 const createFunction = (functionBody: string, props = {}) => {
@@ -106,18 +140,63 @@ const changeDevice = async () => {
 };
 
 // Watchers
-watch(() => form.value?.name, () => {
-  updateName();
-  active.value = false;
-});
+// watch(() => form.value?.name, () => {
+//   updateName();
+//   active.value = false;
+// });
 
-watch(() => form.value?.category, () => {
-  tabs.value = 'features';
-});
+// watch(() => form.value?.category, () => {
+//   tabs.value = 'features';
+// });
 
 watch(() => selectedObject.value?.id, () => {
-  if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
+  // if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
 });
+
+const transformResponseToFormData = (data: GetCurrentDeviceResponse): EditDeviceForm| null => {
+  if (!data.id) return null;
+  const address = data.props.find((prop) => prop.code === 'address');
+  const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? 0;
+  const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
+  const updatedBusAdress = String(address?.value).split(';')[1];
+  const ports = String(address?.value).split(';') ?? [null, null];
+  const children = data.children.reduce((acc, child) => {
+    const key = child.type as DevicePropertyKey;
+
+    const propertyData = child.props.reduce((acc, prop) => {
+      const key = prop.code as keyof DevicePropertyData;
+      const value = prop.value as DevicePropertyData[keyof DevicePropertyData];
+      // @ts-expect-error ///
+      acc[key] = value;
+      return acc;
+    }, {} as DevicePropertyData);
+
+    acc[key] = {
+      ...propertyData,
+    };
+    return acc;
+  }, {} as DeviceChildren);
+
+  return {
+    id: data.id,
+    status: data.status,
+    type: data.type,
+    sdaPort: Number(ports[0]),
+    sclPort: Number(ports[1]),
+    busAdress: Number(updatedBusAdress),
+    parent_id: data.parent_id,
+    name: data.name,
+    zone_id: data.zone_id,
+    category: data.category as ObjectsCategory,
+    props: {
+      interface: updatedInterface,
+      update_interval: Number(updatedInterval),
+    },
+    children,
+  };
+};
+
+const forceUpdateKey = ref(0);
 
 watchEffect(() => {
   const result = {
@@ -127,9 +206,10 @@ watchEffect(() => {
       ...item,
       props: propsModel(item.props) ?? [],
     })),
-  };
-
-  form.value = result;
+  } as GetCurrentDeviceResponse;
+  const transformedData = transformResponseToFormData(result);
+  if (transformedData) Object.assign(asideEditingForm, transformedData);
+  forceUpdateKey.value += 1;
 });
 
 onBeforeMount(async () => {
@@ -141,16 +221,14 @@ onBeforeMount(async () => {
     },
   );
   apiDevice.value = dataDevice as APIData<any>;
-  //
 
   // Update Device
+  const body = computed<DeviceEditFormPayload>(() => transformToDeviceEditFormPayload(asideEditingForm));
+
   const dataUpdateDevice: unknown = await useAPI(
     paths.objects,
     {
-      body: computed(() => updateParamsForApi({
-        ...form.value,
-        name: name.value,
-      })),
+      body,
       immediate: false,
       watch: false,
       method: 'PUT',
@@ -158,7 +236,6 @@ onBeforeMount(async () => {
   );
 
   apiUpdateDevice.value = dataUpdateDevice as APIData<any>;
-  //
 
   // Delete Device
   const dataDeleteDevice: unknown = await useAPI(
@@ -186,16 +263,17 @@ onBeforeMount(async () => {
   apiPorts.value = dataPorts as APIData<TablePortData[]>;
   //
 });
+
 </script>
 
 <template>
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <Inplace v-model:active="active" v-if="form" class="tw-w-full" @open="updateName">
+        <Inplace v-model:active="active" v-if="asideEditingForm.name" class="tw-w-full" @open="updateName">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-              {{ form?.name }} ({{ form.type}})
+              {{ asideEditingForm?.name }} ({{ asideEditingForm.type}})
             </h3>
           </template>
           <template #content="{ closeCallback }">
@@ -220,7 +298,7 @@ onBeforeMount(async () => {
         />
       </div>
       <Tag
-        :severity="checkStatusColor(form?.status)"
+        :severity="checkStatusColor(asideEditingForm.status)"
         class="tw-ml-3 !tw-rounded-lg"
         outlined
         label
@@ -228,14 +306,13 @@ onBeforeMount(async () => {
         <div class="tw-flex tw-items-center tw-font-normal">
           <div
             class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusBackgroundColor(form?.status)"
+            :class="checkStatusBackgroundColor(asideEditingForm.status)"
           />
-          {{ checkStatusTextSmall(form?.status) }}
+          {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
       </Tag>
 
       <Tabs v-model:value="tabs">
-        <!-- Header -->
         <TabList>
           <Tab value="features">
             <p class="tw-font-normal">
@@ -247,7 +324,7 @@ onBeforeMount(async () => {
               {{ t('devices.events') }}
             </p>
           </Tab>
-          <Tab value="ports" v-if="form?.category === 'controller'">
+          <Tab value="ports" v-if="asideEditingForm?.category === 'controller'">
             <p class="tw-font-normal">
               {{ t('devices.ports') }}
             </p>
@@ -258,20 +335,23 @@ onBeforeMount(async () => {
             </p>
           </Tab>
         </TabList>
-        <!--  -->
-
-        <!-- Container -->
         <TabPanels>
           <TabPanel value="features">
-            <DevicesDynamicDeviceForm :deviceType="form.type" is-editing>
+            <DevicesDynamicDeviceForm
+              :key="forceUpdateKey"
+              is-editing
+              :device-type="asideEditingForm.type"
+              v-model:dynamic-form="asideEditingForm"
+              :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
+            >
               <template #footer>
                 <div class="tw-mt-4 tw-flex tw-justify-end">
                   <DialogsDeleteDialog
                     @delete="confirmDelete"
                     v-model="dialogDelete"
-                    :id="form?.id ?? -1"
+                    :id="asideEditingForm?.id ?? -1"
                     :loading="apiDeleteDevice?.pending"
-                    :subtitle="`Вы уверены, что хотите удалить «${form?.name}»`"
+                    :subtitle="`Вы уверены, что хотите удалить «${asideEditingForm?.name}»`"
                     class="tw-mr-2"
                     title="Удалить категорию"
                   />
@@ -285,34 +365,13 @@ onBeforeMount(async () => {
                 </div>
               </template>
             </DevicesDynamicDeviceForm>
-            <!-- <DevicesPropertiesForm v-if="form" v-model="form">
-              <template #footer>
-                <div class="tw-flex tw-justify-end">
-                  <DialogsDeleteDialog
-                    @delete="confirmDelete"
-                    v-model="dialogDelete"
-                    :id="form?.id ?? -1"
-                    :loading="apiDeleteDevice?.pending"
-                    :subtitle="`Вы уверены, что хотите удалить «${form?.name}»`"
-                    class="tw-mr-2"
-                    title="Удалить категорию"
-                  />
 
-                  <Button
-                    :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
-                    class="tw-mr-2"
-                    @click="changeDevice"
-                    :label="t('save')"
-                  />
-                </div>
-              </template>
-            </DevicesPropertiesForm> -->
           </TabPanel>
           <TabPanel value="events">
             <FormsEventForm
               targetType="object"
-              :id="form.id"
-              :modelType="form.type"
+              :id="asideEditingForm.id"
+              :modelType="asideEditingForm.type"
               :eventTypes="deviceEventTypes"
             />
           </TabPanel>
@@ -327,7 +386,6 @@ onBeforeMount(async () => {
             Скоро...
           </TabPanel>
         </TabPanels>
-        <!--  -->
       </Tabs>
     </div>
   </LayoutFullRightbar>

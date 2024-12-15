@@ -1,8 +1,17 @@
 export enum ObjectsCategory {
   Controller = 'controller',
-  GenericInput = 'genericInput',
+  GenericInput = 'generic_input',
+  GenericOutput = 'generic_output',
   Regulator = 'regulator',
   Sensor = 'sensor',
+}
+
+export enum DevicePropertyKey {
+  Temperature = 'temperature',
+  Humidity = 'humidity',
+  Illumination = 'illumination',
+  Pressure = 'pressure',
+  CO2 = 'co2',
 }
 
 export enum Default {
@@ -26,4 +35,13 @@ export enum Sensor {
 export enum Connection {
   HTTP = 'http',
   MQTT = 'mqtt',
+}
+
+export enum DeviceInterface {
+  '1W' = '1W',
+  '1WBUS' = '1WBUS',
+  'ADC' = 'АЦП',
+  'DISCRETE' = 'Дискретный',
+  'I2C' = 'I2C',
+  'MODBUS' = 'MODBUS'
 }
