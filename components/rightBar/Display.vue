@@ -88,14 +88,15 @@ onBeforeMount(async () => {
       >
         <DisplayEditForm
           @update="emit('update')"
+          v-model:isOpen="isOpen"
           v-model:form="apiItem.data.response"
           :devices="devices"
         />
       </SharedUILoader>
       <DisplayCreateForm
         v-else
-        v-model:isOpen="isOpen"
         @update="emit('update')"
+        v-model:isOpen="isOpen"
         :zoneId="zoneId"
         :devices="devices"
       />

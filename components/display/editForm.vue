@@ -28,6 +28,10 @@ const form = defineModel<itemType>('form', {
   required: true,
 });
 
+const isOpen = defineModel<boolean>('isOpen', {
+  required: true,
+});
+
 // Variables
 const loadingDelete = ref(false);
 
@@ -64,6 +68,7 @@ const confirmDelete = async () => {
       await emit('update');
     },
     success: () => {
+      isOpen.value = false;
     },
     successMessage: 'Устройство удалено',
     errorMessage: 'Ошибка удаления устройства',
@@ -83,7 +88,7 @@ onBeforeMount(async () => {
 
   // Delete Device
   const dataDelete: unknown = await useAPI(paths.privateItem, {
-    body: computed(() => ({
+    query: computed(() => ({
       id: form.value.item_id,
     })),
     method: 'DELETE',
