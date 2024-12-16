@@ -107,13 +107,14 @@ onBeforeMount(async () => {
               class="tw-m-1"
             >
               <div
-                class="tw tw-relative tw-flex tw-aspect-square tw-w-24 tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
+                class="tw tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
                 :class="{ '!tw-border-inherit': !(items.status === 'on') }"
                 :style="{ borderColor: itemColor(rooms.style, items.color) }"
               >
                 <img
                   :src="`items/${items.icon}.png`"
                   alt=""
+                  class="tw-w-20"
                   :class="{ '!tw-opacity-60': !(items.status === 'on') }"
                 >
                 <Badge
