@@ -49,7 +49,7 @@ module.exports = {
     'vuejs-accessibility/form-control-has-label': 'off',
     '@intlify/vue-i18n/no-raw-text': ['warn', {
       ignorePattern: '^[-#:()&%x,+]+$',
-      ignoreText: ['', '*', '.'],
+      ignoreText: ['', '*', '.', '...'],
     }],
     '@intlify/vue-i18n/no-unused-keys': [
       'error',
