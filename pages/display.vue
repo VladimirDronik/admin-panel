@@ -6,7 +6,7 @@ import { IconPlus } from '@tabler/icons-vue';
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema, type RoomBtnsData } from '~/types/DisplayTypes';
 // Helpers modules
-import { roomColor, itemColor } from '~/helpers/rooms';
+import { itemColor, roomTextColor } from '~/helpers/rooms';
 
 // Composables
 const { t } = useI18n();
@@ -21,18 +21,23 @@ const apiDisplays = ref<APIData<DisplayData>>();
 const id = ref<number>(0);
 const zoneId = ref<number>(0);
 
-const edit = ref(false);
+const variant = ref('');
 const isShow = ref(false);
 
-const showPanel = (zone_id: number, item_id: number | null = null) => {
+const showItemPanel = (zone_id: number, item_id: number | null = null) => {
   zoneId.value = zone_id;
-  isShow.value = true;
   if (item_id) {
-    edit.value = true;
+    variant.value = 'Edit Item';
     id.value = item_id;
   } else {
-    edit.value = false;
+    variant.value = 'Create Item';
   }
+  isShow.value = true;
+};
+
+const showScenarioPanel = (item_id: number) => {
+  id.value = item_id;
+  variant.value = 'Edit Scenario';
   isShow.value = true;
 };
 
@@ -58,6 +63,32 @@ onBeforeMount(async () => {
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
+      <PerfectScrollbar class="tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
+        <button
+          v-for="scenario in apiDisplays?.data?.response.scenario_items"
+          @click="showScenarioPanel(scenario.id)"
+          :key="scenario.id"
+          type="button"
+          class="tw-relative tw-aspect-square tw-w-32 tw-min-w-32 tw-rounded-md tw-border-2 tw-p-1"
+        >
+          <div class="tw-flex tw-h-full tw-w-full tw-items-center tw-justify-between tw-pt-1">
+            <div class="tw-h-full tw-pt-2">
+              <img
+                :src="`scenario_items/${scenario.icon}.png`"
+                alt=""
+                class="tw-aspect-square tw-w-12"
+              >
+              <h4
+                class="tw-absolute tw-bottom-2 tw-left-1.5 tw-right-0 tw-mr-2 tw-truncate tw-text-left tw-text-primary"
+                :style="{ color: roomTextColor(scenario.color) }"
+              >
+                {{ scenario.title }}
+              </h4>
+              <!-- <Button class="tw-aspect-square tw-w-8" outlined icon="pi pi-plus" size="small" /> -->
+            </div>
+          </div>
+        </button>
+      </PerfectScrollbar>
       <div
         v-for="rooms in apiDisplays?.data?.response.room_items"
         :key="rooms.id"
@@ -65,7 +96,7 @@ onBeforeMount(async () => {
       >
         <div class="tw-flex tw-w-full tw-items-center tw-justify-between tw-pl-1.5 tw-pt-1">
           <div class=" tw-flex tw-items-center">
-            <h4 class="tw-mr-2 tw-text-xl" :style="{ color: roomColor(rooms.style) }">
+            <h4 class="tw-mr-2 tw-text-xl" :style="{ color: itemColor(rooms.style) }">
               {{ rooms.name }}
             </h4>
             <div
@@ -97,7 +128,7 @@ onBeforeMount(async () => {
           >
             <button
               v-for="items in rooms.items"
-              @click="showPanel(rooms.id, items.item_id)"
+              @click="showItemPanel(rooms.id, items.item_id)"
               :key="items.item_id"
               type="button"
               class="tw-m-1.5"
@@ -128,7 +159,7 @@ onBeforeMount(async () => {
               </h5>
             </button>
             <button
-              @click="showPanel(rooms.id)"
+              @click="showItemPanel(rooms.id)"
               type="button"
               class="tw-m-1.5"
             >
@@ -153,9 +184,9 @@ onBeforeMount(async () => {
     <template #rightbar>
       <RightBarDisplay
         @update="apiDisplays?.refresh"
-        v-model:edit="edit"
+        :variant="variant"
+        :zoneId="zoneId"
         v-model:id="id"
-        v-model:zoneId="zoneId"
         v-model:is-show="isShow"
       />
     </template>

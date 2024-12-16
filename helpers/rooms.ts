@@ -36,7 +36,16 @@ export const roomColor = (color: string) => {
   return '#EAEFF4';
 };
 
-export const itemColor = (colorRoom: string, colorBtn: string | undefined) => {
+export const roomTextColor = (color: string) => {
+  if (color === 'blue') return '#5398FF';
+  if (color === 'yellow') return '#FFD058';
+  if (color === 'orange') return '#FF9E58';
+  if (color === 'green') return '#19B58F';
+  if (color === 'red') return '#FF634E';
+  return '';
+};
+
+export const itemColor = (colorRoom: string, colorBtn: string | undefined = undefined) => {
   if (colorBtn) {
     if (colorBtn === 'blue') return '#5398FF';
     if (colorBtn === 'yellow') return '#FFD058';

@@ -43,7 +43,6 @@ const apiDeleteItem = ref<APIData<any>>();
 const resolver = ref(zodResolver(
   z.object({
     title: z.string().min(1),
-    type: z.string(),
     zone_id: z.number(),
   }),
 ));
@@ -56,8 +55,8 @@ const changeItem = async () => {
     },
     success: () => {
     },
-    successMessage: 'Кнопка была успешно создана',
-    errorMessage: 'Кнопка не была создана',
+    successMessage: 'Кнопка была успешно изменена',
+    errorMessage: 'Кнопка не была изменена',
   });
 };
 
@@ -133,20 +132,6 @@ onBeforeMount(async () => {
             required
           >
             <InputText v-model="form.title" class="tw-w-full" />
-          </SharedUILabel>
-          <SharedUILabel
-            :title="'Тип'"
-            :value="form.type"
-            name="type"
-            class="tw-mb-2"
-            required
-          >
-            <Select
-              v-model="form.type"
-              :options="devices"
-              class="tw-w-full"
-              show-clear
-            />
           </SharedUILabel>
           <SharedUILabel
             :title="'Помещение'"
