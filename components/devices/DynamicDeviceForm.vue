@@ -1,39 +1,40 @@
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue';
-import { deviceFormMapping } from '@/components/forms/FormMappings';
+import { deviceFormMapping } from '~/components/forms/FormMappings';
 import DefaultFormComponent from '../forms/byTypes/DefaultForm.vue';
+import { type DynamicFormData, type AddFieldToDynamicFormPayload } from './form.types';
 
-const props = defineProps({
-  deviceType: {
-    type: String,
-    required: true,
-  },
-  isEditing: {
-    type: Boolean,
-    default: false,
-  },
+const props = withDefaults(defineProps<{
+  addFieldToDynamicForm: AddFieldToDynamicFormPayload;
+  deviceType: string;
+  isEditing?: boolean;
+}>(), {
+  isEditing: false,
 });
 
-const emit = defineEmits(['update:modelValue', 'update:valid']);
+const dynamicForm = defineModel<DynamicFormData>('dynamic-form');
+
+const emit = defineEmits(['update:valid']);
 
 const FormComponent = computed(() => {
   const mapping = deviceFormMapping.find((item) => item.type === props.deviceType);
   return mapping?.component || DefaultFormComponent;
 });
 
-const updateModelValue = (newValue: unknown) => {
-  console.log('Данные, полученные от формы:', newValue);
-  emit('update:modelValue', newValue);
-};
-
 const updateValidity = (isValid: boolean) => {
   emit('update:valid', isValid);
 };
+
 </script>
 
 <template>
   <div>
-    <component :is="FormComponent" :isEditing="props.isEditing" @update:modelValue="updateModelValue" @update:valid="updateValidity" />
+    <component
+      :is="FormComponent"
+      :isEditing="props.isEditing"
+      v-model:dynamic-form="dynamicForm"
+      @update:valid="updateValidity"
+      :add-field-to-dynamic-form="props.addFieldToDynamicForm"
+    />
     <slot name="footer" />
   </div>
 </template>

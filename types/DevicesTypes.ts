@@ -1,3 +1,7 @@
+export type DeviceZoneId = number | null;
+export type DevicePort = number | null;
+export type DeviceParentId = number | null;
+
 export interface Devices {
   id: number;
   type: string;
@@ -9,7 +13,7 @@ export interface Devices {
   parent_id: number;
   category: string;
   tags: string[];
-  zone_id: number | null;
+  zone_id: DeviceZoneId;
   status: string;
   children?: Devices[];
   props: ModelProps[];
@@ -127,38 +131,4 @@ export interface GetDevicesPortsResponse {
   data: {
     response: PortDataObject[];
   };
-}
-
-export interface DynamicFormData {
-    address: string;
-    controller: number | null;
-    sdaPort?: number | null;
-    sclPort?: number | null;
-    mode?: string;
-    update_interval?: number;
-    enableGraphingTemp?: boolean;
-    minAvailableTemp?: number;
-    maxAvailableTemp?: number;
-    minAlarmTemp?: number;
-    maxAlarmTemp?: number;
-    enableGraphingPressure?: boolean;
-    minAvailablePressure?: number;
-    maxAvailablePressure?: number;
-    minAlarmPressure?: number;
-    maxAlarmPressure?: number;
-    enableGraphingHumidity?: boolean;
-    minAvailableHumidity?: number;
-    maxAvailableHumidity?: number;
-    minAlarmHumidity?: number;
-    maxAlarmHumidity?: number;
-    enableGraphingIllumination?: boolean;
-    minAvailableIllumination?: number;
-    maxAvailableIllumination?: number;
-    minAlarmIllumination?: number;
-    maxAlarmIllumination?: number;
-    enableGraphingCO2?: boolean;
-    minAvailableCO2?: number;
-    maxAvailableCO2?: number;
-    minAlarmCO2?: number;
-    maxAlarmCO2?: number;
 }
