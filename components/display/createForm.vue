@@ -20,6 +20,10 @@ const props = defineProps<{
   zoneId: number,
 }>();
 
+const isOpen = defineModel<boolean>('isOpen', {
+  required: true,
+});
+
 const emit = defineEmits<{
   (e: 'update'): void
 }>();
@@ -32,6 +36,8 @@ const form = ref({
 });
 
 const events = ref<Event[]>();
+
+const step = ref('1');
 
 const apiCreateItem = ref<APIData<any>>();
 
@@ -50,6 +56,14 @@ const createItem = async () => {
       await emit('update');
     },
     success: () => {
+      form.value = {
+        title: null,
+        type: null,
+        color: null,
+        item_id: null,
+      };
+      isOpen.value = false;
+      step.value = '1';
     },
     successMessage: 'Кнопка была успешно создана',
     errorMessage: 'Кнопка не была создана',
@@ -60,7 +74,7 @@ onBeforeMount(async () => {
   // Create Device
   const data: unknown = await useAPI(paths.privateWizard, {
     body: computed(() => ({
-      ...form.value,
+      item: form.value,
       events: events.value?.map((item) => ({
         actions: item.actions,
         name: item.code,
@@ -79,7 +93,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <Stepper v-if="resolver" value="1" linear>
+  <Stepper v-if="resolver" v-model:value="step" linear>
     <StepList>
       <Step value="1">{{ t('devices.features') }}</Step>
       <Step value="2">{{ t('devices.events') }}</Step>
