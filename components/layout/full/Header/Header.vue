@@ -7,32 +7,25 @@ const open = defineModel<boolean>('open', {
 </script>
 
 <template>
-  <div class="tw-pl-80" :class="{ '!tw-pl-20': !open }">
-    <Card class="tw-sticky tw-top-0 tw-z-30 tw-h-full tw-max-h-28 !tw-rounded-none tw-border-b !tw-shadow-none">
-      <template #content>
-        <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
-          <Button
-            @click="open = !open"
-            size="small"
-            severity="secondary"
-            icon="pi pi-align-justify"
-            text
-            rounded
-          />
-          <div class="tw-flex tw-items-center">
-            <LayoutFullHeaderLanguage class="tw-mr-2" />
+  <div
+    class="tw-sticky tw-top-0 tw-z-30 tw-flex tw-h-20 tw-items-center !tw-rounded-none tw-border-b tw-px-6 !tw-shadow-none"
+  >
+    <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
+      <Button
+        @click="open = !open"
+        size="small"
+        severity="secondary"
+        icon="pi pi-align-justify"
+        rounded
+        class="tw-aspect-square tw-h-9 tw-w-9"
+      />
+      <div class="tw-flex tw-items-center">
+        <LayoutFullHeaderLanguage class="tw-mr-2" />
 
-            <LayoutFullHeaderNotification class="tw-mr-2" />
+        <LayoutFullHeaderNotification class="tw-mr-2" />
 
-            <LayoutFullHeaderProfile />
-          </div>
-        </div>
-      </template>
-    </Card>
-    <slot />
+        <LayoutFullHeaderProfile />
+      </div>
+    </div>
   </div>
 </template>
-
-<style>
-
-</style>

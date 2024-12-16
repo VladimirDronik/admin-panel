@@ -22,14 +22,16 @@ watch(open, (newValue) => {
 
 <template>
   <div>
-    <!-- Layout -->
+    <!-- Sidebar -->
     <LayoutFullSidebar v-model:open="open" class="tw-z-40" />
-    <LayoutFullHeader v-model:open="open">
+    <!--  -->
+    <div class="tw-pl-80" :class="{ '!tw-pl-20': !open }">
+      <LayoutFullHeader v-model:open="open" />
       <!-- Notifications -->
       <Toast :baseZIndex="99999" />
       <!--  -->
+
       <slot />
-    </LayoutFullHeader>
-    <!--  -->
+    </div>
   </div>
 </template>
