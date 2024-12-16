@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
+import { IconPlus } from '@tabler/icons-vue';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema, type RoomBtnsData } from '~/types/DisplayTypes';
@@ -62,7 +63,7 @@ onBeforeMount(async () => {
         :key="rooms.id"
         class="tw-rounded-md tw-border tw-p-3"
       >
-        <div class="tw-mb-2 tw-flex tw-w-full tw-items-center tw-justify-between">
+        <div class="tw-flex tw-w-full tw-items-center tw-justify-between tw-pl-1.5 tw-pt-1">
           <div class=" tw-flex tw-items-center">
             <h4 class="tw-mr-2 tw-text-xl" :style="{ color: roomColor(rooms.style) }">
               {{ rooms.name }}
@@ -85,15 +86,10 @@ onBeforeMount(async () => {
                 %
               </span>
             </div>
+            <Button class="tw-aspect-square tw-w-8" outlined icon="pi pi-plus" size="small" />
           </div>
-          <Button
-            @click="showPanel(rooms.id)"
-            label="Добавить кнопку"
-            icon="pi pi-plus"
-            size="small"
-          />
         </div>
-        <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2">
+        <div class="tw-pt-2">
           <VueDraggableNext
             v-model="rooms.items"
             :animation="300"
@@ -104,10 +100,10 @@ onBeforeMount(async () => {
               @click="showPanel(rooms.id, items.item_id)"
               :key="items.item_id"
               type="button"
-              class="tw-m-1"
+              class="tw-m-1.5"
             >
               <div
-                class="tw tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border tw-p-3"
+                class="tw tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
                 :class="{ '!tw-border-inherit': !(items.status === 'on') }"
                 :style="{ borderColor: itemColor(rooms.style, items.color) }"
               >
@@ -121,14 +117,32 @@ onBeforeMount(async () => {
                   v-if="items.group_elements"
                   :style="{ backgroundColor: itemColor(rooms.style, items.color) }"
                   :class="{ '!tw-bg-gray-400': !(items.status === 'on') }"
-                  class="tw-absolute -tw-right-2 -tw-top-2 tw-rounded-full"
+                  class="tw-absolute -tw-right-2.5 -tw-top-2.5 tw-rounded-full"
                   rounded
                 >
                   {{ items.group_elements.length }}
                 </Badge>
               </div>
-              <h5 class="tw-w-24 tw-truncate tw-text-center">
+              <h5 class="tw-w-28 tw-truncate tw-text-center">
                 {{ items.title }}
+              </h5>
+            </button>
+            <button
+              @click="showPanel(rooms.id)"
+              type="button"
+              class="tw-m-1.5"
+            >
+              <div
+                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
+              >
+                <IconPlus
+                  width="80"
+                  height="80"
+                  stroke-width="1.5"
+                />
+              </div>
+              <h5 class="tw-w-28 tw-truncate tw-text-center">
+                Добавить
               </h5>
             </button>
           </VueDraggableNext>
