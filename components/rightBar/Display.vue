@@ -5,19 +5,12 @@ import { useI18n } from 'vue-i18n';
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 import type { APIData } from '~/types/StoreTypes';
 
-const { t } = useI18n();
 const storeRooms = useRoomsStore();
 
-defineProps({
-  edit: {
-    type: Boolean,
-    required: true,
-  },
-  zoneId: {
-    type: Number,
-    required: true,
-  },
-});
+const { variant, zoneId } = defineProps<{
+  variant: string,
+  zoneId: number,
+}>();
 
 const emit = defineEmits<{
   (e: 'update'): void
@@ -44,7 +37,14 @@ const devices = [
 
 const apiItem = ref<APIData<itemType>>();
 
+const title = computed(() => {
+  if (variant === 'Edit Item') return 'Редактировать Кнопку';
+  if (variant === 'Edit Scenario') return 'Редактировать Сценарий';
+  return 'Добавить Кнопку';
+});
+
 onBeforeMount(async () => {
+  // Get Rooms
   storeRooms.getRoomsApi();
   // Get Item
   const data: unknown = await useAPI(
@@ -68,7 +68,7 @@ onBeforeMount(async () => {
     <div class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
-          {{ !edit ? 'Добавить Кнопку' : "Редактировать кнопку" }}
+          {{ title }}
         </h3>
         <Button
           text
@@ -83,17 +83,28 @@ onBeforeMount(async () => {
       </div>
 
       <SharedUILoader
-        v-if="apiItem?.data?.response && edit"
+        v-if="apiItem?.data?.response && variant === 'Edit Item'"
         :isUpdate="apiItem.pending"
       >
-        <DisplayEditForm
+        <DisplayEditItemForm
           @update="emit('update')"
           v-model:isOpen="isOpen"
           v-model:form="apiItem.data.response"
           :devices="devices"
         />
       </SharedUILoader>
-      <DisplayCreateForm
+      <SharedUILoader
+        v-if="apiItem?.data?.response && variant === 'Edit Scenario'"
+        :isUpdate="apiItem.pending"
+      >
+        <DisplayEditScenarioForm
+          @update="emit('update')"
+          v-model:isOpen="isOpen"
+          v-model:form="apiItem.data.response"
+          :devices="devices"
+        />
+      </SharedUILoader>
+      <DisplayCreateItemForm
         v-else
         @update="emit('update')"
         v-model:isOpen="isOpen"
