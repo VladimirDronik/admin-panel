@@ -94,6 +94,7 @@ onBeforeMount(async () => {
       </SharedUILoader>
       <DisplayCreateForm
         v-else
+        v-model:isOpen="isOpen"
         @update="emit('update')"
         :zoneId="zoneId"
         :devices="devices"

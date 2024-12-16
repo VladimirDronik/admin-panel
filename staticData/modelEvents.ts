@@ -3,7 +3,7 @@ import type { EventsObject } from '@/types/ModelEventTypes';
 export const itemEventTypes: EventsObject = {
   button: [
     {
-      code: 'on.click',
+      code: 'item.on_click',
       name: 'on_click',
       description: 'Описание',
       actions: [],
