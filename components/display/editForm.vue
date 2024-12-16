@@ -34,6 +34,7 @@ const loadingDelete = ref(false);
 const events = ref<Event[]>();
 
 const apiChangeItem = ref<APIData<any>>();
+const apiDeleteItem = ref<APIData<any>>();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -56,16 +57,41 @@ const changeItem = async () => {
   });
 };
 
+const confirmDelete = async () => {
+  await updateData({
+    update: async () => {
+      await apiDeleteItem.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+    },
+    successMessage: 'Устройство удалено',
+    errorMessage: 'Ошибка удаления устройства',
+  });
+};
+
 onBeforeMount(async () => {
   // Create Device
-  const data: unknown = await useAPI(paths.privateItem, {
+  const dataCreate: unknown = await useAPI(paths.privateItem, {
     body: computed(() => form.value),
     method: 'PATCH',
     immediate: false,
     watch: false,
   });
 
-  apiChangeItem.value = data as APIData<any>;
+  apiChangeItem.value = dataCreate as APIData<any>;
+
+  // Delete Device
+  const dataDelete: unknown = await useAPI(paths.privateItem, {
+    body: computed(() => ({
+      id: form.value.item_id,
+    })),
+    method: 'DELETE',
+    immediate: false,
+    watch: false,
+  });
+
+  apiDeleteItem.value = dataDelete as APIData<any>;
 });
 
 </script>
@@ -142,6 +168,7 @@ onBeforeMount(async () => {
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogsDeleteDialog
+              @delete="confirmDelete"
               :loading="loadingDelete"
               :title="`Вы уверены, что хотите удалить «${form.title}»?`"
               class="tw-mr-2"
