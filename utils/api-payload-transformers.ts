@@ -97,7 +97,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
 
   const initialForm = getInitialEditDeviceFormDataByTypes(data);
 
-  if ('address' in initialForm.props && address) {
+  if (initialForm.props && 'address' in initialForm.props && address) {
     initialForm.props.address = String(address.value);
   }
   if ('protocol' in initialForm.props && updatedProtocol) {

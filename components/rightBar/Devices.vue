@@ -3,10 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Helper modules
-import { ClockCogIcon } from 'vue-tabler-icons';
-import { a } from 'vitest/dist/chunks/suite.B2jumIFP.js';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
-import { updateParamsForApi } from '~/helpers/devices';
 // Types
 import {
   TablePortListSchema, type TablePortData, type FullDevice,
@@ -19,9 +16,8 @@ import type {
 import { objectManager, paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
 import type {
-  AddFieldToDynamicFormPayload, DeviceEditFormPayload, DeviceChildren, DevicePropertyData, EditDeviceForm, DeviceCreateFormPayload,
+  AddFieldToDynamicFormPayload, DeviceEditFormPayload, EditDeviceForm,
 } from '~/components/devices/form.types';
-import api from '~/plugins/api';
 import type { GetCurrentDeviceResponse } from './right-bar.types.ts';
 import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
 import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
@@ -39,6 +35,7 @@ const isOpen = defineModel<boolean>('isOpen', {
 const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
   required: true,
 });
+console.log(selectedObject);
 
 // Variables
 
@@ -125,9 +122,9 @@ const changeDevice = async () => {
   });
 };
 
-// watch(() => selectedObject.value?.id, () => {
-//   if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
-// });
+watch(() => selectedObject.value?.id, () => {
+  if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
+});
 
 const forceUpdateKey = ref(0);
 
@@ -157,7 +154,6 @@ onBeforeMount(async () => {
 
   // Update Device
   const body = computed<DeviceEditFormPayload>(() => transformToDeviceEditFormPayload(asideEditingForm));
-  console.log(body, 'body');
 
   const dataUpdateDevice: unknown = await useAPI(
     paths.objects,
@@ -204,7 +200,7 @@ onBeforeMount(async () => {
 <template>
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between" :key="forceUpdateKey">
         <Inplace v-model:active="active" v-if="asideEditingForm.name" class="tw-w-full">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
@@ -258,7 +254,7 @@ onBeforeMount(async () => {
               {{ t('devices.events') }}
             </p>
           </Tab>
-          <Tab value="ports" v-if="asideEditingForm?.category === 'controller'">
+          <Tab value="ports" v-if="selectedObject?.category === 'controller'">
             <p class="tw-font-normal">
               {{ t('devices.ports') }}
             </p>
