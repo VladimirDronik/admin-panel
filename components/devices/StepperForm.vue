@@ -14,8 +14,11 @@ import { deviceEventTypes } from '~/staticData/modelEvents';
 import {
   type CreateDeviceInitialForm, type DynamicFormData, type DeviceCreateFormPayload, type AddFieldToDynamicFormPayload,
 } from './form.types';
-import { DeviceInterface, ObjectsCategory } from '~/types/DevicesEnums';
+import {
+  Controller, GenericInput, GenericOutput, ObjectsCategory,
+} from '~/types/DevicesEnums';
 import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
+import { getInitialCreateDeviceFormDataByTypes } from '../forms/byTypes/initial-dynamic-form-data';
 
 // Composables
 const { t } = useI18n();
@@ -27,23 +30,10 @@ const initialForm = defineModel<CreateDeviceInitialForm>('form', {
   required: true,
 });
 
-const dynamicForm = reactive<DynamicFormData>({
-  sdaPort: null,
-  sclPort: null,
-  busAdress: null,
-  parent_id: 0,
-  category: ObjectsCategory.Sensor,
-  name: initialForm.value.name,
-  zone_id: initialForm.value.zone_id,
-  props: {
-    update_interval: 300,
-    interface: DeviceInterface['1W'],
-    address: '',
-  },
-  children: {},
-});
+const dynamicForm = reactive(getInitialCreateDeviceFormDataByTypes(initialForm.value)) as DynamicFormData;
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
+  if (!dynamicForm.children) return;
   dynamicForm.children[key] = value;
 };
 
@@ -123,7 +113,7 @@ const createDevice = async () => {
       initialForm.value = {
         name: '',
         zone_id: null,
-        type: '',
+        type: Controller.MegaD,
         tags: [],
         category: 'controller',
       };
@@ -145,6 +135,7 @@ onBeforeMount(async () => {
   const body = computed<DeviceCreateFormPayload>(() => transformToDeviceCreateFormPayload({
     ...initialForm.value, ...dynamicForm,
   }));
+  console.log(body);
   const data: unknown = await useAPI(paths.objects, {
     body,
     method: 'POST',
@@ -154,6 +145,23 @@ onBeforeMount(async () => {
 
   apiCreateDevice.value = data as APIData<any>;
 });
+
+const changeTypeHandler = () => {
+  Object.assign(dynamicForm, getInitialCreateDeviceFormDataByTypes(initialForm.value));
+  switch (initialForm.value.type) {
+    case Controller.MegaD:
+      dynamicForm.category = ObjectsCategory.Controller;
+      break;
+    case GenericOutput.Relay:
+      dynamicForm.category = ObjectsCategory.GenericOutput;
+      break;
+    case GenericInput.GenericInput:
+      dynamicForm.category = ObjectsCategory.GenericInput;
+      break;
+    default:
+      dynamicForm.category = ObjectsCategory.Sensor;
+  }
+};
 
 </script>
 
@@ -173,7 +181,7 @@ onBeforeMount(async () => {
               <MultiSelect v-model="initialForm.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" />
             </SharedUILabel>
             <SharedUILabel class="tw-mb-4" :title="t('devices.type') " required>
-              <Select v-model="initialForm.type" :options="types" class="tw-w-2/4" />
+              <Select v-model="initialForm.type" @change="changeTypeHandler" :options="types" class="tw-w-2/4" />
             </SharedUILabel>
           </div>
 
@@ -184,7 +192,7 @@ onBeforeMount(async () => {
               <InputText v-model="dynamicForm.name" class="tw-w-3/4" />
             </SharedUILabel>
             <SharedUILabel class="tw-mb-4" :title="t('devices.room')">
-              <Select v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
+              <Select :showClear="true" v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
             </SharedUILabel>
           </div>
 

@@ -1,5 +1,5 @@
 import {
-  DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller,
+  DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, GenericOutput,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
 
@@ -23,25 +23,21 @@ export type AddFieldToDynamicFormPayload = (key: DevicePropertyKey, value: Devic
 export interface DynamicFormDataBasic {
     sdaPort: DevicePort,
     sclPort: DevicePort,
-    busAdress?: number | null;
+    busAddress?: number | null;
     parent_id: number,
     name: string,
     zone_id: DeviceZoneId,
     category: ObjectsCategory,
-    props: {
-      interface?: DeviceInterface;
-      update_interval: number,
-      address?: string;
-    },
+    props: DeviceProps,
   }
 
 export interface DynamicFormData extends DynamicFormDataBasic {
-    children: DeviceChildren,
+    children?: DeviceChildren,
   }
 
 export interface CreateDeviceInitialForm {
     name: string;
-    type: string;
+    type: FormTypes;
     zone_id: DeviceZoneId;
     category: string;
     tags: string[];
@@ -51,18 +47,21 @@ export interface DeviceProps {
     interface?: DeviceInterface;
     address: string;
     update_interval: number;
+    id?: string;
+    password?: string;
+    protocol?: Connection;
   }
 
 export interface DeviceChild {
-    Type: string;
-    Props: DevicePropertyData;
-    Children: null;
+    type: string;
+    props: DevicePropertyData;
+    children: null;
   }
 
 export interface DeviceCreateFormObject extends CreateDeviceInitialForm {
     parent_id?: number;
     props: DeviceProps;
-    Children: DeviceChild[];
+    children?: DeviceChild[];
     events: unknown[];
   }
 
@@ -76,4 +75,6 @@ export type FormDataToTransform = CreateDeviceInitialForm & DynamicFormData
 
 export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
-export type EditDeviceForm = DynamicFormData & { type: Sensor | Controller | '', id: number, status: string }
+export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
+
+export type FormTypes = Controller | Sensor | GenericInput | GenericOutput

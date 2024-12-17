@@ -12,11 +12,11 @@ export function useControllersViaType() {
       filter_by_type: type,
       type_struct: 'easy',
       with_methods: false,
-    });
+    }, false);
 
-    controllers.value = response.list.map((sensor) => ({
-      id: sensor.id,
-      name: sensor.name,
+    controllers.value = response.list.map((controller) => ({
+      id: controller.id,
+      name: controller.name,
     }));
 
     return controllers.value;

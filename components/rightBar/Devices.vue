@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Helper modules
 import { ClockCogIcon } from 'vue-tabler-icons';
+import { a } from 'vitest/dist/chunks/suite.B2jumIFP.js';
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
 import { updateParamsForApi } from '~/helpers/devices';
 // Types
@@ -20,12 +21,10 @@ import { deviceEventTypes } from '~/staticData/modelEvents';
 import type {
   AddFieldToDynamicFormPayload, DeviceEditFormPayload, DeviceChildren, DevicePropertyData, EditDeviceForm, DeviceCreateFormPayload,
 } from '~/components/devices/form.types';
-import {
-  ObjectsCategory, DevicePropertyKey, DeviceInterface,
-} from '~/types/DevicesEnums';
 import api from '~/plugins/api';
 import type { GetCurrentDeviceResponse } from './right-bar.types.ts';
 import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
+import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
 
 // Composables
 const { t } = useI18n();
@@ -51,25 +50,10 @@ const active = ref(false);
 
 const dialogDelete = ref(false);
 
-const asideEditingForm = reactive<EditDeviceForm>({
-  id: 0,
-  sdaPort: null,
-  sclPort: null,
-  parent_id: 0,
-  category: ObjectsCategory.Sensor,
-  name: '',
-  zone_id: null,
-  props: {
-    update_interval: 300,
-    interface: DeviceInterface['1W'],
-    address: '',
-  },
-  children: {},
-  type: '',
-  status: 'N/A',
-});
+let asideEditingForm = reactive<EditDeviceForm>(initialEditFormData);
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
+  if (!asideEditingForm.children) return;
   asideEditingForm.children[key] = value;
 };
 
@@ -79,15 +63,8 @@ const apiDevice = ref<APIData<any>>();
 const apiUpdateDevice = ref<APIData<any>>();
 const apiDeleteDevice = ref<APIData<any>>();
 
-const form = ref({});
-
 // Computed Properties
 const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
-
-// Methods
-const updateName = () => {
-  // if (form.value) name.value = form.value?.name;
-};
 
 const createFunction = (functionBody: string, props = {}) => {
   const func = new Function('userAccessLevel', 'props', functionBody);
@@ -110,7 +87,8 @@ const propsModel = (props: ModelProps | undefined): ModelProps[] => {
 };
 
 const confirmDelete = async () => {
-  if (apiDevice.value?.data?.response.id) {
+  if (apiDevice.value?.data?.response.id && apiDeleteDevice.value) {
+    apiDeleteDevice.value.pending = true;
     await updateData({
       update: async () => {
         await apiDeleteDevice.value?.execute();
@@ -119,9 +97,17 @@ const confirmDelete = async () => {
           offset: 0,
         });
       },
+      error: () => {
+        dialogDelete.value = false;
+        isOpen.value = false;
+        if (!apiDeleteDevice.value) return;
+        apiDeleteDevice.value.pending = false;
+      },
       success: () => {
         dialogDelete.value = false;
         isOpen.value = false;
+        if (!apiDeleteDevice.value) return;
+        apiDeleteDevice.value.pending = false;
       },
       successMessage: 'Устройство удалено',
       errorMessage: 'Ошибка удаления устройства',
@@ -139,62 +125,9 @@ const changeDevice = async () => {
   });
 };
 
-// Watchers
-// watch(() => form.value?.name, () => {
-//   updateName();
-//   active.value = false;
+// watch(() => selectedObject.value?.id, () => {
+//   if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
 // });
-
-// watch(() => form.value?.category, () => {
-//   tabs.value = 'features';
-// });
-
-watch(() => selectedObject.value?.id, () => {
-  // if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
-});
-
-const transformResponseToFormData = (data: GetCurrentDeviceResponse): EditDeviceForm| null => {
-  if (!data.id) return null;
-  const address = data.props.find((prop) => prop.code === 'address');
-  const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? 0;
-  const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
-  const updatedBusAdress = String(address?.value).split(';')[1];
-  const ports = String(address?.value).split(';') ?? [null, null];
-  const children = data.children.reduce((acc, child) => {
-    const key = child.type as DevicePropertyKey;
-
-    const propertyData = child.props.reduce((acc, prop) => {
-      const key = prop.code as keyof DevicePropertyData;
-      const value = prop.value as DevicePropertyData[keyof DevicePropertyData];
-      // @ts-expect-error ///
-      acc[key] = value;
-      return acc;
-    }, {} as DevicePropertyData);
-
-    acc[key] = {
-      ...propertyData,
-    };
-    return acc;
-  }, {} as DeviceChildren);
-
-  return {
-    id: data.id,
-    status: data.status,
-    type: data.type,
-    sdaPort: Number(ports[0]),
-    sclPort: Number(ports[1]),
-    busAdress: Number(updatedBusAdress),
-    parent_id: data.parent_id,
-    name: data.name,
-    zone_id: data.zone_id,
-    category: data.category as ObjectsCategory,
-    props: {
-      interface: updatedInterface,
-      update_interval: Number(updatedInterval),
-    },
-    children,
-  };
-};
 
 const forceUpdateKey = ref(0);
 
@@ -208,7 +141,7 @@ watchEffect(() => {
     })),
   } as GetCurrentDeviceResponse;
   const transformedData = transformResponseToFormData(result);
-  if (transformedData) Object.assign(asideEditingForm, transformedData);
+  if (transformedData) asideEditingForm = reactive(transformedData);
   forceUpdateKey.value += 1;
 });
 
@@ -224,6 +157,7 @@ onBeforeMount(async () => {
 
   // Update Device
   const body = computed<DeviceEditFormPayload>(() => transformToDeviceEditFormPayload(asideEditingForm));
+  console.log(body, 'body');
 
   const dataUpdateDevice: unknown = await useAPI(
     paths.objects,
@@ -238,6 +172,7 @@ onBeforeMount(async () => {
   apiUpdateDevice.value = dataUpdateDevice as APIData<any>;
 
   // Delete Device
+
   const dataDeleteDevice: unknown = await useAPI(
     () => `${paths.objects}/${selectedObject.value?.id}`,
     {
@@ -248,7 +183,7 @@ onBeforeMount(async () => {
   );
 
   apiDeleteDevice.value = dataDeleteDevice as APIData<any>;
-  //
+  apiDeleteDevice.value.pending = false;
 
   // Get Port List
   const dataPorts: unknown = await useAPI(
@@ -270,7 +205,7 @@ onBeforeMount(async () => {
   <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <Inplace v-model:active="active" v-if="asideEditingForm.name" class="tw-w-full" @open="updateName">
+        <Inplace v-model:active="active" v-if="asideEditingForm.name" class="tw-w-full">
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
               {{ asideEditingForm?.name }} ({{ asideEditingForm.type}})
@@ -311,7 +246,6 @@ onBeforeMount(async () => {
           {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
       </Tag>
-
       <Tabs v-model:value="tabs">
         <TabList>
           <Tab value="features">
@@ -351,11 +285,10 @@ onBeforeMount(async () => {
                     v-model="dialogDelete"
                     :id="asideEditingForm?.id ?? -1"
                     :loading="apiDeleteDevice?.pending"
-                    :subtitle="`Вы уверены, что хотите удалить «${asideEditingForm?.name}»`"
+                    :subtitle="`Вы уверены, что хотите удалить «${asideEditingForm?.name}»?`"
                     class="tw-mr-2"
-                    title="Удалить категорию"
+                    title="Удалить устройство"
                   />
-
                   <Button
                     :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
                     class="tw-mr-2"
