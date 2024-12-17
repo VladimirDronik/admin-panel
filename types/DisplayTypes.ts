@@ -59,6 +59,8 @@ export const displayRequestSchema = z.object({
   scenario_items: z.array(scenarioItem),
 });
 
+export type roomSensorTypes = z.infer<typeof roomSensors>;
+
 export type RoomBtnsData = z.infer<typeof roomBtns>;
 
 export type DisplayData = z.infer<typeof displayRequestSchema>;

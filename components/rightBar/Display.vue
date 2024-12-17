@@ -94,7 +94,7 @@ onBeforeMount(async () => {
         />
       </SharedUILoader>
       <SharedUILoader
-        v-if="apiItem?.data?.response && variant === 'Edit Scenario'"
+        v-else-if="apiItem?.data?.response && variant === 'Edit Scenario'"
         :isUpdate="apiItem.pending"
       >
         <DisplayEditScenarioForm
