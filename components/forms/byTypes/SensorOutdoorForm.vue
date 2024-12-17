@@ -3,62 +3,15 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { DevicePropertyKey } from '~/types/DevicesEnums';
 import type {
-  DynamicFormData, AddFieldToDynamicFormPayload, DeviceChildrenRequired, DeviceChildren,
+  DynamicFormData, DeviceChildrenRequired,
 } from '~/components/devices/form.types';
 
 const props = defineProps<{
   isEditing: boolean;
-  addFieldToDynamicForm: AddFieldToDynamicFormPayload;
 }>();
 
 const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
-
-const initialForm: DeviceChildren = {
-  [DevicePropertyKey.Temperature]: {
-    value: 0,
-    value_updated_at: '',
-    min_error_value: -41,
-    min_threshold: -40,
-    max_threshold: 85,
-    max_error_value: 86,
-    unit: '°C',
-    write_graph: false,
-  },
-  [DevicePropertyKey.Pressure]: {
-    value: 0,
-    value_updated_at: '',
-    min_error_value: 224,
-    min_threshold: 225,
-    max_threshold: 825,
-    max_error_value: 826,
-    unit: 'mmHg',
-    write_graph: false,
-  },
-  [DevicePropertyKey.Humidity]: {
-    value: 0,
-    value_updated_at: '',
-    min_error_value: -1,
-    min_threshold: 0,
-    max_threshold: 100,
-    max_error_value: 101,
-    unit: '%',
-    write_graph: false,
-  },
-  [DevicePropertyKey.Illumination]: {
-    value: 0,
-    value_updated_at: '',
-    min_error_value: -1,
-    min_threshold: 0,
-    max_threshold: 65535,
-    max_error_value: 65536,
-    unit: 'lx',
-    write_graph: false,
-  },
-};
-
-Object.entries(initialForm).forEach(([key, value]) => props.addFieldToDynamicForm(key as DevicePropertyKey, value));
 
 const { t } = useI18n();
 
@@ -107,20 +60,45 @@ watch(
   { deep: true },
 );
 
-const sensorMockData = {
-  data: [
-    { value: 23, unit: '°C', label: t('devices.temperature') },
-    { value: 300, unit: 'mmHg', label: t('devices.pressure') },
-    { value: 40, unit: '%', label: t('devices.humidity') },
-    { value: 30000, unit: 'lx', label: t('devices.illumination') },
-  ],
-  lastUpdate: '26.09.2024 15:27:59',
-};
+const sensorDataToShow = computed(() => {
+  const { temperature } = dynamicForm.value.children;
+  const { pressure } = dynamicForm.value.children;
+  const { humidity } = dynamicForm.value.children;
+  const { illumination } = dynamicForm.value.children;
+
+  const lastUpdate = temperature.value_updated_at || humidity.value_updated_at || pressure.value_updated_at || illumination.value_updated_at || '';
+
+  return {
+    data: [
+      {
+        value: temperature.value ?? 0,
+        unit: '°C',
+        label: t('devices.temperature'),
+      },
+      {
+        value: pressure.value ?? 0,
+        unit: 'mmHg',
+        label: t('devices.pressure'),
+      },
+      {
+        value: humidity.value ?? 0,
+        unit: '%',
+        label: t('devices.humidity'),
+      },
+      {
+        value: illumination.value ?? 0,
+        unit: 'lx',
+        label: t('devices.illumination'),
+      },
+    ],
+    lastUpdate,
+  };
+});
 </script>
 
 <template>
   <Form :resolver="resolver" :form="dynamicForm">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
     <FormsSensorBasicPlacement v-model:parent-id="dynamicForm.parent_id" v-model:sda-port="dynamicForm.sdaPort" v-model:scl-port="dynamicForm.sclPort" />
 
     <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="dynamicForm.props.update_interval" name="update_interval">

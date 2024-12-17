@@ -49,6 +49,7 @@ const props = defineProps<SensorHeaderProps>();
 
   <SharedUILabel class="tw-mb-2" :title="t('devices.room')" name="room">
     <Select
+      :showClear="true"
       v-model="zoneId"
       :options="storeRooms.getRoomsSelect"
       optionLabel="name"

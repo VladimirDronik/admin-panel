@@ -32,6 +32,15 @@ export enum Sensor {
   SCD4X = 'scd4x',
 }
 
+export enum GenericInput {
+  GenericInput = 'generic_input',
+}
+
+export enum GenericOutput {
+  Relay = 'relay',
+}
+
+
 export enum Connection {
   HTTP = 'http',
   MQTT = 'mqtt',
@@ -45,3 +54,5 @@ export enum DeviceInterface {
   'I2C' = 'I2C',
   'MODBUS' = 'MODBUS'
 }
+
+
