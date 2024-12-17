@@ -1,18 +1,23 @@
 import { type Component } from 'vue';
-import { Controller, Sensor, Default } from '@/types/DevicesEnums';
+import {
+  Controller, Sensor, Default, GenericOutput, GenericInput,
+} from '@/types/DevicesEnums';
 
-import SensorDS18B20Form from '@/components/forms/byTypes/SensorDS18B20Form.vue';
-import SensorHTU21DForm from '@/components/forms/byTypes/SensorHTU21DForm.vue';
-import SensorBH1750Form from '@/components/forms/byTypes/SensorBH1750Form.vue';
-import SensorBME280Form from '@/components/forms/byTypes/SensorBME280Form.vue';
+import SensorDS18B20Form from '~/components/forms/byTypes/SensorDS18B20Form.vue';
+import SensorHTU21DForm from '~/components/forms/byTypes/SensorHTU21DForm.vue';
+import SensorBH1750Form from '~/components/forms/byTypes/SensorBH1750Form.vue';
+import SensorBME280Form from '~/components/forms/byTypes/SensorBME280Form.vue';
 import SensorBMP280Form from '~/components/forms/byTypes/SensorBMP280Form.vue';
-import SensorOutdoorForm from '@/components/forms/byTypes/SensorOutdoorForm.vue';
+import SensorOutdoorForm from '~/components/forms/byTypes/SensorOutdoorForm.vue';
 import SensorSCD4XForm from '~/components/forms/byTypes/SensorSCD4XForm.vue';
 
-import MegaDForm from '@/components/forms/byTypes/MegaDForm.vue';
-import DefaultForm from '@/components/forms/byTypes/DefaultForm.vue';
+import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
+import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
 
-type DeviceType = Controller | Sensor | Default;
+import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
+import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
+
+type DeviceType = Controller | GenericInput | GenericOutput | Sensor | Default;
 
 interface DeviceFormMapping {
   type: DeviceType;
@@ -57,4 +62,15 @@ export const deviceFormMapping: DeviceFormMapping[] = [
     type: Default.Default,
     component: DefaultForm,
   },
+
+  {
+    type: GenericOutput.Relay,
+    component: RelayForm,
+  },
+
+  {
+    type: GenericInput.GenericInput,
+    component: GenericInputForm,
+  },
+
 ];

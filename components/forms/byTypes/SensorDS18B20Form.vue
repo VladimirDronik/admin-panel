@@ -3,42 +3,21 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { type ModelRef } from 'vue';
-import { DevicePropertyKey, Controller, DeviceInterface } from '~/types/DevicesEnums';
+import { Controller, DeviceInterface } from '~/types/DevicesEnums';
 import type {
-  DynamicFormData, AddFieldToDynamicFormPayload, DeviceChildrenRequired, DeviceChildren,
+  DynamicFormData, DeviceChildrenRequired,
 } from '~/components/devices/form.types';
-import type { DeviceParentId, DevicePort } from '~/types/DevicesTypes';
 
-const parentId = defineModel('parent-id') as ModelRef<DeviceParentId>;
-const sdaPort = defineModel<DevicePort>('sda-port');
+const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
 
 const { controllers, getControllersViaType } = useControllersViaType();
 getControllersViaType(Controller.MegaD);
-const controllerIdRef = computed(() => parentId.value);
+const controllerIdRef = computed(() => dynamicForm.value.parent_id);
 const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
 
 const props = defineProps<{
   isEditing: boolean;
-  addFieldToDynamicForm: AddFieldToDynamicFormPayload;
 }>();
-
-const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
-
-const initialForm: DeviceChildren = {
-  [DevicePropertyKey.Temperature]: {
-    value: 0,
-    value_updated_at: '',
-    min_error_value: -41,
-    min_threshold: -40,
-    max_threshold: 100,
-    max_error_value: 101,
-    unit: '°C',
-    write_graph: false,
-  },
-};
-
-Object.entries(initialForm).forEach(([key, value]) => props.addFieldToDynamicForm(key as DevicePropertyKey, value));
 
 const { t } = useI18n();
 
@@ -73,17 +52,27 @@ watch(
   { deep: true },
 );
 
-const sensorMockData = {
-  data: [
-    { value: 23, unit: '°C', label: t('devices.temperature') },
-  ],
-  lastUpdate: '26.09.2024 15:27:59',
-};
+const sensorDataToShow = computed(() => {
+  const { temperature } = dynamicForm.value.children;
+
+  const lastUpdate = temperature.value_updated_at || '';
+
+  return {
+    data: [
+      {
+        value: temperature.value ?? 0,
+        unit: '°C',
+        label: t('devices.temperature'),
+      },
+    ],
+    lastUpdate,
+  };
+});
 </script>
 
 <template>
   <Form :resolver="resolver" :form="dynamicForm">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorMockData }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
+    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
       <Select
@@ -91,7 +80,7 @@ const sensorMockData = {
         :options="controllers"
         optionLabel="name"
         optionValue="id"
-        class="tw-w-full"
+        class="tw-w-3/4"
       />
     </SharedUILabel>
     <SharedUILabel class="tw-mb-2" :title="t('devices.mode')" required :value="dynamicForm.props.interface" name="interface">
@@ -104,11 +93,11 @@ const sensorMockData = {
     </SharedUILabel>
 
     <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
-      <Select v-model="sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-full" />
+      <Select v-model="dynamicForm.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
     </SharedUILabel>
 
     <SharedUILabel required class="tw-mb-2" v-if="dynamicForm.props.interface === '1WBUS'" :title="t('devices.address16')">
-      <InputNumber id="address" v-model="dynamicForm.busAdress" class="tw-w-full" />
+      <InputNumber id="address" v-model="dynamicForm.busAddress" class="tw-w-full" />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />

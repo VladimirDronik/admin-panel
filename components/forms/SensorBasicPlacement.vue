@@ -30,7 +30,7 @@ const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
       :options="controllers"
       optionLabel="name"
       optionValue="id"
-      class="tw-w-full"
+      class="tw-w-3/4"
     />
   </SharedUILabel>
 
@@ -40,7 +40,7 @@ const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
       :options="formattedPorts"
       optionLabel="label"
       optionValue="value"
-      class="tw-w-full"
+      class="tw-w-3/4"
     />
   </SharedUILabel>
 
@@ -50,7 +50,7 @@ const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
       :options="formattedPorts"
       optionLabel="label"
       optionValue="value"
-      class="tw-w-full"
+      class="tw-w-3/4"
     />
   </SharedUILabel>
 

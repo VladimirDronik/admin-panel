@@ -1,5 +1,5 @@
 import type { DeviceZoneId } from '~/types/DevicesTypes';
-import { type Sensor } from '~/types/DevicesEnums';
+import type { FormTypes } from '../devices/form.types';
 
 export interface GetCurrentDeviceResponse {
     parent_id: number;
@@ -7,7 +7,7 @@ export interface GetCurrentDeviceResponse {
     category: string;
     zone_id: DeviceZoneId;
     name: string;
-    type: Sensor;
+    type: FormTypes;
     id: number;
     tags: string[];
     props: Property[];

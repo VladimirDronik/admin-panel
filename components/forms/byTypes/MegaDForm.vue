@@ -3,112 +3,97 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-
-const storeRooms = useRoomsStore();
-
-const props = defineProps({
-  isEditing: {
-    type: Boolean,
-    required: true,
-  },
-});
+import type {
+  DynamicFormData,
+} from '~/components/devices/form.types';
 
 const { t } = useI18n();
+const storeRooms = useRoomsStore();
 
-const megaDFormSchema = z.object({
-  title: z.string().min(1),
-  id: z.string().max(15),
-  address: z.string().max(15),
-  password: z.string().max(6),
-  protocol: z.enum(['HTTP', 'MQTT']),
-  room: z.string().min(1),
+const props = defineProps<{
+  isEditing: boolean;
+}>();
+
+const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: true });
+
+const emit = defineEmits(['update:valid']);
+
+const flatForm = computed(() => ({
+  id: dynamicForm.value.props.id,
+  address: dynamicForm.value.props.address,
+  password: dynamicForm.value.props.password,
+  protocol: dynamicForm.value.props.protocol,
+}));
+
+const schema = z.object({
+  id: z.string().min(1).max(15),
+  address: z.string().min(1).max(15),
+  password: z.string().min(1).max(6),
+  protocol: z.enum(['http', 'mqtt']),
 });
 
-type MegaDForm = z.infer<typeof megaDFormSchema>;
+const resolver = ref(zodResolver(schema));
 
-const form = reactive<MegaDForm>({
-  title: '',
-  id: '',
-  address: '',
-  password: '',
-  protocol: 'HTTP',
-  room: '',
-});
+watch(
+  () => dynamicForm.value,
+  () => {
+    const flatFormData = flatForm.value;
+    const validationResult = schema.safeParse(flatFormData);
+    const isValid = validationResult.success;
+    emit('update:valid', isValid);
+  },
+  { deep: true },
+);
 
-const resolver = ref(zodResolver(megaDFormSchema));
-const protocolOptions = megaDFormSchema.shape.protocol.options;
-
-interface FieldSettings {
-  inputWidth: string;
-}
-
-const getFieldSettingsForMegaD = (code: keyof MegaDForm): FieldSettings => {
-  switch (code) {
-    case 'id':
-    case 'address':
-      return { inputWidth: '18ch' };
-    case 'password':
-      return { inputWidth: '12ch' };
-    case 'protocol':
-      return { inputWidth: '12ch' };
-    default:
-      return { inputWidth: '18ch' };
-  }
-};
-
-const handleSubmit = () => {
-  console.log('Form Data:', form);
-};
+const protocolOptions = schema.shape.protocol.options;
 
 </script>
 
 <template>
-  <Form :resolver="resolver" @submit="handleSubmit">
+  <div />
+  <Form :resolver="resolver" :form="dynamicForm">
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required :value="form.title" name="title">
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required :value="dynamicForm.name" name="title">
       <InputText
-        v-model="form.title"
-        :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
+        v-model="dynamicForm.name"
       />
     </SharedUILabel>
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.id')" required :value="form.id" name="id">
+    <SharedUILabel class="tw-mb-2" :title="t('devices.id')" required :value="dynamicForm.props.id" name="id">
       <InputText
-        v-model="form.id"
-        :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
+        v-model="dynamicForm.props.id"
       />
     </SharedUILabel>
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.address')" required :value="form.address" name="address">
+    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.address')" required :value="dynamicForm.props.address" name="address">
       <InputText
         id="address"
-        v-model="form.address"
-        :style="{ width: getFieldSettingsForMegaD('address').inputWidth }"
+        v-model="dynamicForm.props.address"
       />
     </SharedUILabel>
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.password')" required :value="form.password" name="password">
+    <SharedUILabel class="tw-mb-2" :title="t('devices.password')" required :value="dynamicForm.props.password" name="password">
       <InputText
         id="password"
-        v-model="form.password"
-        :style="{ width: getFieldSettingsForMegaD('password').inputWidth }"
+        v-model="dynamicForm.props.password"
       />
     </SharedUILabel>
-
-    <SharedUILabel class="tw-mb-2" :title="t('devices.protocol')" required :value="form.protocol" name="ptotocol">
+    <SharedUILabel class="tw-mb-2" :title="t('devices.protocol')" required :value="dynamicForm.props.protocol" name="ptotocol">
       <Select
         :options="protocolOptions"
-        v-model="form.protocol"
-        :style="{ width: getFieldSettingsForMegaD('protocol').inputWidth }"
+        v-model="dynamicForm.props.protocol"
       />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.room')" name="room">
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.room')" name="zone_id">
       <Select
-        :value="form.room"
+        :showClear="true"
+        v-model="dynamicForm.zone_id"
         :options="storeRooms.getRoomsSelect"
         optionLabel="name"
-        :style="{ width: getFieldSettingsForMegaD('id').inputWidth }"
+        optionValue="code"
+        class="tw-w-3/4"
+
       />
     </SharedUILabel>
   </Form>

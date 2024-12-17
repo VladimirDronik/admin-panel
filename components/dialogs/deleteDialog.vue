@@ -60,12 +60,13 @@ const deleteItem = () => {
       modal
       dismissable-mask
     >
+      {{ props.subtitle }}
       <div>
         <Button
           @click="deleteItem"
           :loading="loading"
           color="primary"
-          class="tw-mr-2"
+          class="tw-mr-2 tw-mt-4"
           :label="t('delete')"
         />
         <Button

@@ -10,7 +10,6 @@ export function useControllerPortsViaId(controllerId: Ref<number | null>) {
       formattedPorts.value = [];
       return;
     }
-    console.log(deviceStore);
     const portsData = await deviceStore.getPortsApi(controllerId.value);
     formattedPorts.value = portsData.flatMap((group) => group.ports.map((port) => {
       let objectsText = '';
