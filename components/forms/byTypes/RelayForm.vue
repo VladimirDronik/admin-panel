@@ -13,7 +13,7 @@ const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: tru
 const { controllers, getControllersViaType } = useControllersViaType();
 getControllersViaType(Controller.MegaD);
 const controllerIdRef = computed(() => dynamicForm.value.parent_id);
-const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
+const { formattedPorts } = useControllerPortsViaId(controllerIdRef, 'outputs');
 
 const { t } = useI18n();
 
@@ -45,7 +45,7 @@ watch(
 </script>
 
 <template>
-  <Form :resolver="resolver" :form="dynamicForm">
+  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
       <Select

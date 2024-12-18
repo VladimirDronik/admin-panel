@@ -45,7 +45,7 @@ watch(
 </script>
 
 <template>
-  <Form :resolver="resolver" :form="dynamicForm">
+  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
       <Select

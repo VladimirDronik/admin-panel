@@ -78,7 +78,7 @@ const sensorDataToShow = computed(() => {
 </script>
 
 <template>
-  <Form :resolver="resolver" :form="dynamicForm">
+  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
     <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
     <FormsSensorBasicPlacement v-model:parent-id="dynamicForm.parent_id" v-model:sda-port="dynamicForm.sdaPort" v-model:scl-port="dynamicForm.sclPort" />
 

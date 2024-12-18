@@ -127,7 +127,6 @@ const isDynamicFormValid = ref(false);
 
 const devicesDynamicFormValidityHandler = (isValid: boolean) => {
   isDynamicFormValid.value = isValid;
-  console.log('Форма валидна:', isValid);
 };
 
 onBeforeMount(async () => {

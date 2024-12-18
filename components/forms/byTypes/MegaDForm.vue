@@ -51,7 +51,7 @@ const protocolOptions = schema.shape.protocol.options;
 
 <template>
   <div />
-  <Form :resolver="resolver" :form="dynamicForm">
+  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
 
     <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required :value="dynamicForm.name" name="title">
       <InputText
