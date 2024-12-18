@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
+import {
+  IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus,
+} from '@tabler/icons-vue';
 // Helpers
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 // Types
@@ -23,6 +26,22 @@ definePageMeta({
 });
 
 // Variables
+
+const iconMap = {
+  bh1750: IconSun,
+  outdoor: IconHome,
+  generic_input: IconPlugConnected,
+  relay: IconPlug,
+  cs: IconBolt,
+  bme280: IconCloudRain,
+  ds18b20: IconTemperatureSun,
+  scd4x: IconAlertSquareRounded,
+  motion: IconRun,
+  htu21d: IconCloudPlus,
+} as const;
+
+type IconMapKey = keyof typeof iconMap;
+
 const perPage = 10000;
 
 const page = ref(1);
@@ -216,7 +235,7 @@ watchEffect(() => {
       :perPage="perPage"
     >
       <Column field="id" expander style="width: 100px">
-        <template #header>
+        <!-- <template #header>
           <DevicesTableHeader title="devices.id">
             <InputText
               v-model.number="filters[0].value"
@@ -238,6 +257,9 @@ watchEffect(() => {
               type="number"
             />
           </DevicesTableHeader>
+        </template> -->
+        <template #body="{ node }">
+          <IconCpu2 v-if="node.data.type === 'mega_d'" size="26" stroke-width="1.5" color="#555" />
         </template>
       </Column>
       <Column field="name">
@@ -254,6 +276,12 @@ watchEffect(() => {
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
+          <component
+            :is="iconMap[node.data.type as IconMapKey]"
+            size="24"
+            stroke-width="1.5"
+            color="#555"
+          />
           <p class="tw-max-w-48 tw-truncate">
             {{ node.data.name }}
           </p>

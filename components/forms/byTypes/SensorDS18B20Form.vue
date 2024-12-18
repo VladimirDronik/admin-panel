@@ -71,7 +71,7 @@ const sensorDataToShow = computed(() => {
 </script>
 
 <template>
-  <Form :resolver="resolver" :form="dynamicForm">
+  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
     <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
     <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">

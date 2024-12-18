@@ -1,7 +1,7 @@
 import { ref, watch, type Ref } from 'vue';
 import { useDevicesStore } from '~/stores/devices/devices';
 
-export function useControllerPortsViaId(controllerId: Ref<number | null>) {
+export function useControllerPortsViaId(controllerId: Ref<number | null>, group: string = 'inputs,digital') {
   const deviceStore = useDevicesStore();
   const formattedPorts = ref<{ label: string; value: number; number: number }[]>([]);
 
@@ -10,7 +10,7 @@ export function useControllerPortsViaId(controllerId: Ref<number | null>) {
       formattedPorts.value = [];
       return;
     }
-    const portsData = await deviceStore.getPortsApi(controllerId.value);
+    const portsData = await deviceStore.getPortsApi(controllerId.value, group);
     formattedPorts.value = portsData.flatMap((group) => group.ports.map((port) => {
       let objectsText = '';
       const portObjectExists = port.objects && port.objects.length > 0;
