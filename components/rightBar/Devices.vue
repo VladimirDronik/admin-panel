@@ -35,7 +35,6 @@ const isOpen = defineModel<boolean>('isOpen', {
 const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
   required: true,
 });
-console.log(selectedObject);
 
 // Variables
 
@@ -48,6 +47,12 @@ const active = ref(false);
 const dialogDelete = ref(false);
 
 let asideEditingForm = reactive<EditDeviceForm>(initialEditFormData);
+
+const isDynamicFormValid = ref(false);
+
+const devicesDynamicFormValidityHandler = (isValid: boolean) => {
+  isDynamicFormValid.value = isValid;
+};
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
   if (!asideEditingForm.children) return;
@@ -273,6 +278,7 @@ onBeforeMount(async () => {
               :device-type="asideEditingForm.type"
               v-model:dynamic-form="asideEditingForm"
               :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
+              @update:valid="devicesDynamicFormValidityHandler"
             >
               <template #footer>
                 <div class="tw-mt-4 tw-flex tw-justify-end">
@@ -286,6 +292,7 @@ onBeforeMount(async () => {
                     title="Удалить устройство"
                   />
                   <Button
+                    :disabled="!isDynamicFormValid"
                     :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
                     class="tw-mr-2"
                     @click="changeDevice"
