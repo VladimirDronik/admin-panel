@@ -86,7 +86,6 @@ watch(roomIds, async (newValue, oldValue) => {
     <SharedUIBreadcrumb title="pages.display">
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
-    {{ roomIds }}
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar class="tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
         <DisplayScenarioCard
