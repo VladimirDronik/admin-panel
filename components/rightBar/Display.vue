@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 // Types and Schemes modules
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 import type { APIData } from '~/types/StoreTypes';
+import { paths } from '~/utils/endpoints';
 
 const storeRooms = useRoomsStore();
 
@@ -48,7 +49,7 @@ onBeforeMount(async () => {
   storeRooms.getRoomsApi();
   // Get Item
   const data: unknown = await useAPI(
-    'http://10.35.16.1:8081/private/item',
+    paths.privateItem,
     {
       query: computed(() => ({
         id: id.value,

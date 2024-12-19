@@ -2,19 +2,23 @@
 import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconPlus } from '@tabler/icons-vue';
+import _ from 'lodash';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
+import { paths } from '~/utils/endpoints';
 
 // Composables
 const { t } = useI18n();
+const storeUser = useUserStore();
 
 useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
 
 // Variables
-const apiDisplays = ref<APIData<DisplayData>>();
+const apiItems = ref<APIData<DisplayData>>();
+const apiItemsOrder = ref<APIData<any>>();
 
 const id = ref<number>(0);
 const zoneId = ref<number>(0);
@@ -41,16 +45,38 @@ const showScenarioPanel = (item_id: number) => {
 
 onBeforeMount(async () => {
   // Get Buttons
-  const dataDeleteDevice: unknown = await useAPI(
-    'http://10.35.16.1:8081/private/cp',
+  const dataItemsGet: unknown = await useAPI(
+    paths.privateCp,
     {
       watch: false,
     },
     displayRequestSchema,
   );
 
-  apiDisplays.value = dataDeleteDevice as APIData<DisplayData>;
+  apiItems.value = dataItemsGet as APIData<DisplayData>;
   //
+});
+
+const roomIds = computed(() => {
+  if (!apiItems.value?.data) return [];
+  return apiItems.value.data.response.room_items.map((room) => ({
+    zone_id: room.id,
+    item_ids: room.items.map((item) => item.item_id),
+  }));
+});
+
+watch(roomIds, async (newValue, oldValue) => {
+  const result = newValue.find((item, index) => _.isEqual(item, oldValue[index]));
+  if (result) {
+    await $fetch(paths.privateItemsOrder, {
+      method: 'PATCH',
+      body: result,
+      headers: {
+        token: storeUser.userLocal?.token ?? '',
+      },
+    });
+    // await apiItems.value?.refresh();
+  }
 });
 
 </script>
@@ -60,10 +86,11 @@ onBeforeMount(async () => {
     <SharedUIBreadcrumb title="pages.display">
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
+    {{ roomIds }}
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar class="tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
         <DisplayScenarioCard
-          v-for="scenario in apiDisplays?.data?.response.scenario_items"
+          v-for="scenario in apiItems?.data?.response.scenario_items"
           @click="showScenarioPanel(scenario.id)"
           :key="scenario.id"
           :icon="scenario.icon"
@@ -72,7 +99,7 @@ onBeforeMount(async () => {
         />
       </PerfectScrollbar>
       <div
-        v-for="rooms in apiDisplays?.data?.response.room_items"
+        v-for="rooms in apiItems?.data?.response.room_items"
         :key="rooms.id"
         class="tw-rounded-md tw-border tw-p-3"
       >
@@ -123,7 +150,7 @@ onBeforeMount(async () => {
 
     <template #rightbar>
       <RightBarDisplay
-        @update="apiDisplays?.refresh"
+        @update="apiItems?.refresh"
         :variant="variant"
         :zoneId="zoneId"
         v-model:id="id"
