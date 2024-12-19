@@ -6,10 +6,12 @@ export const actionRouter = 'http://10.35.16.1:8083';
 
 export const paths = {
   // Translator
+  privateCp: `${translator}/private/cp`,
+  privateItem: `${translator}/private/item`,
+  privateWizard: `${translator}/private/wizard/create_item`,
   privateRoomsList: `${translator}/private/rooms-list-all`,
   privateZonesOrder: `${translator}/private/zones/order`,
-  privateWizard: `${translator}/private/wizard/create_item`,
-  privateItem: `${translator}/private/item`,
+  privateItemsOrder: `${translator}/private/items/order`,
 
   // Object Manager
   scripts: `${objectManager}/scripts`,
