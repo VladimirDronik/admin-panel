@@ -37,4 +37,5 @@ export const Components = [
   'InputNumber',
   'InputSwitch',
   'InputMask',
+  'Checkbox',
 ];

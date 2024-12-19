@@ -15,19 +15,19 @@ const headers = [
     code: 'id',
   },
   {
-    label: 'Название',
+    label: t('script.name'),
     code: 'name',
   },
   {
-    label: 'Скрипт',
+    label: t('script.code'),
     code: 'code',
   },
   {
-    label: 'Выполнений',
+    label: t('script.count'),
     code: 'count',
   },
   {
-    label: 'Системный',
+    label: t('script.system'),
     code: 'system',
   },
 ];
@@ -57,7 +57,7 @@ const data = computed(() => storeScript.scripts);
         <Column field="actions" style="width: 200px">
           <template #header>
             <p class="tw-font-semibold">
-              Действия
+              {{ t('scripts.action') }}
             </p>
           </template>
           <template>

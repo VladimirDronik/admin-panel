@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // Helpers modules
 import { itemColor } from '~/helpers/rooms';
+// Types
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 defineProps<{
@@ -34,7 +35,7 @@ defineProps<{
           %
         </span>
       </div>
-      <Button class="tw-aspect-square tw-w-8" outlined icon="pi pi-plus" size="small" />
+      <DialogsDisplaySensorDialog :sensors />
     </div>
   </div>
 </template>

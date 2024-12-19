@@ -47,6 +47,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     'vuejs-accessibility/anchor-has-content': 'off',
     'vuejs-accessibility/form-control-has-label': 'off',
+    '@typescript-eslint/no-duplicate-enum-values': 'off',
     '@intlify/vue-i18n/no-raw-text': ['warn', {
       ignorePattern: '^[-#:()&%x,+]+$',
       ignoreText: ['', '*', '.', '...'],

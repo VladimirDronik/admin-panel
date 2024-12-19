@@ -40,7 +40,6 @@ export enum GenericOutput {
   Relay = 'relay',
 }
 
-
 export enum Connection {
   HTTP = 'http',
   MQTT = 'mqtt',
@@ -54,5 +53,3 @@ export enum DeviceInterface {
   'I2C' = 'I2C',
   'MODBUS' = 'MODBUS'
 }
-
-
