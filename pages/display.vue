@@ -18,7 +18,6 @@ useHead({
 
 // Variables
 const apiItems = ref<APIData<DisplayData>>();
-const apiItemsOrder = ref<APIData<any>>();
 
 const id = ref<number>(0);
 const zoneId = ref<number>(0);
@@ -139,7 +138,7 @@ watch(roomIds, async (newValue, oldValue) => {
                 />
               </div>
               <h5 class="tw-w-28 tw-truncate tw-text-center">
-                Добавить
+                {{ t('add')}}
               </h5>
             </button>
           </VueDraggableNext>

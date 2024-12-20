@@ -46,7 +46,10 @@ const perPage = 10000;
 
 const page = ref(1);
 
-const typeOptions = ref<Options[]>([]);
+const typeOptions = computed(() => {
+  if (!storeDevices.tags?.data?.response) return [];
+  return Object.keys(storeDevices.tags?.data?.response) ?? [];
+});
 
 const isUpdate = ref(true);
 const isOpen = ref(false);
@@ -90,11 +93,10 @@ const filters = ref<Filter[]>([
     label: 'Тип',
     key: 'filter_by_type',
     value: null,
-    options: typeOptions.value,
   },
   {
     label: 'Помещения',
-    key: 'id',
+    key: 'filter_by_zone_id',
     value: null,
   },
   {
@@ -206,17 +208,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
   }
 });
 
-watchEffect(() => {
-  typeOptions.value = storeDevices.types?.data?.response
-    .filter((item) => getCategoriesOption.value.includes(item.category))
-    .map((item) => ({
-      title: item.name,
-      props: {
-        value: item.type,
-      },
-    })) ?? [];
-});
-
 </script>
 
 <template>
@@ -271,7 +262,6 @@ watchEffect(() => {
               hide-details
               class="tw-min-w-96"
               prepend-inner-icon="mdi-magnify"
-              clearable
             />
           </DevicesTableHeader>
         </template>
@@ -296,7 +286,6 @@ watchEffect(() => {
               hide-details
               class="tw-min-w-80"
               prepend-inner-icon="mdi-magnify"
-              clearable
             />
           </DevicesTableHeader>
         </template>
@@ -312,8 +301,7 @@ watchEffect(() => {
               optionValue="code"
               class="tw-min-w-80"
               prepend-inner-icon="mdi-magnify"
-              hide-details
-              clearable
+              showClear
             />
           </DevicesTableHeader>
         </template>
@@ -330,7 +318,7 @@ watchEffect(() => {
               :placeholder="filters[5].label"
               class="tw-min-w-80"
               color="primary"
-              hide-details
+              showClear
             />
           </DevicesTableHeader>
         </template>
@@ -347,13 +335,13 @@ watchEffect(() => {
           <DevicesTableHeader title="devices.tags">
             <Select
               v-model="filters[6].value"
-              :options="filters[6].options"
+              :options="typeOptions"
               :placeholder="filters[6].label"
               class="tw-min-w-80"
               color="primary"
               chips
               multiple
-              hide-details
+              showClear
             />
           </DevicesTableHeader>
         </template>

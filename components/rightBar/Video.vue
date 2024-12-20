@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+// Composables
+const { t } = useI18n();
+
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
@@ -23,7 +28,7 @@ const selectType = 'Камера';
     <div elevation="0" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-          {{ edit ? 'Изменить Виджет' : 'Добавить Виджет' }}
+          {{ edit ? t('video.changeWidget') : t('video.changeWidget') }}
         </h3>
         <Button
           @click="isOpen = false"

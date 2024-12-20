@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-// Static data modules
-import { colors } from '~/staticData/rooms';
-// Helpers modules
-import { getRoomColorByValue } from '~/helpers/rooms';
 
 const { t } = useI18n();
 
@@ -27,18 +23,33 @@ const loadingDelete = ref(false);
     <div v-if="form" class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
-          {{ form.is_group ? 'Добавить категорию' : "Добавить помещение" }}
+          {{ form.is_group ? t('room.addCategory') : t('room.addRoom') }}
         </h3>
-        <Button text @click="isOpen = false" icon="pi" rounded size="small" variant="text">
+        <Button
+          @click="isOpen = false"
+          icon="pi"
+          size="small"
+          variant="text"
+          text
+          rounded
+        >
           <XIcon class="white" />
         </Button>
       </div>
 
       <div class="!tw-px-0 !tw-pt-1">
-        <SharedUILabel :title="'Наименование'" required class="tw-mb-2">
+        <SharedUILabel
+          :title="t('room.name')"
+          class="tw-mb-2"
+          required
+        >
           <InputText v-model="form.name" class="tw-w-full" />
         </SharedUILabel>
-        <SharedUILabel :title="'Цвет категории'" required class="tw-mb-2">
+        <SharedUILabel
+          :title="t('room.colorCategory')"
+          class="tw-mb-2"
+          required
+        >
           <SharedUIColorSelect v-model="form.color" />
         </SharedUILabel>
       </div>
@@ -60,7 +71,3 @@ const loadingDelete = ref(false);
     </div>
   </LayoutFullRightbar>
 </template>
-
-<style>
-
-</style>
