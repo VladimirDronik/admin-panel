@@ -4,8 +4,8 @@ import type {
 } from '~/components/devices/form.types';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import {
-  Controller, GenericInput, GenericOutput, Sensor, ObjectsCategory, Connection, DeviceInterface,
-  DevicePropertyKey,
+  Controller, GenericInput, Relay, Regulator, Sensor, ObjectsCategory, Connection, DeviceInterface,
+  DevicePropertyKey, RegulatorType,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -240,11 +240,27 @@ const createFormByTypesMap = {
     category: ObjectsCategory.GenericInput,
     props: {},
   },
-  [GenericOutput.Relay]: {
+  [Relay.Relay]: {
     sdaPort: null,
     parent_id: 0,
-    category: ObjectsCategory.GenericOutput,
+    category: ObjectsCategory.Relay,
     props: {},
+  },
+  [Regulator.Regulator]: {
+    parent_id: 0,
+    category: ObjectsCategory.Regulator,
+    props: {
+      enable: false,
+      type: RegulatorType.Simple,
+      fallback_sensor_value_id: 0,
+      sensor_value_ttl: 30,
+      min_sp: 0,
+      target_sp: 0,
+      max_sp: 0,
+      below_tolerance: 0,
+      above_tolerance: 0,
+      complex_tolerance: 0,
+    },
   },
 };
 
@@ -316,7 +332,7 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {},
   },
-  [GenericOutput.Relay]: {
+  [Relay.Relay]: {
     id: 0,
     sdaPort: null,
     parent_id: 0,

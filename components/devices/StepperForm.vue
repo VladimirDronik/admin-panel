@@ -15,7 +15,7 @@ import {
   type CreateDeviceInitialForm, type DynamicFormData, type DeviceCreateFormPayload, type AddFieldToDynamicFormPayload,
 } from './form.types';
 import {
-  Controller, GenericInput, GenericOutput, ObjectsCategory,
+  Controller, GenericInput, Relay, ObjectsCategory,
 } from '~/types/DevicesEnums';
 import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
 import { getInitialCreateDeviceFormDataByTypes } from '../forms/byTypes/initial-dynamic-form-data';
@@ -112,7 +112,7 @@ const createDevice = async () => {
       model.value = undefined;
       initialForm.value = {
         name: '',
-        zone_id: null,
+        zone_id: 0,
         type: Controller.MegaD,
         tags: [],
         category: 'controller',
@@ -151,8 +151,8 @@ const changeTypeHandler = () => {
     case Controller.MegaD:
       dynamicForm.category = ObjectsCategory.Controller;
       break;
-    case GenericOutput.Relay:
-      dynamicForm.category = ObjectsCategory.GenericOutput;
+    case Relay.Relay:
+      dynamicForm.category = ObjectsCategory.Relay;
       break;
     case GenericInput.GenericInput:
       dynamicForm.category = ObjectsCategory.GenericInput;

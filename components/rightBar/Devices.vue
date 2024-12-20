@@ -159,7 +159,8 @@ onBeforeMount(async () => {
 
   // Update Device
   const body = computed<DeviceEditFormPayload>(() => transformToDeviceEditFormPayload(asideEditingForm));
-
+  // Проверка пока формы в работе
+  console.log(body);
   const dataUpdateDevice: unknown = await useAPI(
     paths.objects,
     {

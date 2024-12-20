@@ -47,6 +47,12 @@ watch(
 
 const protocolOptions = schema.shape.protocol.options;
 
+// watch(() => dynamicForm.value.zone_id, (newValue) => {
+//   if (newValue == null) {
+//     dynamicForm.value.zone_id = 0;
+//   }
+// });
+
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 export enum ObjectsCategory {
   Controller = 'controller',
   GenericInput = 'generic_input',
-  GenericOutput = 'generic_output',
+  Relay = 'relay',
   Regulator = 'regulator',
   Sensor = 'sensor',
 }
@@ -36,8 +36,12 @@ export enum GenericInput {
   GenericInput = 'generic_input',
 }
 
-export enum GenericOutput {
+export enum Relay {
   Relay = 'relay',
+}
+
+export enum Regulator {
+  Regulator = 'regulator',
 }
 
 
@@ -54,5 +58,11 @@ export enum DeviceInterface {
   'I2C' = 'I2C',
   'MODBUS' = 'MODBUS'
 }
+
+export enum RegulatorType {
+  Complex = 'complex',
+  PID = 'pid',
+  Simple= 'simple'
+} 
 
 

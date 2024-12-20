@@ -1,6 +1,6 @@
 import { type Component } from 'vue';
 import {
-  Controller, Sensor, Default, GenericOutput, GenericInput,
+  Controller, Sensor, Default, Relay, GenericInput, Regulator,
 } from '@/types/DevicesEnums';
 
 import SensorDS18B20Form from '~/components/forms/byTypes/SensorDS18B20Form.vue';
@@ -16,8 +16,9 @@ import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
 
 import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
 import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
+import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
 
-type DeviceType = Controller | GenericInput | GenericOutput | Sensor | Default;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Regulator | Default;
 
 interface DeviceFormMapping {
   type: DeviceType;
@@ -64,13 +65,17 @@ export const deviceFormMapping: DeviceFormMapping[] = [
   },
 
   {
-    type: GenericOutput.Relay,
+    type: Relay.Relay,
     component: RelayForm,
   },
 
   {
     type: GenericInput.GenericInput,
     component: GenericInputForm,
+  },
+  {
+    type: Regulator.Regulator,
+    component: RegulatorForm,
   },
 
 ];

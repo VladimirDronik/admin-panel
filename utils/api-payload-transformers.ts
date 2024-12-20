@@ -6,7 +6,7 @@ import type {
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import {
-  Sensor, Controller, GenericOutput, GenericInput,
+  Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
   DevicePropertyKey, Connection,
 } from '~/types/DevicesEnums';
@@ -14,7 +14,7 @@ import {
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
   const isDS1820 = formData.type === Sensor.DS18B20;
   const isMegaD = formData.type === Controller.MegaD;
-  const isRelayOrGenericInput = formData.type === GenericOutput.Relay || formData.type === GenericInput.GenericInput;
+  const isRelayOrGenericInput = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput;
   let address = `${formData.sdaPort};${formData.sclPort}`;
   if (isDS1820 && formData.props.interface === '1W') address = String(formData.sdaPort);
   if (isDS1820 && formData.props.interface === '1WBUS') address = `${formData.sdaPort};${formData.busAddress}`;
