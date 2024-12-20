@@ -1,5 +1,6 @@
 import {
-  DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, GenericOutput,
+  DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, Relay,
+  Regulator, RegulatorType,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
 
@@ -50,6 +51,16 @@ export interface DeviceProps {
     id?: string;
     password?: string;
     protocol?: Connection;
+    sensor_value_ttl?: number;
+    type?: RegulatorType;
+    min_sp?: number;
+    target_sp?: number;
+    max_sp?: number;
+    below_tolerance?: number;
+    above_tolerance?: number;
+    complex_tolerance?: number;
+    enable?: boolean;
+    fallback_sensor_value_id?: number;
   }
 
 export interface DeviceChild {
@@ -77,4 +88,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | GenericOutput
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator

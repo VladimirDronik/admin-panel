@@ -28,6 +28,7 @@ definePageMeta({
 // Variables
 
 const iconMap = {
+  mega_d: IconCpu2,
   bh1750: IconSun,
   outdoor: IconHome,
   generic_input: IconPlugConnected,
@@ -225,7 +226,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
       :items="storeDevices.getDevices"
       :perPage="perPage"
     >
-      <Column field="id" expander style="width: 100px">
+      <Column expander>
         <!-- <template #header>
           <DevicesTableHeader title="devices.id">
             <InputText
@@ -249,9 +250,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
             />
           </DevicesTableHeader>
         </template> -->
-        <template #body="{ node }">
-          <IconCpu2 v-if="node.data.type === 'mega_d'" size="26" stroke-width="1.5" color="#555" />
-        </template>
       </Column>
       <Column field="name">
         <template #header>
@@ -420,6 +418,10 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
 .p-scrollpanel-content {
   padding-bottom: 0 !important;
+}
+
+.p-treetable-body-cell-content.p-treetable-body-cell-content-expander {
+  margin-right: -20px !important;
 }
 
 </style>
