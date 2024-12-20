@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 // Static data modules
+import { paths } from '~/utils/endpoints';
+// Types and Schemes modules
+import type { APIData } from '~/types/StoreTypes';
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 const { t } = useI18n();
@@ -25,6 +28,8 @@ const form = ref({
 const selectedSensor = ref<string>();
 const selectedParamSensor = ref<string>();
 
+const apiGetSensor = ref<APIData<any>>();
+
 const selectSensor = (sensor: string) => {
   selectedSensor.value = sensor;
 };
@@ -33,6 +38,18 @@ const selectParamSensor = (param: string) => {
 };
 
 const checked = ref(false);
+
+onBeforeMount(async () => {
+  // Get Sensor
+  const dataGetSensor: unknown = await useAPI(paths.objectsTypes, {
+    query: computed(() => ({
+      tags: selectedSensor.value,
+    })),
+    immediate: false,
+  });
+
+  apiGetSensor.value = dataGetSensor as APIData<any>;
+});
 </script>
 
 <template>
@@ -71,6 +88,8 @@ const checked = ref(false);
       <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
         <div class="tw-h-full">
           <div class="tw-h-full tw-rounded-md tw-border tw-p-3">
+            <InputText
+              class="tw-mb-2 tw-w-full" />
             <button
               v-for="sensor in sensors"
               @click="selectSensor(sensor.type)"
@@ -92,8 +111,8 @@ const checked = ref(false);
         <div>
           <div class="tw-mb-4 tw-rounded-md tw-border tw-p-3">
             <button
-              v-for="sensor in sensors"
-              @click="selectSensor(sensor.type)"
+              v-for="sensor in apiGetSensor?.data?.response"
+              @click="selectParamSensor(sensor.type)"
               :key="sensor.id"
               type="button"
               class="tw-flex tw-w-full tw-items-center tw-py-1"
