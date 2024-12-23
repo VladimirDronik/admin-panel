@@ -134,6 +134,7 @@ onBeforeMount(async () => {
   const body = computed<DeviceCreateFormPayload>(() => transformToDeviceCreateFormPayload({
     ...initialForm.value, ...dynamicForm,
   }));
+  /// Консоль для работы, пока идут создания девайсов
   console.log(body);
   const data: unknown = await useAPI(paths.objects, {
     body,
@@ -161,6 +162,8 @@ const changeTypeHandler = () => {
       dynamicForm.category = ObjectsCategory.Sensor;
   }
 };
+
+const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulator');
 
 </script>
 
@@ -191,7 +194,7 @@ const changeTypeHandler = () => {
               <InputText v-model="dynamicForm.name" class="tw-w-3/4" />
             </SharedUILabel>
             <SharedUILabel class="tw-mb-4" :title="t('devices.room')">
-              <Select :showClear="true" v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
+              <Select :disabled="isRoomSelectDisabled" :showClear="true" v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
             </SharedUILabel>
           </div>
 

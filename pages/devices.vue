@@ -149,6 +149,8 @@ const created = async () => {
     }),
   ]);
   isUpdate.value = false;
+  // console.log('Raw Devices:', storeDevices.getDevices);
+  // console.log('Processed Devices:', processedDevices.value);
 };
 
 const propsModel = (props: any[] | undefined) => {
@@ -208,6 +210,35 @@ watch([props, childrenProps], (newValue, oldValue) => {
     updateFields();
   }
 });
+
+// В работе
+
+// interface Devices {
+//   key?: string;
+//   data?: object;
+//   children?: Devices[]
+// }
+
+// function processDevices(arr: Devices[], depth = 1): Devices[] {
+//   return arr.map((obj) => {
+//     if (obj.children) {
+//       obj.children = processDevices(obj.children, depth + 1);
+
+//       if (depth >= 3 && obj.children.length > 0) {
+//         obj.children[0].data.name = `${obj.children[0].data.name} (${obj.data.name})`;
+//         obj.data.name = '';
+//       }
+//     }
+
+//     return obj;
+//   });
+// }
+
+// const processedDevices = computed(() => {
+//   const result = processDevices(storeDevices.getDevices ?? []);
+//   console.log(result, 'res');
+//   return result;
+// });
 
 </script>
 

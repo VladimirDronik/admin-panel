@@ -6,15 +6,14 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData,
 } from '~/components/devices/form.types';
-import { ObjectsCategory, Sensor } from '~/types/DevicesEnums';
 
 const storeDevices = useDevicesStore();
 const storeRooms = useRoomsStore();
 const { api } = useApiInstant();
 const { t } = useI18n();
 const sensorOptions = ref<{ label: string; value: number, zone_id: number }[]>([]);
-// const selectedSensor = ref<number | null>(null);
-const childrenOptions = ref<{ label: string; value: number }[]>([]);
+const mainSensorChildrenOptions = ref<{ label: string; value: number }[]>([]);
+const additionalSensorChildrenOptions = ref<{ label: string; value: number }[]>([]);
 const props = defineProps<{
   isEditing: boolean;
 }>();
@@ -47,14 +46,15 @@ const handleMainSensorSelection = async (event: { value: number }) => {
     params: { without_children: false },
   });
   if (data?.response?.children) {
-    childrenOptions.value = data.response.children.map((child: any) => ({
+    mainSensorChildrenOptions.value = data.response.children.map((child: any) => ({
       label: child.name,
       value: child.id,
     }));
   } else {
-    childrenOptions.value = [];
+    mainSensorChildrenOptions.value = [];
   }
 };
+
 const handleAdditionalSensorSelection = async (event: { value: number }) => {
   const sensorId = event.value;
   const endpoint = `${objectManager}/objects/${sensorId}`;
@@ -62,32 +62,16 @@ const handleAdditionalSensorSelection = async (event: { value: number }) => {
     params: { without_children: false },
   });
   if (data?.response?.children) {
-    childrenOptions.value = data.response.children.map((child: any) => ({
+    additionalSensorChildrenOptions.value = data.response.children.map((child: any) => ({
       label: child.name,
       value: child.id,
     }));
   } else {
-    childrenOptions.value = [];
+    additionalSensorChildrenOptions.value = [];
   }
 };
 onMounted(fetchSensors);
-console.log(sensorOptions);
-//   [Regulator.Regulator]: {
-//     parent_id: 0,
-//     category: ObjectsCategory.Regulator,
-//     props: {
-//       enable: false,
-//       type: RegulatorType.Simple,
-//       fallback_sensor_value_id: 0,
-//       sensor_value_ttl: 30,
-//       min_sp: 0,
-//       target_sp: 0,
-//       max_sp: 0,
-//       below_tolerance: 0,
-//       above_tolerance: 0,
-//       complex_tolerance: 0,
-//     },
-//   },
+
 const flatForm = computed(() => ({
   type: dynamicForm.value.props.type,
   sensor_value_ttl: dynamicForm.value.props.sensor_value_ttl,
@@ -141,8 +125,9 @@ const typeOptions = schema.shape.type.options;
         :disabled="true"
       />
     </SharedUILabel>
+    <Divider v-if="props.isEditing" class="tw-mt-0 tw-pb-3" />
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.mainSensor')" required name="">
+    <SharedUILabel :width="300" v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.mainSensor')" required name="">
       <Select
         :options="sensorOptions"
         optionLabel="label"
@@ -151,22 +136,22 @@ const typeOptions = schema.shape.type.options;
         @change="handleMainSensorSelection"
       />
     </SharedUILabel>
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.indicator')" required :value="dynamicForm.parent_id" name="">
+    <SharedUILabel :width="300" v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.indicator')" required :value="dynamicForm.parent_id" name="">
       <Select
         v-model="dynamicForm.parent_id"
-        :options="childrenOptions"
+        :options="mainSensorChildrenOptions"
         optionLabel="label"
         optionValue="value"
         class="tw-w-3/4"
       />
     </SharedUILabel>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.sensorTTL')" required :value="dynamicForm.props.sensor_value_ttl" name="sensor_value_ttl">
+    <SharedUILabel :width="300" class="tw-mb-2" :title="t('devices.sensorTTL')" required :value="dynamicForm.props.sensor_value_ttl" name="sensor_value_ttl">
       <InputNumber
         v-model="dynamicForm.props.sensor_value_ttl"
       />
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel class="tw-mb-2" :title="t('devices.additionalSensor')" name="">
+    <SharedUILabel :width="300" class="tw-mb-2" :title="t('devices.additionalSensor')" name="">
       <Select
         :options="sensorOptions"
         optionLabel="label"
@@ -175,20 +160,20 @@ const typeOptions = schema.shape.type.options;
         @change="handleAdditionalSensorSelection"
       />
     </SharedUILabel>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.indicator')" :value="dynamicForm.props.fallback_sensor_value_id" name="">
+    <SharedUILabel :width="300" class="tw-mb-2" :title="t('devices.indicator')" :value="dynamicForm.props.fallback_sensor_value_id" name="">
       <Select
         v-model="dynamicForm.props.fallback_sensor_value_id"
-        :options="childrenOptions"
+        :options="additionalSensorChildrenOptions"
         optionLabel="label"
         optionValue="value"
         class="tw-w-3/4"
       />
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel required :title="t('devices.regulation')">
+    <SharedUILabel :width="300" required :title="t('devices.regulation')">
       <ToggleSwitch v-model="dynamicForm.props.enable" />
     </SharedUILabel>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.regulatorType')" required :value="dynamicForm.props.type" name="type">
+    <SharedUILabel :width="300" class="tw-mb-2" :title="t('devices.regulatorType')" required :value="dynamicForm.props.type" name="type">
       <Select
         v-model="dynamicForm.props.type"
         :options="typeOptions"
@@ -197,9 +182,9 @@ const typeOptions = schema.shape.type.options;
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.setpoint') }}</p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_1fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
       <SharedUILabel
-        class="tw-flex-col"
+        class="tw-flex-col !tw-items-start"
         required
         :value="dynamicForm.props.min_sp"
         name=""
@@ -215,7 +200,7 @@ const typeOptions = schema.shape.type.options;
       </SharedUILabel>
     </div>
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.hysteresis') }}</p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_1fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
       <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.props.below_tolerance" name="" :title="`${t('devices.below')}:`">
         <InputNumber v-model="dynamicForm.props.below_tolerance" />
       </SharedUILabel>
@@ -232,4 +217,5 @@ const typeOptions = schema.shape.type.options;
 ::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
  width: 150px;
 }
+
 </style>
