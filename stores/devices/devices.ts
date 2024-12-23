@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import _ from 'lodash';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 // Composable modules
@@ -14,7 +13,7 @@ import type {
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import {
-  typesListSchema, type TypeData, tagsSchema, type TagsData, devicesListSchema, type FullDevice,
+  typesListSchema, type TypeData, tagsSchema, type TagsData,
 } from './devicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {

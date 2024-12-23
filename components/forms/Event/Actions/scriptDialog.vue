@@ -11,7 +11,7 @@ const { t } = useI18n();
 const { updateData } = useUtils();
 const storeScript = useScriptStore();
 
-const dialog = defineModel({
+const dialog = defineModel<boolean>({
   default: false,
 });
 
@@ -115,49 +115,73 @@ onBeforeMount(async () => {
   <div>
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="'Выбор скрипта'"
+      modal
       :style="{
         'max-width': '1000px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissableMask
     >
       <p class="tw-mb-3">
         Позволяет выбрать скрипт для выполнения
       </p>
 
       <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
-        <div @click="selectedScript = script" @keydown="selectedScript = script" v-for="script in refScripts?.data?.response.list" :key="script.id" class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
+        <div
+          v-for="script in refScripts?.data?.response.list"
+          :key="script.id"
+          class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
+          @click="selectedScript = script"
+          @keydown="selectedScript = script"
+        >
           <div class="tw-text-left">
-            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-lg">
+            <p
+              class="tw-text-lg"
+              :class="{ 'tw-text-green-500': selectedScript?.id === script.id }"
+            >
               {{ script.name }}
             </p>
-            <p :class="{ 'tw-text-green-500': selectedScript?.id === script.id }" class="tw-text-sm">
+            <p
+              class="tw-text-sm"
+              :class="{ 'tw-text-green-500': selectedScript?.id === script.id }"
+            >
               {{ script.description }}
             </p>
           </div>
           <div>
-            <Button icon="pi pi-pencil" severity="info" rounded aria-label="Search" class="tw-mr-2" />
-            <Button @click.stop="deleteScript(script)" icon="pi pi-trash" severity="danger" rounded aria-label="Cancel" />
+            <Button
+              aria-label="Search"
+              class="tw-mr-2"
+              icon="pi pi-pencil"
+              rounded
+              severity="info"
+            />
+            <Button
+              aria-label="Cancel"
+              icon="pi pi-trash"
+              rounded
+              severity="danger"
+              @click.stop="deleteScript(script)"
+            />
           </div>
         </div>
       </div>
 
       <div class="tw-pt-4">
         <Button
-          @click="createAction"
+          class="tw-mr-2"
           :disabled="!selectedScript"
           :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
-          class="tw-mr-2"
+          @click="createAction"
         >
           {{ t('save') }}
         </Button>
         <Button
+          outlined
           variant="outlined"
           @click="dialog = false"
-          outlined
         >
           {{ t('cancel') }}
         </Button>
@@ -165,8 +189,8 @@ onBeforeMount(async () => {
 
       <DialogsDeleteDialog
         :id="selectedScript?.id ?? -1"
-        :showBtn="false"
         v-model="deleteDialog"
+        :show-btn="false"
       />
     </Dialog>
   </div>

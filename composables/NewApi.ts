@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+ 
 import { ZodArray, ZodObject, ZodRecord } from 'zod';
 import type { UseFetchOptions } from 'nuxt/app';
 

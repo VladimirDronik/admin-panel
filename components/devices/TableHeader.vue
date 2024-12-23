@@ -24,7 +24,11 @@ const toggle = (event: any) => {
     <p class="tw-font-semibold">
       {{ t(title) }}
     </p>
-    <button @click="toggle" type="button" class="tree-table__header-filter tw-ml-3 tw-bg-white">
+    <button
+      class="tree-table__header-filter tw-ml-3 tw-bg-white"
+      type="button"
+      @click="toggle"
+    >
       <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
     </button>
     <Popover ref="popover">

@@ -14,7 +14,7 @@ interface Method {
 const { t } = useI18n();
 const { updateData } = useUtils();
 
-const dialog = defineModel({
+const dialog = defineModel<boolean>({
   default: false,
 });
 
@@ -145,14 +145,14 @@ onBeforeMount(async () => {
   <div>
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="'Выбор метода обьекта'"
+      modal
       :style="{
         'max-width': '1000px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissableMask
     >
       <p class="tw-mb-7">
         Позволяет выбрать метод любого обьекта в системе
@@ -166,20 +166,29 @@ onBeforeMount(async () => {
           Список Методов
         </h3>
       </div>
-      <div v-if="filteredObjects?.length" class="tw-flex">
+      <div
+        v-if="filteredObjects?.length"
+        class="tw-flex"
+      >
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <div v-if="filteredObjects?.length">
-            <InputText v-model="search" class="tw-mb-2 tw-w-full" />
+            <InputText
+              v-model="search"
+              class="tw-mb-2 tw-w-full"
+            />
             <ScrollPanel style="height: 300px">
               <button
                 v-for="object in filteredObjects"
                 :key="object.id"
-                @click="selectObject(object)"
-                type="button"
                 class="tw-block"
+                type="button"
+                @click="selectObject(object)"
               >
                 <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
-                  <p :class="{ 'tw-text-green-500': selectedObject?.id === object.id }" class="tw-max-w-80 tw-truncate tw-text-lg ">
+                  <p
+                    class="tw-max-w-80 tw-truncate tw-text-lg "
+                    :class="{ 'tw-text-green-500': selectedObject?.id === object.id }"
+                  >
                     {{ object.name }}
                   </p>
                 </div>
@@ -196,13 +205,13 @@ onBeforeMount(async () => {
               <button
                 v-for="method in selectedObject.methods"
                 :key="method.name"
-                @click="selectMethod(method)"
-                type="button"
                 class="tw-flex tw-items-center tw-justify-between"
+                type="button"
+                @click="selectMethod(method)"
               >
                 <p
-                  :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }"
                   class="tw-text-lg"
+                  :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }"
                 >
                   {{ method.name }}
                 </p>
@@ -217,17 +226,17 @@ onBeforeMount(async () => {
 
       <div class="tw-pt-4">
         <Button
-          @click="createAction"
-          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
           class="tw-mr-2"
           :disabled="!selectedMethod"
+          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
+          @click="createAction"
         >
           {{ t('save') }}
         </Button>
         <Button
+          outlined
           variant="outlined"
           @click="dialog = false"
-          outlined
         >
           {{ t('cancel') }}
         </Button>

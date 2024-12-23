@@ -84,28 +84,35 @@ const editEvents = (event: any) => {
 
 <template>
   <div v-if="events">
-    <div v-for="event in events" :key="event.code" class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
+    <div
+      v-for="event in events"
+      :key="event.code"
+      class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4"
+    >
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <p class="tw-text-lg tw-font-semibold">
           {{ event.name }}
         </p>
-        <div v-if="event" class="tw-flex tw-items-center tw-justify-end">
+        <div
+          v-if="event"
+          class="tw-flex tw-items-center tw-justify-end"
+        >
           <Button
             v-if="event.actions?.length"
-            @click="editEvents(event)"
-            size="small"
-            text
+            icon="pi pi-cog"
             label="Настройка"
             severity="secondary"
-            icon="pi pi-cog"
+            size="small"
+            text
+            @click="editEvents(event)"
           />
           <Button
             v-else
-            @click="createEvents(event)"
             color="primary"
-            size="small"
-            label="Добавить"
             icon="pi pi-plus"
+            label="Добавить"
+            size="small"
+            @click="createEvents(event)"
           />
         </div>
       </div>
@@ -132,11 +139,11 @@ const editEvents = (event: any) => {
     </div>
 
     <DialogsDeviceEvents
-      @update-actions="updateEvents"
       v-model="dialog"
-      v-model:object="object"
       v-model:form="form"
+      v-model:object="object"
       :edit="edit"
+      @update-actions="updateEvents"
     />
   </div>
 </template>

@@ -29,11 +29,11 @@ onMounted(() => {
 
 <template>
   <div
-    :style="{ 'max-width': `${isOpen ? width / 3 : 0}px` }"
-    :class="{ 'rightbar-active': isOpen }"
     class="rightbar tw-w-full tw-border-l tw-bg-white"
+    :class="{ 'rightbar-active': isOpen }"
+    :style="{ 'max-width': `${isOpen ? width / 3 : 0}px` }"
   >
-    <SharedUILoader :isUpdate="isUpdate">
+    <SharedUILoader :is-update="isUpdate">
       <ScrollPanel :style="{ height: `${height - 90}px`, width: '100%' }">
         <slot />
       </ScrollPanel>

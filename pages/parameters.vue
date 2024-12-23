@@ -44,22 +44,35 @@ const editParameter = (item: any) => {
   <SharedUIPanel>
     <SharedUIBreadcrumb title="pages.parameters" />
     <DataTable
-      :value="items"
       class="params-table"
-      tableStyle="min-width: 50rem"
+      table-style="min-width: 50rem"
+      :value="items"
     >
-      <Column field="name" header="Name" />
-      <Column field="value" header="Value" />
-      <Column field="description" header="Description" />
-      <Column field="actions" header="Actions" style="width: 150px">
+      <Column
+        field="name"
+        header="Name"
+      />
+      <Column
+        field="value"
+        header="Value"
+      />
+      <Column
+        field="description"
+        header="Description"
+      />
+      <Column
+        field="actions"
+        header="Actions"
+        style="width: 150px"
+      >
         <template #body="{ data }">
           <div class="tags">
             <Button
-              @click="editParameter(data)"
               icon="pi pi-pencil"
-              severity="info"
               outlined
               rounded
+              severity="info"
+              @click="editParameter(data)"
             />
           </div>
         </template>
@@ -68,7 +81,7 @@ const editParameter = (item: any) => {
     <template #rightbar>
       <RightBarParameters
         v-model:is-open="isOpen"
-        v-model:selectedParameter="selectedParameter"
+        v-model:selected-parameter="selectedParameter"
       />
     </template>
   </SharedUIPanel>

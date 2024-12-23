@@ -76,27 +76,50 @@ watch(roomIds, (newValue, oldValue) => {
 </script>
 
 <template>
-  <SharedUIPanel :isUpdate="storeRooms.apiRooms?.pending">
+  <SharedUIPanel :is-update="storeRooms.apiRooms?.pending">
     <SharedUIBreadcrumb title="pages.rooms">
       <DialogsRoomCreateDialog />
     </SharedUIBreadcrumb>
     <div v-if="storeRooms.apiRooms?.data">
-      <VueDraggableNext v-model="storeRooms.apiRooms.data.response" handle=".handle-list" :animation="300">
-        <div v-for="place in storeRooms.apiRooms.data.response" :key="place.id">
-          <Accordion v-if="place.is_group" expandIcon="none" collapseIcon="none" :value="[]" multiple class="tw-mb-2">
+      <VueDraggableNext
+        v-model="storeRooms.apiRooms.data.response"
+        :animation="300"
+        handle=".handle-list"
+      >
+        <div
+          v-for="place in storeRooms.apiRooms.data.response"
+          :key="place.id"
+        >
+          <Accordion
+            v-if="place.is_group"
+            class="tw-mb-2"
+            collapse-icon="none"
+            expand-icon="none"
+            multiple
+            :value="[]"
+          >
             <AccordionPanel :value="place.id">
               <AccordionHeader>
                 <div class="header__arrow">
-                  <IconChevronUp stroke={2} class="header__arrow-up tw-w-6" />
-                  <IconChevronDown stroke={2} class="header__arrow-down tw-w-6" />
+                  <IconChevronUp
+                    class="header__arrow-up tw-w-6"
+                    stroke="{2}"
+                  />
+                  <IconChevronDown
+                    class="header__arrow-down tw-w-6"
+                    stroke="{2}"
+                  />
                 </div>
                 <div
+                  class="header-list tw-flex tw-w-full tw-justify-between"
                   @click.stop="openRightBar(place)"
                   @keydown.stop="openRightBar(place)"
-                  class="header-list tw-flex tw-w-full tw-justify-between"
                 >
                   <div class=" tw-flex tw-items-center">
-                    <div :style="{ backgroundColor: roomColor(place.style) }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                    <div
+                      class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+                      :style="{ backgroundColor: roomColor(place.style) }"
+                    />
                     <p class=" tw-text-lg tw-font-normal tw-text-black">
                       {{ place.name }}
                     </p>
@@ -105,17 +128,24 @@ watch(roomIds, (newValue, oldValue) => {
                 </div>
               </AccordionHeader>
               <AccordionContent>
-                <VueDraggableNext v-model="place.rooms_in_group" handle=".handle-item" :animation="300">
+                <VueDraggableNext
+                  v-model="place.rooms_in_group"
+                  :animation="300"
+                  handle=".handle-item"
+                >
                   <div
-                    @click="openRightBar(room)"
-                    @keydown="openRightBar(room)"
                     v-for="room in place.rooms_in_group"
                     :key="room.id"
                     class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
+                    @click="openRightBar(room)"
+                    @keydown="openRightBar(room)"
                   >
                     <div class="tw-flex tw-w-full tw-justify-between">
                       <div class="tw-flex tw-items-center">
-                        <div :style="{ backgroundColor: roomColor(room.style) }" class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full" />
+                        <div
+                          class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full"
+                          :style="{ backgroundColor: roomColor(room.style) }"
+                        />
                         <p class="tw-text-lg tw-font-normal tw-text-black">
                           {{ room.name }}
                         </p>
@@ -129,13 +159,13 @@ watch(roomIds, (newValue, oldValue) => {
           </Accordion>
           <div
             v-else
+            class="room-item tw-mb-2 tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-9 tw-text-lg"
             @click="openRightBar(place)"
             @keydown="openRightBar(place)"
-            class="room-item tw-mb-2 tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-9 tw-text-lg"
           >
             <div
-              :style="{ backgroundColor: roomColor(place.style) } "
               class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+              :style="{ backgroundColor: roomColor(place.style) } "
             />
             <div class="tw-flex tw-w-full tw-justify-between">
               <p class=" tw-text-lg tw-font-normal tw-text-black">
@@ -150,9 +180,9 @@ watch(roomIds, (newValue, oldValue) => {
 
     <template #rightbar>
       <RightBarRoom
-        v-model:is-update="isLoading"
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
+        v-model:is-update="isLoading"
       />
     </template>
   </SharedUIPanel>

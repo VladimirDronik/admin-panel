@@ -15,40 +15,55 @@ const selectedParameter = defineModel<any>('selectedParameter', {
 </script>
 
 <template>
-  <LayoutFullRightbar :isOpen="isOpen">
-    <div elevation="0" class="tw-min-h-80 tw-p-7">
+  <LayoutFullRightbar :is-open="isOpen">
+    <div
+      class="tw-min-h-80 tw-p-7"
+      elevation="0"
+    >
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
           {{ t('parameters.addRoom') }}
         </h3>
         <Button
-          @click="isOpen = false"
           icon="pi pi-times"
-          size="small"
-          severity="secondary"
           rounded
+          severity="secondary"
+          size="small"
           text
+          @click="isOpen = false"
         />
       </div>
       <div>
-        <SharedUILabel class="tw-mb-3" :title="t('parameters.name')" required>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          :title="t('parameters.name')"
+        >
           <InputText
-            class="tw-w-full"
             v-model="selectedParameter.name"
+            class="tw-w-full"
             required
           />
         </SharedUILabel>
-        <SharedUILabel class="tw-mb-3" :title="t('parameters.value')" required>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          :title="t('parameters.value')"
+        >
           <InputText
-            class="tw-w-full"
             v-model="selectedParameter.value"
+            class="tw-w-full"
             required
           />
         </SharedUILabel>
-        <SharedUILabel class="tw-mb-3" :title="t('parameters.description')" required>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          :title="t('parameters.description')"
+        >
           <InputText
-            class="tw-w-full"
             v-model="selectedParameter.description"
+            class="tw-w-full"
             required
           />
         </SharedUILabel>

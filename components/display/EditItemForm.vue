@@ -125,44 +125,47 @@ onBeforeMount(async () => {
           @submit="({ valid }) => { if (valid) changeItem() }"
         >
           <SharedUILabel
+            class="tw-mb-2"
+            name="title"
+            required
             :title="'Название'"
             :value="form.title"
-            name="title"
-            class="tw-mb-2"
-            required
           >
-            <InputText v-model="form.title" class="tw-w-full" />
+            <InputText
+              v-model="form.title"
+              class="tw-w-full"
+            />
           </SharedUILabel>
           <SharedUILabel
+            class="tw-mb-2"
+            name="zone_id"
+            required
             :title="'Помещение'"
             :value="form.zone_id"
-            name="zone_id"
-            class="tw-mb-2"
-            required
           >
             <Select
               v-model="form.zone_id"
-              :options="storeRooms.getRoomsSelect"
-              optionLabel="name"
-              optionValue="code"
               class="tw-w-full"
+              option-label="name"
+              option-value="code"
+              :options="storeRooms.getRoomsSelect"
               required
               show-clear
             />
           </SharedUILabel>
           <SharedUILabel
-            :title="'Цвет'"
             class="tw-mb-2"
+            :title="'Цвет'"
           >
             <SharedUIColorSelect v-model="form.color" />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogsDeleteDialog
-              @delete="confirmDelete"
+              :id="form.item_id ?? -1"
+              class="tw-mr-2"
               :loading="loadingDelete"
               :title="`Вы уверены, что хотите удалить «${form.title}»?`"
-              class="tw-mr-2"
-              :id="form.item_id ?? -1"
+              @delete="confirmDelete"
             />
 
             <Button
@@ -175,12 +178,12 @@ onBeforeMount(async () => {
       </TabPanel>
       <TabPanel value="events">
         <FormsEventForm
-          v-model="events"
-          targetType="item"
-          :object="form"
           :id="form.item_id"
-          :modelType="form.type"
-          :eventTypes="itemEventTypes"
+          v-model="events"
+          :event-types="itemEventTypes"
+          :model-type="form.type"
+          :object="form"
+          target-type="item"
         />
       </TabPanel>
     </TabPanels>

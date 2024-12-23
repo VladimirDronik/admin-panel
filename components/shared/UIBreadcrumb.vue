@@ -28,7 +28,10 @@ defineProps({
     >
       {{ t(title) }}
       <!-- Total -->
-      <span class="tw-relative tw-bottom-1.5 tw-text-base tw-font-normal" v-if="total !== -1">
+      <span
+        v-if="total !== -1"
+        class="tw-relative tw-bottom-1.5 tw-text-base tw-font-normal"
+      >
         {{ total }}
       </span>
       <!--  -->

@@ -8,7 +8,7 @@ import { paths } from '~/utils/endpoints';
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 
-const dialog = defineModel({
+const dialog = defineModel<boolean>({
   default: false,
 });
 
@@ -109,14 +109,14 @@ onBeforeMount(async () => {
   <div v-if="event">
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="event.name"
+      modal
       :style="{
         'max-width': '1000px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissableMask
       :width="1000"
     >
       <p class="tw-mb-3">
@@ -126,60 +126,60 @@ onBeforeMount(async () => {
       <SharedUILoader :update="loading">
         <div class="tw-mb-6 tw-flex tw-items-center">
           <Button
-            @click="dialogMethod = true"
             class="tw-mr-4"
-            outlined
+            icon="pi pi-plus"
             label="Метод"
-            icon="pi pi-plus"
+            outlined
+            @click="dialogMethod = true"
           />
           <Button
-            @click="dialogPause = true"
+            class="tw-mr-4"
+            icon="pi pi-plus"
             label="Пауза"
-            icon="pi pi-plus"
+            outlined
             severity="warn"
-            class="tw-mr-4"
-            outlined
+            @click="dialogPause = true"
           />
           <Button
-            @click="dialogScript = true"
+            class="tw-mr-4"
+            icon="pi pi-plus"
             label="Скрипт"
-            icon="pi pi-plus"
-            severity="info"
-            class="tw-mr-4"
             outlined
+            severity="info"
+            @click="dialogScript = true"
           />
           <Button
-            @click="dialogNotification = true"
-            label="Уведомление"
             icon="pi pi-plus"
-            severity="danger"
+            label="Уведомление"
             outlined
+            severity="danger"
+            @click="dialogNotification = true"
           />
         </div>
 
         <FormsEventActionsMethodDialog
-          @update-actions="updateActions"
-          v-model="dialogMethod"
           :id="id"
-          :edit="edit"
-          :targetType="targetType"
+          v-model="dialogMethod"
           v-model:event="event"
+          :edit="edit"
+          :target-type="targetType"
+          @update-actions="updateActions"
         />
         <FormsEventActionsPauseDialog
-          @update-actions="updateActions"
-          v-model="dialogPause"
           :id="id"
-          :edit="edit"
-          :targetType="targetType"
+          v-model="dialogPause"
           v-model:event="event"
+          :edit="edit"
+          :target-type="targetType"
+          @update-actions="updateActions"
         />
         <FormsEventActionsScriptDialog
-          @update-actions="updateActions"
-          v-model="dialogScript"
           :id="id"
-          :edit="edit"
-          :targetType="targetType"
+          v-model="dialogScript"
           v-model:event="event"
+          :edit="edit"
+          :target-type="targetType"
+          @update-actions="updateActions"
         />
         <FormsEventActionsNotificationDialog
           v-model="dialogNotification"
@@ -188,48 +188,48 @@ onBeforeMount(async () => {
         <div v-if="event">
           <VueDraggableNext
             v-model="event.actions"
-            handle=".handle-item"
             :animation="300"
+            handle=".handle-item"
           >
             <div
               v-for="event in event.actions"
               :key="event.id"
+              class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
               @click="openEdit(event)"
               @keydown="openEdit(event)"
-              class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
             >
               <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
                 <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
                   <Tag
-                    :severity="getActionsColor(event.type)"
                     class="tw-mr-3 !tw-w-32"
+                    :severity="getActionsColor(event.type)"
                   >
                     <p class="tw-font-normal">
                       {{ getActionsTitle(event.type, event.args) }}
                     </p>
                   </Tag>
                   <p v-if="event.type === 'delay'">
-                    {{ event?.name ? event.name : '-'}}
+                    {{ event?.name ? event.name : '-' }}
                   </p>
                   <p v-else-if="event.type === 'script'">
-                    {{ event?.args?.name ? event.args.name : '-'}}
+                    {{ event?.args?.name ? event.args.name : '-' }}
                   </p>
                   <p v-else-if="event.type === 'method'">
-                    {{ event?.args?.object ? event.args.object : '-'}}
+                    {{ event?.args?.object ? event.args.object : '-' }}
                   </p>
                   <p v-else>
-                    {{ event?.args?.description ? event.args.description : '-'}}
+                    {{ event?.args?.description ? event.args.description : '-' }}
                   </p>
                 </div>
                 <div class="tw-flex tw-items-center">
                   <Button
-                    @click.stop="deleteItem(event.id)"
+                    aria-label="Cancel"
                     class="tw-mr-2"
                     icon="pi pi-trash"
-                    aria-label="Cancel"
+                    rounded
                     severity="secondary"
                     text
-                    rounded
+                    @click.stop="deleteItem(event.id)"
                   />
                   <GripVerticalIcon class="handle-item tw-w-5 tw-cursor-pointer" />
                 </div>
@@ -242,11 +242,11 @@ onBeforeMount(async () => {
         </div>
 
         <DialogsDeleteDialog
-          @delete="confirmDelete"
-          v-model="dialogDelete"
           :id="selectedId"
-          :showBtn="false"
+          v-model="dialogDelete"
           :loading="apiDeleteMethods?.pending && apiDeleteMethods.status !== 'idle'"
+          :show-btn="false"
+          @delete="confirmDelete"
         />
       </SharedUILoader>
     </Dialog>

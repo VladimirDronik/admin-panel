@@ -204,13 +204,26 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
-    <div elevation="0" class="tw-min-h-80 tw-p-7">
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between" :key="forceUpdateKey">
-        <Inplace v-model:active="active" v-if="asideEditingForm.name" class="tw-w-full">
+  <LayoutFullRightbar
+    :is-open="isOpen"
+    :is-update="isUpdate"
+  >
+    <div
+      class="tw-min-h-80 tw-p-7"
+      elevation="0"
+    >
+      <div
+        :key="forceUpdateKey"
+        class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
+      >
+        <Inplace
+          v-if="asideEditingForm.name"
+          v-model:active="active"
+          class="tw-w-full"
+        >
           <template #display>
             <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-              {{ asideEditingForm?.name }} ({{ asideEditingForm.type}})
+              {{ asideEditingForm?.name }} ({{ asideEditingForm.type }})
             </h3>
           </template>
           <template #content="{ closeCallback }">
@@ -220,25 +233,35 @@ onBeforeMount(async () => {
                 autofocus
                 class="tw-min-w-60"
               />
-              <Button icon="pi pi-times" text severity="danger" @click="closeCallback" />
-              <Button icon="pi pi-save" text severity="success" @click="changeDevice" />
+              <Button
+                icon="pi pi-times"
+                severity="danger"
+                text
+                @click="closeCallback"
+              />
+              <Button
+                icon="pi pi-save"
+                severity="success"
+                text
+                @click="changeDevice"
+              />
             </span>
           </template>
         </Inplace>
         <Button
-          @click="isOpen = false"
           icon="pi pi-times"
-          size="small"
-          severity="secondary"
           rounded
+          severity="secondary"
+          size="small"
           text
+          @click="isOpen = false"
         />
       </div>
       <Tag
-        :severity="checkStatusColor(asideEditingForm.status)"
         class="tw-ml-3 !tw-rounded-lg"
-        outlined
         label
+        outlined
+        :severity="checkStatusColor(asideEditingForm.status)"
       >
         <div class="tw-flex tw-items-center tw-font-normal">
           <div
@@ -260,7 +283,10 @@ onBeforeMount(async () => {
               {{ t('devices.events') }}
             </p>
           </Tab>
-          <Tab value="ports" v-if="selectedObject?.category === 'controller'">
+          <Tab
+            v-if="selectedObject?.category === 'controller'"
+            value="ports"
+          >
             <p class="tw-font-normal">
               {{ t('devices.ports') }}
             </p>
@@ -275,48 +301,47 @@ onBeforeMount(async () => {
           <TabPanel value="features">
             <DevicesDynamicDeviceForm
               :key="forceUpdateKey"
-              is-editing
-              :device-type="asideEditingForm.type"
               v-model:dynamic-form="asideEditingForm"
               :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
+              :device-type="asideEditingForm.type"
+              is-editing
               @update:valid="devicesDynamicFormValidityHandler"
             >
               <template #footer>
                 <div class="tw-mt-4 tw-flex tw-justify-end">
                   <DialogsDeleteDialog
-                    @delete="confirmDelete"
-                    v-model="dialogDelete"
                     :id="asideEditingForm?.id ?? -1"
+                    v-model="dialogDelete"
+                    class="tw-mr-2"
                     :loading="apiDeleteDevice?.pending"
                     :subtitle="`Вы уверены, что хотите удалить «${asideEditingForm?.name}»?`"
-                    class="tw-mr-2"
                     title="Удалить устройство"
+                    @delete="confirmDelete"
                   />
                   <Button
-                    :disabled="!isDynamicFormValid"
-                    :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
                     class="tw-mr-2"
-                    @click="changeDevice"
+                    :disabled="!isDynamicFormValid"
                     :label="t('save')"
+                    :loading="apiUpdateDevice?.pending && apiUpdateDevice.status !== 'idle'"
+                    @click="changeDevice"
                   />
                 </div>
               </template>
             </DevicesDynamicDeviceForm>
-
           </TabPanel>
           <TabPanel value="events">
             <FormsEventForm
-              targetType="object"
               :id="asideEditingForm.id"
-              :modelType="asideEditingForm.type"
-              :eventTypes="deviceEventTypes"
+              :event-types="deviceEventTypes"
+              :model-type="asideEditingForm.type"
+              target-type="object"
             />
           </TabPanel>
           <TabPanel value="ports">
             <DevicesPortsForm
               v-if="apiPorts?.data?.response"
-              v-model:ports="apiPorts.data.response"
               :id="selectedObject?.id ?? 0"
+              v-model:ports="apiPorts.data.response"
             />
           </TabPanel>
           <TabPanel value="management">

@@ -52,19 +52,25 @@ const widgets = [
 </script>
 
 <template>
-  <LayoutFullRightbar :isOpen="isOpen" :isUpdate="isUpdate">
-    <div elevation="0" class="tw-min-h-80 tw-p-7">
+  <LayoutFullRightbar
+    :is-open="isOpen"
+    :is-update="isUpdate"
+  >
+    <div
+      class="tw-min-h-80 tw-p-7"
+      elevation="0"
+    >
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
           {{ edit ? 'Изменить Виджет' : 'Добавить Виджет' }}
         </h3>
         <Button
-          @click="isOpen = false"
           icon="pi pi-times"
-          size="small"
-          severity="secondary"
           rounded
+          severity="secondary"
+          size="small"
           text
+          @click="isOpen = false"
         />
       </div>
       <div v-if="!edit">
@@ -72,9 +78,9 @@ const widgets = [
           <button
             v-for="widget in widgets"
             :key="widget.title"
+            class="tw-flex tw-h-24 tw-w-full tw-items-center tw-justify-center tw-rounded-lg tw-bg-gray-200 tw-p-3 tw-text-2xl"
             type="button"
             @click="emit('add-widget', widget.params)"
-            class="tw-flex tw-h-24 tw-w-full tw-items-center tw-justify-center tw-rounded-lg tw-bg-gray-200 tw-p-3 tw-text-2xl"
           >
             {{ widget.title }}
           </button>

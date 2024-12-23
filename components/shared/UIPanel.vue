@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
-const isUpdate = defineModel('isUpdate', {
+const isUpdate = defineModel<boolean>('isUpdate', {
   default: false,
 });
 </script>
 
 <template>
-  <SharedUILoader :isUpdate="isUpdate">
+  <SharedUILoader :is-update="isUpdate">
     <div class="panel-wrapper tw-relative tw-flex">
       <div class="tw-w-full tw-px-6 tw-pt-6">
         <slot />

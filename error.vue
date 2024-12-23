@@ -13,7 +13,11 @@ useHead({
 <template>
   <div class="tw-align-center tw-h-100vh tw-flex tw-justify-center tw-text-center">
     <div>
-      <img src="/images/background/errorimg.svg" width="500" alt="404" />
+      <img
+        alt="404"
+        src="/images/background/errorimg.svg"
+        width="500"
+      >
       <h1 class="tw-pt-3 tw-text-3xl tw-font-semibold">
         {{ t('error.oops') }}
       </h1>
@@ -21,7 +25,12 @@ useHead({
         {{ t('error.errorPageText') }}
       </h4>
       <NuxtLink to="/devices">
-        <Button flat color="tw-primary" class="tw-mb-4" to="/">
+        <Button
+          class="tw-mb-4"
+          color="tw-primary"
+          flat
+          to="/"
+        >
           {{ t('error.goBack') }}
         </Button>
       </NuxtLink>

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-// Builtin modules
-import { useI18n } from 'vue-i18n';
 // Types and Schemes modules
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 import type { APIData } from '~/types/StoreTypes';
@@ -65,19 +63,19 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <LayoutFullRightbar :isOpen="isOpen">
+  <LayoutFullRightbar :is-open="isOpen">
     <div class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
           {{ title }}
         </h3>
         <Button
-          text
-          @click="isOpen = false"
           icon="pi"
           rounded
           size="small"
+          text
           variant="text"
+          @click="isOpen = false"
         >
           <XIcon class="white" />
         </Button>
@@ -85,32 +83,32 @@ onBeforeMount(async () => {
 
       <SharedUILoader
         v-if="apiItem?.data?.response && variant === 'Edit Item'"
-        :isUpdate="apiItem.pending"
+        :is-update="apiItem.pending"
       >
         <DisplayEditItemForm
-          @update="emit('update')"
-          v-model:isOpen="isOpen"
           v-model:form="apiItem.data.response"
+          v-model:is-open="isOpen"
           :devices="devices"
+          @update="emit('update')"
         />
       </SharedUILoader>
       <SharedUILoader
         v-else-if="apiItem?.data?.response && variant === 'Edit Scenario'"
-        :isUpdate="apiItem.pending"
+        :is-update="apiItem.pending"
       >
         <DisplayEditScenarioForm
-          @update="emit('update')"
-          v-model:isOpen="isOpen"
           v-model:form="apiItem.data.response"
+          v-model:is-open="isOpen"
           :devices="devices"
+          @update="emit('update')"
         />
       </SharedUILoader>
       <DisplayCreateItemForm
         v-else
-        @update="emit('update')"
-        v-model:isOpen="isOpen"
-        :zoneId="zoneId"
+        v-model:is-open="isOpen"
         :devices="devices"
+        :zone-id="zoneId"
+        @update="emit('update')"
       />
     </div>
   </LayoutFullRightbar>

@@ -44,38 +44,38 @@ const deleteItem = () => {
   <div>
     <Button
       v-if="showBtn"
-      @click="dialog = true"
       :label="t('delete')"
       outlined
+      @click="dialog = true"
     />
 
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="title"
+      modal
       :style="{
         'max-width': '800px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissable-mask
     >
       {{ props.subtitle }}
       <div>
         <Button
-          @click="deleteItem"
-          :loading="loading"
-          color="primary"
           class="tw-mr-2 tw-mt-4"
+          color="primary"
           :label="t('delete')"
+          :loading="loading"
+          @click="deleteItem"
         />
         <Button
-          @click="dialog = false"
           color="primary"
-          variant="text"
           outlined
+          variant="text"
+          @click="dialog = false"
         >
-          {{ t('cancel')}}
+          {{ t('cancel') }}
         </Button>
       </div>
     </Dialog>

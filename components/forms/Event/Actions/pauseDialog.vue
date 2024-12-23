@@ -9,7 +9,7 @@ import type { Event } from '@/types/ModelEventTypes';
 const { t } = useI18n();
 const { updateData } = useUtils();
 
-const dialog = defineModel({
+const dialog = defineModel<boolean>({
   default: false,
 });
 
@@ -98,39 +98,42 @@ onBeforeMount(async () => {
   <div>
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="'Добавление паузы'"
+      modal
       :style="{
         'max-width': '550px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissableMask
     >
       <p class="tw-mb-3">
         Позволяет добавить паузу при выполнении действий
       </p>
 
-      <SharedUILabel :title="'Секунд'" class="tw-mb-2">
+      <SharedUILabel
+        class="tw-mb-2"
+        :title="'Секунд'"
+      >
         <InputText
           v-model="duration"
-          type="number"
           class="tw-w-full"
+          type="number"
         />
       </SharedUILabel>
 
       <div class="tw-pt-3">
         <Button
-          @click="createAction"
-          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
           class="tw-mr-2"
+          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
+          @click="createAction"
         >
           {{ t('save') }}
         </Button>
         <Button
+          outlined
           variant="outlined"
           @click="dialog = false"
-          outlined
         >
           {{ t('cancel') }}
         </Button>

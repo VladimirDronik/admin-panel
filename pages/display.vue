@@ -89,11 +89,11 @@ watch(roomIds, async (newValue, oldValue) => {
       <PerfectScrollbar class="tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
         <DisplayScenarioCard
           v-for="scenario in apiItems?.data?.response.scenario_items"
-          @click="showScenarioPanel(scenario.id)"
           :key="scenario.id"
+          :color="scenario.color"
           :icon="scenario.icon"
           :title="scenario.title"
-          :color="scenario.color"
+          @click="showScenarioPanel(scenario.id)"
         />
       </PerfectScrollbar>
       <div
@@ -103,8 +103,8 @@ watch(roomIds, async (newValue, oldValue) => {
       >
         <DisplayItemHeader
           :name="rooms.name"
-          :style="rooms.style"
           :sensors="rooms.sensors"
+          :style="rooms.style"
         />
         <div class="tw-pt-2">
           <VueDraggableNext
@@ -114,31 +114,31 @@ watch(roomIds, async (newValue, oldValue) => {
           >
             <DisplayItemCard
               v-for="items in rooms.items"
-              @click="showItemPanel(rooms.id, items.item_id)"
               :key="items.item_id"
+              :color="items.color"
+              :group-elements="items.group_elements"
               :icon="items.icon"
-              :title="items.title"
               :status="items.status"
               :style="rooms.style"
-              :color="items.color"
-              :groupElements="items.group_elements"
+              :title="items.title"
+              @click="showItemPanel(rooms.id, items.item_id)"
             />
             <button
-              @click="showItemPanel(rooms.id)"
-              type="button"
               class="tw-m-1.5"
+              type="button"
+              @click="showItemPanel(rooms.id)"
             >
               <div
                 class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
               >
                 <IconPlus
-                  width="80"
                   height="80"
                   stroke-width="1.5"
+                  width="80"
                 />
               </div>
               <h5 class="tw-w-28 tw-truncate tw-text-center">
-                {{ t('add')}}
+                {{ t('add') }}
               </h5>
             </button>
           </VueDraggableNext>
@@ -148,11 +148,11 @@ watch(roomIds, async (newValue, oldValue) => {
 
     <template #rightbar>
       <RightBarDisplay
-        @update="apiItems?.refresh"
-        :variant="variant"
-        :zoneId="zoneId"
         v-model:id="id"
         v-model:is-show="isShow"
+        :variant="variant"
+        :zone-id="zoneId"
+        @update="apiItems?.refresh"
       />
     </template>
   </SharedUIPanel>

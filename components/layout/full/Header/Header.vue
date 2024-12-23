@@ -12,12 +12,12 @@ const open = defineModel<boolean>('open', {
   >
     <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
       <Button
-        @click="open = !open"
-        size="small"
-        severity="secondary"
+        class="tw-aspect-square tw-h-9 tw-w-9"
         icon="pi pi-align-justify"
         rounded
-        class="tw-aspect-square tw-h-9 tw-w-9"
+        severity="secondary"
+        size="small"
+        @click="open = !open"
       />
       <div class="tw-flex tw-items-center">
         <LayoutFullHeaderLanguage class="tw-mr-2" />

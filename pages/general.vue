@@ -78,10 +78,10 @@ const addWidget = (params: AddWidget) => {
   <SharedUIPanel>
     <SharedUIBreadcrumb title="pages.general">
       <Button
-        @click="openCreateRightBar"
         class="text-capitalize"
         icon="pi pi-plus"
         label="Добавить виджет"
+        @click="openCreateRightBar"
       />
     </SharedUIBreadcrumb>
     <GridLayout
@@ -90,26 +90,32 @@ const addWidget = (params: AddWidget) => {
       :row-height="100"
     >
       <GridItem
-        class="tw-flex tw-items-end tw-justify-end tw-rounded-lg tw-bg-gray-200 tw-p-3"
         v-for="item in layout"
         :key="item.i"
-        :isResizable="false"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
+        class="tw-flex tw-items-end tw-justify-end tw-rounded-lg tw-bg-gray-200 tw-p-3"
         :h="item.h"
         :i="item.i"
+        :is-resizable="false"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y"
       >
-        <Button @click="openUpdateRightBar" icon="pi pi-cog" text rounded size="large" />
+        <Button
+          icon="pi pi-cog"
+          rounded
+          size="large"
+          text
+          @click="openUpdateRightBar"
+        />
       </GridItem>
     </GridLayout>
 
     <template #rightbar>
       <RightBarGeneral
-        @add-widget="addWidget"
-        v-model:isOpen="isOpen"
-        v-model:isUpdate="isUpdate"
+        v-model:is-open="isOpen"
+        v-model:is-update="isUpdate"
         :edit="edit"
+        @add-widget="addWidget"
       />
     </template>
   </SharedUIPanel>

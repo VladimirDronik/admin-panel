@@ -54,28 +54,31 @@ const data = computed(() => storeScript.scripts);
         :headers="headers"
         :items="data.data?.response.list"
       >
-        <Column field="actions" style="width: 200px">
+        <Column
+          field="actions"
+          style="width: 200px"
+        >
           <template #header>
             <p class="tw-font-semibold">
               {{ t('scripts.action') }}
             </p>
           </template>
-          <template>
+          <template #body>
             <div>
               <Button
-                outlined
-                icon="pi pi-pencil"
-                severity="info"
-                rounded
                 aria-label="Search"
                 class="tw-mr-2"
+                icon="pi pi-pencil"
+                outlined
+                rounded
+                severity="info"
               />
               <Button
-                outlined
-                icon="pi pi-trash"
-                severity="danger"
-                rounded
                 aria-label="Cancel"
+                icon="pi pi-trash"
+                outlined
+                rounded
+                severity="danger"
               />
             </div>
           </template>

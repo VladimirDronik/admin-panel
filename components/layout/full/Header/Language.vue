@@ -52,10 +52,10 @@ watch(locale, (newValue) => {
 <template>
   <div>
     <Button
-      @click="toggle"
-      text
       color="primary"
       icon="pi"
+      text
+      @click="toggle"
     >
       <div size="22">
         <div
@@ -64,10 +64,10 @@ watch(locale, (newValue) => {
         >
           <img
             v-if="$i18n.locale === language.value"
-            :src="language.avatar"
             :alt="$i18n.locale"
             class="tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
-          />
+            :src="language.avatar"
+          >
         </div>
       </div>
     </Button>
@@ -76,18 +76,18 @@ watch(locale, (newValue) => {
       <div class="theme-list">
         <button
           v-for="(item, index) in languages"
-          @click="selectLanguage(item.value)"
           :key="index"
           :active="$i18n.locale === item.value"
-          color="primary"
           class="tw-align-center tw-flex tw-min-w-44 tw-p-3"
+          color="primary"
           type="button"
+          @click="selectLanguage(item.value)"
         >
           <img
-            :src="item.avatar"
             :alt="item.avatar"
             class="tw-mr-2 tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
-          />
+            :src="item.avatar"
+          >
           <div class="text-subtitle-1 font-weight-regular">
             {{ item.title }}
           </div>

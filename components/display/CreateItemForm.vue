@@ -93,25 +93,36 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <Stepper v-if="resolver" v-model:value="step" linear>
+  <Stepper
+    v-if="resolver"
+    v-model:value="step"
+    linear
+  >
     <StepList>
-      <Step value="1">{{ t('devices.features') }}</Step>
-      <Step value="2">{{ t('devices.events') }}</Step>
+      <Step value="1">
+        {{ t('devices.features') }}
+      </Step>
+      <Step value="2">
+        {{ t('devices.events') }}
+      </Step>
     </StepList>
 
     <StepPanels>
-      <StepPanel v-slot="{ activateCallback }" value="1">
+      <StepPanel
+        v-slot="{ activateCallback }"
+        value="1"
+      >
         <!-- Features Form -->
         <Form
           :resolver
           @submit="({ valid }) => { if (valid) activateCallback('2') }"
         >
           <SharedUILabel
+            class="tw-mb-2"
+            name="title"
+            required
             :title="'Название'"
             :value="form.title"
-            name="title"
-            class="tw-mb-2"
-            required
           >
             <InputText
               v-model="form.title"
@@ -119,39 +130,39 @@ onBeforeMount(async () => {
             />
           </SharedUILabel>
           <SharedUILabel
+            class="tw-mb-2"
+            name="type"
+            required
             :title="'Тип'"
             :value="form.type"
-            name="type"
-            class="tw-mb-2"
-            required
           >
             <Select
               v-model="form.type"
-              :options="devices"
               class="tw-w-full"
+              :options="devices"
               show-clear
             />
           </SharedUILabel>
           <SharedUILabel
+            class="tw-mb-2"
+            name="zone_id"
+            required
             :title="'Помещение'"
             :value="form.item_id"
-            name="zone_id"
-            class="tw-mb-2"
-            required
           >
             <Select
               v-model="form.item_id"
-              :options="storeRooms.getRoomsSelect"
-              optionLabel="name"
-              optionValue="code"
               class="tw-w-full"
+              option-label="name"
+              option-value="code"
+              :options="storeRooms.getRoomsSelect"
               required
               show-clear
             />
           </SharedUILabel>
           <SharedUILabel
-            :title="'Цвет'"
             class="tw-mb-2"
+            :title="'Цвет'"
           >
             <SharedUIColorSelect v-model="form.color" />
           </SharedUILabel>
@@ -164,28 +175,30 @@ onBeforeMount(async () => {
           <!--  -->
         </Form>
         <!--  -->
-
       </StepPanel>
 
-      <StepPanel v-slot="{ activateCallback }" value="2">
+      <StepPanel
+        v-slot="{ activateCallback }"
+        value="2"
+      >
         <!-- Event Form -->
         <FormsEventForm
           v-if="form.type"
           v-model="events"
-          targetType="item"
-          :modelType="form.type"
-          :eventTypes="itemEventTypes"
+          :event-types="itemEventTypes"
+          :model-type="form.type"
+          target-type="item"
         />
         <!-- Actions -->
         <div class="tw-flex tw-justify-between tw-pt-2">
           <Button
-            @click="activateCallback('1')"
             :label="t('goBack')"
+            @click="activateCallback('1')"
           />
           <Button
-            @click="createItem"
             :label="t('save')"
             :loading="apiCreateItem?.pending && apiCreateItem.status !== 'idle'"
+            @click="createItem"
           />
         </div>
         <!--  -->

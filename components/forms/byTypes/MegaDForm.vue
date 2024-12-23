@@ -51,49 +51,89 @@ const protocolOptions = schema.shape.protocol.options;
 
 <template>
   <div />
-  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
-
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required :value="dynamicForm.name" name="title">
+  <Form
+    :form="dynamicForm"
+    :resolver="resolver"
+    :validate-on-blur="true"
+    :validate-on-value-update="false"
+  >
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      name="title"
+      required
+      :title="t('devices.title')"
+      :value="dynamicForm.name"
+    >
       <InputText
         v-model="dynamicForm.name"
       />
     </SharedUILabel>
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.id')" required :value="dynamicForm.props.id" name="id">
+    <SharedUILabel
+      class="tw-mb-2"
+      name="id"
+      required
+      :title="t('devices.id')"
+      :value="dynamicForm.props.id"
+    >
       <InputText
         v-model="dynamicForm.props.id"
       />
     </SharedUILabel>
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.address')" required :value="dynamicForm.props.address" name="address">
+    <SharedUILabel
+      v-if="!props.isEditing"
+      class="tw-mb-2"
+      name="address"
+      required
+      :title="t('devices.address')"
+      :value="dynamicForm.props.address"
+    >
       <InputText
         id="address"
         v-model="dynamicForm.props.address"
       />
     </SharedUILabel>
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.password')" required :value="dynamicForm.props.password" name="password">
+    <SharedUILabel
+      class="tw-mb-2"
+      name="password"
+      required
+      :title="t('devices.password')"
+      :value="dynamicForm.props.password"
+    >
       <InputText
         id="password"
         v-model="dynamicForm.props.password"
       />
     </SharedUILabel>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.protocol')" required :value="dynamicForm.props.protocol" name="ptotocol">
+    <SharedUILabel
+      class="tw-mb-2"
+      name="ptotocol"
+      required
+      :title="t('devices.protocol')"
+      :value="dynamicForm.props.protocol"
+    >
       <Select
-        :options="protocolOptions"
         v-model="dynamicForm.props.protocol"
+        :options="protocolOptions"
       />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.room')" name="zone_id">
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      name="zone_id"
+      :title="t('devices.room')"
+    >
       <Select
-        :showClear="true"
         v-model="dynamicForm.zone_id"
-        :options="storeRooms.getRoomsSelect"
-        optionLabel="name"
-        optionValue="code"
         class="tw-w-3/4"
-
+        option-label="name"
+        option-value="code"
+        :options="storeRooms.getRoomsSelect"
+        :show-clear="true"
       />
     </SharedUILabel>
   </Form>

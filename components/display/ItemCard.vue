@@ -14,8 +14,8 @@ defineProps<{
 
 <template>
   <button
-    type="button"
     class="tw-m-1.5"
+    type="button"
   >
     <div
       class="tw tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
@@ -23,17 +23,17 @@ defineProps<{
       :style="{ borderColor: itemColor(style, color) }"
     >
       <img
-        :src="`items/${icon}.png`"
         alt=""
         class="tw-w-20"
         :class="{ '!tw-opacity-60': !(status === 'on') }"
+        :src="`items/${icon}.png`"
       >
       <Badge
         v-if="groupElements"
-        :style="{ backgroundColor: itemColor(style, color) }"
-        :class="{ '!tw-bg-gray-400': !(status === 'on') }"
         class="tw-absolute -tw-right-2.5 -tw-top-2.5 tw-rounded-full"
+        :class="{ '!tw-bg-gray-400': !(status === 'on') }"
         rounded
+        :style="{ backgroundColor: itemColor(style, color) }"
       >
         {{ groupElements.length }}
       </Badge>

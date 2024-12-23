@@ -51,12 +51,19 @@ const items = [
     </SharedUIBreadcrumb>
 
     <div class="tw-mb-5 tw-flex tw-gap-2">
-      <Select placeholder="Выберите Категорию" :options="['Видеорегистраторы', 'Камеры']" />
+      <Select
+        :options="['Видеорегистраторы', 'Камеры']"
+        placeholder="Выберите Категорию"
+      />
       <InputText placeholder="Поиск" />
     </div>
 
     <div class="tw-grid tw-w-full tw-grid-cols-3 tw-justify-between tw-gap-5">
-      <div v-for="item in items" :key="item.id" class="tw-relative tw-aspect-video tw-w-full tw-rounded tw-bg-slate-200">
+      <div
+        v-for="item in items"
+        :key="item.id"
+        class="tw-relative tw-aspect-video tw-w-full tw-rounded tw-bg-slate-200"
+      >
         <div class="tw-absolute tw-bottom-2 tw-left-2 tw-rounded-full tw-bg-slate-300 tw-px-3 tw-py-2 tw-text-sm">
           {{ item.name }}
         </div>
@@ -65,9 +72,16 @@ const items = [
             class="tw-mr-2 tw-h-2.5 tw-w-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(item.status)"
           />
-          {{ checkStatusTextSmall(item.status)}}
+          {{ checkStatusTextSmall(item.status) }}
         </div>
-        <Button @click="isOpen = true" class="tw-absolute tw-bottom-2 tw-right-2" icon="pi pi-cog" text rounded size="large" />
+        <Button
+          class="tw-absolute tw-bottom-2 tw-right-2"
+          icon="pi pi-cog"
+          rounded
+          size="large"
+          text
+          @click="isOpen = true"
+        />
       </div>
     </div>
 

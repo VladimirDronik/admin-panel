@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { type DeviceZoneId } from '@/types/DevicesTypes';
 
@@ -21,7 +20,10 @@ const props = defineProps<SensorHeaderProps>();
 <template>
   <!-- Данные -->
   <div class="tw-mt-4 tw-grid tw-grid-cols-3 tw-gap-4 tw-text-center">
-    <div v-for="(item, index) in props.data" :key="index">
+    <div
+      v-for="(item, index) in props.data"
+      :key="index"
+    >
       <p class="tw-text-2xl tw-font-bold">
         {{ item.value }} {{ item.unit }}
       </p>
@@ -32,7 +34,8 @@ const props = defineProps<SensorHeaderProps>();
   </div>
 
   <!-- Дата обновления -->
-  <div class="tw-mt-4"> {{ t('devices.dataUpdated') }}:
+  <div class="tw-mt-4">
+    {{ t('devices.dataUpdated') }}:
     <span>
       {{ props.lastUpdate }}
     </span>
@@ -40,30 +43,45 @@ const props = defineProps<SensorHeaderProps>();
 
   <Divider class="tw-mt-0 tw-pb-3" />
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.title')" required name="title">
+  <SharedUILabel
+    class="tw-mb-2"
+    name="title"
+    required
+    :title="t('devices.title')"
+  >
     <InputText
       v-model="name"
-      required
-      class="tw-w-3/4" />
-  </SharedUILabel>
-
-  <SharedUILabel class="tw-mb-2" :title="t('devices.room')" name="room">
-    <Select
-      :showClear="true"
-      v-model="zoneId"
-      :options="storeRooms.getRoomsSelect"
-      optionLabel="name"
-      optionValue="code"
       class="tw-w-3/4"
+      required
     />
   </SharedUILabel>
 
-  <SharedUILabel class="tw-mb-2" :title="t('devices.polling')" required name="update_interval">
+  <SharedUILabel
+    class="tw-mb-2"
+    name="room"
+    :title="t('devices.room')"
+  >
+    <Select
+      v-model="zoneId"
+      class="tw-w-3/4"
+      option-label="name"
+      option-value="code"
+      :options="storeRooms.getRoomsSelect"
+      :show-clear="true"
+    />
+  </SharedUILabel>
+
+  <SharedUILabel
+    class="tw-mb-2"
+    name="update_interval"
+    required
+    :title="t('devices.polling')"
+  >
     <InputNumber
-      v-model="updateInterval"
-      suffix=" sec"
       id="update_interval"
+      v-model="updateInterval"
       class="tw-mr-10 tw-w-1/4"
+      suffix=" sec"
     />
   </SharedUILabel>
 

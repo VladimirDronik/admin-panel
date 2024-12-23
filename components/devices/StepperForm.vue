@@ -168,33 +168,84 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
 </script>
 
 <template>
-  <Stepper value="1" class="basis-[50rem]" linear>
+  <Stepper
+    class="basis-[50rem]"
+    linear
+    value="1"
+  >
     <StepList>
-      <Step value="1">{{ t('devices.features') }}</Step>
-      <Step value="2">{{ t('devices.events') }}</Step>
-      <Step value="3">{{ t('devices.management') }}</Step>
+      <Step value="1">
+        {{ t('devices.features') }}
+      </Step>
+      <Step value="2">
+        {{ t('devices.events') }}
+      </Step>
+      <Step value="3">
+        {{ t('devices.management') }}
+      </Step>
     </StepList>
 
     <StepPanels>
-      <StepPanel v-slot="{ activateCallback }" value="1">
+      <StepPanel
+        v-slot="{ activateCallback }"
+        value="1"
+      >
         <form>
           <div class="tw-ml-[20%] tw-mr-[5%]">
-            <SharedUILabel class="tw-mb-4" :title="t('devices.tags')" required>
-              <MultiSelect v-model="initialForm.tags" :options="tags" filter display="chip" :maxSelectedLabels="5" class="tw-w-full" />
+            <SharedUILabel
+              class="tw-mb-4"
+              required
+              :title="t('devices.tags')"
+            >
+              <MultiSelect
+                v-model="initialForm.tags"
+                class="tw-w-full"
+                display="chip"
+                filter
+                :max-selected-labels="5"
+                :options="tags"
+              />
             </SharedUILabel>
-            <SharedUILabel class="tw-mb-4" :title="t('devices.type') " required>
-              <Select v-model="initialForm.type" @change="changeTypeHandler" :options="types" class="tw-w-2/4" />
+            <SharedUILabel
+              class="tw-mb-4"
+              required
+              :title="t('devices.type') "
+            >
+              <Select
+                v-model="initialForm.type"
+                class="tw-w-2/4"
+                :options="types"
+                @change="changeTypeHandler"
+              />
             </SharedUILabel>
           </div>
 
           <Divider class="tw-mt-0 tw-pb-3" />
 
           <div class="tw-ml-[20%] tw-mr-[5%]">
-            <SharedUILabel class="tw-mb-4" :title="t('devices.title')" required>
-              <InputText v-model="dynamicForm.name" class="tw-w-3/4" />
+            <SharedUILabel
+              class="tw-mb-4"
+              required
+              :title="t('devices.title')"
+            >
+              <InputText
+                v-model="dynamicForm.name"
+                class="tw-w-3/4"
+              />
             </SharedUILabel>
-            <SharedUILabel class="tw-mb-4" :title="t('devices.room')">
-              <Select :disabled="isRoomSelectDisabled" :showClear="true" v-model="dynamicForm.zone_id" :options="storeRooms.getRoomsSelect" optionLabel="name" optionValue="code" class="tw-w-2/4" />
+            <SharedUILabel
+              class="tw-mb-4"
+              :title="t('devices.room')"
+            >
+              <Select
+                v-model="dynamicForm.zone_id"
+                class="tw-w-2/4"
+                :disabled="isRoomSelectDisabled"
+                option-label="name"
+                option-value="code"
+                :options="storeRooms.getRoomsSelect"
+                :show-clear="true"
+              />
             </SharedUILabel>
           </div>
 
@@ -206,22 +257,29 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
           <DevicesDynamicDeviceForm
             v-model:dynamic-form="dynamicForm"
             :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
-            :deviceType="initialForm.type"
-            @update:valid="devicesDynamicFormValidityHandler" />
+            :device-type="initialForm.type"
+            @update:valid="devicesDynamicFormValidityHandler"
+          />
         </form>
 
         <div class="tw-flex tw-justify-end">
-          <Button :disabled="!valid" @click="activateCallback('2')">
+          <Button
+            :disabled="!valid"
+            @click="activateCallback('2')"
+          >
             {{ t('next') }}
           </Button>
         </div>
       </StepPanel>
-      <StepPanel v-slot="{ activateCallback }" value="2">
+      <StepPanel
+        v-slot="{ activateCallback }"
+        value="2"
+      >
         <FormsEventForm
           v-model="events"
-          targetType="object"
-          :modelType="initialForm.type"
-          :eventTypes="deviceEventTypes"
+          :event-types="deviceEventTypes"
+          :model-type="initialForm.type"
+          target-type="object"
         />
         <div class="tw-flex tw-justify-between">
           <Button @click="activateCallback('1')">
@@ -232,17 +290,20 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
           </Button>
         </div>
       </StepPanel>
-      <StepPanel v-slot="{ activateCallback }" value="3">
+      <StepPanel
+        v-slot="{ activateCallback }"
+        value="3"
+      >
         Пока пусто
         <div class="tw-flex tw-justify-between">
           <Button @click="activateCallback('2')">
             {{ t('goBack') }}
           </Button>
           <Button
-            @click="createDevice"
+            color="primary"
             :label="t('save')"
             :loading="apiCreateDevice?.pending && apiCreateDevice.status !== 'idle'"
-            color="primary"
+            @click="createDevice"
           />
         </div>
       </StepPanel>

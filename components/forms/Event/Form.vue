@@ -109,28 +109,35 @@ const editEvents = (event: Event) => {
 <template>
   <div>
     <div v-if="events.length">
-      <div v-for="event in events" :key="event.code" class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4">
+      <div
+        v-for="event in events"
+        :key="event.code"
+        class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4"
+      >
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <p class="tw-text-lg tw-font-semibold">
             {{ event.name }}
           </p>
-          <div v-if="event" class="tw-flex tw-items-center tw-justify-end">
+          <div
+            v-if="event"
+            class="tw-flex tw-items-center tw-justify-end"
+          >
             <Button
               v-if="event.actions?.length"
-              @click="editEvents(event)"
-              size="small"
-              text
+              icon="pi pi-cog"
               label="Настройка"
               severity="secondary"
-              icon="pi pi-cog"
+              size="small"
+              text
+              @click="editEvents(event)"
             />
             <Button
               v-else
-              @click="createEvents(event)"
               color="primary"
-              size="small"
-              label="Добавить"
               icon="pi pi-plus"
+              label="Добавить"
+              size="small"
+              @click="createEvents(event)"
             />
           </div>
         </div>
@@ -155,14 +162,14 @@ const editEvents = (event: Event) => {
 
       <FormsEventActions
         v-if="selectedEvent"
-        @update-actions="updateEvents"
+        :id="id"
         v-model="dialog"
         v-model:event="selectedEvent"
         v-model:form="form"
-        :id="id"
         :edit="edit"
-        :modelType="modelType"
-        :targetType="targetType"
+        :model-type="modelType"
+        :target-type="targetType"
+        @update-actions="updateEvents"
       />
     </div>
     <div v-else>

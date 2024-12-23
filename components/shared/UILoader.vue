@@ -15,18 +15,21 @@ defineProps({
 
 <template>
   <div class="tw-relative tw-w-full">
-
     <transition
-      name="smooth-loader"
       mode="out-in"
+      name="smooth-loader"
     >
       <div
         v-if="isUpdate"
-        data-test="loader"
         class="tw-absolute tw-inset-0 tw-z-40 tw-w-full tw-overflow-hidden tw-bg-white"
+        data-test="loader"
       >
         <div class="tw-flex tw-h-full tw-items-center tw-justify-center">
-          <ProgressSpinner strokeWidth="3" style="width: 30px; height: 30px" stroke="#19B58F" />
+          <ProgressSpinner
+            stroke="#19B58F"
+            stroke-width="3"
+            style="width: 30px; height: 30px"
+          />
         </div>
       </div>
     </transition>

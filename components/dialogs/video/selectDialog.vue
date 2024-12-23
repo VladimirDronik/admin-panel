@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const visible = defineModel({
+const visible = defineModel<boolean>({
   default: false,
 });
 
@@ -16,28 +16,35 @@ const selectType = ref();
 <template>
   <div>
     <Button
-      @click="visible = true"
       class="text-capitalize"
       icon="pi pi-plus"
       label="Добавить устройство"
+      @click="visible = true"
     />
 
     <Dialog
       v-model:visible="visible"
+      dismissable-mask
       header="Добавить новое устройство видеонаблюдения"
-      :style="{ 'max-width': '800px', width: '100%', margin: '0 20px' }"
       modal
-      dismissableMask
+      :style="{ 'max-width': '800px', width: '100%', margin: '0 20px' }"
     >
-      <SharedUILabel class="tw-mb-3" title="Тип Устройства" required>
+      <SharedUILabel
+        class="tw-mb-3"
+        required
+        title="Тип Устройства"
+      >
         <Select
           v-model="selectType"
-          :options="types"
           class="tw-w-full"
+          :options="types"
           required
         />
       </SharedUILabel>
-      <DialogsVideoCreateDialog :disabled="!selectType" v-model:type="selectType" />
+      <DialogsVideoCreateDialog
+        v-model:type="selectType"
+        :disabled="!selectType"
+      />
     </Dialog>
   </div>
 </template>

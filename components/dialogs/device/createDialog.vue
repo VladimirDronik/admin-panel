@@ -7,7 +7,7 @@ import type { APIData } from '~/types/StoreTypes';
 import { paths } from '~/utils/endpoints';
 import { type Devices } from '~/types/DevicesTypes';
 
-const visible = defineModel({
+const visible = defineModel<boolean>({
   default: false,
 });
 
@@ -140,25 +140,25 @@ onBeforeMount(async () => {
 <template>
   <div>
     <Button
-      @click="visible = true"
       class="text-capitalize"
       icon="pi pi-plus"
       :label="t('devices.addDevice')"
+      @click="visible = true"
     />
 
     <Dialog
       v-model:visible="visible"
-      modal
-      dismissableMask
+      dismissable-mask
       :header="t('devices.addTitleDevice')"
+      modal
       :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
     >
       <DevicesStepperForm
+        v-model:dialog="visible"
         v-model:form="form"
         v-model:model="model"
-        v-model:dialog="visible"
-        :loadingModal="apiDeviceModel?.pending && apiDeviceModel.status !== 'idle'"
-        disableRoomSelect
+        disable-room-select
+        :loading-modal="apiDeviceModel?.pending && apiDeviceModel.status !== 'idle'"
       />
     </Dialog>
   </div>

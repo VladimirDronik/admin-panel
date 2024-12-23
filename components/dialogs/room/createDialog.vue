@@ -6,7 +6,7 @@ import { getRoomColorByValue } from '~/helpers/rooms';
 
 const { t } = useI18n();
 
-const dialog = defineModel({
+const dialog = defineModel<boolean>({
   default: false,
 });
 
@@ -29,30 +29,46 @@ const form = ref({
     />
     <Dialog
       v-model:visible="dialog"
+      dismissable-mask
       :header="'Добавить Помещение'"
+      modal
       :style="{
         'max-width': '1000px',
         width: '100%',
         margin: '0 20px',
       }"
-      modal
-      dismissableMask
     >
-
       <div class="tw-mb-5">
-        <SharedUILabel :title="'Название'" required class="tw-mb-2">
-          <InputText v-model="form.name" class="tw-w-full" />
+        <SharedUILabel
+          class="tw-mb-2"
+          required
+          :title="'Название'"
+        >
+          <InputText
+            v-model="form.name"
+            class="tw-w-full"
+          />
         </SharedUILabel>
-        <SharedUILabel :title="'Цвет Категории'" required>
+        <SharedUILabel
+          required
+          :title="'Цвет Категории'"
+        >
           <SharedUIColorSelect v-model="form.color" />
         </SharedUILabel>
       </div>
 
       <div class="tw-flex">
-        <Button class="tw-mr-2" @click="createRoom">
+        <Button
+          class="tw-mr-2"
+          @click="createRoom"
+        >
           {{ t('save') }}
         </Button>
-        <Button variant="outlined" @click="dialog = false" outlined>
+        <Button
+          outlined
+          variant="outlined"
+          @click="dialog = false"
+        >
           {{ t('cancel') }}
         </Button>
       </div>

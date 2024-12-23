@@ -35,38 +35,48 @@ const toggle = (event: any) => {
 <template>
   <div>
     <Button
-      @click="toggle"
-      text
-      rounded
       icon="pi"
+      rounded
+      text
+      @click="toggle"
     >
       <img
+        alt="Profile"
         class="tw-rounded-full"
         src="~/assets/images/user-1.jpg"
         width="35"
-        alt="Profile"
-      />
+      >
     </Button>
 
-    <Popover ref="menu" class="profile">
+    <Popover
+      ref="menu"
+      class="profile"
+    >
       <Card class="tw-w-96 !tw-shadow-none">
         <template #content>
           <div class="tw-px-2">
-            <h6 class="tw-text-xl">Профиль пользователя</h6>
+            <h6 class="tw-text-xl">
+              Профиль пользователя
+            </h6>
             <div class="tw-mt-4 tw-flex tw-items-center tw-pb-4">
               <img
-                src="~/assets/images/user-1.jpg"
-                width="80"
                 alt="Profile"
                 class="tw-rounded-full"
-              />
+                src="~/assets/images/user-1.jpg"
+                width="80"
+              >
               <div class="tw-ml-3">
-                <h6 class="tw-text-xl tw-font-semibold">Никита Гурьянов</h6>
+                <h6 class="tw-text-xl tw-font-semibold">
+                  Никита Гурьянов
+                </h6>
                 <span>
                   ул. Гоголя, 09
                 </span>
                 <div class="tw-mt-1 tw-flex tw-items-center">
-                  <MailIcon size="18" stroke-width="1.5" />
+                  <MailIcon
+                    size="18"
+                    stroke-width="1.5"
+                  />
                   <span class=" tw-ml-2">
                     ID: 00000000
                   </span>
@@ -84,12 +94,12 @@ const toggle = (event: any) => {
                 :to="item.href"
               >
                 <img
-                  :src="item.avatar"
-                  width="24"
-                  height="24"
                   :alt="item.avatar"
                   class="tw-mr-3 tw-max-w-6"
-                />
+                  height="24"
+                  :src="item.avatar"
+                  width="24"
+                >
                 <div>
                   <h6 class="tw-mb-1 tw-font-bold">
                     {{ item.title }}
@@ -103,11 +113,11 @@ const toggle = (event: any) => {
           </ScrollPanel>
           <div class="tw-px-2 tw-py-4 tw-text-center">
             <Button
-              @click="router.push({ name: 'auth-login' })"
               class="tw-w-full"
               color="primary"
-              size="small"
               outlined
+              size="small"
+              @click="router.push({ name: 'auth-login' })"
             >
               Logout
             </Button>

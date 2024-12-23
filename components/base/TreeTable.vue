@@ -11,6 +11,7 @@ import _, { isArray } from 'lodash';
 import TreeTable from 'primevue/treetable';
 // Types
 import type { Filter, Header } from '@/types/MainTypes';
+import type { TreeTableSelectionKeys } from 'primevue'
 
 // Composables
 const route = useRoute();
@@ -20,7 +21,7 @@ const page = defineModel<number>('page', {
   required: true,
 });
 
-const selectedKey = defineModel('selectedKey', {
+const selectedKey = defineModel<TreeTableSelectionKeys | undefined>('selectedKey', {
   default: [],
 });
 
@@ -28,30 +29,16 @@ const filters = defineModel<Filter[]>('filters', {
   required: true,
 });
 
-const props = defineProps({
-  total: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  items: {
-    type: Object as PropType<any[]>,
-    required: true,
-    default() {
-      return [];
-    },
-  },
-  perPage: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  headers: {
-    type: Object as PropType<Header[]>,
-    default() {
-      return [];
-    },
-  },
+const props = withDefaults(defineProps<{
+  total?: number,
+  items?: any[],
+  perPage?: number,
+  headers?: Header[],
+}>(), {
+  total: 0,
+  perPage: 0,
+  items: undefined,
+  headers: undefined,
 });
 
 const emit = defineEmits<{
@@ -63,7 +50,7 @@ const emit = defineEmits<{
 // Variables
 const isUpdate = ref(false);
 
-const expandedKeys = ref<any>({});
+const expandedKeys = ref<TreeTableSelectionKeys | undefined>({});
 
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
@@ -126,7 +113,9 @@ defineExpose({
 });
 
 watch(() => props.total, () => {
-  Array.from(Array(props.total).keys()).forEach((key) => expandedKeys.value[key] = true);
+  Array.from(Array(props.total).keys()).forEach((key) => {
+    if (expandedKeys.value) expandedKeys.value[key] = true;
+  })
 }, {
   immediate: true,
 });
@@ -137,20 +126,20 @@ watch(() => props.total, () => {
   <div class="custom-table">
     <Paginator
       v-if="total > perPage"
-      :rows="1"
-      :totalRecords="Math.ceil(total / perPage)"
       v-model:first="page"
       data-test="pagination"
+      :rows="1"
+      :total-records="Math.ceil(total / perPage)"
     />
 
-    <SharedUILoader :isUpdate="isUpdate">
+    <SharedUILoader :is-update="isUpdate">
       <TreeTable
-        @nodeSelect="(item: any) => emit('click-row', item)"
-        v-model:selectionKeys="selectedKey"
-        v-model:expandedKeys="expandedKeys"
-        :value="items"
+        v-model:expanded-keys="expandedKeys"
+        v-model:selection-keys="selectedKey"
         class="tree-table"
-        selectionMode="single"
+        selection-mode="single"
+        :value="items"
+        @node-select="(item: any) => emit('click-row', item)"
       >
         <slot />
         <template #empty>

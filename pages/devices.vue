@@ -62,11 +62,13 @@ const props = computed(() => {
   if (selectedObject.value?.props) {
     return selectedObject.value.props.map((item) => item.value);
   }
+  return []
 });
 const childrenProps = computed(() => {
   if (selectedObject.value?.children) {
     return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];
   }
+  return []
 });
 
 const tags = computed<(Options | string)[]>(() => {
@@ -244,18 +246,21 @@ watch([props, childrenProps], (newValue, oldValue) => {
 
 <template>
   <SharedUIPanel :is-update="isUpdate">
-    <SharedUIBreadcrumb title="pages.devices" :total="storeDevices.total">
+    <SharedUIBreadcrumb
+      title="pages.devices"
+      :total="storeDevices.total"
+    >
       <DialogsDeviceCreateDialog />
     </SharedUIBreadcrumb>
     <BaseTreeTable
-      @update="update"
-      @created="created"
-      @click-row="clickRow"
-      v-model:page="page"
       v-model:filters="filters"
-      :total="storeDevices.total"
+      v-model:page="page"
       :items="storeDevices.getDevices"
-      :perPage="perPage"
+      :per-page="perPage"
+      :total="storeDevices.total"
+      @click-row="clickRow"
+      @created="created"
+      @update="update"
     >
       <Column expander>
         <!-- <template #header>
@@ -287,9 +292,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <DevicesTableHeader title="devices.title">
             <InputText
               v-model.number="filters[2].value"
-              :placeholder="filters[2].label"
-              hide-details
               class="tw-min-w-96"
+              hide-details
+              :placeholder="filters[2].label"
               prepend-inner-icon="mdi-magnify"
             />
           </DevicesTableHeader>
@@ -297,9 +302,9 @@ watch([props, childrenProps], (newValue, oldValue) => {
         <template #body="{ node }">
           <component
             :is="iconMap[node.data.type as IconMapKey]"
+            color="#555"
             size="24"
             stroke-width="1.5"
-            color="#555"
           />
           <p class="tw-max-w-48 tw-truncate">
             {{ node.data.name }}
@@ -311,26 +316,29 @@ watch([props, childrenProps], (newValue, oldValue) => {
           <DevicesTableHeader title="devices.type">
             <InputText
               v-model.number="filters[3].value"
-              :placeholder="filters[3].label"
-              hide-details
               class="tw-min-w-80"
+              hide-details
+              :placeholder="filters[3].label"
               prepend-inner-icon="mdi-magnify"
             />
           </DevicesTableHeader>
         </template>
       </Column>
-      <Column v-if="!isOpen" field="address">
+      <Column
+        v-if="!isOpen"
+        field="address"
+      >
         <template #header>
           <DevicesTableHeader title="devices.room">
             <Select
               v-model.number="filters[4].value"
-              :placeholder="filters[4].label"
-              :options="storeRooms.getRoomsSelect"
-              optionLabel="name"
-              optionValue="code"
               class="tw-min-w-80"
+              option-label="name"
+              option-value="code"
+              :options="storeRooms.getRoomsSelect"
+              :placeholder="filters[4].label"
               prepend-inner-icon="mdi-magnify"
-              showClear
+              show-clear
             />
           </DevicesTableHeader>
         </template>
@@ -338,16 +346,19 @@ watch([props, childrenProps], (newValue, oldValue) => {
           {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
         </template>
       </Column>
-      <Column v-if="!isOpen" field="status">
+      <Column
+        v-if="!isOpen"
+        field="status"
+      >
         <template #header>
           <DevicesTableHeader title="devices.status">
             <Select
               v-model="filters[5].value"
-              :options="filters[5].options"
-              :placeholder="filters[5].label"
               class="tw-min-w-80"
               color="primary"
-              showClear
+              :options="filters[5].options"
+              :placeholder="filters[5].label"
+              show-clear
             />
           </DevicesTableHeader>
         </template>
@@ -356,33 +367,40 @@ watch([props, childrenProps], (newValue, oldValue) => {
             class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(node.data.status)"
           />
-          {{ checkStatusText(node.data.status)}}
+          {{ checkStatusText(node.data.status) }}
         </template>
       </Column>
-      <Column v-if="!isOpen" field="tags" style="width: 200px">
+      <Column
+        v-if="!isOpen"
+        field="tags"
+        style="width: 200px"
+      >
         <template #header>
           <DevicesTableHeader title="devices.tags">
             <Select
               v-model="filters[6].value"
-              :options="typeOptions"
-              :placeholder="filters[6].label"
+              chips
               class="tw-min-w-80"
               color="primary"
-              chips
               multiple
-              showClear
+              :options="typeOptions"
+              :placeholder="filters[6].label"
+              show-clear
             />
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
           <div class="tags">
-            <ScrollPanel class="tw-max-w-96" aria-orientation="horizontal">
+            <ScrollPanel
+              aria-orientation="horizontal"
+              class="tw-max-w-96"
+            >
               <div class="tw-flex">
                 <Tag
                   v-for="item in node.data.tags"
                   :key="item"
-                  severity="warn"
                   class="tw-mr-2 tw-flex"
+                  severity="warn"
                 >
                   <p class="tw-font-normal">
                     {{ item }}
@@ -398,7 +416,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <template #rightbar>
       <RightBarDevices
         v-model:is-open="isOpen"
-        v-model:selectedObject="selectedObject"
+        v-model:selected-object="selectedObject"
       />
     </template>
   </SharedUIPanel>

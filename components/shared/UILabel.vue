@@ -1,43 +1,56 @@
 <script lang="ts" setup>
 import { FormField } from '@primevue/forms';
 
-defineProps({
+withDefaults(defineProps<{
+  name?: string,
+  width?: number,
+  title?: string,
+  colomn?: boolean,
+  required?: boolean,
+  value?: any,
+  tooltip?: any,
+}
+>(), {
+  name: '',
+  title: '',
+  width: 200,
+  colomn: false,
+  required: false,
   value: {},
-  title: {
-    type: String,
-    default: '',
-  },
-  name: {
-    type: String,
-    default: '',
-  },
-  width: {
-    type: Number,
-    default: 200,
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  colomn: {
-    type: Boolean,
-    default: false,
-  },
   tooltip: {},
-});
+})
 </script>
 
 <template>
-  <FormField v-slot="$field" :name :initialValue="value" :class="{ 'tw-flex': !colomn }" class="tw-w-full tw-items-center">
-    <p v-if="title" class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg" :style="{ width: `${width}px` }">
+  <FormField
+    v-slot="$field"
+    class="tw-w-full tw-items-center"
+    :class="{ 'tw-flex': !colomn }"
+    :initial-value="value"
+    :name
+  >
+    <p
+      v-if="title"
+      class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg"
+      :style="{ width: `${width}px` }"
+    >
       <span v-tooltip="tooltip">
         {{ title }}
       </span>
-      <span v-if="required" class="tw-text-primary"> *</span>
+      <span
+        v-if="required"
+        class="tw-text-primary"
+      > *</span>
     </p>
     <div class="tw-w-full">
       <slot />
-      <Message class="tw-text-danger tw-text-sm" v-if="$field?.invalid" severity="error" size="small" variant="simple">
+      <Message
+        v-if="$field?.invalid"
+        class="tw-text-danger tw-text-sm"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ $field.error?.message }}
       </Message>
     </div>

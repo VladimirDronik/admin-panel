@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const visible = defineModel({
+const visible = defineModel<boolean>({
   default: false,
 });
 
@@ -19,81 +19,131 @@ defineProps({
 
 <template>
   <div>
-    <Button @click="visible = true" label="Далее" :disabled="disabled" />
+    <Button
+      :disabled="disabled"
+      label="Далее"
+      @click="visible = true"
+    />
 
     <Dialog
       v-model:visible="visible"
+      dismissable-mask
       :header="`Добавление ${type}`"
-      :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
       modal
-      dismissableMask
+      :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
     >
       <div v-if="selectType">
         <div v-if="selectType === 'Камера'">
-          <SharedUILabel class="tw-mb-3" title="Название" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Название"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Производитель" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Производитель"
+          >
             <Select
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Ссылка" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Ссылка"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Активность" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Активность"
+          >
             <SharedUISwitchField
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <Button label="Создать" :disabled="!selectType" />
+          <Button
+            :disabled="!selectType"
+            label="Создать"
+          />
         </div>
         <div v-else-if="selectType === 'Видеорегистратор'">
-          <SharedUILabel class="tw-mb-3" title="Название" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Название"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Производитель" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Производитель"
+          >
             <Select
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="IP адрес" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="IP адрес"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Логин" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Логин"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Пароль" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Пароль"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <SharedUILabel class="tw-mb-3" title="Количество камер" required>
+          <SharedUILabel
+            class="tw-mb-3"
+            required
+            title="Количество камер"
+          >
             <InputText
               class="tw-w-full"
               required
             />
           </SharedUILabel>
-          <Button label="Создать" :disabled="!selectType" />
+          <Button
+            :disabled="!selectType"
+            label="Создать"
+          />
         </div>
       </div>
     </Dialog>

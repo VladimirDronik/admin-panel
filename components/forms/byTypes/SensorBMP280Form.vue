@@ -77,20 +77,52 @@ const sensorDataToShow = computed(() => {
 </script>
 
 <template>
-  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
-    <FormsSensorBasicPlacement v-model:parent-id="dynamicForm.parent_id" v-model:sda-port="dynamicForm.sdaPort" v-model:scl-port="dynamicForm.sclPort" />
+  <Form
+    :form="dynamicForm"
+    :resolver="resolver"
+    :validate-on-blur="true"
+    :validate-on-value-update="false"
+  >
+    <FormsSensorHeader
+      v-if="props.isEditing"
+      v-bind="{ ...sensorDataToShow }"
+      v-model:name="dynamicForm.name"
+      v-model:update-interval="dynamicForm.props.update_interval"
+      v-model:zone-id="dynamicForm.zone_id"
+    />
+    <FormsSensorBasicPlacement
+      v-model:parent-id="dynamicForm.parent_id"
+      v-model:scl-port="dynamicForm.sclPort"
+      v-model:sda-port="dynamicForm.sdaPort"
+    />
 
     <!-- Интервал опроса -->
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="dynamicForm.props.update_interval" name="update_interval">
-      <InputNumber suffix=" sec" id="update_interval" v-model="dynamicForm.props.update_interval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel
+      v-if="!props.isEditing"
+      class="tw-mb-2"
+      name="update_interval"
+      required
+      :title="t('devices.polling')"
+      :value="dynamicForm.props.update_interval"
+    >
+      <InputNumber
+        id="update_interval"
+        v-model="dynamicForm.props.update_interval"
+        class="tw-mr-10 tw-w-1/4"
+        suffix=" sec"
+      />
     </SharedUILabel>
 
-    <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
+    <Divider
+      v-if="!props.isEditing"
+      class="tw-mt-0 tw-pb-3"
+    />
 
     <!-- Температура-->
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.temperature') }}</p>
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.temperature') }}
+    </p>
 
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.temperature.write_graph" />
@@ -99,29 +131,58 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col"
-        required
-        :value="dynamicForm.children.temperature.min_threshold"
         name="minThresholdTemp"
+        required
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
+        :value="dynamicForm.children.temperature.min_threshold"
       >
-        <InputNumber v-model="dynamicForm.children.temperature.min_threshold" suffix=" °C" />
+        <InputNumber
+          v-model="dynamicForm.children.temperature.min_threshold"
+          suffix=" °C"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.temperature.max_threshold" name="maxThresholdTemp" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="dynamicForm.children.temperature.max_threshold" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        name="maxThresholdTemp"
+        required
+        :title="`${t('devices.maxAvailability')}:`"
+        :value="dynamicForm.children.temperature.max_threshold"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.max_threshold"
+          suffix=" °C"
+        />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
-      <SharedUILabel class="tw-flex-col" :value="dynamicForm.children.temperature.min_error_value" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber v-model="dynamicForm.children.temperature.min_error_value" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col"
+        :title="`${t('devices.minAlarm')}:`"
+        :tooltip="t('devices.tooltipMinAlarm')"
+        :value="dynamicForm.children.temperature.min_error_value"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.min_error_value"
+          suffix=" °C"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.temperature.max_error_value" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="dynamicForm.children.temperature.max_error_value" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        :title="`${t('devices.maxAlarm')}:`"
+        :value="dynamicForm.children.temperature.max_error_value"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.max_error_value"
+          suffix=" °C"
+        />
       </SharedUILabel>
     </div>
 
     <!-- Давление -->
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.pressure') }}</p>
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.pressure') }}
+    </p>
 
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.pressure.write_graph" />
@@ -130,29 +191,51 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col"
-        required
-        :value="dynamicForm.children.pressure.min_threshold"
         name="minThresholdPressure"
+        required
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
+        :value="dynamicForm.children.pressure.min_threshold"
       >
-        <InputNumber v-model="dynamicForm.children.pressure.min_threshold" suffix=" mmHg" />
+        <InputNumber
+          v-model="dynamicForm.children.pressure.min_threshold"
+          suffix=" mmHg"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.pressure.max_threshold" name="maxThresholdPressure" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="dynamicForm.children.pressure.max_threshold" suffix=" mmHg" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        name="maxThresholdPressure"
+        required
+        :title="`${t('devices.maxAvailability')}:`"
+        :value="dynamicForm.children.pressure.max_threshold"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.pressure.max_threshold"
+          suffix=" mmHg"
+        />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col"
-        :value="dynamicForm.children.pressure.min_error_value"
         :title="`${t('devices.minAlarm')}:`"
         :tooltip="t('devices.tooltipMinAlarm')"
+        :value="dynamicForm.children.pressure.min_error_value"
       >
-        <InputNumber v-model="dynamicForm.children.pressure.min_error_value" suffix=" mmHg" />
+        <InputNumber
+          v-model="dynamicForm.children.pressure.min_error_value"
+          suffix=" mmHg"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.pressure.max_error_value" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="dynamicForm.children.pressure.max_error_value" suffix=" mmHg" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        :title="`${t('devices.maxAlarm')}:`"
+        :value="dynamicForm.children.pressure.max_error_value"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.pressure.max_error_value"
+          suffix=" mmHg"
+        />
       </SharedUILabel>
     </div>
   </Form>

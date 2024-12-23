@@ -48,7 +48,12 @@ watch(
 
 </script>
 <template>
-  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
+  <Form
+    :form="dynamicForm"
+    :resolver="resolver"
+    :validate-on-blur="true"
+    :validate-on-value-update="false"
+  >
     <!-- <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
       <InputText
         v-model="dynamicForm.name"
@@ -117,6 +122,5 @@ watch(
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel> -->
-
   </Form>
 </template>

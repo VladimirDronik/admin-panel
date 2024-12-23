@@ -93,10 +93,19 @@ user.value = data as APIData<loginData>;
 
 </script>
 <template>
-  <div v-if="user" class="auth-screen tw-h-screen">
-    <Toast :baseZIndex="99999" />
-    <div style="height: 85vh" class="tw-flex tw-items-center tw-justify-center">
-      <div style="width: 500px;" class="tw-rounded-lg tw-bg-white tw-p-5">
+  <div
+    v-if="user"
+    class="auth-screen tw-h-screen"
+  >
+    <Toast :base-z-index="99999" />
+    <div
+      class="tw-flex tw-items-center tw-justify-center"
+      style="height: 85vh"
+    >
+      <div
+        class="tw-rounded-lg tw-bg-white tw-p-5"
+        style="width: 500px;"
+      >
         <div class="tw-flex tw-justify-center tw-py-4">
           <Logo />
         </div>
@@ -105,9 +114,9 @@ user.value = data as APIData<loginData>;
         </div>
         <form>
           <SharedUILabel
-            :title="t('auth.login')"
             class="tw-mb-3"
             colomn
+            :title="t('auth.login')"
           >
             <InputText
               v-model="params.login"
@@ -115,9 +124,9 @@ user.value = data as APIData<loginData>;
             />
           </SharedUILabel>
           <SharedUILabel
-            :title="t('auth.password')"
             class="tw-mb-3"
             colomn
+            :title="t('auth.password')"
           >
             <InputText
               v-model="params.password"
@@ -125,10 +134,10 @@ user.value = data as APIData<loginData>;
             />
           </SharedUILabel>
           <Button
-            @click="user.refresh()"
-            :loading="!user.pending"
             class="tw-w-full"
             :label="t('auth.signIn')"
+            :loading="!user.pending"
+            @click="user.refresh()"
           />
         </form>
       </div>

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import sidebarData from './sidebarItem';
 
@@ -7,8 +7,9 @@ const { t } = useI18n();
 const route = useRoute();
 
 // Declare Options
-const open = defineModel('open', {
+const open = defineModel<boolean>('open', {
   required: true,
+  default: false,
 });
 
 // Variables
@@ -20,32 +21,38 @@ const to = computed(() => route.path);
 </script>
 
 <template>
-  <div :class="{ '!tw-max-w-20': !open }" class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80">
+  <div
+    class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80"
+    :class="{ '!tw-max-w-20': !open }"
+  >
     <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r !tw-shadow-none">
       <template #content>
         <div class="tw-mb-7 ">
           <Logo v-if="open" />
           <LogoRtlLogo v-else />
         </div>
-        <div v-for="item in sidebar" :key="item.title">
+        <div
+          v-for="item in sidebar"
+          :key="item.title"
+        >
           <div v-if="!item.header">
             <Button
-              :text="to !== item.to"
               v-tooltip="{
                 value: t(item.title),
                 disabled: open,
                 background: ' #000000',
               }"
-              :to="item.to"
-              :class="{ '!tw-justify-center': !open }"
               as="router-link"
               class="tw-mb-1 tw-w-full !tw-justify-start tw-text-black"
+              :class="{ '!tw-justify-center': !open }"
+              :text="to !== item.to"
+              :to="item.to"
             >
               <component
                 :is="item.icon"
+                class="iconClass tw-min-w-5"
                 size="20"
                 stroke-width="1.5"
-                class="iconClass tw-min-w-5"
               />
               {{ open ? t(item.title) : '' }}
             </Button>

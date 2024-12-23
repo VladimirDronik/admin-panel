@@ -1,14 +1,14 @@
-import { ClockCogIcon, ContrastOffIcon } from 'vue-tabler-icons';
 import type {
-  DeviceCreateFormPayload, FormDataToTransform, EditDeviceForm, DeviceEditFormPayload, DeviceProps, DeviceChildren,
+  DeviceCreateFormPayload, FormDataToTransform, EditDeviceForm, DeviceEditFormPayload, DeviceChildren,
   DevicePropertyData,
 } from '~/components/devices/form.types';
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
+import type {
+  DevicePropertyKey, Connection} from '~/types/DevicesEnums';
 import {
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
-  DevicePropertyKey, Connection,
   Regulator,
 } from '~/types/DevicesEnums';
 
@@ -97,7 +97,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
       return acc;
     }, {} as DevicePropertyData);
 
-    // eslint-disable-next-line no-param-reassign
+     
     childrenAcc[key] = propertyData;
 
     return childrenAcc;

@@ -24,30 +24,42 @@ const filters = defineModel<Filter[]>('filters', {
   default: [],
 });
 
-const props = defineProps({
-  total: {
-    type: Number,
-    default: 0,
-  },
-  items: {
-    type: Object as PropType<any[]>,
-    required: true,
-    default() {
-      return [];
-    },
-  },
-  perPage: {
-    type: Number,
-    default: 0,
-  },
-  headers: {
-    type: Object as PropType<Header[]>,
-    required: true,
-    default() {
-      return [];
-    },
-  },
+const props = withDefaults(defineProps<{
+  total?: number,
+  items?: any[],
+  perPage?: number,
+  headers?: Header[],
+}>(), {
+  total: 0,
+  perPage: 0,
+  items: undefined,
+  headers: undefined,
 });
+
+// const props = defineProps({
+//   total: {
+//     type: Number,
+//     default: 0,
+//   },
+//   items: {
+//     type: Object as PropType<any[]>,
+//     required: true,
+//     default() {
+//       return [];
+//     },
+//   },
+//   perPage: {
+//     type: Number,
+//     default: 0,
+//   },
+//   headers: {
+//     type: Object as PropType<Header[]>,
+//     required: true,
+//     default() {
+//       return [];
+//     },
+//   },
+// });
 
 const emit = defineEmits<{
   (e: 'update', params: any): void
@@ -121,22 +133,22 @@ defineExpose({
   <div>
     <Paginator
       v-if="total > perPage"
-      :rows="1"
-      :totalRecords="Math.ceil(total / perPage)"
       v-model:first="page"
       data-test="pagination"
+      :rows="1"
+      :total-records="Math.ceil(total / perPage)"
     />
-    <SharedUILoader :isUpdate="isUpdate">
+    <SharedUILoader :is-update="isUpdate">
       <DataTable
-        @nodeSelect="(item: any) => emit('click-row', item)"
-        :value="items"
         :headers="headers"
+        :value="items"
+        @node-select="(item: any) => emit('click-row', item)"
       >
         <Column
           v-for="item in headers"
+          :key="item.code"
           :field="item.code"
           :header="item.label"
-          :key="item.code"
         />
         <slot />
         <template #empty>

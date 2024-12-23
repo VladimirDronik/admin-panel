@@ -12,21 +12,30 @@ const value = defineModel<string | null>({
 <template>
   <Select
     v-model="value"
-    :options="colors"
-    optionLabel="name"
-    optionValue="code"
     class="tw-w-full"
-    showClear
+    option-label="name"
+    option-value="code"
+    :options="colors"
+    show-clear
   >
     <template #value="slotProps">
-      <div v-if="slotProps.value" class="tw-flex tw-items-center">
-        <div :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+      <div
+        v-if="slotProps.value"
+        class="tw-flex tw-items-center"
+      >
+        <div
+          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+          :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }"
+        />
         <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
       </div>
     </template>
     <template #option="slotProps">
       <div class="tw-flex tw-items-center">
-        <div :style="{ backgroundColor: slotProps.option.color }" class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full" />
+        <div
+          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+          :style="{ backgroundColor: slotProps.option.color }"
+        />
         <div>{{ slotProps.option.name }}</div>
       </div>
     </template>

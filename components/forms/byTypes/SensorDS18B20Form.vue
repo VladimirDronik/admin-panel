@@ -71,44 +71,118 @@ const sensorDataToShow = computed(() => {
 </script>
 
 <template>
-  <Form :resolver="resolver" :validateOnValueUpdate="false" :validateOnBlur="true" :form="dynamicForm">
-    <FormsSensorHeader v-if="props.isEditing" v-bind="{ ...sensorDataToShow }" v-model:name="dynamicForm.name" v-model:update-interval="dynamicForm.props.update_interval" v-model:zone-id="dynamicForm.zone_id" />
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
+  <Form
+    :form="dynamicForm"
+    :resolver="resolver"
+    :validate-on-blur="true"
+    :validate-on-value-update="false"
+  >
+    <FormsSensorHeader
+      v-if="props.isEditing"
+      v-bind="{ ...sensorDataToShow }"
+      v-model:name="dynamicForm.name"
+      v-model:update-interval="dynamicForm.props.update_interval"
+      v-model:zone-id="dynamicForm.zone_id"
+    />
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.placement') }}
+    </p>
+    <SharedUILabel
+      class="tw-mb-2"
+      name="controller"
+      required
+      :title="t('devices.controller')"
+      :value="dynamicForm.parent_id"
+    >
       <Select
         v-model="dynamicForm.parent_id"
-        :options="controllers"
-        optionLabel="name"
-        optionValue="id"
         class="tw-w-3/4"
+        option-label="name"
+        option-value="id"
+        :options="controllers"
       />
     </SharedUILabel>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.mode')" required :value="dynamicForm.props.interface" name="interface">
+    <SharedUILabel
+      class="tw-mb-2"
+      name="interface"
+      required
+      :title="t('devices.mode')"
+      :value="dynamicForm.props.interface"
+    >
       <div class="tw-flex tw-items-center">
-        <RadioButton class="tw-mr-1" inputId="single-mode" v-model="dynamicForm.props.interface" :value="DeviceInterface['1W']" />
-        <label for="single-mode" class="tw-mr-4"> {{ t('devices.single') }}</label>
-        <RadioButton class="tw-mr-1" inputId="bus-mode" v-model="dynamicForm.props.interface" :value="DeviceInterface['1WBUS']" />
+        <RadioButton
+          v-model="dynamicForm.props.interface"
+          class="tw-mr-1"
+          input-id="single-mode"
+          :value="DeviceInterface['1W']"
+        />
+        <label
+          class="tw-mr-4"
+          for="single-mode"
+        > {{ t('devices.single') }}</label>
+        <RadioButton
+          v-model="dynamicForm.props.interface"
+          class="tw-mr-1"
+          input-id="bus-mode"
+          :value="DeviceInterface['1WBUS']"
+        />
         <label for="bus-mode"> {{ t('devices.bus') }}</label>
       </div>
     </SharedUILabel>
 
-    <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
-      <Select v-model="dynamicForm.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
+    <SharedUILabel
+      class="tw-mb-2"
+      required
+      :title="t('devices.port')"
+    >
+      <Select
+        v-model="dynamicForm.sdaPort"
+        class="tw-w-3/4"
+        option-label="label"
+        option-value="value"
+        :options="formattedPorts"
+      />
     </SharedUILabel>
 
-    <SharedUILabel required class="tw-mb-2" v-if="dynamicForm.props.interface === '1WBUS'" :title="t('devices.address16')">
-      <InputNumber id="address" v-model="dynamicForm.busAddress" class="tw-w-full" />
+    <SharedUILabel
+      v-if="dynamicForm.props.interface === '1WBUS'"
+      class="tw-mb-2"
+      required
+      :title="t('devices.address16')"
+    >
+      <InputNumber
+        id="address"
+        v-model="dynamicForm.busAddress"
+        class="tw-w-full"
+      />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
-    <SharedUILabel v-if="!props.isEditing" class="tw-mb-2" :title="t('devices.polling')" required :value="dynamicForm.props.update_interval" name="update_interval">
-      <InputNumber suffix=" sec" id="update_interval" v-model="dynamicForm.props.update_interval" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel
+      v-if="!props.isEditing"
+      class="tw-mb-2"
+      name="update_interval"
+      required
+      :title="t('devices.polling')"
+      :value="dynamicForm.props.update_interval"
+    >
+      <InputNumber
+        id="update_interval"
+        v-model="dynamicForm.props.update_interval"
+        class="tw-mr-10 tw-w-1/4"
+        suffix=" sec"
+      />
     </SharedUILabel>
 
-    <Divider v-if="!props.isEditing" class="tw-mt-0 tw-pb-3" />
+    <Divider
+      v-if="!props.isEditing"
+      class="tw-mt-0 tw-pb-3"
+    />
 
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.temperature') }}</p>
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.temperature') }}
+    </p>
 
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.temperature.write_graph" />
@@ -117,24 +191,51 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
-        required
-        :value="dynamicForm.children.temperature.min_threshold"
         name="minThresholdTemp"
+        required
         :title="`${t('devices.minAvailability')}:`"
         :tooltip="t('devices.tooltipMinAvailability')"
+        :value="dynamicForm.children.temperature.min_threshold"
       >
-        <InputNumber v-model="dynamicForm.children.temperature.min_threshold" suffix=" °C" />
+        <InputNumber
+          v-model="dynamicForm.children.temperature.min_threshold"
+          suffix=" °C"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" required :value="dynamicForm.children.temperature.max_threshold" name="maxThresholdTemp" :title="`${t('devices.maxAvailability')}:`">
-        <InputNumber v-model="dynamicForm.children.temperature.max_threshold" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        name="maxThresholdTemp"
+        required
+        :title="`${t('devices.maxAvailability')}:`"
+        :value="dynamicForm.children.temperature.max_threshold"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.max_threshold"
+          suffix=" °C"
+        />
       </SharedUILabel>
     </div>
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
-      <SharedUILabel class="tw-flex-col" :value="dynamicForm.children.temperature.min_error_value" :title="`${t('devices.minAlarm')}:`" :tooltip="t('devices.tooltipMinAlarm')">
-        <InputNumber v-model="dynamicForm.children.temperature.min_error_value" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col"
+        :title="`${t('devices.minAlarm')}:`"
+        :tooltip="t('devices.tooltipMinAlarm')"
+        :value="dynamicForm.children.temperature.min_error_value"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.min_error_value"
+          suffix=" °C"
+        />
       </SharedUILabel>
-      <SharedUILabel class="tw-flex-col !tw-items-start" :value="dynamicForm.children.temperature.max_error_value" :title="`${t('devices.maxAlarm')}:`">
-        <InputNumber v-model="dynamicForm.children.temperature.max_error_value" suffix=" °C" />
+      <SharedUILabel
+        class="tw-flex-col !tw-items-start"
+        :title="`${t('devices.maxAlarm')}:`"
+        :value="dynamicForm.children.temperature.max_error_value"
+      >
+        <InputNumber
+          v-model="dynamicForm.children.temperature.max_error_value"
+          suffix=" °C"
+        />
       </SharedUILabel>
     </div>
   </Form>

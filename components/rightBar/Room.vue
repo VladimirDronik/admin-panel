@@ -19,19 +19,22 @@ const loadingDelete = ref(false);
 </script>
 
 <template>
-  <LayoutFullRightbar :isOpen="isOpen">
-    <div v-if="form" class="tw-min-h-80 tw-p-7">
+  <LayoutFullRightbar :is-open="isOpen">
+    <div
+      v-if="form"
+      class="tw-min-h-80 tw-p-7"
+    >
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
           {{ form.is_group ? t('room.addCategory') : t('room.addRoom') }}
         </h3>
         <Button
-          @click="isOpen = false"
           icon="pi"
-          size="small"
-          variant="text"
-          text
           rounded
+          size="small"
+          text
+          variant="text"
+          @click="isOpen = false"
         >
           <XIcon class="white" />
         </Button>
@@ -39,27 +42,30 @@ const loadingDelete = ref(false);
 
       <div class="!tw-px-0 !tw-pt-1">
         <SharedUILabel
-          :title="t('room.name')"
           class="tw-mb-2"
           required
+          :title="t('room.name')"
         >
-          <InputText v-model="form.name" class="tw-w-full" />
+          <InputText
+            v-model="form.name"
+            class="tw-w-full"
+          />
         </SharedUILabel>
         <SharedUILabel
-          :title="t('room.colorCategory')"
           class="tw-mb-2"
           required
+          :title="t('room.colorCategory')"
         >
           <SharedUIColorSelect v-model="form.color" />
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">
         <DialogsDeleteDialog
+          :id="form.item?.id ?? -1"
           v-model="dialog"
+          class="tw-mr-2"
           :loading="loadingDelete"
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"
-          class="tw-mr-2"
-          :id="form.item?.id ?? -1"
         />
 
         <Button

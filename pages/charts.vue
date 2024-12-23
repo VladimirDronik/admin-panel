@@ -91,7 +91,12 @@ const setChartOptions = () => {
         </div>
       </div>
       <div class="tw-h-full tw-rounded-lg tw-border tw-p-3">
-        <Chart class="tw-h-full" type="line" :data="chartData" :options="chartOptions" />
+        <Chart
+          class="tw-h-full"
+          :data="chartData"
+          :options="chartOptions"
+          type="line"
+        />
       </div>
     </div>
   </SharedUIPanel>

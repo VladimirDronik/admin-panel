@@ -30,10 +30,10 @@ const updateValidity = (isValid: boolean) => {
   <div>
     <component
       :is="FormComponent"
-      :isEditing="props.isEditing"
       v-model:dynamic-form="dynamicForm"
-      @update:valid="updateValidity"
       :add-field-to-dynamic-form="props.addFieldToDynamicForm"
+      :is-editing="props.isEditing"
+      @update:valid="updateValidity"
     />
     <slot name="footer" />
   </div>
