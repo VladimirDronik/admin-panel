@@ -9,17 +9,20 @@ import {
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
   DevicePropertyKey, Connection,
+  Regulator,
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
   const isDS1820 = formData.type === Sensor.DS18B20;
   const isMegaD = formData.type === Controller.MegaD;
   const isRelayOrGenericInput = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput;
+  const isRegulator = formData.type === Regulator.Regulator;
   let address = `${formData.sdaPort};${formData.sclPort}`;
   if (isDS1820 && formData.props.interface === '1W') address = String(formData.sdaPort);
   if (isDS1820 && formData.props.interface === '1WBUS') address = `${formData.sdaPort};${formData.busAddress}`;
   if (isMegaD) address = String(formData.props.address);
   if (isRelayOrGenericInput) address = `${formData.sdaPort}`;
+  if (isRegulator) address = '';
   return address;
 };
 
@@ -44,6 +47,9 @@ export const transformToDeviceCreateFormPayload = (
     // @ts-expect-error ///
     delete result.object['children'];
   }
+  if (formData.type === Regulator.Regulator && !result.object.props.address) {
+    delete result.object.props.address;
+  }
 
   return result;
 };
@@ -53,7 +59,9 @@ export const transformToDeviceEditFormPayload = (
 ): DeviceEditFormPayload => {
   const children = formatChildren(formData.children);
   const result = { ...formData, children, events: [] };
-  result.props.address = createAddress(formData);
+  if (formData.type !== Regulator.Regulator) {
+    result.props.address = createAddress(formData);
+  }
   const resultWithoutPorts = Object.fromEntries(
     Object.entries(result).filter(([key]) => key !== 'sdaPort' && key !== 'sclPort' && key !== 'busAddress'),
   );

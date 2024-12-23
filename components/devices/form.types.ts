@@ -46,7 +46,7 @@ export interface CreateDeviceInitialForm {
 
 export interface DeviceProps {
     interface?: DeviceInterface;
-    address: string;
+    address?: string;
     update_interval: number;
     id?: string;
     password?: string;
@@ -61,6 +61,7 @@ export interface DeviceProps {
     complex_tolerance?: number;
     enable?: boolean;
     fallback_sensor_value_id?: number;
+    period?: number;
   }
 
 export interface DeviceChild {

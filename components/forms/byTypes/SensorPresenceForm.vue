@@ -69,7 +69,9 @@ watch(
     <Divider v-if="props.isEditing" class="tw-mt-0 tw-pb-3" />
 
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
-    <SharedUILabel :width="350" class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
+
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.motion') }}</p>
+    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
       <Select
         v-model="dynamicForm.parent_id"
         :options="controllers"
@@ -79,21 +81,39 @@ watch(
       />
     </SharedUILabel>
 
-    <SharedUILabel :width="350" required class="tw-mb-2" :title="t('devices.port')">
+    <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
       <Select v-model="dynamicForm.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
     </SharedUILabel>
 
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.presence') }}</p>
+    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
+      <Select
+        v-model="dynamicForm.parent_id"
+        :options="controllers"
+        optionLabel="name"
+        optionValue="id"
+        class="tw-w-3/4"
+      />
+    </SharedUILabel>
+
+    <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
+      <Select v-model="dynamicForm.sclPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
+    </SharedUILabel>
+
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel :width="350" required :title="t('devices.detecting')">
+    <SharedUILabel required :title="t('devices.detecting')">
       <ToggleSwitch v-model="dynamicForm.props.enable" />
     </SharedUILabel>
 
-    <SharedUILabel :width="350" class="tw-mb-2" :title="t('devices.period')" required :value="dynamicForm.props.period" name="period">
+    <SharedUILabel class="tw-mb-2" :title="t('devices.period')" required :value="dynamicForm.props.period" name="period">
       <InputNumber suffix=" sec" id="period" v-model="dynamicForm.props.period" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
+    <SharedUILabel :title="t('devices.graphing')">
+      <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
+    </SharedUILabel>
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel> -->

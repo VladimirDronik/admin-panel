@@ -10,6 +10,8 @@ import SensorBME280Form from '~/components/forms/byTypes/SensorBME280Form.vue';
 import SensorBMP280Form from '~/components/forms/byTypes/SensorBMP280Form.vue';
 import SensorOutdoorForm from '~/components/forms/byTypes/SensorOutdoorForm.vue';
 import SensorSCD4XForm from '~/components/forms/byTypes/SensorSCD4XForm.vue';
+import SensorMotionForm from '~/components/forms/byTypes/SensorMotionForm.vue';
+import SensorPresenceForm from '~/components/forms/byTypes/SensorPresenceForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
 import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
@@ -18,7 +20,7 @@ import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
 import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
 import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
 
-type DeviceType = Controller | GenericInput | Relay | Sensor | Default;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator;
 
 interface DeviceFormMapping {
   type: DeviceType;
@@ -77,6 +79,16 @@ export const deviceFormMapping: DeviceFormMapping[] = [
   {
     type: Regulator.Regulator,
     component: RegulatorForm,
+  },
+
+  {
+    type: Sensor.MOTION,
+    component: SensorMotionForm,
+  },
+
+  {
+    type: Sensor.PRESENCE,
+    component: SensorPresenceForm,
   },
 
 ];

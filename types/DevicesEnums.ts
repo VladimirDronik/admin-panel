@@ -12,6 +12,10 @@ export enum DevicePropertyKey {
   Illumination = 'illumination',
   Pressure = 'pressure',
   CO2 = 'co2',
+  Motion = 'motion',
+  Presence = 'presence',
+  Current = 'current',
+
 }
 
 export enum Default {
@@ -30,6 +34,8 @@ export enum Sensor {
   HTU21D = 'htu21d',
   OUTDOOR = 'outdoor',
   SCD4X = 'scd4x',
+  MOTION = 'motion',
+  PRESENCE = 'presence',
 }
 
 export enum GenericInput {

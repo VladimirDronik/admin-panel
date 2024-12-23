@@ -224,6 +224,62 @@ const createFormByTypesMap = {
       },
     },
   },
+  [Sensor.MOTION]: {
+    parent_id: 0,
+    sdaPort: 0,
+    category: ObjectsCategory.Sensor,
+    props: {
+      enable: false,
+      interface: DeviceInterface['DISCRETE'],
+      period: 8,
+    },
+    children: {
+      [DevicePropertyKey.Motion]: {
+        max_error_value: 2,
+        max_threshold: 2,
+        min_error_value: -1,
+        min_threshold: -1,
+        unit: '',
+        value: 1.00,
+        value_updated_at: '02.11.2024 08:48:44',
+        write_graph: true,
+      },
+
+    },
+  },
+  [Sensor.PRESENCE]: {
+    parent_id: 0,
+    sdaPort: 0,
+    sclPort: 0,
+    category: ObjectsCategory.Sensor,
+    props: {
+      enable: false,
+      interface: DeviceInterface['DISCRETE'],
+      period: 8,
+    },
+    children: {
+      [DevicePropertyKey.Motion]: {
+        max_error_value: 2,
+        max_threshold: 2,
+        min_error_value: -1,
+        min_threshold: -1,
+        unit: '',
+        value: 1.00,
+        value_updated_at: '02.11.2024 08:48:44',
+        write_graph: true,
+      },
+      [DevicePropertyKey.Presence]: {
+        max_error_value: 2,
+        max_threshold: 2,
+        min_error_value: -1,
+        min_threshold: -1,
+        unit: '',
+        value: 1.00,
+        value_updated_at: '02.11.2024 08:48:44',
+        write_graph: true,
+      },
+    },
+  },
   [Controller.MegaD]: {
     category: ObjectsCategory.Controller,
     props: {
@@ -317,6 +373,25 @@ const editFormByTypesMap = {
     },
     children: {},
   },
+  [Sensor.MOTION]: {
+    id: 0,
+    parent_id: 0,
+    sdaPort: 0,
+    props: {
+      enable: false,
+    },
+    children: {},
+  },
+  [Sensor.PRESENCE]: {
+    id: 0,
+    parent_id: 0,
+    sdaPort: 0,
+    sclPort: 0,
+    props: {
+      enable: false,
+    },
+    children: {},
+  },
   [Controller.MegaD]: {
     id: 0,
     props: {
@@ -337,6 +412,21 @@ const editFormByTypesMap = {
     sdaPort: null,
     parent_id: 0,
     props: {},
+  },
+  [Regulator.Regulator]: {
+    id: 0,
+    props: {
+      enable: false,
+      type: RegulatorType.Simple,
+      fallback_sensor_value_id: 0,
+      sensor_value_ttl: 30,
+      min_sp: 0,
+      target_sp: 0,
+      max_sp: 0,
+      below_tolerance: 0,
+      above_tolerance: 0,
+      complex_tolerance: 0,
+    },
   },
 };
 
