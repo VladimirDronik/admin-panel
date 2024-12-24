@@ -12,7 +12,6 @@ import type { DeviceParentId, DevicePort } from '~/types/DevicesTypes';
 const { t } = useI18n();
 const { controllers, getControllersViaType } = useControllersViaType();
 
-
 // Declare Options
 const parentId = defineModel<DeviceParentId>('parent-id') as ModelRef<DeviceParentId>;
 const sdaPort = defineModel<DevicePort>('sda-port');

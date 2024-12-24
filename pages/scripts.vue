@@ -41,7 +41,7 @@ onBeforeMount(() => {
   storeScript.getScriptsApi({
     limit: 99,
   });
-})
+});
 
 </script>
 

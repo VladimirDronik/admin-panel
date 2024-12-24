@@ -8,6 +8,7 @@ import { getRoomColorByValue } from '~/helpers/rooms';
 const value = defineModel<string | null>({
   default: null,
 });
+
 </script>
 
 <template>

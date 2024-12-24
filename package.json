@@ -55,6 +55,7 @@
     "@nuxt/test-utils": "^3.15.1",
     "@primevue/nuxt-module": "^4.2.5",
     "@types/lodash": "^4.17.13",
+    "@vue/eslint-config-airbnb": "^8.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vuepress/bundler-vite": "^2.0.0-rc.18",
     "@vuepress/plugin-search": "^2.0.0-rc.61",

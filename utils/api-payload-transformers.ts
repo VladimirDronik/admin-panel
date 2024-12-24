@@ -4,8 +4,7 @@ import type {
 } from '~/components/devices/form.types';
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
-import type {
-  DevicePropertyKey, Connection} from '~/types/DevicesEnums';
+import type { DevicePropertyKey, Connection } from '~/types/DevicesEnums';
 import {
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
@@ -47,7 +46,7 @@ export const transformToDeviceCreateFormPayload = (
     // @ts-expect-error ///
     delete result.object['children'];
   }
-  
+
   if (formData.type === Regulator.Regulator && !result.object.props.address) {
     delete result.object.props.address;
   }
@@ -101,7 +100,6 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
       return acc;
     }, {} as DevicePropertyData);
 
-     
     childrenAcc[key] = propertyData;
 
     return childrenAcc;

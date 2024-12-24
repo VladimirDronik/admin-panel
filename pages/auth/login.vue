@@ -90,9 +90,9 @@ onBeforeMount(async () => {
     },
     loginSchema,
   );
-  
+
   user.value = data as APIData<loginData>;
-})
+});
 
 </script>
 <template>

@@ -5,8 +5,8 @@ import moment from 'moment';
 import _, { isArray } from 'lodash';
 import { useRoute } from 'vue-router';
 // Types
+import type { TreeTableSelectionKeys } from 'primevue';
 import type { Filter, Header } from '@/types/MainTypes';
-import type { TreeTableSelectionKeys } from 'primevue'
 
 // Composables
 const route = useRoute();
@@ -91,7 +91,7 @@ watch(filterValueList, (newValue, oldValue) => {
 watch(() => props.total, () => {
   Array.from(Array(props.total).keys()).forEach((key) => {
     if (expandedKeys.value) expandedKeys.value[key] = true;
-  })
+  });
 }, {
   immediate: true,
 });

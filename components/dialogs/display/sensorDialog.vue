@@ -27,7 +27,7 @@ const selectedParamSensor = ref<string>();
 
 const apiGetSensor = ref<APIData<any>>();
 
-  const form = ref({
+const form = ref({
   name: '',
   color: null,
 });

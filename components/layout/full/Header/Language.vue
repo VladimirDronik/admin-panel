@@ -6,7 +6,6 @@ import { useUserStore } from '~/stores/user';
 import England from '@/assets/images/flag/icon-flag-en.svg';
 import Russia from '@/assets/images/flag/icon-flag-ru.svg';
 
-
 // Composables
 const { locale } = useI18n({ useScope: 'global' });
 const userStore = useUserStore();
@@ -47,7 +46,7 @@ watch(locale, (newValue) => {
 // Hooks
 onBeforeMount(() => {
   selectLanguage(userStore.userLocal?.language ?? 'ru');
-})
+});
 
 </script>
 

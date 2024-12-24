@@ -29,6 +29,7 @@ export default [
   ...pluginVue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
   ...compat.extends(
+    "@vue/eslint-config-airbnb",
     "@nuxt/eslint-config",
     "plugin:tailwindcss/recommended",
     "plugin:@intlify/vue-i18n/recommended",
@@ -45,6 +46,7 @@ export default [
     ignores: [
       "**docs/",
       "**.nuxt/",
+      "**.output/",
       "**.json",
       "**.mjs",
     ]
@@ -52,12 +54,39 @@ export default [
   {
     rules: {
       "vue/valid-v-for": "off",
-      "no-unused-expressions": "error",
-      "tailwindcss/no-custom-classname": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": 'off',
-      "@intlify/vue-i18n/no-missing-keys": "off", // need update
+      "@intlify/vue-i18n/no-missing-keys": "off",
+
+      camelcase: 'off',
+      'no-underscore-dangle': 'off',
+      'no-shadow': 'off',
+      'no-console': 'off',
+      'no-continue': 'off',
+      'vue/max-len': 'off',
+      'valid-typeof': 'off',
+      'dot-notation': 'off',
+      'guard-for-in': 'off',
+      'linebreak-style': 'off',
+      'no-spaced-func': 'off',
+      'no-return-assign': 'off',
+      'func-call-spacing': 'off',
+      'import/extensions': 'off',
+      'consistent-return': 'off',
+      'prefer-object-spread': 'off',
+      'no-restricted-syntax': 'off',
+      'import/no-unresolved': 'off',
+      'no-use-before-define': 'off',
+      'vue/require-default-prop': 'off',
+      'import/prefer-default-export': 'off',
+      'vue/multi-word-component-names': 'off',
+      'tailwindcss/no-custom-classname': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      'import/no-extraneous-dependencies': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@intlify/vue-i18n/no-dynamic-keys': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      'vuejs-accessibility/anchor-has-content': 'off',
+      'vuejs-accessibility/form-control-has-label': 'off',
 
       "vue/attributes-order": ["warn", {
         "alphabetical": true

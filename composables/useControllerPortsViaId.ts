@@ -4,7 +4,7 @@ import { ref, watch, type Ref } from 'vue';
 export function useControllerPortsViaId(controllerId: Ref<number | null>, group: string = 'inputs,digital') {
   // Composable
   const deviceStore = useDevicesStore();
-  
+
   // Variables
   const formattedPorts = ref<{ label: string; value: number; number: number }[]>([]);
 

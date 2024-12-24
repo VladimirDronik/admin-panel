@@ -20,7 +20,7 @@ withDefaults(defineProps<{
   required: false,
   value: {},
   tooltip: {},
-})
+});
 </script>
 
 <template>

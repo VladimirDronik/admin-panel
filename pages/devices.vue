@@ -11,7 +11,7 @@ import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { Filter, Options } from '~/types/MainTypes';
-import type { TreeTableDevices } from '~/types/DevicesTypes'
+import type { TreeTableDevices } from '~/types/DevicesTypes';
 
 // Composables
 const { t } = useI18n();
@@ -49,8 +49,6 @@ const perPage = 10000;
 
 const page = ref(1);
 
-
-
 const isUpdate = ref(true);
 const isOpen = ref(false);
 
@@ -66,14 +64,14 @@ const props = computed(() => {
   if (selectedObject.value?.props) {
     return selectedObject.value.props.map((item) => item.value);
   }
-  return []
+  return [];
 });
 
 const childrenProps = computed(() => {
   if (selectedObject.value?.children) {
     return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];
   }
-  return []
+  return [];
 });
 
 const tags = computed<(Options | string)[]>(() => {
@@ -216,7 +214,6 @@ watch([props, childrenProps], (newValue, oldValue) => {
   }
 });
 
-
 function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] {
   return arr.map((obj) => {
     if (obj.children) {
@@ -245,12 +242,10 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
   }).flat();
 }
 
-
 const processedDevices = computed(() => {
   const result = processDevices(storeDevices.getDevices ?? []);
   return result;
 });
-
 
 </script>
 
@@ -310,8 +305,8 @@ const processedDevices = computed(() => {
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          <span :style="{ paddingLeft: node.data.paddingLeft }"></span>
-          <component 
+          <span :style="{ paddingLeft: node.data.paddingLeft }" />
+          <component
             :is="iconMap[node.data.type as IconMapKey]"
             color="#555"
             size="24"

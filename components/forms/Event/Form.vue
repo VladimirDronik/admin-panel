@@ -64,8 +64,6 @@ const filterEvents = async (type: string) => {
   }
 };
 
-
-
 const actionsType = (actions: any[]) => {
   if (actions) {
     return {

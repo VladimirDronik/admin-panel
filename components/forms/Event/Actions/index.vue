@@ -50,7 +50,7 @@ const apiOrderMethods = ref<APIData<any>>();
 const apiDeleteMethods = ref<APIData<any>>();
 
 // Computed Properties
-  const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
+const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
 
 // Methods
 const updateActions = () => {
