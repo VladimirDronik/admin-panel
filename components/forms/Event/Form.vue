@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // Types and Schemes modules
-import type { Event, EventsObject, Action } from '@/types/ModelEventTypes';
 import type { Request } from '~/types/StoreTypes';
+import type { Event, EventsObject, Action } from '@/types/ModelEventTypes';
 
+// Declare Options
 const props = defineProps<{
   id?: number,
   modelType: string,
@@ -10,16 +11,18 @@ const props = defineProps<{
   eventTypes: EventsObject,
 }>();
 
+const events = defineModel<Event[]>({
+  default: [],
+});
+
+// Variables
 const form = ref();
 const selectedEvent = ref<Event>();
 
 const dialog = ref(false);
 const edit = ref(false);
 
-const events = defineModel<Event[]>({
-  default: [],
-});
-
+// Methods
 const filterEvents = async (type: string) => {
   const objectEvents = props.eventTypes[type];
   if (objectEvents) {
@@ -61,9 +64,7 @@ const filterEvents = async (type: string) => {
   }
 };
 
-watch(events, () => {
-  form.value = events.value?.find((item: any) => item.code === selectedEvent.value?.code) ?? null;
-});
+
 
 const actionsType = (actions: any[]) => {
   if (actions) {
@@ -86,10 +87,6 @@ const updateEvents = () => {
   filterEvents(props.modelType);
 };
 
-updateEvents();
-
-watch(() => [props.modelType, props.id], updateEvents);
-
 const createEvents = (event: Event) => {
   selectedEvent.value = event;
   form.value = event;
@@ -104,6 +101,15 @@ const editEvents = (event: Event) => {
   edit.value = false;
 };
 
+// Watchers
+watch(events, () => {
+  form.value = events.value?.find((item: any) => item.code === selectedEvent.value?.code) ?? null;
+});
+
+watch(() => [props.modelType, props.id], updateEvents);
+
+// Created
+updateEvents();
 </script>
 
 <template>

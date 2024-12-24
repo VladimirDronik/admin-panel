@@ -1,7 +1,9 @@
- 
+// Builtin modules
 import { ZodArray, ZodObject, ZodRecord } from 'zod';
+// Types modules
 import type { UseFetchOptions } from 'nuxt/app';
 
+// Types
 interface MyOptions {
   success?: (response: any) => void
   error?: () => void

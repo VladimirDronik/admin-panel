@@ -1,17 +1,12 @@
 <script setup lang="ts">
+
+// Types
 interface AddWidget {
   width: number;
   height: number;
 }
 
-const isOpen = defineModel<boolean>('isOpen', {
-  required: true,
-});
-
-const isUpdate = defineModel<boolean>('isUpdate', {
-  required: true,
-});
-
+// Declare Options
 defineProps({
   edit: {
     type: Boolean,
@@ -23,6 +18,15 @@ const emit = defineEmits<{
   (e: 'add-widget', params: AddWidget): void
 }>();
 
+const isOpen = defineModel<boolean>('isOpen', {
+  required: true,
+});
+
+const isUpdate = defineModel<boolean>('isUpdate', {
+  required: true,
+});
+
+// Variables
 const widgets = [
   {
     title: '1 X 4',

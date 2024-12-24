@@ -1,12 +1,15 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
 
 useHead({
   titleTemplate: computed(() => t('pages.networkSettings')),
 });
 
+// Variables
 const items = [
   {
     name: 'eco_mode',
@@ -34,6 +37,7 @@ const isOpen = ref(false);
 
 const selectedParameter = ref();
 
+// Methods
 const editParameter = (item: any) => {
   isOpen.value = true;
   selectedParameter.value = item;

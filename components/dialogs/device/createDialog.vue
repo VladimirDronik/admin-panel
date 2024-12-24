@@ -1,29 +1,28 @@
 <script setup lang="ts">
+// Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-// Types modules
-import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+// Types modules
+import type { APIData } from '~/types/StoreTypes';
 import { type Devices } from '~/types/DevicesTypes';
+
+// Composables
+defineOptions({
+  inheritAttrs: false,
+});
 
 const visible = defineModel<boolean>({
   default: false,
 });
 
-defineOptions({
-  inheritAttrs: false,
-});
-
 // Composables
-const storeDevices = useDevicesStore();
-
 const { t } = useI18n();
+const storeDevices = useDevicesStore();
 
 // Variables
 const model = ref<Devices>();
-
-const apiDeviceModel = ref<APIData<any>>();
 
 const form = ref({
   name: '',
@@ -33,29 +32,20 @@ const form = ref({
   tags: [],
 });
 
+// Apis
+const apiDeviceModel = ref<APIData<any>>();
+
+// Computed Properties
 const props = computed(() => {
   if (model.value?.props) {
     return model.value.props.map((item) => item.value);
   }
 });
+
 const childrenProps = computed(() => {
   if (model.value?.children) {
     return model.value?.children.map((item) => item?.props.map((item) => item.value))[0];
   }
-});
-
-watchEffect(() => {
-  // const result = {
-  //   ...apiDeviceModel.value?.data?.response,
-  //   props: propsModel(apiDeviceModel.value?.data?.response.props),
-  //   children: apiDeviceModel.value?.data?.response.children?.map((item: any) => ({
-  //     ...item,
-  //     props: propsModel(item.props) ?? [],
-  //   })),
-  // };
-
-  // model.value = result;
-  model.value = apiDeviceModel.value?.data?.response;
 });
 
 // Methods
@@ -102,6 +92,20 @@ const updateFields = () => {
 };
 
 // Watchers
+watchEffect(() => {
+  // const result = {
+  //   ...apiDeviceModel.value?.data?.response,
+  //   props: propsModel(apiDeviceModel.value?.data?.response.props),
+  //   children: apiDeviceModel.value?.data?.response.children?.map((item: any) => ({
+  //     ...item,
+  //     props: propsModel(item.props) ?? [],
+  //   })),
+  // };
+
+  // model.value = result;
+  model.value = apiDeviceModel.value?.data?.response;
+});
+
 watch(() => form.value.type, getModel);
 
 watch(() => form.value.category, () => {
@@ -118,6 +122,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
   immediate: true,
 });
 
+// Hooks
 onBeforeMount(async () => {
   // Get Device Model
   const data: unknown = await useAPI(

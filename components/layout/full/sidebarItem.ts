@@ -1,3 +1,4 @@
+// Builtin modules
 import {
   IconVideo,
   IconDoor,
@@ -12,22 +13,14 @@ import {
   IconUsers,
 } from '@tabler/icons-vue';
 
-export interface menu {
-    header?: string;
-    title?: string;
-    icon?: any;
-    to?: string;
-    chip?: string;
-    chipColor?: string;
-    chipVariant?: string;
-    chipIcon?: string;
-    children?: menu[];
-    disabled?: boolean;
-    type?: string;
-    subCaption?: string;
+export interface Menu {
+  title?: string,
+  icon?: any,
+  to?: string,
+  header?: string
 }
 
-const sidebarItem: menu[] = [
+const sidebarItem: Menu[] = [
   { header: 'pages.home' },
   {
     title: 'pages.general',

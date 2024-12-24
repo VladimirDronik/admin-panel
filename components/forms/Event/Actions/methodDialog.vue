@@ -1,27 +1,23 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
-// Types Modules
-import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+// Types Modules
+import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 
+// Types
 interface Method {
   name: string
   description: string;
 }
 
+// Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
 
-const dialog = defineModel<boolean>({
-  default: false,
-});
-
-const event = defineModel<Event>('event', {
-  required: true,
-});
-
+// Declare Options
 const props = defineProps<{
   id?: number;
   edit: boolean;
@@ -32,18 +28,28 @@ const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
-const apiCreateMethod = ref<APIData<any>>();
-const apiDevicesList = ref<APIData<any>>();
+const dialog = defineModel<boolean>({
+  default: false,
+});
 
+const event = defineModel<Event>('event', {
+  required: true,
+});
+
+// Variables
 const selectedObject = ref<any>();
 const selectedMethod = ref<Method | null>();
 
 const search = ref('');
 
-watch(search, () => {
-  selectedObject.value = null;
-});
+// Apis
+const apiDevicesList = ref<APIData<any>>();
+const apiCreateMethod = ref<APIData<any>>();
 
+// Computed Properties
+const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.includes(search.value)));
+
+// Methods
 const selectObject = (object: any) => {
   selectedObject.value = object;
   selectedMethod.value = null;
@@ -51,8 +57,6 @@ const selectObject = (object: any) => {
 const selectMethod = (method: Method) => {
   selectedMethod.value = method;
 };
-
-const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.includes(search.value)));
 
 const createAction = async () => {
   if (props.id) {
@@ -86,6 +90,11 @@ const createAction = async () => {
   }
 };
 
+// Watchers
+watch(search, () => {
+  selectedObject.value = null;
+});
+
 watch(dialog, () => {
   if (dialog.value) {
     selectedObject.value = null;
@@ -93,6 +102,7 @@ watch(dialog, () => {
   }
 });
 
+// Hooks
 onBeforeMount(async () => {
   // Get Device List
   const data: unknown = await useAPI(

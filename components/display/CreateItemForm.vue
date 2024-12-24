@@ -1,32 +1,37 @@
 <script lang="ts" setup>
 // Builtin modules
-import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
-import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes
+import type { Event } from '@/types/ModelEventTypes';
 import type { APIData } from '~/types/StoreTypes';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
-import type { Event } from '@/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 const { updateData } = useUtils();
 
+// Declare Options
 const props = defineProps<{
   devices: string[],
   zoneId: number,
+}>();
+
+const emit = defineEmits<{
+  (e: 'update'): void
 }>();
 
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
 
-const emit = defineEmits<{
-  (e: 'update'): void
-}>();
+// Variables
+const step = ref('1');
+const events = ref<Event[]>();
 
 const form = ref({
   title: null,
@@ -34,12 +39,6 @@ const form = ref({
   color: null,
   item_id: null,
 });
-
-const events = ref<Event[]>();
-
-const step = ref('1');
-
-const apiCreateItem = ref<APIData<any>>();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -49,6 +48,10 @@ const resolver = ref(zodResolver(
   }),
 ));
 
+// Apis
+const apiCreateItem = ref<APIData<any>>();
+
+// Methods
 const createItem = async () => {
   await updateData({
     update: async () => {
@@ -70,6 +73,7 @@ const createItem = async () => {
   });
 };
 
+// Hooks
 onBeforeMount(async () => {
   // Create Device
   const data: unknown = await useAPI(paths.privateWizard, {
@@ -206,7 +210,3 @@ onBeforeMount(async () => {
     </StepPanels>
   </Stepper>
 </template>
-
-<style>
-
-</style>

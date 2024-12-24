@@ -1,13 +1,14 @@
 <script setup lang="ts">
+// Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
-// Static Data
+// Static Data modules
 import { paths } from '~/utils/endpoints';
-// Helpers
+// Helpers modules
 import { roomColor } from '~/helpers/rooms';
-// Types
+// Types modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { APIData } from '~/types/StoreTypes';
 
@@ -15,13 +16,13 @@ import type { APIData } from '~/types/StoreTypes';
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 
+useHead({
+  titleTemplate: computed(() => t('pages.rooms')),
+});
+
 // Declare Options
 definePageMeta({
   middleware: ['auth'],
-});
-
-useHead({
-  titleTemplate: computed(() => t('pages.rooms')),
 });
 
 // Variables
@@ -49,6 +50,17 @@ const openRightBar = (item: RoomItem) => {
   form.value = item;
 };
 
+const save = async () => {
+  await orderRooms.value?.refresh();
+  await storeRooms.getRoomsApi();
+};
+
+// Watchers
+watch(roomIds, (newValue, oldValue) => {
+  if (oldValue && !_.isEqual(newValue, oldValue)) save();
+});
+
+// Hooks
 onBeforeMount(async () => {
   await storeRooms.getRoomsApi();
   const data: unknown = await useAPI(
@@ -62,16 +74,6 @@ onBeforeMount(async () => {
   );
 
   orderRooms.value = data as APIData<RoomItem[]>;
-});
-
-const save = async () => {
-  await orderRooms.value?.refresh();
-  await storeRooms.getRoomsApi();
-};
-
-// Watchers
-watch(roomIds, (newValue, oldValue) => {
-  if (oldValue && !_.isEqual(newValue, oldValue)) save();
 });
 </script>
 

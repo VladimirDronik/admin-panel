@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 // Builtin modules
-import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
-import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form } from '@primevue/forms';
+import { useI18n } from 'vue-i18n';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
-import type { APIData } from '~/types/StoreTypes';
-import { type itemType } from '~/types/DisplayTypes';
 import type { Event } from '@/types/ModelEventTypes';
+import type { APIData } from '~/types/StoreTypes';
+import type { itemType } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
-const storeRooms = useRoomsStore();
 const { updateData } = useUtils();
 
+// Declare Options
 defineProps<{
   devices: string[]
 }>();
@@ -37,9 +37,6 @@ const loadingDelete = ref(false);
 
 const events = ref<Event[]>();
 
-const apiChangeItem = ref<APIData<any>>();
-const apiDeleteItem = ref<APIData<any>>();
-
 const resolver = ref(zodResolver(
   z.object({
     title: z.string().min(1),
@@ -47,6 +44,11 @@ const resolver = ref(zodResolver(
   }),
 ));
 
+// Apis
+const apiChangeItem = ref<APIData<any>>();
+const apiDeleteItem = ref<APIData<any>>();
+
+// Methods
 const changeItem = async () => {
   await updateData({
     update: async () => {
@@ -74,6 +76,7 @@ const confirmDelete = async () => {
   });
 };
 
+// Hooks
 onBeforeMount(async () => {
   // Create Device
   const dataCreate: unknown = await useAPI(paths.privateItem, {

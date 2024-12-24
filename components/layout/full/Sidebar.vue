@@ -1,5 +1,7 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
+// Static Data modules
 import sidebarData from './sidebarItem';
 
 // Composables
@@ -17,7 +19,6 @@ const sidebar = shallowRef(sidebarData);
 
 // Computed Properties
 const to = computed(() => route.path);
-
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const to = computed(() => route.path);
           v-for="item in sidebar"
           :key="item.title"
         >
-          <div v-if="!item.header">
+          <div v-if="item.title">
             <Button
               v-tooltip="{
                 value: t(item.title),
@@ -58,7 +59,7 @@ const to = computed(() => route.path);
             </Button>
           </div>
           <p
-            v-else
+            v-else-if="item.header"
             class="tw-mb-3 tw-pt-3 tw-font-semibold"
             :class="{ 'tw-text-center': !open }"
           >

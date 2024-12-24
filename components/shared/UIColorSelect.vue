@@ -4,6 +4,7 @@ import { colors } from '~/staticData/rooms';
 // Helpers modules
 import { getRoomColorByValue } from '~/helpers/rooms';
 
+// Declare Options
 const value = defineModel<string | null>({
   default: null,
 });

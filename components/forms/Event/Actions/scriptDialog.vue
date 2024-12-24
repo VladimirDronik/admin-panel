@@ -1,24 +1,19 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
-// Types Modules
-import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
-import { type ScriptType } from '~/stores/script/scriptTypes';
+// Types Modules
 import type { Event } from '@/types/ModelEventTypes';
+import type { APIData } from '~/types/StoreTypes';
+import { type ScriptType } from '~/stores/script/scriptTypes';
 
+// Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
 const storeScript = useScriptStore();
 
-const dialog = defineModel<boolean>({
-  default: false,
-});
-
-const event = defineModel<Event>('event', {
-  required: true,
-});
-
+// Declare Options
 const props = defineProps<{
   id?: number;
   edit: boolean;
@@ -29,18 +24,26 @@ const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
-const apiCreateMethod = ref<APIData<any>>();
+const event = defineModel<Event>('event', {
+  required: true,
+});
 
+const dialog = defineModel<boolean>({
+  default: false,
+});
+
+// Variables
 const deleteDialog = ref(false);
 
 const selectedScript = ref<ScriptType | null>();
 
-watch(dialog, () => {
-  if (dialog.value) {
-    selectedScript.value = null;
-  }
-});
+// Apis
+const apiCreateMethod = ref<APIData<any>>();
 
+// Computed Properties
+const refScripts = computed(() => storeScript.scripts);
+
+// Methods
 const createAction = async () => {
   if (props.id) {
     updateData({
@@ -75,12 +78,18 @@ const deleteScript = (script: ScriptType) => {
   deleteDialog.value = true;
 };
 
+// Watchers
+watch(dialog, () => {
+  if (dialog.value) {
+    selectedScript.value = null;
+  }
+});
+
 storeScript.getScriptsApi({
   limit: 99,
 });
 
-const refScripts = computed(() => storeScript.scripts);
-
+// Hooks
 onBeforeMount(async () => {
   // Create Action
   const dataDevice: unknown = await useAPI(

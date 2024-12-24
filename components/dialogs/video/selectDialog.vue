@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-
+// Declare Options
 const visible = defineModel<boolean>({
   default: false,
 });
 
+// Variables
 const types = [
   'Камера',
   'Видеорегистратор',
@@ -48,7 +49,3 @@ const selectType = ref();
     </Dialog>
   </div>
 </template>
-
-<style>
-
-</style>

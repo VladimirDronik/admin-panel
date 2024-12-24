@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n';
-import { VueDraggableNext } from 'vue-draggable-next';
-import { IconPlus } from '@tabler/icons-vue';
+// Builtin modules
 import _ from 'lodash';
+import { useI18n } from 'vue-i18n';
+import { IconPlus } from '@tabler/icons-vue';
+import { VueDraggableNext } from 'vue-draggable-next';
+// Static Data modules
+import { paths } from '~/utils/endpoints';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
-import { paths } from '~/utils/endpoints';
 
 // Composables
 const { t } = useI18n();
@@ -25,6 +27,7 @@ const zoneId = ref<number>(0);
 const variant = ref('');
 const isShow = ref(false);
 
+// Methods
 const showItemPanel = (zone_id: number, item_id: number | null = null) => {
   zoneId.value = zone_id;
   if (item_id) {
@@ -42,20 +45,7 @@ const showScenarioPanel = (item_id: number) => {
   isShow.value = true;
 };
 
-onBeforeMount(async () => {
-  // Get Buttons
-  const dataItemsGet: unknown = await useAPI(
-    paths.privateCp,
-    {
-      watch: false,
-    },
-    displayRequestSchema,
-  );
-
-  apiItems.value = dataItemsGet as APIData<DisplayData>;
-  //
-});
-
+// Computed Properties
 const roomIds = computed(() => {
   if (!apiItems.value?.data) return [];
   return apiItems.value.data.response.room_items.map((room) => ({
@@ -64,6 +54,7 @@ const roomIds = computed(() => {
   }));
 });
 
+// Watchers
 watch(roomIds, async (newValue, oldValue) => {
   const result = newValue.find((item, index) => _.isEqual(item, oldValue[index]));
   if (result) {
@@ -76,6 +67,21 @@ watch(roomIds, async (newValue, oldValue) => {
     });
     // await apiItems.value?.refresh();
   }
+});
+
+// Hooks
+onBeforeMount(async () => {
+  // Get Buttons
+  const dataItemsGet: unknown = await useAPI(
+    paths.privateCp,
+    {
+      watch: false,
+    },
+    displayRequestSchema,
+  );
+
+  apiItems.value = dataItemsGet as APIData<DisplayData>;
+  //
 });
 
 </script>

@@ -1,8 +1,17 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
 // Composables
 const { t } = useI18n();
+
+// Declare Options
+defineProps({
+  edit: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
@@ -12,13 +21,7 @@ const isUpdate = defineModel<boolean>('isUpdate', {
   default: false,
 });
 
-defineProps({
-  edit: {
-    type: Boolean,
-    default: false,
-  },
-});
-
+// Variables
 const selectType = 'Камера';
 
 </script>

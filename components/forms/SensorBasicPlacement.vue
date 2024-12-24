@@ -1,21 +1,29 @@
 <script setup lang="ts">
-import { type ModelRef } from 'vue';
+// Builtin modules
 import { useI18n } from 'vue-i18n';
-import { Controller } from '~/types/DevicesEnums';
+import { type ModelRef } from 'vue';
+// Helper modules
 import { useControllersViaType } from '~/composables/useControllersViaType';
+// Types modules
+import { Controller } from '~/types/DevicesEnums';
 import type { DeviceParentId, DevicePort } from '~/types/DevicesTypes';
 
+// Composables
 const { t } = useI18n();
+const { controllers, getControllersViaType } = useControllersViaType();
 
+
+// Declare Options
 const parentId = defineModel<DeviceParentId>('parent-id') as ModelRef<DeviceParentId>;
 const sdaPort = defineModel<DevicePort>('sda-port');
 const sclPort = defineModel<DevicePort>('scl-port');
 
-const { controllers, getControllersViaType } = useControllersViaType();
-getControllersViaType(Controller.MegaD);
-
+// Computed Properties
 const controllerIdRef = computed(() => parentId.value);
+
 const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
+
+getControllersViaType(Controller.MegaD);
 
 </script>
 

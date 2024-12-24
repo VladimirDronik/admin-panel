@@ -1,12 +1,15 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
 
 useHead({
   titleTemplate: computed(() => t('pages.users')),
 });
 
+// Variables
 const headers = [
   {
     label: 'ID',
@@ -47,7 +50,3 @@ const headers = [
     />
   </SharedUIPanel>
 </template>
-
-<style>
-
-</style>

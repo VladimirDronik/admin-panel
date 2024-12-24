@@ -1,10 +1,14 @@
+// Builtin modules
 import { ref, watch, type Ref } from 'vue';
-import { useDevicesStore } from '~/stores/devices/devices';
 
 export function useControllerPortsViaId(controllerId: Ref<number | null>, group: string = 'inputs,digital') {
+  // Composable
   const deviceStore = useDevicesStore();
+  
+  // Variables
   const formattedPorts = ref<{ label: string; value: number; number: number }[]>([]);
 
+  // Methods
   const loadPorts = async () => {
     if (!controllerId.value) {
       formattedPorts.value = [];
@@ -28,6 +32,7 @@ export function useControllerPortsViaId(controllerId: Ref<number | null>, group:
     }));
   };
 
+  // Watchers
   watch(
     controllerId,
     () => {

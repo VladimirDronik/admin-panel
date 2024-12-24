@@ -1,12 +1,15 @@
 <script lang="ts" setup>
+// Builtin modules
 import { IconX } from '@tabler/icons-vue';
 // Types and Schemes modules
-import { type itemType, itemSchema } from '~/types/DisplayTypes';
-import type { APIData } from '~/types/StoreTypes';
 import { paths } from '~/utils/endpoints';
+import type { APIData } from '~/types/StoreTypes';
+import { type itemType, itemSchema } from '~/types/DisplayTypes';
 
+// Composables
 const storeRooms = useRoomsStore();
 
+// Declare Options
 const { variant, zoneId } = defineProps<{
   variant: string,
   zoneId: number,
@@ -24,6 +27,7 @@ const isOpen = defineModel<boolean>('isShow', {
   required: true,
 });
 
+// Variables
 const devices = [
   'switch',
   'button',
@@ -35,14 +39,17 @@ const devices = [
   'sensor',
 ];
 
+// Apis
 const apiItem = ref<APIData<itemType>>();
 
+// Computed Properties
 const title = computed(() => {
   if (variant === 'Edit Item') return 'Редактировать Кнопку';
   if (variant === 'Edit Scenario') return 'Редактировать Сценарий';
   return 'Добавить Кнопку';
 });
 
+// Hooks
 onBeforeMount(async () => {
   // Get Rooms
   storeRooms.getRoomsApi();
@@ -114,7 +121,3 @@ onBeforeMount(async () => {
     </div>
   </LayoutFullRightbar>
 </template>
-
-<style>
-
-</style>

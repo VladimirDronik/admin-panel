@@ -1,23 +1,25 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
-// Static data modules
-import { colors } from '~/staticData/rooms';
-import { getRoomColorByValue } from '~/helpers/rooms';
 
+// Composables
 const { t } = useI18n();
 
+// Declare Options
 const dialog = defineModel<boolean>({
   default: false,
+});
+
+// Variables
+const form = ref({
+  name: '',
+  color: '',
 });
 
 // Methods
 const createRoom = async () => {
 };
 
-const form = ref({
-  name: '',
-  color: '',
-});
 </script>
 
 <template>

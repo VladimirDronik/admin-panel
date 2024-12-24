@@ -1,12 +1,8 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
-const dialog = defineModel<boolean>({
-  default: false,
-});
-
-const { t } = useI18n();
-
+// Declare Options
 const props = defineProps({
   id: {
     type: Number,
@@ -34,6 +30,14 @@ const emit = defineEmits<{
   (e: 'delete', id: number): void
 }>();
 
+const dialog = defineModel<boolean>({
+  default: false,
+});
+
+// Composables
+const { t } = useI18n();
+
+// Methods
 const deleteItem = () => {
   emit('delete', props.id);
   dialog.value = false;

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
-const storeDevices = useDevicesStore();
 
+// Declare Options
 const dialog = defineModel<boolean>({
   default: false,
 });

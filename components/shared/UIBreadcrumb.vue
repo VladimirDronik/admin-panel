@@ -40,11 +40,3 @@ defineProps({
     <slot />
   </div>
 </template>
-
-<style lang="scss">
-.page-breadcrumb {
-    .v-toolbar {
-        background: transparent;
-    }
-}
-</style>

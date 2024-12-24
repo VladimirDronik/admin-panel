@@ -4,23 +4,21 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Helper modules
 import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
-// Types
+// Static Data modules
+import { deviceEventTypes } from '~/staticData/modelEvents';
+import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
+import { objectManager, paths } from '~/utils/endpoints';
+import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
+// Types and Schemes modules
+import type { APIData } from '~/types/StoreTypes';
+import type { ModelProps } from '~/types/DevicesTypes';
+import type { GetCurrentDeviceResponse } from './right-bar.types.ts';
 import {
   TablePortListSchema, type TablePortData, type FullDevice,
 } from '~/stores/devices/devicesTypes';
-import type { APIData } from '~/types/StoreTypes';
-import type {
-  ModelProps,
-} from '~/types/DevicesTypes';
-// Static Data modules
-import { objectManager, paths } from '~/utils/endpoints';
-import { deviceEventTypes } from '~/staticData/modelEvents';
 import type {
   AddFieldToDynamicFormPayload, DeviceEditFormPayload, EditDeviceForm,
 } from '~/components/devices/form.types';
-import type { GetCurrentDeviceResponse } from './right-bar.types.ts';
-import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
-import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
 
 // Composables
 const { t } = useI18n();
@@ -37,27 +35,16 @@ const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
 });
 
 // Variables
-
 const name = ref('');
-
 const tabs = ref('features');
 
 const active = ref(false);
-
 const dialogDelete = ref(false);
-
-let asideEditingForm = reactive<EditDeviceForm>(initialEditFormData);
-
 const isDynamicFormValid = ref(false);
 
-const devicesDynamicFormValidityHandler = (isValid: boolean) => {
-  isDynamicFormValid.value = isValid;
-};
+const forceUpdateKey = ref(0);
 
-const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
-  if (!asideEditingForm.children) return;
-  asideEditingForm.children[key] = value;
-};
+let asideEditingForm = reactive<EditDeviceForm>(initialEditFormData);
 
 // Apis
 const apiPorts = ref<APIData<TablePortData[]>>();
@@ -68,6 +55,7 @@ const apiDeleteDevice = ref<APIData<any>>();
 // Computed Properties
 const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
 
+// Methods
 const createFunction = (functionBody: string, props = {}) => {
   const func = new Function('userAccessLevel', 'props', functionBody);
   return {
@@ -117,6 +105,15 @@ const confirmDelete = async () => {
   }
 };
 
+const devicesDynamicFormValidityHandler = (isValid: boolean) => {
+  isDynamicFormValid.value = isValid;
+};
+
+const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
+  if (!asideEditingForm.children) return;
+  asideEditingForm.children[key] = value;
+};
+
 const changeDevice = async () => {
   await updateData({
     update: async () => {
@@ -127,11 +124,10 @@ const changeDevice = async () => {
   });
 };
 
+// Watchers
 watch(() => selectedObject.value?.id, () => {
   if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
 });
-
-const forceUpdateKey = ref(0);
 
 watchEffect(() => {
   const result = {
@@ -147,6 +143,7 @@ watchEffect(() => {
   forceUpdateKey.value += 1;
 });
 
+// Hooks
 onBeforeMount(async () => {
   // Get Device Item
   const dataDevice: unknown = await useAPI(
@@ -174,7 +171,6 @@ onBeforeMount(async () => {
   apiUpdateDevice.value = dataUpdateDevice as APIData<any>;
 
   // Delete Device
-
   const dataDeleteDevice: unknown = await useAPI(
     () => `${paths.objects}/${selectedObject.value?.id}`,
     {

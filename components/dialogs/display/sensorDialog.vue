@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 // Static data modules
 import { paths } from '~/utils/endpoints';
@@ -6,30 +7,32 @@ import { paths } from '~/utils/endpoints';
 import type { APIData } from '~/types/StoreTypes';
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
+// Composables
 const { t } = useI18n();
+
+// Declare Options
+defineProps<{
+  sensors: roomSensorTypes[] | undefined,
+}>();
 
 const dialog = defineModel<boolean>({
   default: false,
 });
 
-defineProps<{
-  sensors: roomSensorTypes[] | undefined,
-}>();
-
-// Methods
-const createRoom = async () => {
-};
-
-const form = ref({
-  name: '',
-  color: null,
-});
+// Variables
+const checked = ref(false);
 
 const selectedSensor = ref<string>();
 const selectedParamSensor = ref<string>();
 
 const apiGetSensor = ref<APIData<any>>();
 
+  const form = ref({
+  name: '',
+  color: null,
+});
+
+// Methods
 const selectSensor = (sensor: string) => {
   selectedSensor.value = sensor;
 };
@@ -37,8 +40,10 @@ const selectParamSensor = (param: string) => {
   selectedSensor.value = param;
 };
 
-const checked = ref(false);
+const createRoom = async () => {
+};
 
+// Hooks
 onBeforeMount(async () => {
   // Get Sensor
   const dataGetSensor: unknown = await useAPI(paths.objectsTypes, {

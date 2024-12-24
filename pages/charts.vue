@@ -1,21 +1,19 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 import Chart from 'primevue/chart';
 
+// Composables
 const { t } = useI18n();
-
 useHead({
   titleTemplate: computed(() => t('pages.charts')),
 });
 
-onMounted(() => {
-  chartData.value = setChartData();
-  chartOptions.value = setChartOptions();
-});
-
+// Variables
 const chartData = ref();
 const chartOptions = ref();
 
+// Methods
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
 
@@ -39,6 +37,7 @@ const setChartData = () => {
     ],
   };
 };
+
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--p-text-color');
@@ -75,6 +74,12 @@ const setChartOptions = () => {
     },
   };
 };
+
+// Hooks
+onMounted(() => {
+  chartData.value = setChartData();
+  chartOptions.value = setChartOptions();
+});
 </script>
 
 <template>

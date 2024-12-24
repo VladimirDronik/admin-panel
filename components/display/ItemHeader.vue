@@ -4,6 +4,7 @@ import { itemColor } from '~/helpers/rooms';
 // Types
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
+// Declare Options
 defineProps<{
   name: string,
   style: string,
