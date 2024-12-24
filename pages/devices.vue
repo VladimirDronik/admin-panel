@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus,
+  IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled,
 } from '@tabler/icons-vue';
 // Helpers
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
@@ -10,6 +10,7 @@ import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { Filter, Options } from '~/types/MainTypes';
+import type { TreeTableDevices } from '~/types/DevicesTypes'
 
 // Composables
 const { t } = useI18n();
@@ -39,6 +40,7 @@ const iconMap = {
   scd4x: IconAlertSquareRounded,
   motion: IconRun,
   htu21d: IconCloudPlus,
+  regulator: IconToggleRightFilled,
 } as const;
 
 type IconMapKey = keyof typeof iconMap;
@@ -151,8 +153,6 @@ const created = async () => {
     }),
   ]);
   isUpdate.value = false;
-  // console.log('Raw Devices:', storeDevices.getDevices);
-  // console.log('Processed Devices:', processedDevices.value);
 };
 
 const propsModel = (props: any[] | undefined) => {
@@ -213,34 +213,41 @@ watch([props, childrenProps], (newValue, oldValue) => {
   }
 });
 
-// В работе
 
-// interface Devices {
-//   key?: string;
-//   data?: object;
-//   children?: Devices[]
-// }
+function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] {
+  return arr.map((obj) => {
+    if (obj.children) {
+      obj.children = processDevices(obj.children, depth + 1);
 
-// function processDevices(arr: Devices[], depth = 1): Devices[] {
-//   return arr.map((obj) => {
-//     if (obj.children) {
-//       obj.children = processDevices(obj.children, depth + 1);
+      if (depth === 3 && obj.children.length > 0) {
+        return obj.children.map((child) => ({
+          ...child,
+          data: {
+            ...child.data,
+            name: `${child.data.name} (${obj.data.name})`,
+            paddingLeft: `${depth * 20}px`,
+          },
+        }));
+      }
+      // if (depth >= 3) {
+      //   obj.data.hidden = true;
+      // }
+    }
+    obj.data = {
+      ...obj.data,
+      ...(depth > 1 && { paddingLeft: `${depth * 20}px` }),
+    };
 
-//       if (depth >= 3 && obj.children.length > 0) {
-//         obj.children[0].data.name = `${obj.children[0].data.name} (${obj.data.name})`;
-//         obj.data.name = '';
-//       }
-//     }
+    return obj;
+  }).flat();
+}
 
-//     return obj;
-//   });
-// }
 
-// const processedDevices = computed(() => {
-//   const result = processDevices(storeDevices.getDevices ?? []);
-//   console.log(result, 'res');
-//   return result;
-// });
+const processedDevices = computed(() => {
+  const result = processDevices(storeDevices.getDevices ?? []);
+  return result;
+});
+
 
 </script>
 
@@ -255,7 +262,7 @@ watch([props, childrenProps], (newValue, oldValue) => {
     <BaseTreeTable
       v-model:filters="filters"
       v-model:page="page"
-      :items="storeDevices.getDevices"
+      :items="processedDevices"
       :per-page="perPage"
       :total="storeDevices.total"
       @click-row="clickRow"
@@ -300,7 +307,8 @@ watch([props, childrenProps], (newValue, oldValue) => {
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          <component
+          <span :style="{ paddingLeft: node.data.paddingLeft }"></span>
+          <component 
             :is="iconMap[node.data.type as IconMapKey]"
             color="#555"
             size="24"
@@ -470,7 +478,11 @@ watch([props, childrenProps], (newValue, oldValue) => {
 }
 
 .p-treetable-body-cell-content.p-treetable-body-cell-content-expander {
-  margin-right: -20px !important;
+  margin-right: -40px !important;
+}
+
+.hidden {
+  display: none;
 }
 
 </style>

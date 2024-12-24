@@ -24,6 +24,7 @@ export enum Default {
 
 export enum Controller {
   MegaD = 'mega_d',
+  WBMRM2mini = 'wb_mrm2_mini',
 }
 
 export enum Sensor {
