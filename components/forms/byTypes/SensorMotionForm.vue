@@ -27,11 +27,14 @@ const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
   enable: dynamicForm.value.props.enable,
+  period: dynamicForm.value.props.period,
 }));
+
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  enable: z.boolean().default(true),
+  enable: z.boolean().default(false),
+  period: z.number().default(8),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -54,7 +57,7 @@ watch(
     :validate-on-blur="true"
     :validate-on-value-update="false"
   >
-    <!-- <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
       <InputText
         v-model="dynamicForm.name"
         required
@@ -101,6 +104,13 @@ watch(
 
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
-    </SharedUILabel> -->
+    </SharedUILabel>
   </Form>
 </template>
+
+<style scoped>
+
+::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+ width: 100px;
+}
+</style>

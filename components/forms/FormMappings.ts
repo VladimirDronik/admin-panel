@@ -16,6 +16,7 @@ import SensorMotionForm from '~/components/forms/byTypes/SensorMotionForm.vue';
 import SensorPresenceForm from '~/components/forms/byTypes/SensorPresenceForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
+import WBMRM2miniForm from '~/components/forms/byTypes/WBMRM2miniForm.vue';
 import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
 
 import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
@@ -92,5 +93,9 @@ export const deviceFormMapping: DeviceFormMapping[] = [
   {
     type: Sensor.PRESENCE,
     component: SensorPresenceForm,
+  },
+  {
+    type: Controller.WBMRM2mini,
+    component: WBMRM2miniForm,
   },
 ];
