@@ -38,6 +38,7 @@ const form = ref({
   type: null,
   color: null,
   item_id: null,
+  icon: null,
 });
 
 const resolver = ref(zodResolver(
@@ -64,6 +65,7 @@ const createItem = async () => {
         type: null,
         color: null,
         item_id: null,
+        icon: null,
       };
       isOpen.value = false;
       step.value = '1';
@@ -169,6 +171,12 @@ onBeforeMount(async () => {
             :title="'Цвет'"
           >
             <SharedUIColorSelect v-model="form.color" />
+          </SharedUILabel>
+          <SharedUILabel
+            class="tw-mb-2"
+            :title="'Иконка'"
+          >
+            <SharedUIIconSelect v-model:icon="form.icon" />
           </SharedUILabel>
           <!-- Actions -->
           <div class="tw-flex tw-justify-end tw-pt-2">

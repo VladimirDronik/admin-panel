@@ -163,6 +163,12 @@ onBeforeMount(async () => {
           >
             <SharedUIColorSelect v-model="form.color" />
           </SharedUILabel>
+          <SharedUILabel
+            class="tw-mb-2"
+            :title="'Иконка'"
+          >
+            <SharedUIIconSelect v-model:icon="form.icon" />
+          </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogsDeleteDialog
               :id="form.item_id ?? -1"
