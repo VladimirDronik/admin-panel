@@ -1,5 +1,7 @@
 <script setup lang="ts">
+// Builtin modules
 import { IconMail } from '@tabler/icons-vue';
+// Images
 import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
@@ -127,7 +129,7 @@ const toggle = (event: any) => {
   </div>
 </template>
 
-<style>
+<style scoped lang="scss">
 .profile .p-popover-content {
   background: none !important;
 }

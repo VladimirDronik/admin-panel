@@ -1,14 +1,16 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
+const storeScript = useScriptStore();
 
 useHead({
   titleTemplate: computed(() => t('pages.scripts')),
 });
 
-const storeScript = useScriptStore();
-
+// Variables
 const headers = [
   {
     label: 'ID',
@@ -32,11 +34,15 @@ const headers = [
   },
 ];
 
-storeScript.getScriptsApi({
-  limit: 99,
-});
-
+// Computed Properties
 const data = computed(() => storeScript.scripts);
+
+onBeforeMount(() => {
+  storeScript.getScriptsApi({
+    limit: 99,
+  });
+})
+
 </script>
 
 <template>
@@ -87,7 +93,3 @@ const data = computed(() => storeScript.scripts);
     </div>
   </SharedUIPanel>
 </template>
-
-<style>
-
-</style>

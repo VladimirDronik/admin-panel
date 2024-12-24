@@ -1,13 +1,16 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 import { checkStatusTextSmall, checkStatusBackgroundColor } from '~/helpers/main';
 
+// Composables
 const { t } = useI18n();
 
 useHead({
   titleTemplate: computed(() => t('pages.video')),
 });
 
+// Variables
 const isOpen = ref(false);
 
 const items = [
@@ -90,7 +93,3 @@ const items = [
     </template>
   </SharedUIPanel>
 </template>
-
-<style>
-
-</style>

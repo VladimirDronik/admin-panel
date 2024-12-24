@@ -6,12 +6,10 @@ import { useUserStore } from '~/stores/user';
 import England from '@/assets/images/flag/icon-flag-en.svg';
 import Russia from '@/assets/images/flag/icon-flag-ru.svg';
 
-const userStore = useUserStore();
 
 // Composables
 const { locale } = useI18n({ useScope: 'global' });
-
-const menu = ref();
+const userStore = useUserStore();
 
 // Variables
 const languages = [
@@ -23,6 +21,8 @@ const languages = [
   },
 ];
 
+const menu = ref();
+
 const toggle = (event: any) => {
   menu.value.toggle(event);
 };
@@ -31,8 +31,6 @@ const toggle = (event: any) => {
 const selectLanguage = (item: string) => {
   locale.value = item;
 };
-
-selectLanguage(userStore.userLocal?.language ?? 'ru');
 
 watch(locale, (newValue) => {
   localStorage.setItem(userStore.localStorageName, JSON.stringify({
@@ -46,6 +44,10 @@ watch(locale, (newValue) => {
     };
   }
 });
+// Hooks
+onBeforeMount(() => {
+  selectLanguage(userStore.userLocal?.language ?? 'ru');
+})
 
 </script>
 

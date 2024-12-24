@@ -1,14 +1,9 @@
 <script setup lang="ts">
 // Builtin modules
-import {
-  type PropType, ref, watch, computed,
-} from 'vue';
-import { useRoute } from 'vue-router';
-// External modules
+import { ref, watch, computed } from 'vue';
 import moment from 'moment';
 import _, { isArray } from 'lodash';
-// Components
-import TreeTable from 'primevue/treetable';
+import { useRoute } from 'vue-router';
 // Types
 import type { Filter, Header } from '@/types/MainTypes';
 import type { TreeTableSelectionKeys } from 'primevue'
@@ -17,17 +12,6 @@ import type { TreeTableSelectionKeys } from 'primevue'
 const route = useRoute();
 
 // Declare Options
-const page = defineModel<number>('page', {
-  required: true,
-});
-
-const selectedKey = defineModel<TreeTableSelectionKeys | undefined>('selectedKey', {
-  default: [],
-});
-
-const filters = defineModel<Filter[]>('filters', {
-  required: true,
-});
 
 const props = withDefaults(defineProps<{
   total?: number,
@@ -46,6 +30,18 @@ const emit = defineEmits<{
   (e: 'created', getData: () => void): void
   (e: 'click-row', item: any): void
 }>();
+
+const page = defineModel<number>('page', {
+  required: true,
+});
+
+const selectedKey = defineModel<TreeTableSelectionKeys | undefined>('selectedKey', {
+  default: [],
+});
+
+const filters = defineModel<Filter[]>('filters', {
+  required: true,
+});
 
 // Variables
 const isUpdate = ref(false);
@@ -92,6 +88,14 @@ watch(filterValueList, (newValue, oldValue) => {
   if (!_.isEqual(newValue, oldValue)) filter();
 });
 
+watch(() => props.total, () => {
+  Array.from(Array(props.total).keys()).forEach((key) => {
+    if (expandedKeys.value) expandedKeys.value[key] = true;
+  })
+}, {
+  immediate: true,
+});
+
 // Created
 const paramsKeys = Object.keys(route.query);
 filters.value = filters.value.map((item) => {
@@ -105,19 +109,10 @@ filters.value = filters.value.map((item) => {
   return item;
 });
 
-// Created
 emit('created', filter);
 
 defineExpose({
   filter,
-});
-
-watch(() => props.total, () => {
-  Array.from(Array(props.total).keys()).forEach((key) => {
-    if (expandedKeys.value) expandedKeys.value[key] = true;
-  })
-}, {
-  immediate: true,
 });
 
 </script>

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useRoute } from 'vue-router';
-// External modules
 import moment from 'moment';
 import _, { isArray } from 'lodash';
-// Types
+// Types modules
 import type { Filter } from '@/types/MainTypes';
 
+// Types
 interface Header {
   label: string;
   code: string;
@@ -16,14 +16,6 @@ interface Header {
 const route = useRoute();
 
 // Declare Options
-const page = defineModel<number>('page', {
-  default: 1,
-});
-
-const filters = defineModel<Filter[]>('filters', {
-  default: [],
-});
-
 const props = withDefaults(defineProps<{
   total?: number,
   items?: any[],
@@ -36,42 +28,26 @@ const props = withDefaults(defineProps<{
   headers: undefined,
 });
 
-// const props = defineProps({
-//   total: {
-//     type: Number,
-//     default: 0,
-//   },
-//   items: {
-//     type: Object as PropType<any[]>,
-//     required: true,
-//     default() {
-//       return [];
-//     },
-//   },
-//   perPage: {
-//     type: Number,
-//     default: 0,
-//   },
-//   headers: {
-//     type: Object as PropType<Header[]>,
-//     required: true,
-//     default() {
-//       return [];
-//     },
-//   },
-// });
-
 const emit = defineEmits<{
   (e: 'update', params: any): void
   (e: 'created', getData: () => void): void
   (e: 'click-row', item: any): void
 }>();
 
+const page = defineModel<number>('page', {
+  default: 1,
+});
+
+const filters = defineModel<Filter[]>('filters', {
+  default: [],
+});
+
 // Variables
 const isUpdate = ref(false);
 
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
+
 // Methods
 const filter = _.debounce(async () => {
   isUpdate.value = true;
@@ -120,7 +96,6 @@ filters.value = filters.value.map((item) => {
   return item;
 });
 
-// Created
 emit('created', filter);
 
 defineExpose({

@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+// Declare Options
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const visible = defineModel<boolean>({
   default: false,
@@ -6,13 +13,6 @@ const visible = defineModel<boolean>({
 
 const selectType = defineModel<string | null>('type', {
   required: true,
-});
-
-defineProps({
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 </script>
@@ -149,7 +149,3 @@ defineProps({
     </Dialog>
   </div>
 </template>
-
-<style>
-
-</style>

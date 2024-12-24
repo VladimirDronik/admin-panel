@@ -1,10 +1,11 @@
-import { ref } from 'vue';
-import { useDevicesStore } from '~/stores/devices/devices';
+// Types modules
 import type { Controller } from '~/types/DevicesEnums';
 
 export function useControllersViaType() {
+  // Variables
   const controllers = ref<{ id: number; name: string }[]>([]);
 
+  // Methods
   const getControllersViaType = async (type: Controller) => {
     const storeDevices = useDevicesStore();
 

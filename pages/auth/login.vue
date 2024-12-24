@@ -2,15 +2,14 @@
 // Builtin modules
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-// Composable modules
 import { useI18n } from 'vue-i18n';
-import { useUserStore } from '~/stores/user';
-// Static Data
+// Static Data modules
 import { auth } from '~/utils/endpoints';
-// Types
+// Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
 import type { APIData } from '~/types/StoreTypes';
 
+// Types
 interface LocalData {
   token: string | null;
   openSidebar: boolean;
@@ -23,13 +22,13 @@ const router = useRouter();
 const storeUser = useUserStore();
 const toast = useToast();
 
+useHead({
+  titleTemplate: computed(() => t('pages.login')),
+});
+
 // Declare Options
 definePageMeta({
   layout: 'blank',
-});
-
-useHead({
-  titleTemplate: computed(() => t('pages.login')),
 });
 
 // Variables
@@ -40,6 +39,7 @@ const params = ref({
   password: '12345',
 });
 
+// Methods
 const success = (response: any) => {
   const localStorageData = localStorage.getItem(storeUser.localStorageName);
   const localData = (localStorageData ? JSON.parse(localStorageData) : null) as LocalData | null;
@@ -75,21 +75,24 @@ const error = () => {
   });
 };
 
-const data: unknown = await useAPI(
-  auth,
-  {
-    params,
-    immediate: false,
-    success,
-    error,
-    headers: {
-      'api-key': 'c041d36e381a835afce48c91686370c8',
+// Hooks
+onBeforeMount(async () => {
+  const data: unknown = await useAPI(
+    auth,
+    {
+      params,
+      immediate: false,
+      success,
+      error,
+      headers: {
+        'api-key': 'c041d36e381a835afce48c91686370c8',
+      },
     },
-  },
-  loginSchema,
-);
-
-user.value = data as APIData<loginData>;
+    loginSchema,
+  );
+  
+  user.value = data as APIData<loginData>;
+})
 
 </script>
 <template>
@@ -145,9 +148,8 @@ user.value = data as APIData<loginData>;
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .auth-screen {
-
   background-color: #EAF8F5;
 }
 </style>

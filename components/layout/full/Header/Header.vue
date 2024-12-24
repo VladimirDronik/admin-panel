@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-
+// Declare Options
 const open = defineModel<boolean>('open', {
   required: true,
 });

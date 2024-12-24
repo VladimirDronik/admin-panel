@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+// Builtin modules
 import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical } from '@tabler/icons-vue';
+// Helper modules
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
@@ -9,14 +11,7 @@ import { paths } from '~/utils/endpoints';
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 
-const dialog = defineModel<boolean>({
-  default: false,
-});
-
-const event = defineModel<Event>('event', {
-  required: true,
-});
-
+// Declare Options
 const props = defineProps<{
   id?: number,
   modelType: string,
@@ -28,13 +23,15 @@ const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
-const updateActions = () => {
-  emit('updateActions');
-};
+const dialog = defineModel<boolean>({
+  default: false,
+});
 
-const apiOrderMethods = ref<APIData<any>>();
-const apiDeleteMethods = ref<APIData<any>>();
+const event = defineModel<Event>('event', {
+  required: true,
+});
 
+// Variables
 const loading = ref(false);
 
 const dialogMethod = ref(false);
@@ -48,6 +45,18 @@ const selectedId = ref(0);
 
 const editAction = ref(false);
 
+// Apis
+const apiOrderMethods = ref<APIData<any>>();
+const apiDeleteMethods = ref<APIData<any>>();
+
+// Computed Properties
+  const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
+
+// Methods
+const updateActions = () => {
+  emit('updateActions');
+};
+
 const deleteItem = (id: number) => {
   selectedId.value = id;
   dialogDelete.value = true;
@@ -58,8 +67,15 @@ const confirmDelete = async () => {
   await updateActions();
 };
 
-const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
+const openEdit = (event: any) => {
+  if (event.type === 'method') dialogMethod.value = true;
+  if (event.type === 'pause') dialogPause.value = true;
+  if (event.type === 'script') dialogScript.value = true;
+  if (event.type === 'notification') dialogNotification.value = true;
+  editAction.value = true;
+};
 
+// Watchers
 watch(idList, async (newValue, oldValue) => {
   if (!_.isEqual(oldValue, newValue) && props.id) {
     if (newValue?.length === oldValue?.length) {
@@ -69,14 +85,7 @@ watch(idList, async (newValue, oldValue) => {
   }
 });
 
-const openEdit = (event: any) => {
-  if (event.type === 'method') dialogMethod.value = true;
-  if (event.type === 'pause') dialogPause.value = true;
-  if (event.type === 'script') dialogScript.value = true;
-  if (event.type === 'notification') dialogNotification.value = true;
-  editAction.value = true;
-};
-
+// Hooks
 onBeforeMount(async () => {
   // Create Action
   const dataCreateDevice: unknown = await useAPI(

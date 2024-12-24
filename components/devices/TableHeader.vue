@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 import { IconFilterFilled } from '@tabler/icons-vue';
 
+// Composables
 const { t } = useI18n();
 
+// Declare Options
 defineProps({
   title: {
     type: String,
@@ -11,8 +14,10 @@ defineProps({
   },
 });
 
+// Variables
 const popover = ref();
 
+// Methods
 const toggle = (event: any) => {
   popover.value.toggle(event);
 };

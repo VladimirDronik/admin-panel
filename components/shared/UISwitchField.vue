@@ -6,15 +6,15 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 // Declare Options
-const value = defineModel<boolean>({
-  default: false,
-});
-
 defineProps({
   disabled: {
     type: Boolean,
     default: false,
   },
+});
+
+const value = defineModel<boolean>({
+  default: false,
 });
 </script>
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
+// Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
   IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus,
 } from '@tabler/icons-vue';
-// Helpers
+// Helpers modules
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
-// Types
+// Types modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { Filter, Options } from '~/types/MainTypes';
@@ -26,7 +27,6 @@ definePageMeta({
 });
 
 // Variables
-
 const iconMap = {
   mega_d: IconCpu2,
   bh1750: IconSun,
@@ -47,10 +47,7 @@ const perPage = 10000;
 
 const page = ref(1);
 
-const typeOptions = computed(() => {
-  if (!storeDevices.tags?.data?.response) return [];
-  return Object.keys(storeDevices.tags?.data?.response) ?? [];
-});
+
 
 const isUpdate = ref(true);
 const isOpen = ref(false);
@@ -58,12 +55,18 @@ const isOpen = ref(false);
 const selectedObject = ref<FullDevice>();
 
 // Computed Properties
+const typeOptions = computed(() => {
+  if (!storeDevices.tags?.data?.response) return [];
+  return Object.keys(storeDevices.tags?.data?.response) ?? [];
+});
+
 const props = computed(() => {
   if (selectedObject.value?.props) {
     return selectedObject.value.props.map((item) => item.value);
   }
   return []
 });
+
 const childrenProps = computed(() => {
   if (selectedObject.value?.children) {
     return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];

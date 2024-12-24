@@ -1,20 +1,26 @@
 <script setup lang="ts">
+// Builtin modules
 import { useI18n } from 'vue-i18n';
+// Types modules
 import { type DeviceZoneId } from '@/types/DevicesTypes';
 
-const { t } = useI18n();
-const storeRooms = useRoomsStore();
-
+// Types
 interface SensorHeaderProps {
   data: { value: string | number; unit: string; label: string }[];
   lastUpdate: string;
 }
 
+// Composables
+const { t } = useI18n();
+const storeRooms = useRoomsStore();
+
+// Declare Options
+const props = defineProps<SensorHeaderProps>();
+
 const updateInterval = defineModel<number>('update-interval');
 const zoneId = defineModel<DeviceZoneId>('zone-id');
 const name = defineModel<string>('name');
 
-const props = defineProps<SensorHeaderProps>();
 </script>
 
 <template>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user';
 
+// Composables
 const userStore = useUserStore();
 
+// Variables
 const open = ref<boolean>(!!userStore.userLocal?.openSidebar);
 
+// Watchers
 watch(open, (newValue) => {
   localStorage.setItem(userStore.localStorageName, JSON.stringify({
     ...userStore.userLocal,

@@ -2,6 +2,7 @@
 // Helpers modules
 import { itemColor } from '~/helpers/rooms';
 
+// Declare Options
 defineProps<{
   icon: string,
   status: string,

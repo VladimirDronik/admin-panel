@@ -1,18 +1,21 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
 import { GridLayout, GridItem } from 'vue3-grid-layout-next';
 
+// Types
 interface AddWidget {
   width: number;
   height: number;
 }
-
+// Composables
 const { t } = useI18n();
 
 useHead({
   titleTemplate: computed(() => t('pages.general')),
 });
 
+// Variables
 const cols = 12;
 
 const edit = ref(false);
@@ -52,6 +55,7 @@ const layout = ref([
   },
 ]);
 
+// Methods
 const openCreateRightBar = () => {
   isOpen.value = true;
   edit.value = false;

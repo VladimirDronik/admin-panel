@@ -3,8 +3,10 @@
 import { IconX } from '@tabler/icons-vue';
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
 
+// Declare Options
 const form = defineModel<any>('form', {
   required: false,
 });
@@ -13,6 +15,7 @@ const isOpen = defineModel<boolean>('isShow', {
   required: true,
 });
 
+// Variables
 const dialog = ref(false);
 
 const loading = ref(false);

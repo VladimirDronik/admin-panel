@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import pluginVue from 'eslint-plugin-vue'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +26,7 @@ export default [
     languageOptions: { globals: globals.browser },
   },
   pluginJs.configs.recommended,
+  ...pluginVue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
   ...compat.extends(
     "@nuxt/eslint-config",
@@ -50,6 +52,7 @@ export default [
   {
     rules: {
       "vue/valid-v-for": "off",
+      "no-unused-expressions": "error",
       "tailwindcss/no-custom-classname": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-unused-vars": "off",

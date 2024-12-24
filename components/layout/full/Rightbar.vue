@@ -24,7 +24,6 @@ onMounted(() => {
     height.value = window.innerHeight;
   };
 });
-
 </script>
 
 <template>
@@ -42,7 +41,6 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-
 .rightbar {
   transition: max-width .1s linear;
 }

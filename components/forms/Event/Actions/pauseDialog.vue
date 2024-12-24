@@ -1,26 +1,17 @@
 <script lang="ts" setup>
+// Builtin modules
 import { useI18n } from 'vue-i18n';
-// Types Modules
-import type { APIData } from '~/types/StoreTypes';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
+// Types Modules
 import type { Event } from '@/types/ModelEventTypes';
+import type { APIData } from '~/types/StoreTypes';
 
+// Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
 
-const dialog = defineModel<boolean>({
-  default: false,
-});
-
-const event = defineModel<Event>('event', {
-  required: true,
-});
-
-const duration = ref('0');
-
-const apiCreateMethod = ref<APIData<any>>();
-
+// Declare Options
 const props = defineProps<{
   id?: number;
   edit: boolean;
@@ -31,6 +22,21 @@ const emit = defineEmits<{
   (e: 'updateActions'): void
 }>();
 
+const dialog = defineModel<boolean>({
+  default: false,
+});
+
+const event = defineModel<Event>('event', {
+  required: true,
+});
+
+// Variables
+const duration = ref('0');
+
+// Apis
+const apiCreateMethod = ref<APIData<any>>();
+
+// Watchers
 const createAction = async () => {
   if (props.id) {
     await updateData({
@@ -62,6 +68,7 @@ const createAction = async () => {
   }
 };
 
+// Hooks
 onBeforeMount(async () => {
   // Create Action
   const dataDevice: unknown = await useAPI(

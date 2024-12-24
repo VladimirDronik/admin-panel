@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+// Builtin modules
 const isUpdate = defineModel<boolean>('isUpdate', {
   default: false,
 });
@@ -16,7 +16,7 @@ const isUpdate = defineModel<boolean>('isUpdate', {
   </SharedUILoader>
 </template>
 
-<style>
+<style scoped lang="scss">
 .panel-wrapper {
   min-height: calc(100vh - 90px);
   padding-bottom: 0;

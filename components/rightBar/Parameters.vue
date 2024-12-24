@@ -2,8 +2,10 @@
 // Builtin modules
 import { useI18n } from 'vue-i18n';
 
+// Composables
 const { t } = useI18n();
 
+// Declare Options
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
