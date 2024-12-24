@@ -8,10 +8,10 @@ export interface DevicePropertyData {
     value?: number;
     value_updated_at?: string;
     min_error_value?: number;
-    min_threshold: number;
-    max_threshold: number;
+    min_threshold?: number;
+    max_threshold?: number;
     max_error_value?: number;
-    unit: string;
+    unit?: string;
     write_graph?: boolean;
   }
 
@@ -22,8 +22,8 @@ export type DeviceChildren = Partial<DeviceChildrenRequired>;
 export type AddFieldToDynamicFormPayload = (key: DevicePropertyKey, value: DevicePropertyData) => void;
 
 export interface DynamicFormDataBasic {
-    sdaPort: DevicePort,
-    sclPort: DevicePort,
+    sdaPort?: DevicePort,
+    sclPort?: DevicePort,
     busAddress?: number | null;
     parent_id: number,
     name: string,
@@ -47,7 +47,7 @@ export interface CreateDeviceInitialForm {
 export interface DeviceProps {
     interface?: DeviceInterface;
     address?: string;
-    update_interval: number;
+    update_interval?: number;
     id?: string;
     password?: string;
     protocol?: Connection;

@@ -2,6 +2,21 @@ export type DeviceZoneId = number | null;
 export type DevicePort = number | null;
 export type DeviceParentId = number | null;
 
+export interface TreeTableDevices {
+  key?: string;
+  data: {
+    id?: number;
+    category?: string;
+    name?: string;
+    type?: string;
+    tags?: string[] | null;
+    address?: string | number;
+    status?: string;
+    paddingLeft?: string;
+  };
+  children?: TreeTableDevices[];
+}
+
 export interface Devices {
   id: number;
   type: string;

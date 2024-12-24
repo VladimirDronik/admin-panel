@@ -318,6 +318,16 @@ const createFormByTypesMap = {
       complex_tolerance: 0,
     },
   },
+  [Controller.WBMRM2mini]: {
+    category: ObjectsCategory.Controller,
+    props: {
+      id: '',
+      password: '',
+      protocol: Connection.HTTP,
+      address: '',
+    },
+    children: {},
+  },
 };
 
 export const getInitialCreateDeviceFormDataByTypes = (initialForm: CreateDeviceInitialForm) => ({ ...createFormByTypesMap[initialForm.type], name: initialForm.name, zone_id: initialForm.zone_id });
@@ -376,9 +386,10 @@ const editFormByTypesMap = {
   [Sensor.MOTION]: {
     id: 0,
     parent_id: 0,
-    sdaPort: 0,
+    sdaPort: null,
     props: {
       enable: false,
+      period: 8,
     },
     children: {},
   },
@@ -427,6 +438,16 @@ const editFormByTypesMap = {
       above_tolerance: 0,
       complex_tolerance: 0,
     },
+  },
+  [Controller.WBMRM2mini]: {
+    category: ObjectsCategory.Controller,
+    props: {
+      id: '',
+      password: '',
+      protocol: Connection.HTTP,
+      address: '',
+    },
+    children: {},
   },
 };
 
