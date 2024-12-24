@@ -1,5 +1,4 @@
 import { createI18n } from 'vue-i18n';
-import VueTablerIcons from 'vue-tabler-icons';
 import messages from '@/locales/messages';
 
 export const plugins = (language: string = 'en', plugins: any[] = []) => {
@@ -13,6 +12,6 @@ export const plugins = (language: string = 'en', plugins: any[] = []) => {
   return [i18n, ...plugins];
 };
 
-export const components = {
-  VueTablerIcons,
-};
+// export const components = {
+//   VueTablerIcons,
+// };

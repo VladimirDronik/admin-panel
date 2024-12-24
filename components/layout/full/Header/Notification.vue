@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BellRingingIcon } from 'vue-tabler-icons';
+import { IconBellRinging } from '@tabler/icons-vue';
 </script>
 <template>
   <Button
@@ -7,7 +7,7 @@ import { BellRingingIcon } from 'vue-tabler-icons';
     icon="pi"
     text
   >
-    <BellRingingIcon
+    <IconBellRinging
       size="22"
       stroke-width="1.5"
     />

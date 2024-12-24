@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { MailIcon } from 'vue-tabler-icons';
-import { useUserStore } from '~/stores/user';
+import { IconMail } from '@tabler/icons-vue';
 import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
@@ -73,7 +72,7 @@ const toggle = (event: any) => {
                   ул. Гоголя, 09
                 </span>
                 <div class="tw-mt-1 tw-flex tw-items-center">
-                  <MailIcon
+                  <IconMail
                     size="18"
                     stroke-width="1.5"
                   />

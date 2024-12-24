@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { IconX } from '@tabler/icons-vue';
 // Types and Schemes modules
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 import type { APIData } from '~/types/StoreTypes';
@@ -77,7 +78,7 @@ onBeforeMount(async () => {
           variant="text"
           @click="isOpen = false"
         >
-          <XIcon class="white" />
+          <IconX class="white" />
         </Button>
       </div>
 

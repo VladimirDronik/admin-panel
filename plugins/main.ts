@@ -1,5 +1,4 @@
 import { createI18n } from 'vue-i18n';
-import VueTablerIcons from 'vue-tabler-icons';
 import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 // Data Locales
 import messages from '@/locales/messages';
@@ -17,5 +16,4 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.vueApp.use(i18n);
   nuxtApp.vueApp.use(PerfectScrollbarPlugin);
-  nuxtApp.vueApp.use(VueTablerIcons);
 });

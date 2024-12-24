@@ -1,4 +1,3 @@
-import { DevicesIcon } from 'vue-tabler-icons';
 import {
   IconVideo,
   IconDoor,
@@ -9,6 +8,7 @@ import {
   IconBrandTabler,
   IconPlug,
   IconLogs,
+  IconDevices,
   IconUsers,
 } from '@tabler/icons-vue';
 
@@ -37,7 +37,7 @@ const sidebarItem: menu[] = [
   { header: 'pages.equipment' },
   {
     title: 'pages.devices',
-    icon: DevicesIcon,
+    icon: IconDevices,
     to: '/devices',
   },
   {

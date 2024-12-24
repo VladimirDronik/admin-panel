@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 // Builtin modules
+import { IconX } from '@tabler/icons-vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -36,7 +37,7 @@ const loadingDelete = ref(false);
           variant="text"
           @click="isOpen = false"
         >
-          <XIcon class="white" />
+          <IconX class="white" />
         </Button>
       </div>
 

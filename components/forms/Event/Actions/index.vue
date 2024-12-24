@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import _ from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next';
+import { IconGripVertical } from '@tabler/icons-vue';
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
@@ -231,7 +232,7 @@ onBeforeMount(async () => {
                     text
                     @click.stop="deleteItem(event.id)"
                   />
-                  <GripVerticalIcon class="handle-item tw-w-5 tw-cursor-pointer" />
+                  <IconGripVertical class="handle-item tw-w-5 tw-cursor-pointer" />
                 </div>
               </div>
             </div>
