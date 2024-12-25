@@ -135,7 +135,7 @@ onBeforeMount(async () => {
     ...initialForm.value, ...dynamicForm,
   }));
   /// Консоль для работы, пока идут создания девайсов
-  console.log(body);
+  // console.log(body);
   const data: unknown = await useAPI(paths.objects, {
     body,
     method: 'POST',

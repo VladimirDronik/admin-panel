@@ -255,7 +255,7 @@ const createFormByTypesMap = {
     props: {
       enable: false,
       interface: DeviceInterface['DISCRETE'],
-      period: 8,
+      period: 120,
     },
     children: {
       [DevicePropertyKey.Motion]: {
@@ -264,8 +264,8 @@ const createFormByTypesMap = {
         min_error_value: -1,
         min_threshold: -1,
         unit: '',
-        value: 1.00,
-        value_updated_at: '02.11.2024 08:48:44',
+        value: 0,
+        value_updated_at: '',
         write_graph: true,
       },
       [DevicePropertyKey.Presence]: {
@@ -274,8 +274,8 @@ const createFormByTypesMap = {
         min_error_value: -1,
         min_threshold: -1,
         unit: '',
-        value: 1.00,
-        value_updated_at: '02.11.2024 08:48:44',
+        value: 0,
+        value_updated_at: '',
         write_graph: true,
       },
     },
@@ -396,10 +396,11 @@ const editFormByTypesMap = {
   [Sensor.PRESENCE]: {
     id: 0,
     parent_id: 0,
-    sdaPort: 0,
-    sclPort: 0,
+    sdaPort: null,
+    sclPort: null,
     props: {
       enable: false,
+      period: 120,
     },
     children: {},
   },

@@ -59,5 +59,9 @@ export default {
     complex: 'общий',
     detecting: 'Включение обнаружения',
     period: 'Период генерации события',
+    motion: 'Движение',
+    presence: 'Присутсвие',
+    graphingMotion: 'Ведение графика движения',
+    graphingPresence: 'Ведение графика присутствия',
   },
 };
