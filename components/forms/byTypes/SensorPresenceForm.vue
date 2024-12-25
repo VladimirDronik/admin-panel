@@ -26,12 +26,16 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
+  sclPort: dynamicForm.value.sclPort,
   enable: dynamicForm.value.props.enable,
+  period: dynamicForm.value.props.period,
 }));
+
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   enable: z.boolean().default(true),
+  period: z.number().default(120),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -54,7 +58,7 @@ watch(
     :validate-on-blur="true"
     :validate-on-value-update="false"
   >
-    <!-- <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
+    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
       <InputText
         v-model="dynamicForm.name"
         required
@@ -106,21 +110,28 @@ watch(
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel required :title="t('devices.detecting')">
+    <SharedUILabel  :width="350" required :title="t('devices.detecting')">
       <ToggleSwitch v-model="dynamicForm.props.enable" />
     </SharedUILabel>
 
-    <SharedUILabel class="tw-mb-2" :title="t('devices.period')" required :value="dynamicForm.props.period" name="period">
+    <SharedUILabel  :width="350" class="tw-mb-2" :title="t('devices.period')" required :value="dynamicForm.props.period" name="period">
       <InputNumber suffix=" sec" id="period" v-model="dynamicForm.props.period" class="tw-mr-10 tw-w-1/4" />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
-    <SharedUILabel :title="t('devices.graphing')">
+    <SharedUILabel :width="350" :title="t('devices.graphingMotion')">
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel>
-    <SharedUILabel :title="t('devices.graphing')">
+    <SharedUILabel :width="350" :title="t('devices.graphingPresence')">
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
-    </SharedUILabel> -->
+    </SharedUILabel>
   </Form>
 </template>
+
+<style scoped>
+
+::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+ width: 100px;
+}
+</style>

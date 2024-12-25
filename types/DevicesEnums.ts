@@ -15,7 +15,6 @@ export enum DevicePropertyKey {
   Motion = 'motion',
   Presence = 'presence',
   Current = 'current',
-
 }
 
 export enum Default {

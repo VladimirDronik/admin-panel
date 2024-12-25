@@ -247,6 +247,7 @@ const processedDevices = computed(() => {
   return result;
 });
 
+
 </script>
 
 <template>
@@ -476,11 +477,19 @@ const processedDevices = computed(() => {
 }
 
 .p-treetable-body-cell-content.p-treetable-body-cell-content-expander {
-  margin-right: -40px !important;
+  margin-right: -80px !important;
 }
 
 .hidden {
   display: none;
+}
+
+tr[aria-level="2"] .p-treetable-node-toggle-button {
+  margin-left: 50px !important;
+}
+
+tr[aria-level="1"] .p-treetable-node-toggle-button {
+  margin-left: 5px !important;
 }
 
 </style>
