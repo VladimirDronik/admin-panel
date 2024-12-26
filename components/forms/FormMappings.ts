@@ -14,6 +14,7 @@ import SensorOutdoorForm from '~/components/forms/byTypes/SensorOutdoorForm.vue'
 import SensorSCD4XForm from '~/components/forms/byTypes/SensorSCD4XForm.vue';
 import SensorMotionForm from '~/components/forms/byTypes/SensorMotionForm.vue';
 import SensorPresenceForm from '~/components/forms/byTypes/SensorPresenceForm.vue';
+import SensorCSForm from '~/components/forms/byTypes/SensorCSForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
 import WBMRM2miniForm from '~/components/forms/byTypes/WBMRM2miniForm.vue';
@@ -97,5 +98,9 @@ export const deviceFormMapping: DeviceFormMapping[] = [
   {
     type: Controller.WBMRM2mini,
     component: WBMRM2miniForm,
+  },
+  {
+    type: Sensor.CS,
+    component: SensorCSForm,
   },
 ];

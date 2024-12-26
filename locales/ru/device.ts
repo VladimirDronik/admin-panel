@@ -63,5 +63,6 @@ export default {
     presence: 'Присутсвие',
     graphingMotion: 'Ведение графика движения',
     graphingPresence: 'Ведение графика присутствия',
+    current: 'Ток',
   },
 };

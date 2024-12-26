@@ -14,13 +14,13 @@ import {
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
   const isDS1820 = formData.type === Sensor.DS18B20;
   const isMegaD = formData.type === Controller.MegaD;
-  const isRelayOrGenericInputOrMotion = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput || formData.type === Sensor.MOTION;
+  const isRelayOrGenericInputOrMotionOrCS = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput || formData.type === Sensor.MOTION || formData.type === Sensor.CS;
   const isRegulator = formData.type === Regulator.Regulator;
   let address = `${formData.sdaPort};${formData.sclPort}`;
   if (isDS1820 && formData.props.interface === '1W') address = String(formData.sdaPort);
   if (isDS1820 && formData.props.interface === '1WBUS') address = `${formData.sdaPort};${formData.busAddress}`;
   if (isMegaD) address = String(formData.props.address);
-  if (isRelayOrGenericInputOrMotion) address = `${formData.sdaPort}`;
+  if (isRelayOrGenericInputOrMotionOrCS) address = `${formData.sdaPort}`;
   if (isRegulator) address = '';
   return address;
 };

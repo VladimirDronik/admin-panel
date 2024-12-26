@@ -63,5 +63,6 @@ export default {
     presence: 'Presence',
     graphingMotion: 'Enable Graphing Motion',
     graphingPresence: 'Enable Graphing Presence',
+    current: 'Current',
   },
 };
