@@ -247,7 +247,6 @@ const processedDevices = computed(() => {
   return result;
 });
 
-
 </script>
 
 <template>

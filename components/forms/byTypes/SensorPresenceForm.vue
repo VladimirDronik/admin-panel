@@ -58,72 +58,148 @@ watch(
     :validate-on-blur="true"
     :validate-on-value-update="false"
   >
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.title')" required name="title">
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      name="title"
+      required
+      :title="t('devices.title')"
+    >
       <InputText
         v-model="dynamicForm.name"
+        class="tw-w-3/4"
         required
-        class="tw-w-3/4" />
+      />
     </SharedUILabel>
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.room')" name="room">
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      name="room"
+      :title="t('devices.room')"
+    >
+
       <Select
-        :showClear="true"
         v-model="dynamicForm.zone_id"
+        class="tw-w-3/4"
+        option-label="name"
+        option-value="code"
         :options="storeRooms.getRoomsSelect"
-        optionLabel="name"
-        optionValue="code"
-        class="tw-w-3/4"
+        :show-clear="true"
       />
     </SharedUILabel>
 
-    <Divider v-if="props.isEditing" class="tw-mt-0 tw-pb-3" />
+    <Divider
+      v-if="props.isEditing"
+      class="tw-mt-0 tw-pb-3"
+    />
 
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.placement') }}</p>
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.placement') }}
+    </p>
 
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.motion') }}</p>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.motion') }}
+    </p>
+    <SharedUILabel
+      class="tw-mb-2"
+      name="controller"
+      required
+      :title="t('devices.controller')"
+      :value="dynamicForm.parent_id"
+    >
       <Select
         v-model="dynamicForm.parent_id"
-        :options="controllers"
-        optionLabel="name"
-        optionValue="id"
         class="tw-w-3/4"
+        option-label="name"
+        option-value="id"
+        :options="controllers"
       />
     </SharedUILabel>
 
-    <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
-      <Select v-model="dynamicForm.sdaPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
+    <SharedUILabel
+      class="tw-mb-2"
+      required
+      :title="t('devices.port')"
+    >
+      <Select
+        v-model="dynamicForm.sdaPort"
+        class="tw-w-3/4"
+        option-label="label"
+        option-value="value"
+        :options="formattedPorts"
+      />
     </SharedUILabel>
 
-    <p class="tw-mb-4 tw-text-lg tw-font-semibold">{{ t('devices.presence') }}</p>
-    <SharedUILabel class="tw-mb-2" :title="t('devices.controller')" required :value="dynamicForm.parent_id" name="controller">
+    <p class="tw-mb-4 tw-text-lg tw-font-semibold">
+      {{ t('devices.presence') }}
+    </p>
+    <SharedUILabel
+      class="tw-mb-2"
+      name="controller"
+      required
+      :title="t('devices.controller')"
+      :value="dynamicForm.parent_id"
+    >
       <Select
         v-model="dynamicForm.parent_id"
-        :options="controllers"
-        optionLabel="name"
-        optionValue="id"
         class="tw-w-3/4"
+        option-label="name"
+        option-value="id"
+        :options="controllers"
       />
     </SharedUILabel>
 
-    <SharedUILabel required class="tw-mb-2" :title="t('devices.port')">
-      <Select v-model="dynamicForm.sclPort" :options="formattedPorts" optionLabel="label" optionValue="value" class="tw-w-3/4" />
+    <SharedUILabel
+      class="tw-mb-2"
+      required
+      :title="t('devices.port')"
+    >
+      <Select
+        v-model="dynamicForm.sclPort"
+        class="tw-w-3/4"
+        option-label="label"
+        option-value="value"
+        :options="formattedPorts"
+      />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel  :width="350" required :title="t('devices.detecting')">
+    <SharedUILabel
+      required
+      :title="t('devices.detecting')"
+      :width="350"
+    >
       <ToggleSwitch v-model="dynamicForm.props.enable" />
     </SharedUILabel>
 
-    <SharedUILabel  :width="350" class="tw-mb-2" :title="t('devices.period')" required :value="dynamicForm.props.period" name="period">
-      <InputNumber suffix=" sec" id="period" v-model="dynamicForm.props.period" class="tw-mr-10 tw-w-1/4" />
+    <SharedUILabel
+      class="tw-mb-2"
+      name="period"
+      required
+      :title="t('devices.period')"
+      :value="dynamicForm.props.period"
+      :width="350"
+    >
+      <InputNumber
+        id="period"
+        v-model="dynamicForm.props.period"
+        class="tw-mr-10 tw-w-1/4"
+        suffix=" sec"
+      />
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
-    <SharedUILabel :width="350" :title="t('devices.graphingMotion')">
+    <SharedUILabel
+      :title="t('devices.graphingMotion')"
+      :width="350"
+    >
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel>
-    <SharedUILabel :width="350" :title="t('devices.graphingPresence')">
+    <SharedUILabel
+      :title="t('devices.graphingPresence')"
+      :width="350"
+    >
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel>
   </Form>

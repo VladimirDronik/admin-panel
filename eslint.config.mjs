@@ -29,7 +29,7 @@ export default [
   ...pluginVue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
   ...compat.extends(
-    "@vue/eslint-config-airbnb",
+    // "@vue/eslint-config-airbnb",
     "@nuxt/eslint-config",
     "plugin:tailwindcss/recommended",
     "plugin:@intlify/vue-i18n/recommended",
@@ -67,6 +67,9 @@ export default [
       'dot-notation': 'off',
       'guard-for-in': 'off',
       'linebreak-style': 'off',
+      'no-multiple-empty-lines': ['error', {
+        max: 1,
+      }],
       'no-spaced-func': 'off',
       'no-return-assign': 'off',
       'func-call-spacing': 'off',
