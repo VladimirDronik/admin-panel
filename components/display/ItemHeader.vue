@@ -21,25 +21,12 @@ defineProps<{
       >
         {{ name }}
       </h4>
-      <div
+      <DialogsDisplayChangeSensorDialog
         v-for="sensor in sensors"
         :key="sensor.id_item"
-        class="tw-mr-2 tw-flex tw-items-center"
-      >
-        <img
-          alt=""
-          class="tw-mr-0.5"
-          :src="`scenario_items/${sensor.icon}.png`"
-        >
-        {{ sensor.current }}
-        <span v-if="sensor.type === 'temperature'">
-          °
-        </span>
-        <span v-else-if="sensor.type === 'humidity'">
-          %
-        </span>
-      </div>
-      <DialogsDisplaySensorDialog :sensors />
+        :sensor
+      />
+      <DialogsDisplayAddSensorDialog :sensors />
     </div>
   </div>
 </template>

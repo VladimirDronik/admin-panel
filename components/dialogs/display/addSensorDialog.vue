@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Builtin modules
+import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Static data modules
 import { paths } from '~/utils/endpoints';
@@ -11,7 +12,7 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 const { t } = useI18n();
 
 // Declare Options
-defineProps<{
+const props = defineProps<{
   sensors: roomSensorTypes[] | undefined,
 }>();
 
@@ -20,28 +21,62 @@ const dialog = defineModel<boolean>({
 });
 
 // Variables
-const checked = ref(false);
+const isAllSensors = ref(false);
+const isRegulator = ref(false);
 
 const selectedSensor = ref<string>();
 const selectedParamSensor = ref<string>();
 
 const apiGetSensor = ref<APIData<any>>();
+const apiGetModel = ref<APIData<any>>();
 
 const form = ref({
-  name: '',
-  color: null,
+  min: '',
+  max: '',
+});
+
+const allSensor = [
+  'co2',
+  'humidity',
+  'pressure',
+  'temperature',
+  'illumination',
+];
+
+// Computed Properties
+const sensorList = computed(() => {
+  if (isAllSensors.value) {
+    return allSensor;
+  }
+  return _.uniq(props.sensors?.map((item) => item.type));
 });
 
 // Methods
 const selectSensor = (sensor: string) => {
   selectedSensor.value = sensor;
+  selectedParamSensor.value = undefined;
 };
 const selectParamSensor = (param: string) => {
-  selectedSensor.value = param;
+  selectedParamSensor.value = param;
 };
 
 const createRoom = async () => {
 };
+
+const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.children.find((item: any) => item.type === selectedSensor.value)?.props);
+
+// Watchers
+watch(selectedModelSensor, () => {
+  if (!selectedParamSensor.value) {
+    form.value.min = '';
+    form.value.max = '';
+    return;
+  }
+  form.value.min = selectedModelSensor.value?.min_threshold?.value ?? '';
+  form.value.max = selectedModelSensor.value?.max_threshold?.value ?? '';
+}, {
+  immediate: false,
+});
 
 // Hooks
 onBeforeMount(async () => {
@@ -54,6 +89,17 @@ onBeforeMount(async () => {
   });
 
   apiGetSensor.value = dataGetSensor as APIData<any>;
+
+  // Get Model
+  const dataGetModel: unknown = await useAPI(paths.objectModel, {
+    query: computed(() => ({
+      category: 'sensor',
+      type: selectedParamSensor.value,
+    })),
+    immediate: false,
+  });
+
+  apiGetModel.value = dataGetModel as APIData<any>;
 });
 </script>
 
@@ -69,7 +115,7 @@ onBeforeMount(async () => {
     <Dialog
       v-model:visible="dialog"
       dismissable-mask
-      :header="'Добавление датчика на панель управления'"
+      :header="'Добавление параметра датчика на панель управления'"
       modal
       :style="{
         'max-width': '1000px',
@@ -87,7 +133,7 @@ onBeforeMount(async () => {
             Все
           </label>
           <Checkbox
-            v-model="checked"
+            v-model="isAllSensors"
             binary
             name="Все"
           />
@@ -96,23 +142,20 @@ onBeforeMount(async () => {
       <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
         <div class="tw-h-full">
           <div class="tw-h-full tw-rounded-md tw-border tw-p-3">
+            {{ isAllSensors }}
             <InputText
               class="tw-mb-2 tw-w-full"
             />
             <button
-              v-for="sensor in sensors"
-              :key="sensor.id"
+              v-for="sensor in sensorList"
+              :key="sensor"
               class="tw-flex tw-w-full tw-items-center tw-py-1"
               type="button"
-              @click="selectSensor(sensor.type)"
+              @click="selectSensor(sensor)"
             >
               <div class="tw-flex tw-items-center">
-                <img
-                  alt=""
-                  class="tw-mr-1"
-                  :src="`scenario_items/${sensor.icon}.png`"
-                >
-                {{ sensor.type }}
+                -
+                {{ sensor }}
               </div>
             </button>
           </div>
@@ -127,17 +170,19 @@ onBeforeMount(async () => {
               @click="selectParamSensor(sensor.type)"
             >
               <div class="tw-flex tw-items-center">
-                <img
-                  alt=""
-                  class="tw-mr-1"
-                  :src="`scenario_items/${sensor.icon}.png`"
-                >
+                -
                 {{ sensor.type }}
               </div>
             </button>
           </div>
           <p class="tw-mb-4 tw-text-xl">
-            Текущее значение: -
+            Текущее значение: {{ selectedParamSensor ? selectedModelSensor?.value?.value : '-' }}
+            <span v-if="selectedSensor === 'temperature'">
+              °
+            </span>
+            <span v-else-if="selectedSensor === 'humidity'">
+              %
+            </span>
           </p>
           <div class="tw-mb-5">
             <SharedUILabel
@@ -147,7 +192,7 @@ onBeforeMount(async () => {
               :title="'Минимальное значение'"
             >
               <InputText
-                v-model="form.name"
+                v-model="form.min"
                 class="tw-w-full"
               />
             </SharedUILabel>
@@ -157,14 +202,14 @@ onBeforeMount(async () => {
               :title="'Максимальное значение'"
             >
               <InputText
-                v-model="form.name"
+                v-model="form.max"
                 class="tw-w-full"
               />
             </SharedUILabel>
           </div>
           <div class="tw-flex tw-items-center tw-gap-2">
             <Checkbox
-              v-model="checked"
+              v-model="isRegulator"
               binary
             />
             <label for="ingredient1">
