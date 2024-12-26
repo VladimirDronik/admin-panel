@@ -36,6 +36,7 @@ export enum Sensor {
   SCD4X = 'scd4x',
   MOTION = 'motion',
   PRESENCE = 'presence',
+  CS = 'cs',
 }
 
 export enum GenericInput {
@@ -58,7 +59,7 @@ export enum Connection {
 export enum DeviceInterface {
   '1W' = '1W',
   '1WBUS' = '1WBUS',
-  'ADC' = 'АЦП',
+  'ADC' = 'ADC',
   'DISCRETE' = 'Дискретный',
   'I2C' = 'I2C',
   'MODBUS' = 'MODBUS'

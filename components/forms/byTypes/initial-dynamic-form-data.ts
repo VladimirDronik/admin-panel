@@ -318,6 +318,27 @@ const createFormByTypesMap = {
       complex_tolerance: 0,
     },
   },
+  [Sensor.CS]: {
+    sdaPort: 0,
+    parent_id: 0,
+    category: ObjectsCategory.Sensor,
+    props: {
+      interface: DeviceInterface['ADC'],
+      update_interval: 300,
+    },
+    children: {
+      [DevicePropertyKey.Current]: {
+        value: 0,
+        value_updated_at: '',
+        min_error_value: -1,
+        min_threshold: 0,
+        max_threshold: 10,
+        max_error_value: 11,
+        unit: 'u',
+        write_graph: false,
+      },
+    },
+  },
   [Controller.WBMRM2mini]: {
     category: ObjectsCategory.Controller,
     props: {
@@ -379,6 +400,16 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {
       interface: DeviceInterface['1W'],
+      update_interval: 300,
+    },
+    children: {},
+  },
+  [Sensor.CS]: {
+    id: 0,
+    sdaPort: 0,
+    parent_id: 0,
+    props: {
+      interface: DeviceInterface['ADC'],
       update_interval: 300,
     },
     children: {},
