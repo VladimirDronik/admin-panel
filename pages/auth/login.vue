@@ -19,8 +19,9 @@ interface LocalData {
 // Composables
 const { t } = useI18n();
 const router = useRouter();
-const storeUser = useUserStore();
 const toast = useToast();
+const storeUser = useUserStore();
+const runtimeConfig = useRuntimeConfig()
 
 useHead({
   titleTemplate: computed(() => t('pages.login')),
@@ -112,9 +113,12 @@ onBeforeMount(async () => {
         <div class="tw-flex tw-justify-center tw-py-4">
           <Logo />
         </div>
-        <div class="tw-mb-3 tw-text-center tw-text-lg">
+        <div class="tw-mb-1 tw-text-center tw-text-lg">
           {{ t('auth.title') }}
         </div>
+        <p class="tw-text-center tw-text-sm tw-text-gray-500">
+          {{ runtimeConfig.public.version }}
+        </p>
         <form>
           <SharedUILabel
             class="tw-mb-3"
