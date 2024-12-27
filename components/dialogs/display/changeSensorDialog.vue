@@ -12,8 +12,9 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 const { t } = useI18n();
 
 // Declare Options
-const { sensor } = defineProps<{
+const { sensor, id } = defineProps<{
   sensor: roomSensorTypes,
+  id: number,
 }>();
 
 const dialog = defineModel<boolean>({
@@ -23,6 +24,8 @@ const dialog = defineModel<boolean>({
 // Variables
 const isRegulator = ref(false);
 
+const apiGetSensor = ref<APIData<any>>();
+
 const form = ref({
   min: '',
   max: '',
@@ -31,6 +34,24 @@ const form = ref({
 // Methods
 const changeSensor = async () => {
 };
+
+// Hooks
+onBeforeMount(async () => {
+  // Get Sensor
+  const dataGetSensor: unknown = await useAPI(paths.privateSensor, {
+    query: computed(() => ({
+      itemId: id,
+    })),
+    immediate: false,
+  });
+
+  apiGetSensor.value = dataGetSensor as APIData<any>;
+});
+
+watch(() => id, () => {
+  console.log('dsds');
+  apiGetSensor.value?.execute();
+});
 </script>
 
 <template>
@@ -66,6 +87,8 @@ const changeSensor = async () => {
     >
       <div class="tw-mb-3">
         <div>
+          {{ sensor }}
+          {{ apiGetSensor }}
           <p class="tw-mb-4 tw-text-xl">
             Текущее значение: {{ sensor.name ? sensor.name : '-' }}
             <span v-if="sensor.type === 'temperature'">

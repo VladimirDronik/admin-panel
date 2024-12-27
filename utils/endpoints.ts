@@ -8,6 +8,7 @@ export const paths = {
   // Translator
   privateCp: `${translator}/private/cp`,
   privateItem: `${translator}/private/item`,
+  privateSensor: `${translator}/private/sensor`,
   privateWizard: `${translator}/private/wizard/create_item`,
   privateRoomsList: `${translator}/private/rooms-list-all`,
   privateZonesOrder: `${translator}/private/zones/order`,
