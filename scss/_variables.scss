@@ -29,3 +29,19 @@
 .tw-bg-info {
   background: var(--p-sky-400);
 }
+
+.p-dark .bg-base {
+  background-color: #121212;
+}
+
+.p-dark .bg-base-light {
+  background-color: var(--p-surface-800) !important;
+}
+
+.p-dark .text-base {
+  color: #F8F8F8;
+}
+
+.p-dark .border-base {
+  border-color: var(--p-surface-800);
+}

@@ -19,8 +19,8 @@ defineProps<{
     type="button"
   >
     <div
-      class="tw tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
-      :class="{ '!tw-border-inherit': !(status === 'on') }"
+      class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
+      :class="{ 'item': !(status === 'on') }"
       :style="{ borderColor: itemColor(style, color) }"
     >
       <img
@@ -31,7 +31,7 @@ defineProps<{
       >
       <Badge
         v-if="groupElements"
-        class="tw-absolute -tw-right-2.5 -tw-top-2.5 tw-rounded-full"
+        class="tw-absolute -tw-right-2.5 -tw-top-2.5 tw-rounded-full tw-text-white"
         :class="{ '!tw-bg-gray-400': !(status === 'on') }"
         rounded
         :style="{ backgroundColor: itemColor(style, color) }"
@@ -44,3 +44,13 @@ defineProps<{
     </h5>
   </button>
 </template>
+
+<style lang="scss" scoped>
+  .item {
+    border-color: inherit !important;
+    
+    .p-dark & {
+      border-color: var(--p-surface-800) !important;
+    }
+  }
+</style>

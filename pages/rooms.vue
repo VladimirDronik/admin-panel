@@ -122,11 +122,11 @@ onBeforeMount(async () => {
                       class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
                       :style="{ backgroundColor: roomColor(place.style) }"
                     />
-                    <p class=" tw-text-lg tw-font-normal tw-text-black">
+                    <p class="text-base tw-text-lg tw-font-normal tw-text-black">
                       {{ place.name }}
                     </p>
                   </div>
-                  <IconGripVertical class="handle-list tw-w-5 tw-text-black" />
+                  <IconGripVertical class="text-base handle-list tw-w-5 tw-text-black" />
                 </div>
               </AccordionHeader>
               <AccordionContent>
@@ -138,7 +138,7 @@ onBeforeMount(async () => {
                   <div
                     v-for="room in place.rooms_in_group"
                     :key="room.id"
-                    class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 tw-pl-6 tw-text-lg"
+                    class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-10 tw-text-lg"
                     @click="openRightBar(room)"
                     @keydown="openRightBar(room)"
                   >
@@ -148,7 +148,7 @@ onBeforeMount(async () => {
                           class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full"
                           :style="{ backgroundColor: roomColor(room.style) }"
                         />
-                        <p class="tw-text-lg tw-font-normal tw-text-black">
+                        <p class="text-base tw-text-lg tw-font-normal">
                           {{ room.name }}
                         </p>
                       </div>
@@ -170,7 +170,7 @@ onBeforeMount(async () => {
               :style="{ backgroundColor: roomColor(place.style) } "
             />
             <div class="tw-flex tw-w-full tw-justify-between">
-              <p class=" tw-text-lg tw-font-normal tw-text-black">
+              <p class="text-base tw-text-lg tw-font-normal tw-text-black">
                 {{ place.name }}
               </p>
               <IconGripVertical class="handle-list tw-w-5" />
@@ -238,6 +238,34 @@ onBeforeMount(async () => {
 
   &:hover {
     background-color: rgb(var(--v-theme-lightprimary)) !important;
+  }
+}
+
+.p-dark .p-accordionheader {
+  border: 1px solid var(--p-surface-600) !important;
+  background: var(--p-surface-900) !important;
+}
+.p-dark .room-item {
+  background: var(--p-surface-900) !important;
+  border: 1px solid var(--p-surface-600) !important;
+}
+
+.p-dark .p-accordioncontent-content .room-item {
+  &:not(:last-child):not(:first-child) {
+    border-radius: 0 !important;
+    border-top: none !important;
+    border-bottom: 1px solid var(--p-surface-600) !important;
+  }
+  &:last-child {
+    border-top: none !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+  &:first-child {
+    border-bottom: 1px solid var(--p-surface-600) !important;
+    border-top: none !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
   }
 }
 

@@ -90,9 +90,9 @@ onMounted(() => {
         <Select placeholder="Выберите Категорию" />
         <InputText placeholder="Поиск" />
         <div class="tw-flex tw-flex-col tw-gap-2">
-          <div class="tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
-          <div class="tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
-          <div class="tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
+          <div class="bg-base-light tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
+          <div class="bg-base-light tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
+          <div class="bg-base-light tw-h-20 tw-w-full tw-rounded tw-bg-slate-300" />
         </div>
       </div>
       <div class="tw-h-full tw-rounded-lg tw-border tw-p-3">

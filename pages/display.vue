@@ -92,7 +92,7 @@ onBeforeMount(async () => {
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
-      <PerfectScrollbar class="tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
+      <PerfectScrollbar class="border-base tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3">
         <DisplayScenarioCard
           v-for="scenario in apiItems?.data?.response.scenario_items"
           :key="scenario.id"
@@ -105,7 +105,7 @@ onBeforeMount(async () => {
       <div
         v-for="rooms in apiItems?.data?.response.room_items"
         :key="rooms.id"
-        class="tw-rounded-md tw-border tw-p-3"
+        class="border-base tw-rounded-md tw-border tw-p-3"
       >
         <DisplayItemHeader
           :name="rooms.name"

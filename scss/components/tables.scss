@@ -12,6 +12,10 @@
   background-color: #E0ECE9 !important;
 }
 
+.p-dark .p-datatable-header-cell, .p-dark .p-treetable-header-cell {
+  background-color: #292c2b !important;
+}
+
 .p-treetable-row-selected {
   background-color: var(--p-primary-50) !important;
   color: black !important;

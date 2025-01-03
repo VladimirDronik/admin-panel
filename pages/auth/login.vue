@@ -107,7 +107,7 @@ onBeforeMount(async () => {
       style="height: 85vh"
     >
       <div
-        class="tw-rounded-lg tw-bg-white tw-p-5"
+        class="bg-base tw-rounded-lg tw-bg-white tw-p-5"
         style="width: 500px;"
       >
         <div class="tw-flex tw-justify-center tw-py-4">
@@ -155,5 +155,9 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .auth-screen {
   background-color: #EAF8F5;
+
+  .p-dark & {
+    background-color: var(--p-surface-950);
+  }
 }
 </style>

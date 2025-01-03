@@ -28,7 +28,7 @@ const createRoom = () => {
       @click="dialog = true"
     >
       <div
-        class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
+        class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
       >
         <img
           alt=""

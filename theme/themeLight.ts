@@ -31,20 +31,7 @@ const Noir = definePreset(Aura, {
           focusColor: '#ffffff',
         },
       },
-      dark: {
-        primary: {
-          color: '{primary.50}',
-          contrastColor: '{primary.950}',
-          hoverColor: '{primary.100}',
-          activeColor: '{primary.200}',
-        },
-        highlight: {
-          background: '{primary.50}',
-          focusBackground: '{primary.300}',
-          color: '{primary.950}',
-          focusColor: '{primary.950}',
-        },
-      },
+      // dark 
     },
   },
 });

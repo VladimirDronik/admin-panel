@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="rightbar tw-w-full tw-border-l tw-bg-white"
+    class="bg-base border-base rightbar tw-w-full tw-border-l tw-bg-white"
     :class="{ 'rightbar-active': isOpen }"
     :style="{ 'max-width': `${isOpen ? width / 3 : 0}px` }"
   >

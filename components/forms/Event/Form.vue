@@ -116,7 +116,7 @@ updateEvents();
       <div
         v-for="event in events"
         :key="event.code"
-        class="tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4"
+        class="border-base tw-border-grey tw-mb-2 tw-rounded-md tw-border tw-border-solid tw-p-4"
       >
         <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
           <p class="tw-text-lg tw-font-semibold">

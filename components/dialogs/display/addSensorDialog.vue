@@ -141,8 +141,7 @@ onBeforeMount(async () => {
       </div>
       <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
         <div class="tw-h-full">
-          <div class="tw-h-full tw-rounded-md tw-border tw-p-3">
-            {{ isAllSensors }}
+          <div class="border-base tw-h-full tw-rounded-md tw-border tw-p-3">
             <InputText
               class="tw-mb-2 tw-w-full"
             />
@@ -161,7 +160,7 @@ onBeforeMount(async () => {
           </div>
         </div>
         <div>
-          <div class="tw-mb-4 tw-rounded-md tw-border tw-p-3">
+          <div class="border-base tw-mb-4 tw-rounded-md tw-border tw-p-3">
             <button
               v-for="sensor in apiGetSensor?.data?.response"
               :key="sensor.id"

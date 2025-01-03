@@ -30,7 +30,7 @@ const toggle = (event: any) => {
       {{ t(title) }}
     </p>
     <button
-      class="tree-table__header-filter tw-ml-3 tw-bg-white"
+      class="bg-base-light tree-table__header-filter tw-ml-3 tw-bg-white"
       type="button"
       @click="toggle"
     >
@@ -44,6 +44,29 @@ const toggle = (event: any) => {
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+.tree-table__header-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .1s linear;
+  & svg {
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+    --tw-text-opacity: 1;
+    transition: color .1s linear;
+  }
 
+  &:hover, &:focus {
+    background-color: var(--p-surface-700);
+    color: white;
+
+    svg {
+      color: white;
+    }
+  }
+}
 </style>

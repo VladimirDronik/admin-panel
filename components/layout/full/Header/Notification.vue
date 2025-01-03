@@ -10,6 +10,7 @@ import { IconBellRinging } from '@tabler/icons-vue';
     text
   >
     <IconBellRinging
+      class="text-base"
       size="22"
       stroke-width="1.5"
     />

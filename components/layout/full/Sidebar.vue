@@ -26,53 +26,60 @@ const to = computed(() => route.path);
     class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80"
     :class="{ '!tw-max-w-20': !open }"
   >
-    <Card class="tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r !tw-shadow-none">
-      <template #content>
-        <div class="tw-mb-7 ">
-          <Logo v-if="open" />
-          <LogoRtlLogo v-else />
-        </div>
-        <div
-          v-for="item in sidebar"
-          :key="item.title"
-        >
-          <div v-if="item.title">
-            <Button
-              v-tooltip="{
-                value: t(item.title),
-                disabled: open,
-                background: ' #000000',
-              }"
-              as="router-link"
-              class="tw-mb-1 tw-w-full !tw-justify-start tw-text-black"
-              :class="{ '!tw-justify-center': !open }"
-              :text="to !== item.to"
-              :to="item.to"
-            >
-              <component
-                :is="item.icon"
-                class="iconClass tw-min-w-5"
-                size="20"
-                stroke-width="1.5"
-              />
-              {{ open ? t(item.title) : '' }}
-            </Button>
-          </div>
-          <p
-            v-else-if="item.header"
-            class="tw-mb-3 tw-pt-3 tw-font-semibold"
-            :class="{ 'tw-text-center': !open }"
+    <div class="border-base tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r tw-p-5 !tw-shadow-none">
+      <div class="tw-mb-7 ">
+        <Logo v-if="open" />
+        <LogoRtlLogo v-else />
+      </div>
+      <div
+        v-for="item in sidebar"
+        :key="item.title"
+      >
+        <div v-if="item.title">
+          <Button
+            v-tooltip="{
+              value: t(item.title),
+              disabled: open,
+              background: ' #000000',
+            }"
+            as="router-link"
+            class="text-base tw-mb-1 tw-w-full !tw-justify-start tw-text-black"
+            :class="{ '!tw-justify-center': !open }"
+            :text="to !== item.to"
+            :to="item.to"
           >
-            {{ open ? t(item.header) : '...' }}
-          </p>
+            <component
+              :is="item.icon"
+              class="iconClass tw-min-w-5"
+              size="20"
+              stroke-width="1.5"
+            />
+            {{ open ? t(item.title) : '' }}
+          </Button>
         </div>
-      </template>
-    </Card>
+        <p
+          v-else-if="item.header"
+          class="tw-mb-3 tw-pt-3 tw-font-semibold"
+          :class="{ 'tw-text-center': !open }"
+        >
+          {{ open ? t(item.header) : '...' }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .router-link-active {
-  color: white !important;
+    color: white !important;
+  }
+
+.p-dark {
+
+  & .router-link-active {
+    background-color: var(--p-surface-800) !important;
+    border-color: var(--p-surface-800) !important;
+    color: var(--p-primary-700) !important;
+  }
 }
 </style>

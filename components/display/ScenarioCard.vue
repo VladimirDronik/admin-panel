@@ -12,7 +12,7 @@ defineProps<{
 
 <template>
   <button
-    class="tw-relative tw-aspect-square tw-w-32 tw-min-w-32 tw-rounded-md tw-border-2 tw-p-1"
+    class="border-base tw-relative tw-aspect-square tw-w-32 tw-min-w-32 tw-rounded-md tw-border-2 tw-p-1"
     type="button"
   >
     <div class="tw-flex tw-h-full tw-w-full tw-items-center tw-justify-between tw-pt-1">

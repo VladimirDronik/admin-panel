@@ -96,7 +96,7 @@ const addWidget = (params: AddWidget) => {
       <GridItem
         v-for="item in layout"
         :key="item.i"
-        class="tw-flex tw-items-end tw-justify-end tw-rounded-lg tw-bg-gray-200 tw-p-3"
+        class="bg-base-light tw-flex tw-items-end tw-justify-end tw-rounded-lg tw-bg-gray-200 tw-p-3"
         :h="item.h"
         :i="item.i"
         :is-resizable="false"

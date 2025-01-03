@@ -1,5 +1,6 @@
 import main from './main';
 import auth from './auth';
+import room from './room';
 import pages from './pages';
 import error from './error';
 import video from './video';
@@ -12,6 +13,7 @@ import parameters from './parameters';
 export default {
   ...main,
   ...auth,
+  ...room,
   ...error,
   ...pages,
   ...video,

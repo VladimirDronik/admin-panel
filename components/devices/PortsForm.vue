@@ -19,7 +19,7 @@ const ports = defineModel<TablePortData[]>('ports', {
         {{ _.startCase(_.toLower(item.group)) }}
       </h3>
       <DataTable
-        class="tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border"
+        class="border-base tw-mb-4 tw-overflow-hidden tw-rounded-md tw-border"
         :value="item.ports"
       >
         <Column
