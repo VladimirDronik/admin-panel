@@ -1,12 +1,15 @@
 <script setup lang="ts">
 // Builtin modules
 import { IconMail } from '@tabler/icons-vue';
+import { useI18n } from 'vue-i18n';
 // Images
 import proUser1 from '~/assets/images/icon-account.svg';
 import proUser3 from '~/assets/images/icon-tasks.svg';
 
 // Composables
+const { t } = useI18n();
 const router = useRouter();
+const runtimeConfig = useRuntimeConfig()
 
 // Variables
 const profileDD = [
@@ -112,7 +115,7 @@ const toggle = (event: any) => {
               </div>
             </div>
           </ScrollPanel>
-          <div class="tw-px-2 tw-py-4 tw-text-center">
+          <div class="tw-relative tw-top-4 tw-py-4 tw-pb-0 tw-text-center">
             <Button
               class="tw-w-full"
               color="primary"
@@ -120,8 +123,11 @@ const toggle = (event: any) => {
               size="small"
               @click="router.push({ name: 'auth-login' })"
             >
-              Logout
+              {{ t('logout') }}
             </Button>
+            <p class="tw-pt-1 tw-text-center tw-text-sm tw-text-gray-500">
+              {{ runtimeConfig.public.version }}
+            </p>
           </div>
         </template>
       </Card>

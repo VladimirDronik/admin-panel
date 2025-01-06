@@ -98,7 +98,7 @@ onBeforeMount(async () => {
           {{ t('auth.title') }}
         </div>
         <p class="tw-text-center tw-text-sm tw-text-gray-500">
-          {{ runtimeConfig.version }}
+          {{ runtimeConfig.public.version }}
         </p>
         <form>
           <SharedUILabel

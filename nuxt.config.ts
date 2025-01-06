@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    version: '2.0b',
     public: {
+      version: '2.0b',
       backendApi: '',
       mqttPort: '',
       translatorPort: '',
