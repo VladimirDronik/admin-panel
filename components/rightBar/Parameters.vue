@@ -17,7 +17,7 @@ const selectedParameter = defineModel<any>('selectedParameter', {
 </script>
 
 <template>
-  <LayoutFullRightbar :is-open="isOpen">
+  <LayoutRightbar :is-open="isOpen">
     <div
       class="tw-min-h-80 tw-p-7"
       elevation="0"
@@ -72,5 +72,5 @@ const selectedParameter = defineModel<any>('selectedParameter', {
       </div>
       <Button :label="t('save')" />
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

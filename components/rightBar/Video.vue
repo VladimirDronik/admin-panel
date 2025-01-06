@@ -27,7 +27,7 @@ const selectType = 'Камера';
 </script>
 
 <template>
-  <LayoutFullRightbar
+  <LayoutRightbar
     :is-open="isOpen"
     :is-update="isUpdate"
   >
@@ -160,5 +160,5 @@ const selectType = 'Камера';
         </div>
       </div>
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

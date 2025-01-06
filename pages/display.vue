@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconPlus } from '@tabler/icons-vue';
+import { useStorage } from '@vueuse/core'
 import { VueDraggableNext } from 'vue-draggable-next';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
@@ -12,7 +13,11 @@ import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
-const storeUser = useUserStore();
+const localState = useStorage('touch-on', {
+  token: '',
+  openSidebar: true,
+  language: 'ru',
+})
 
 useHead({
   titleTemplate: computed(() => t('pages.display')),
@@ -62,7 +67,7 @@ watch(roomIds, async (newValue, oldValue) => {
       method: 'PATCH',
       body: result,
       headers: {
-        token: storeUser.userLocal?.token ?? '',
+        token: localState.value.token ?? '',
       },
     });
     // await apiItems.value?.refresh();

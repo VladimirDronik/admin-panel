@@ -200,7 +200,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <LayoutFullRightbar
+  <LayoutRightbar
     :is-open="isOpen"
     :is-update="isUpdate"
   >
@@ -346,5 +346,5 @@ onBeforeMount(async () => {
         </TabPanels>
       </Tabs>
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

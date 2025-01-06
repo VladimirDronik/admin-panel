@@ -1,13 +1,15 @@
 // Composable modules
-import { useUserStore } from '~/stores/user';
+import { useStorage } from '@vueuse/core'
 
 export default defineNuxtRouteMiddleware((_to, _from) => {
   // Composable
-  const storeUser = useUserStore();
+  const localState = useStorage('touch-on', {
+    token: '',
+    openSidebar: true,
+    language: 'ru',
+  })
 
-  if (!storeUser.userLocal) {
-    if (!localStorage.getItem('touchOn')) {
+  if (!localState.value.token) {
       return navigateTo('/auth/login');
-    }
   }
 });

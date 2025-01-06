@@ -1,14 +1,20 @@
 <script setup lang="ts">
 // Builtin modules
 import { useI18n } from 'vue-i18n';
+import { useStorage } from '@vueuse/core'
 import { useUserStore } from '~/stores/user';
 // Images
 import England from '@/assets/images/flag/icon-flag-en.svg';
 import Russia from '@/assets/images/flag/icon-flag-ru.svg';
 
 // Composables
-const { locale } = useI18n({ useScope: 'global' });
 const userStore = useUserStore();
+const { locale } = useI18n({ useScope: 'global' });
+const localState = useStorage('touch-on', {
+  token: '',
+  openSidebar: true,
+  language: 'ru',
+})
 
 // Variables
 const languages = [
@@ -31,21 +37,11 @@ const selectLanguage = (item: string) => {
   locale.value = item;
 };
 
-watch(locale, (newValue) => {
-  localStorage.setItem(userStore.localStorageName, JSON.stringify({
-    ...userStore.userLocal,
-    language: newValue,
-  }));
-  if (userStore.userLocal) {
-    userStore.userLocal = {
-      ...userStore.userLocal,
-      language: newValue,
-    };
-  }
-});
+watch(locale, (newValue) => localState.value.language = newValue);
+
 // Hooks
 onBeforeMount(() => {
-  selectLanguage(userStore.userLocal?.language ?? 'ru');
+  selectLanguage(localState.value.language);
 });
 
 </script>

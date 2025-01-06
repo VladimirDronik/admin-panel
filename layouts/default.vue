@@ -1,31 +1,27 @@
 <script setup lang="ts">
+// Builtin modules
+import { useStorage } from '@vueuse/core'
 
 // Composables
 const userStore = useUserStore();
+const localState = useStorage('touch-on', {
+  token: '',
+  openSidebar: true,
+  language: 'ru',
+})
 
 // Variables
-const open = ref<boolean>(!!userStore.userLocal?.openSidebar);
+const open = ref<boolean>(!!localState.value.openSidebar);
 
 // Watchers
-watch(open, (newValue) => {
-  localStorage.setItem(userStore.localStorageName, JSON.stringify({
-    ...userStore.userLocal,
-    openSidebar: newValue,
-  }));
-  if (userStore.userLocal) {
-    userStore.userLocal = {
-      ...userStore.userLocal,
-      openSidebar: newValue,
-    };
-  }
-});
+watch(open, (newValue) => localState.value.openSidebar = newValue);
 
 </script>
 
 <template>
   <div>
     <!-- Sidebar -->
-    <LayoutFullSidebar
+    <LayoutSidebar
       v-model:open="open"
       class="tw-z-40"
     />
@@ -34,7 +30,7 @@ watch(open, (newValue) => {
       class="tw-pl-80"
       :class="{ '!tw-pl-20': !open }"
     >
-      <LayoutFullHeader v-model:open="open" />
+      <LayoutHeader v-model:open="open" />
       <!-- Notifications -->
       <Toast :base-z-index="99999" />
       <!--  -->

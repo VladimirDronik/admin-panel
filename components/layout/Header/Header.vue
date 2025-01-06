@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+
+// Composables
+const isDark = useDark({
+  selector: 'html',
+  attribute: 'class',
+  valueDark: 'p-dark',
+  valueLight: 'p-light',
+  storageKey: 'touch-on-color',
+})
+
 // Declare Options
 const open = defineModel<boolean>('open', {
   required: true,
@@ -6,10 +16,8 @@ const open = defineModel<boolean>('open', {
 
 const darkTheme = ref(false)
 
-const toggleDarkMode = () => {
-  document.documentElement.classList.toggle('p-dark');
-  darkTheme.value = !darkTheme.value
-}
+// Methods
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -30,13 +38,13 @@ const toggleDarkMode = () => {
           :icon="darkTheme ? 'pi pi-moon' : 'pi pi-sun'"
           size="small"
           text
-          @click="toggleDarkMode()"
+          @click="toggleDark()"
         />
-        <LayoutFullHeaderLanguage class="tw-mr-2" />
+        <LayoutHeaderLanguage class="tw-mr-2" />
 
-        <LayoutFullHeaderNotification class="tw-mr-2" />
+        <LayoutHeaderNotification class="tw-mr-2" />
 
-        <LayoutFullHeaderProfile />
+        <LayoutHeaderProfile />
       </div>
     </div>
   </div>

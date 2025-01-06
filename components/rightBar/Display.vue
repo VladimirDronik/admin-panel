@@ -71,7 +71,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <LayoutFullRightbar :is-open="isOpen">
+  <LayoutRightbar :is-open="isOpen">
     <div class="tw-min-h-80 tw-p-7">
       <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
         <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
@@ -119,5 +119,5 @@ onBeforeMount(async () => {
         @update="emit('update')"
       />
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

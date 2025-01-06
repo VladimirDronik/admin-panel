@@ -1,26 +1,24 @@
 <script setup lang="ts">
 // Builtin modules
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStorage } from '@vueuse/core'
 // Static Data modules
 import { auth } from '~/utils/endpoints';
 // Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
 import type { APIData } from '~/types/StoreTypes';
 
-// Types
-interface LocalData {
-  token: string | null;
-  openSidebar: boolean;
-  language: string;
-}
-
 // Composables
 const { t } = useI18n();
 const router = useRouter();
 const toast = useToast();
-const storeUser = useUserStore();
+const localState = useStorage('touch-on', {
+  token: '',
+  openSidebar: true,
+  language: 'ru',
+})
 const runtimeConfig = useRuntimeConfig()
 
 useHead({
@@ -42,29 +40,12 @@ const params = ref({
 
 // Methods
 const success = (response: any) => {
-  const localStorageData = localStorage.getItem(storeUser.localStorageName);
-  const localData = (localStorageData ? JSON.parse(localStorageData) : null) as LocalData | null;
-  if (localData) {
-    localStorage.setItem(storeUser.localStorageName, JSON.stringify({
-      ...localData,
-      token: response.response.api_access_token,
-    }));
-    storeUser.userLocal = {
-      ...localData,
-      token: response.response.api_access_token,
-    };
-  } else {
-    localStorage.setItem(storeUser.localStorageName, JSON.stringify({
+  localState.value = {
       token: response.response.api_access_token,
       openSidebar: true,
       language: 'ru',
-    }));
-    storeUser.userLocal = {
-      token: response.response.api_access_token,
-      openSidebar: true,
-      language: 'ru',
-    };
-  }
+    }
+
   router.push({ name: 'general' });
 };
 

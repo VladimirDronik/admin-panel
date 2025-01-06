@@ -56,7 +56,7 @@ const widgets = [
 </script>
 
 <template>
-  <LayoutFullRightbar
+  <LayoutRightbar
     :is-open="isOpen"
     :is-update="isUpdate"
   >
@@ -94,5 +94,5 @@ const widgets = [
         Редактирование
       </div>
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

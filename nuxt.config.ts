@@ -49,6 +49,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
+    '@vueuse/nuxt',
     '@nuxtjs/google-fonts',
     '@primevue/nuxt-module',
     '@nuxt/test-utils/module',

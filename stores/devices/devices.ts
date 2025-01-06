@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useStorage } from '@vueuse/core'
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 // Composable modules
@@ -20,6 +21,12 @@ export const useDevicesStore = defineStore('Devices', () => {
   // Composables
   const { api } = useApiInstant();
   const storeUser = useUserStore();
+  const localState = useStorage('touchOn', {
+    darkTheme: false,
+    token: '',
+    openSidebar: true,
+    language: 'ru',
+  })
 
   // Variables
   const list = ref<Devices[]>([]);
@@ -90,7 +97,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     const { data }: RequestData = await api.get(paths.objects, {
       params,
       headers: {
-        token: storeUser.userLocal?.token,
+        token: localState.value.token,
       },
     });
 

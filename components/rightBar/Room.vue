@@ -23,7 +23,7 @@ const loadingDelete = ref(false);
 </script>
 
 <template>
-  <LayoutFullRightbar :is-open="isOpen">
+  <LayoutRightbar :is-open="isOpen">
     <div
       v-if="form"
       class="tw-min-h-80 tw-p-7"
@@ -79,5 +79,5 @@ const loadingDelete = ref(false);
         </Button>
       </div>
     </div>
-  </LayoutFullRightbar>
+  </LayoutRightbar>
 </template>

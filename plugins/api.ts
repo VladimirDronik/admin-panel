@@ -1,12 +1,18 @@
+import { useStorage } from '@vueuse/core'
+
 export default defineNuxtPlugin(() => {
-  const storeUser = useUserStore();
+  const localState = useStorage('touch-on', {
+    token: '',
+    openSidebar: true,
+    language: 'ru',
+  })
 
   const router = useRouter();
 
   const api = $fetch.create({
     onRequest({ options }) {
-      if (storeUser.userLocal?.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
-      if (storeUser.userLocal?.token) options.headers.set('token', storeUser.userLocal?.token);
+      if (localState.value.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
+      if (localState.value.token) options.headers.set('token', localState.value.token);
     },
     async onResponseError({ response, error }) {
       console.error('Ошибка', error);
