@@ -71,53 +71,38 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <LayoutRightbar :is-open="isOpen">
-    <div class="tw-min-h-80 tw-p-7">
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
-          {{ title }}
-        </h3>
-        <Button
-          icon="pi"
-          rounded
-          size="small"
-          text
-          variant="text"
-          @click="isOpen = false"
-        >
-          <IconX class="white" />
-        </Button>
-      </div>
-
-      <SharedUILoader
-        v-if="apiItem?.data?.response && variant === 'Edit Item'"
-        :is-update="apiItem.pending"
-      >
-        <DisplayEditItemForm
-          v-model:form="apiItem.data.response"
-          v-model:is-open="isOpen"
-          :devices="devices"
-          @update="emit('update')"
-        />
-      </SharedUILoader>
-      <SharedUILoader
-        v-else-if="apiItem?.data?.response && variant === 'Edit Scenario'"
-        :is-update="apiItem.pending"
-      >
-        <DisplayEditScenarioForm
-          v-model:form="apiItem.data.response"
-          v-model:is-open="isOpen"
-          :devices="devices"
-          @update="emit('update')"
-        />
-      </SharedUILoader>
-      <DisplayCreateItemForm
-        v-else
+  <LayoutRightbar
+    :is-open="isOpen"
+    :title
+  >
+    <SharedUILoader
+      v-if="apiItem?.data?.response && variant === 'Edit Item'"
+      :is-update="apiItem.pending"
+    >
+      <DisplayEditItemForm
+        v-model:form="apiItem.data.response"
         v-model:is-open="isOpen"
         :devices="devices"
-        :zone-id="zoneId"
         @update="emit('update')"
       />
-    </div>
+    </SharedUILoader>
+    <SharedUILoader
+      v-else-if="apiItem?.data?.response && variant === 'Edit Scenario'"
+      :is-update="apiItem.pending"
+    >
+      <DisplayEditScenarioForm
+        v-model:form="apiItem.data.response"
+        v-model:is-open="isOpen"
+        :devices="devices"
+        @update="emit('update')"
+      />
+    </SharedUILoader>
+    <DisplayCreateItemForm
+      v-else
+      v-model:is-open="isOpen"
+      :devices="devices"
+      :zone-id="zoneId"
+      @update="emit('update')"
+    />
   </LayoutRightbar>
 </template>

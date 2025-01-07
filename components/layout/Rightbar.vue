@@ -2,18 +2,15 @@
 // Variables
 const width = ref(window.innerWidth);
 const height = ref(window.innerHeight);
+import { IconX } from '@tabler/icons-vue'
 
 // Declare Options
-defineProps({
-  isOpen: {
-    type: Boolean,
-    required: true,
-  },
-  isUpdate: {
-    type: Boolean,
-    default: false,
-  },
-});
+defineProps<{
+  title?: string,
+  isUpdate?: boolean,
+}>();
+
+const isOpen = defineModel<boolean>('isOpen')
 
 // Hooks
 onMounted(() => {
@@ -34,7 +31,27 @@ onMounted(() => {
   >
     <SharedUILoader :is-update="isUpdate">
       <ScrollPanel :style="{ height: `${height - 90}px`, width: '100%' }">
-        <slot />
+        <div class="tw-min-h-80 tw-p-7">
+          <div
+            v-if="title"
+            class="tw-mb-4 tw-flex tw-items-center tw-justify-between"
+          >
+            <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
+              {{ title }}
+            </h3>
+            <Button
+              icon="pi"
+              rounded
+              size="small"
+              text
+              variant="text"
+              @click="isOpen = false"
+            >
+              <IconX class="white" />
+            </Button>
+          </div>
+          <slot />
+        </div>
       </ScrollPanel>
     </SharedUILoader>
   </div>

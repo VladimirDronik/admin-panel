@@ -3,7 +3,10 @@ import { RouterLink } from 'vue-router';
 </script>
 <template>
   <div class="logo">
-    <RouterLink :to="{ name: 'devices' }">
+    <RouterLink
+      class="tw-flex tw-justify-center"
+      :to="{ name: 'devices' }"
+    >
       <svg
         fill="none"
         height="32"

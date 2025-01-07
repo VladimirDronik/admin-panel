@@ -17,60 +17,45 @@ const selectedParameter = defineModel<any>('selectedParameter', {
 </script>
 
 <template>
-  <LayoutRightbar :is-open="isOpen">
-    <div
-      class="tw-min-h-80 tw-p-7"
-      elevation="0"
-    >
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-          {{ t('parameters.addRoom') }}
-        </h3>
-        <Button
-          icon="pi pi-times"
-          rounded
-          severity="secondary"
-          size="small"
-          text
-          @click="isOpen = false"
+  <LayoutRightbar
+    :is-open="isOpen"
+    :title="t('parameters.addRoom')"
+  >
+    <div>
+      <SharedUILabel
+        class="tw-mb-3"
+        required
+        :title="t('parameters.name')"
+      >
+        <InputText
+          v-model="selectedParameter.name"
+          class="tw-w-full"
+          required
         />
-      </div>
-      <div>
-        <SharedUILabel
-          class="tw-mb-3"
+      </SharedUILabel>
+      <SharedUILabel
+        class="tw-mb-3"
+        required
+        :title="t('parameters.value')"
+      >
+        <InputText
+          v-model="selectedParameter.value"
+          class="tw-w-full"
           required
-          :title="t('parameters.name')"
-        >
-          <InputText
-            v-model="selectedParameter.name"
-            class="tw-w-full"
-            required
-          />
-        </SharedUILabel>
-        <SharedUILabel
-          class="tw-mb-3"
+        />
+      </SharedUILabel>
+      <SharedUILabel
+        class="tw-mb-3"
+        required
+        :title="t('parameters.description')"
+      >
+        <InputText
+          v-model="selectedParameter.description"
+          class="tw-w-full"
           required
-          :title="t('parameters.value')"
-        >
-          <InputText
-            v-model="selectedParameter.value"
-            class="tw-w-full"
-            required
-          />
-        </SharedUILabel>
-        <SharedUILabel
-          class="tw-mb-3"
-          required
-          :title="t('parameters.description')"
-        >
-          <InputText
-            v-model="selectedParameter.description"
-            class="tw-w-full"
-            required
-          />
-        </SharedUILabel>
-      </div>
-      <Button :label="t('save')" />
+        />
+      </SharedUILabel>
     </div>
+    <Button :label="t('save')" />
   </LayoutRightbar>
 </template>

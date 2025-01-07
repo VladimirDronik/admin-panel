@@ -59,40 +59,23 @@ const widgets = [
   <LayoutRightbar
     :is-open="isOpen"
     :is-update="isUpdate"
+    :title="edit ? 'Изменить Виджет' : 'Добавить Виджет'"
   >
-    <div
-      class="tw-min-h-80 tw-p-7"
-      elevation="0"
-    >
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-          {{ edit ? 'Изменить Виджет' : 'Добавить Виджет' }}
-        </h3>
-        <Button
-          icon="pi pi-times"
-          rounded
-          severity="secondary"
-          size="small"
-          text
-          @click="isOpen = false"
-        />
+    <div v-if="!edit">
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        <button
+          v-for="widget in widgets"
+          :key="widget.title"
+          class="bg-base-light tw-flex tw-h-24 tw-w-full tw-items-center tw-justify-center tw-rounded-lg tw-bg-gray-200 tw-p-3 tw-text-2xl"
+          type="button"
+          @click="emit('add-widget', widget.params)"
+        >
+          {{ widget.title }}
+        </button>
       </div>
-      <div v-if="!edit">
-        <div class="tw-flex tw-flex-col tw-gap-2">
-          <button
-            v-for="widget in widgets"
-            :key="widget.title"
-            class="tw-flex tw-h-24 tw-w-full tw-items-center tw-justify-center tw-rounded-lg tw-bg-gray-200 tw-p-3 tw-text-2xl"
-            type="button"
-            @click="emit('add-widget', widget.params)"
-          >
-            {{ widget.title }}
-          </button>
-        </div>
-      </div>
-      <div v-else>
-        Редактирование
-      </div>
+    </div>
+    <div v-else>
+      Редактирование
     </div>
   </LayoutRightbar>
 </template>

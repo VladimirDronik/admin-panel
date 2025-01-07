@@ -30,134 +30,117 @@ const selectType = 'Камера';
   <LayoutRightbar
     :is-open="isOpen"
     :is-update="isUpdate"
+    :title="edit ? t('video.changeWidget') : t('video.changeWidget')"
   >
-    <div
-      class="tw-min-h-80 tw-p-7"
-      elevation="0"
-    >
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-          {{ edit ? t('video.changeWidget') : t('video.changeWidget') }}
-        </h3>
+    <div v-if="selectType">
+      <div v-if="selectType === 'Камера'">
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Название"
+        >
+          <InputText
+            class="tw-w-full"
+            required
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Производитель"
+        >
+          <Select
+            class="tw-w-full"
+            required
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Ссылка"
+        >
+          <InputText
+            class="tw-w-full"
+            required
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Активность"
+        >
+          <SharedUISwitchField
+            class="tw-w-full"
+            required
+          />
+        </SharedUILabel>
         <Button
-          icon="pi pi-times"
-          rounded
-          severity="secondary"
-          size="small"
-          text
-          @click="isOpen = false"
+          :disabled="!selectType"
+          label="Создать"
         />
       </div>
-      <div v-if="selectType">
-        <div v-if="selectType === 'Камера'">
-          <SharedUILabel
-            class="tw-mb-3"
+      <div v-else-if="selectType === 'Видеорегистратор'">
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Название"
+        >
+          <InputText
+            class="tw-w-full"
             required
-            title="Название"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
-            required
-            title="Производитель"
-          >
-            <Select
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
-            required
-            title="Ссылка"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
-            required
-            title="Активность"
-          >
-            <SharedUISwitchField
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <Button
-            :disabled="!selectType"
-            label="Создать"
           />
-        </div>
-        <div v-else-if="selectType === 'Видеорегистратор'">
-          <SharedUILabel
-            class="tw-mb-3"
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Производитель"
+        >
+          <Select
+            class="tw-w-full"
             required
-            title="Название"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="IP адрес"
+        >
+          <InputText
+            class="tw-w-full"
             required
-            title="Производитель"
-          >
-            <Select
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Логин"
+        >
+          <InputText
+            class="tw-w-full"
             required
-            title="IP адрес"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Пароль"
+        >
+          <InputText
+            class="tw-w-full"
             required
-            title="Логин"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
+          />
+        </SharedUILabel>
+        <SharedUILabel
+          class="tw-mb-3"
+          required
+          title="Количество камер"
+        >
+          <InputText
+            class="tw-w-full"
             required
-            title="Пароль"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            class="tw-mb-3"
-            required
-            title="Количество камер"
-          >
-            <InputText
-              class="tw-w-full"
-              required
-            />
-          </SharedUILabel>
-          <Button label="Сохранить" />
-        </div>
+          />
+        </SharedUILabel>
+        <Button label="Сохранить" />
       </div>
     </div>
   </LayoutRightbar>
