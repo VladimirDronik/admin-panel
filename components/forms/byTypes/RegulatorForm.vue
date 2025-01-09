@@ -85,12 +85,12 @@ const flatForm = computed(() => ({
 const schema = z.object({
   type: z.enum(['complex', 'pid', 'simple']),
   sensor_value_ttl: z.number().default(30),
-  min_sp: z.number().min(1),
-  target_sp: z.number().min(1),
-  max_sp: z.number().min(1),
-  below_tolerance: z.number().min(1),
-  above_tolerance: z.number().min(1),
-  complex_tolerance: z.number().min(1),
+  min_sp: z.number().default(0),
+  target_sp: z.number().default(0),
+  max_sp: z.number().default(0),
+  below_tolerance: z.number().default(0),
+  above_tolerance: z.number().default(0),
+  complex_tolerance: z.number().default(0),
 });
 const resolver = ref(zodResolver(schema));
 watch(
