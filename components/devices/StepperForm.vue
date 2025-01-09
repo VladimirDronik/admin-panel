@@ -59,6 +59,12 @@ const events = ref<Event[]>();
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
+const typeOptions = computed(() => {
+  return storeDevices.types?.data?.response?.map((item) => ({
+    label: item.name, 
+    value: item.type,
+  }));
+});
 const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.keys(storeDevices.tags?.data?.response)) : []));
 
 // const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
@@ -194,7 +200,6 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
           <div class="tw-ml-[20%] tw-mr-[5%]">
             <SharedUILabel
               class="tw-mb-4"
-              required
               :title="t('devices.tags')"
             >
               <MultiSelect
@@ -213,8 +218,10 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
             >
               <Select
                 v-model="initialForm.type"
-                class="tw-w-2/4"
-                :options="types"
+                class="tw-w-full"
+                :options="typeOptions"
+                option-label="label"
+                option-value="value"
                 @change="changeTypeHandler"
               />
             </SharedUILabel>
