@@ -62,7 +62,9 @@ export enum DeviceInterface {
   'ADC' = 'ADC',
   'DISCRETE' = 'Дискретный',
   'I2C' = 'I2C',
-  'MODBUS' = 'MODBUS'
+  'MODBUS' = 'MODBUS',
+  'MEGAOUT' = 'MEGA-OUT',
+  'MEGAIN' = 'MEGA-IN',
 }
 
 export enum RegulatorType {

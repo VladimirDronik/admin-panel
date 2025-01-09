@@ -27,11 +27,13 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
+  mode: dynamicForm.value.props.mode,
 }));
 
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
+  mode: z.string().min(1),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -46,6 +48,13 @@ watch(
   },
   { deep: true },
 );
+
+const modeOptions = ref([
+  { label: 'при замыкании (P)', value: 'P' },
+  { label: 'при размыкании (R)', value: 'R' },
+  { label: 'при замыкании и размыкании (P&R)', value: 'P&R' },
+  { label: 'режим фиксации замыкания (C)', value: 'C' },
+]);
 
 </script>
 
@@ -119,6 +128,19 @@ watch(
         option-label="label"
         option-value="value"
         :options="formattedPorts"
+      />
+    </SharedUILabel>
+    <SharedUILabel
+      class="tw-mb-2"
+      required
+      :title="t('devices.mode')"
+    >
+      <Select
+        v-model="dynamicForm.props.mode"
+        class="tw-w-3/4"
+        option-label="label"
+        option-value="value"
+        :options="modeOptions"
       />
     </SharedUILabel>
   </Form>

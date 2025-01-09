@@ -294,13 +294,18 @@ const createFormByTypesMap = {
     sdaPort: null,
     parent_id: 0,
     category: ObjectsCategory.GenericInput,
-    props: {},
+    props: {
+      interface: DeviceInterface['MEGAIN'],
+      mode: '',
+    },
   },
   [Relay.Relay]: {
     sdaPort: null,
     parent_id: 0,
     category: ObjectsCategory.Relay,
-    props: {},
+    props: {
+      interface: DeviceInterface['MEGAOUT'],
+    },
   },
   [Regulator.Regulator]: {
     parent_id: 0,
@@ -448,13 +453,18 @@ const editFormByTypesMap = {
     id: 0,
     sdaPort: null,
     parent_id: 0,
-    props: {},
+    props: {
+      interface: DeviceInterface['MEGAIN'],
+      mode: '',
+    },
   },
   [Relay.Relay]: {
     id: 0,
     sdaPort: null,
     parent_id: 0,
-    props: {},
+    props: {
+      interface: DeviceInterface['MEGAOUT'],
+    },
   },
   [Regulator.Regulator]: {
     id: 0,

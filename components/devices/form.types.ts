@@ -62,6 +62,7 @@ export interface DeviceProps {
     enable?: boolean;
     fallback_sensor_value_id?: number;
     period?: number;
+    mode?: string;
   }
 
 export interface DeviceChild {
