@@ -17,8 +17,13 @@
 }
 
 .p-treetable-row-selected {
-  background-color: var(--p-primary-50) !important;
+  background-color: var(--p-primary-100) !important;
   color: black !important;
+}
+
+.p-dark .p-treetable-row-selected {
+  background-color: #1b362f !important;
+  color: white !important;
 }
 
 .p-treetable-tbody tr {
