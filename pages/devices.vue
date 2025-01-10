@@ -267,7 +267,7 @@ const processedDevices = computed(() => {
       @created="created"
       @update="update"
     >
-      <Column expander>
+      <Column expander style="width: 15px;">
         <!-- <template #header>
           <DevicesTableHeader title="devices.id">
             <InputText

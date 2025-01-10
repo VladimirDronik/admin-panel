@@ -230,8 +230,9 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       enable: false,
-      interface: DeviceInterface['DISCRETE'],
+      interface: DeviceInterface['MEGAIN'],
       period: 8,
+      mode: 'P',
     },
     children: {
       [DevicePropertyKey.Motion]: {
@@ -254,8 +255,9 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       enable: false,
-      interface: DeviceInterface['DISCRETE'],
+      interface: DeviceInterface['MEGAIN'],
       period: 120,
+      mode: 'P',
     },
     children: {
       [DevicePropertyKey.Motion]: {
@@ -426,6 +428,8 @@ const editFormByTypesMap = {
     props: {
       enable: false,
       period: 8,
+      mode: 'P',
+      interface: DeviceInterface['MEGAIN'],
     },
     children: {},
   },
@@ -437,6 +441,8 @@ const editFormByTypesMap = {
     props: {
       enable: false,
       period: 120,
+      mode: 'P',
+      interface: DeviceInterface['MEGAIN'],
     },
     children: {},
   },
