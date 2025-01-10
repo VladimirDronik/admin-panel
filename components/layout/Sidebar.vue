@@ -26,8 +26,8 @@ const to = computed(() => route.path);
     class="tw-fixed tw-inset-y-0 tw-left-0 tw-w-full tw-max-w-80"
     :class="{ '!tw-max-w-20': !open }"
   >
-    <div class="border-base tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r tw-p-5 !tw-shadow-none">
-      <div class="tw-mb-7 ">
+    <div class="border-base tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r tw-p-5 tw-pt-6 !tw-shadow-none">
+      <div class="tw-mb-5">
         <Logo v-if="open" />
         <LogoRtlLogo v-else />
       </div>

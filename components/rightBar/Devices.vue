@@ -204,10 +204,7 @@ onBeforeMount(async () => {
     :is-open="isOpen"
     :is-update="isUpdate"
   >
-    <div
-      class="tw-min-h-80 tw-p-7"
-      elevation="0"
-    >
+    <div>
       <div
         :key="forceUpdateKey"
         class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
@@ -267,9 +264,13 @@ onBeforeMount(async () => {
           {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
       </Tag>
-      <Tabs v-model:value="tabs">
+      <Tabs
+        v-model:value="tabs"
+      >
         <TabList>
-          <Tab value="features">
+          <Tab
+            value="features"
+          >
             <p class="tw-font-normal">
               {{ t('devices.features') }}
             </p>

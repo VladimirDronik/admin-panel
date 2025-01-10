@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+const router = useRouter()
+
+const goBack = () => {
+  router.push({ name: 'devices' })
+}
 </script>
 <template>
   <div class="logo">
-    <RouterLink
-      class="tw-flex tw-justify-center"
-      :to="{ name: 'devices' }"
+    <button
+      class="tw-flex tw-w-full tw-justify-center"
+      @click="goBack"
     >
       <svg
         fill="none"
@@ -53,6 +57,6 @@ import { RouterLink } from 'vue-router';
           </linearGradient>
         </defs>
       </svg>
-    </RouterLink>
+    </button>
   </div>
 </template>
