@@ -79,7 +79,10 @@ const addCondition = () => {
     type: 'condition',
     sort: 0,
     qos: 0,
-    actions: []
+    actions: [],
+    args: {
+      isOpen: true
+    }
   });
 }
 
