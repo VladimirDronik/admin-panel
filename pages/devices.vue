@@ -466,4 +466,9 @@ tr[aria-level="1"] .p-treetable-node-toggle-button {
   margin-left: 5px !important;
 }
 
+tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
+  margin-left: -33px;
+}
+
+
 </style>
