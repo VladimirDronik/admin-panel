@@ -8,9 +8,7 @@ export interface Filter {
 
 export interface Options {
   title: string,
-  props: {
-    value: any
-  }
+  value: string,
 }
 
 export interface Header {
