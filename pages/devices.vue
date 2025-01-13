@@ -109,7 +109,11 @@ const filters = ref<Filter[]>([
     label: 'Статус',
     key: 'filter_by_status',
     value: null,
-    options: ['ON', 'OFF', 'Enable', 'N/A'],
+    options: [
+      { title: 'Доступен', value: 'ON' },
+      { title: 'Недоступен', value: 'N/A' },
+      { title: 'Отключен', value: 'OFF' },
+    ],
   },
   {
     label: 'Теги',
@@ -247,6 +251,8 @@ const processedDevices = computed(() => {
   return result;
 });
 
+
+
 </script>
 
 <template>
@@ -363,6 +369,8 @@ const processedDevices = computed(() => {
               class="tw-min-w-80"
               color="primary"
               :options="filters[5].options"
+              :option-label="'title'"
+              :option-value="'value'"
               :placeholder="filters[5].label"
               show-clear
             />
