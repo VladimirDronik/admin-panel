@@ -85,6 +85,7 @@ const deleteItem = (id: number) => {
           <div class="tw-relative tw-right-3 tw-flex tw-items-center">
             <Button
               class="tw-mr-2"
+              :class="{'-tw-rotate-90': eventItem.args.isOpen}"
               icon="pi pi-angle-down"
               rounded
               severity="secondary"
