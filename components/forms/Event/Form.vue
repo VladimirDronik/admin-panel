@@ -104,7 +104,9 @@ watch(events, () => {
   form.value = events.value?.find((item: any) => item.code === selectedEvent.value?.code) ?? null;
 });
 
-watch(() => [props.modelType, props.id], updateEvents);
+watch(() => [props.modelType, props.id], () => {updateEvents()
+  console.log('yes')
+});
 
 // Created
 updateEvents();

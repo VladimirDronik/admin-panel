@@ -87,8 +87,6 @@ watch(() => id, () => {
     >
       <div class="tw-mb-3">
         <div>
-          {{ sensor }}
-          {{ apiGetSensor }}
           <p class="tw-mb-4 tw-text-xl">
             Текущее значение: {{ sensor.name ? sensor.name : '-' }}
             <span v-if="sensor.type === 'temperature'">

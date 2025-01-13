@@ -167,7 +167,10 @@ onBeforeMount(async () => {
             class="tw-mb-2"
             :title="'Иконка'"
           >
-            <SharedUIIconSelect v-model:icon="form.icon" />
+            <SharedUIIconSelect
+              v-model:icon="form.icon"
+              @change="changeItem"
+            />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogsDeleteDialog
