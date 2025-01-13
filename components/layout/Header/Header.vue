@@ -42,7 +42,7 @@ const toggleDark = useToggle(isDark)
         />
         <LayoutHeaderLanguage class="tw-mr-2" />
 
-        <LayoutHeaderNotification class="tw-mr-2" />
+        <!-- <LayoutHeaderNotification class="tw-mr-2" /> -->
 
         <LayoutHeaderProfile />
       </div>
