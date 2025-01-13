@@ -50,29 +50,18 @@ const showScenarioPanel = (item_id: number) => {
   isShow.value = true;
 };
 
-// Computed Properties
-const roomIds = computed(() => {
-  if (!apiItems.value?.data) return [];
-  return apiItems.value.data.response.room_items.map((room) => ({
-    zone_id: room.id,
-    item_ids: room.items.map((item) => item.item_id),
-  }));
-});
-
-// Watchers
-watch(roomIds, async (newValue, oldValue) => {
-  const result = newValue.find((item, index) => _.isEqual(item, oldValue[index]));
-  if (result) {
-    await $fetch(paths.privateItemsOrder, {
-      method: 'PATCH',
-      body: result,
-      headers: {
-        token: localState.value.token ?? '',
-      },
-    });
-    // await apiItems.value?.refresh();
-  }
-});
+const updateOrder = async (roomList: any, id: number) => {
+  await $fetch(paths.privateItemsOrder, {
+    method: 'PATCH',
+    body: {
+      zone_id: id,
+      item_ids: roomList.map((item: any) => item.item_id),
+    },
+    headers: {
+      token: localState.value.token ?? '',
+    },
+  });
+}
 
 // Hooks
 onBeforeMount(async () => {
@@ -122,6 +111,7 @@ onBeforeMount(async () => {
             v-model="rooms.items"
             :animation="300"
             class="tw-gap-3"
+            @change="updateOrder(rooms.items, rooms.id)"
           >
             <DisplayItemCard
               v-for="items in rooms.items"
