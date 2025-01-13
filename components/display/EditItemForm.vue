@@ -9,7 +9,6 @@ import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import type { APIData } from '~/types/StoreTypes';
 import { type itemType } from '~/types/DisplayTypes';
-import type { Event } from '~/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
@@ -34,8 +33,6 @@ const isOpen = defineModel<boolean>('isOpen', {
 });
 
 // Variables
-const events = ref<Event[]>();
-
 const loadingDelete = ref(false);
 
 const resolver = ref(zodResolver(
@@ -192,7 +189,6 @@ onBeforeMount(async () => {
       <TabPanel value="events">
         <FormsEventForm
           :id="form.item_id"
-          v-model="events"
           :event-types="itemEventTypes"
           :model-type="form.type"
           :object="form"
