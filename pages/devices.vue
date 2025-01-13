@@ -369,10 +369,9 @@ const processedDevices = computed(() => {
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          <div
-            class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusBackgroundColor(node.data.status)"
-          />
+          <div :class="node.data.status === 'OFF' ? 'tw-text-danger tw-text-xl tw-flex tw-items-center' : 'tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(node.data.status)">
+            {{ node.data.status === 'OFF' ? '×' : '' }}
+          </div>
           {{ checkStatusText(node.data.status) }}
         </template>
       </Column>

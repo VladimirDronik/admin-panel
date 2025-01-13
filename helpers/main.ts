@@ -1,12 +1,12 @@
 export const checkStatusText = (item: string | undefined) => {
-  if (item === 'ON') return 'Включено';
-  if (item === 'OFF') return 'Выключено';
-  return 'Неопределён';
+  if (item === 'ON') return 'Доступен';
+  if (item === 'OFF') return 'Отключен';
+  return 'Недоступен';
 };
 export const checkStatusTextSmall = (item: string | undefined) => {
-  if (item === 'ON') return 'Вкл';
-  if (item === 'OFF') return 'Выкл';
-  return 'Неоп';
+  if (item === 'ON') return 'Доступен';
+  if (item === 'OFF') return 'Отключен';
+  return 'Недоступен';
 };
 
 export const checkStatusBackgroundColor = (item: string | undefined) => {

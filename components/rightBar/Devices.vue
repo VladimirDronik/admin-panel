@@ -256,13 +256,16 @@ onBeforeMount(async () => {
         outlined
         :severity="checkStatusColor(asideEditingForm.status)"
       >
-        <div class="tw-flex tw-items-center tw-font-normal">
-          <div
-            class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusBackgroundColor(asideEditingForm.status)"
-          />
-          {{ checkStatusTextSmall(asideEditingForm.status) }}
+      <div class="tw-flex tw-items-center tw-font-normal">
+        <div
+        :class="asideEditingForm.status === 'OFF' 
+        ? 'tw-text-danger tw-text-xl tw-mr-3' 
+        : 'tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(asideEditingForm.status)"
+        >
+        {{ asideEditingForm.status === 'OFF' ? '×' : '' }}
         </div>
+      {{ checkStatusTextSmall(asideEditingForm.status) }}
+      </div>
       </Tag>
       <Tabs
         v-model:value="tabs"
