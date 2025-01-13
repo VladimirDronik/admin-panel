@@ -24,19 +24,21 @@ const edit = ref(false);
 
 // Methods
 const filterEvents = async (type: string) => {
+  console.log(events.value)
   const objectEvents = props.eventTypes[type];
   if (objectEvents) {
     if (props.id) {
       const requests: Request<{
         [key: string]: Action[]
-      }> = await $fetch('http://10.35.16.1:8083/events/actions', {
+      }> = await $fetch(paths.eventsActions, {
         params: {
           target_id: props.id,
           target_type: props.targetType,
         },
       });
+      console.log(requests)
 
-      const result = objectEvents.map((item) => {
+      events.value = objectEvents.map((item) => {
         if (requests.response[item.code]) {
           return {
             ...item,
@@ -46,18 +48,17 @@ const filterEvents = async (type: string) => {
         }
         return item;
       });
-
-      events.value = result;
+      
     } else {
-      const result = props.eventTypes[type].map((item) => ({
+      events.value = props.eventTypes[type].map((item) => ({
         ...item,
         actionTypes: actionsType(item.actions),
       }));
-      events.value = result;
     }
   } else {
     events.value = [];
   }
+
   if (selectedEvent.value) {
     const eventFind = events.value.find((item) => item.code === selectedEvent.value?.code);
     if (eventFind) selectedEvent.value = eventFind;
@@ -104,9 +105,7 @@ watch(events, () => {
   form.value = events.value?.find((item: any) => item.code === selectedEvent.value?.code) ?? null;
 });
 
-watch(() => [props.modelType, props.id], () => {updateEvents()
-  console.log('yes')
-});
+watch(() => [props.modelType, props.id], updateEvents);
 
 // Created
 updateEvents();

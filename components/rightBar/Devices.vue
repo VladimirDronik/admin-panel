@@ -328,9 +328,10 @@ onBeforeMount(async () => {
           </TabPanel>
           <TabPanel value="events">
             <FormsEventForm
-              :id="asideEditingForm.id"
+              v-if="selectedObject"
+              :id="selectedObject.id"
               :event-types="deviceEventTypes"
-              :model-type="asideEditingForm.type"
+              :model-type="selectedObject.type"
               target-type="object"
             />
           </TabPanel>
