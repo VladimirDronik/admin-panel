@@ -82,7 +82,6 @@ onBeforeMount(async () => {
 
 <template>
   <SharedUIPanel>
-    {{ zoneId }}
     <SharedUIBreadcrumb title="pages.display">
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>
