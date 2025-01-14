@@ -99,6 +99,7 @@ onBeforeMount(async () => {
     </SharedUILoader>
     <DisplayCreateItemForm
       v-else
+      :id="zoneId"
       v-model:is-open="isOpen"
       :devices="devices"
       :zone-id="zoneId"

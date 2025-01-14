@@ -24,7 +24,6 @@ const edit = ref(false);
 
 // Methods
 const filterEvents = async (type: string) => {
-  console.log(events.value)
   const objectEvents = props.eventTypes[type];
   if (objectEvents) {
     if (props.id) {

@@ -5,14 +5,14 @@ import { paths } from '~/utils/endpoints';
 import { filterInListRoom } from '~/helpers/rooms';
 // Types
 import type { APIData } from '~/types/StoreTypes';
-import { roomRequestSchema, type RoomItem } from './roomsTypes';
+import { roomRequestSchema, type RoomItem, type SelectRoom } from './roomsTypes';
 
 export const useRoomsStore = defineStore('Rooms', () => {
   // Variables
   const apiRooms = ref<APIData<RoomItem[]> | null>();
 
   // Computed
-  const getRoomsSelect = computed(() => filterInListRoom(apiRooms.value?.data?.response ?? []));
+  const getRoomsSelect = computed<SelectRoom[]>(() => filterInListRoom(apiRooms.value?.data?.response ?? []));
 
   // Methods
   const getRoomsApi = async (params = {}) => {

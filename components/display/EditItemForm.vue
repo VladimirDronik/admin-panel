@@ -16,7 +16,7 @@ const { updateData } = useUtils();
 const storeRooms = useRoomsStore();
 
 // Declare Options
-defineProps<{
+const props = defineProps<{
   devices: string[]
 }>();
 
@@ -144,15 +144,7 @@ onBeforeMount(async () => {
             :title="'Помещение'"
             :value="form.zone_id"
           >
-            <Select
-              v-model="form.zone_id"
-              class="tw-w-full"
-              option-label="name"
-              option-value="code"
-              :options="storeRooms.getRoomsSelect"
-              required
-              show-clear
-            />
+            <SharedUIRoomSelect v-model="form.zone_id" />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
