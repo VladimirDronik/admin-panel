@@ -64,7 +64,7 @@ watch(() => id, () => {
       <img
         alt=""
         class="tw-mr-0.5"
-        :src="`scenario_items/${sensor.icon}.png`"
+        :src="`items/${sensor.icon}.png`"
       >
       {{ sensor.current }}
       <span v-if="sensor.type === 'temperature'">
