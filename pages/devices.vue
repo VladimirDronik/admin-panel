@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled,
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
@@ -41,6 +41,8 @@ const iconMap = {
   motion: IconRun,
   htu21d: IconCloudPlus,
   regulator: IconToggleRightFilled,
+  modbus: IconCpu,
+  wb_mrm2_mini: IconCurrency,
 } as const;
 
 type IconMapKey = keyof typeof iconMap;
@@ -473,9 +475,9 @@ tr[aria-level="1"] .p-treetable-node-toggle-button {
   margin-left: 5px !important;
 }
 
-tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
-  margin-left: -33px;
-}
+// tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
+//   margin-left: -33px;
+// }
 
 
 </style>
