@@ -23,7 +23,6 @@ export const filterInListRoom = (rooms: RoomItem[] | undefined) => {
       });
     }
   });
-  console.log(result);
   return result;
 };
 //
