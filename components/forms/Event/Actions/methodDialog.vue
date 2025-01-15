@@ -47,7 +47,7 @@ const apiDevicesList = ref<APIData<any>>();
 const apiCreateMethod = ref<APIData<any>>();
 
 // Computed Properties
-const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.includes(search.value)));
+const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.toLowerCase().includes(search.value.toLowerCase())));
 
 // Methods
 const selectObject = (object: any) => {
@@ -177,15 +177,14 @@ onBeforeMount(async () => {
         </h3>
       </div>
       <div
-        v-if="filteredObjects?.length"
         class="tw-flex"
       >
         <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
+          <InputText
+            v-model="search"
+            class="tw-mb-2 tw-w-full"
+          />
           <div v-if="filteredObjects?.length">
-            <InputText
-              v-model="search"
-              class="tw-mb-2 tw-w-full"
-            />
             <ScrollPanel style="height: 300px">
               <button
                 v-for="object in filteredObjects"
