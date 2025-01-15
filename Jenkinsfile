@@ -39,7 +39,7 @@ pipeline {
             steps {
                 sh """
                     docker buildx build \
-                    -t ${env.REGISTRY}/${env.SERVICE}:develop \
+                    -t ${env.REGISTRY}/${env.SERVICE}:2.0 \
                     --platform linux/arm64 \
                     --push \
                     ${env.WORKDIR}${env.SERVICE}
