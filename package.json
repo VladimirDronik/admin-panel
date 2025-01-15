@@ -4,7 +4,7 @@
   "type": "module",
   "version": "2.0.0-alpha.1",
   "scripts": {
-    "build": "nuxt build --dotenv .env.dev",
+    "build": "nuxt build --dotenv .env.prod",
     "dev": "nuxt dev --dotenv .env.local",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
