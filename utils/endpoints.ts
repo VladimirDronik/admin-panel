@@ -1,8 +1,8 @@
-export const auth = 'http://178.57.106.190:18081/token';
+export const auth = `${import.meta.env.VITE_AUTH}/token`;
 
-export const translator = 'http://10.35.16.1:8081';
-export const objectManager = 'http://10.35.16.1:8082';
-export const actionRouter = 'http://10.35.16.1:8083';
+export const translator = import.meta.env.VITE_TRANSLATOR;
+export const objectManager = import.meta.env.VITE_OBJECT_MANAGET;
+export const actionRouter = import.meta.env.VITE_ACTION_ROUTER;
 
 export const paths = {
   // Translator
