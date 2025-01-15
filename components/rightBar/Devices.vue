@@ -204,10 +204,7 @@ onBeforeMount(async () => {
     :is-open="isOpen"
     :is-update="isUpdate"
   >
-    <div
-      class="tw-min-h-80 tw-p-7"
-      elevation="0"
-    >
+    <div>
       <div
         :key="forceUpdateKey"
         class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
@@ -259,17 +256,24 @@ onBeforeMount(async () => {
         outlined
         :severity="checkStatusColor(asideEditingForm.status)"
       >
-        <div class="tw-flex tw-items-center tw-font-normal">
-          <div
-            class="tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusBackgroundColor(asideEditingForm.status)"
-          />
-          {{ checkStatusTextSmall(asideEditingForm.status) }}
+      <div class="tw-flex tw-items-center tw-font-normal">
+        <div
+        :class="asideEditingForm.status === 'OFF' 
+        ? 'tw-text-danger tw-text-xl tw-mr-3' 
+        : 'tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(asideEditingForm.status)"
+        >
+        {{ asideEditingForm.status === 'OFF' ? '×' : '' }}
         </div>
+      {{ checkStatusTextSmall(asideEditingForm.status) }}
+      </div>
       </Tag>
-      <Tabs v-model:value="tabs">
+      <Tabs
+        v-model:value="tabs"
+      >
         <TabList>
-          <Tab value="features">
+          <Tab
+            value="features"
+          >
             <p class="tw-font-normal">
               {{ t('devices.features') }}
             </p>
@@ -327,9 +331,10 @@ onBeforeMount(async () => {
           </TabPanel>
           <TabPanel value="events">
             <FormsEventForm
-              :id="asideEditingForm.id"
+              v-if="selectedObject"
+              :id="selectedObject.id"
               :event-types="deviceEventTypes"
-              :model-type="asideEditingForm.type"
+              :model-type="selectedObject.type"
               target-type="object"
             />
           </TabPanel>

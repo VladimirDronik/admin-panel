@@ -9,7 +9,6 @@ import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import type { APIData } from '~/types/StoreTypes';
 import { type itemType } from '~/types/DisplayTypes';
-import type { Event } from '~/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
@@ -17,7 +16,7 @@ const { updateData } = useUtils();
 const storeRooms = useRoomsStore();
 
 // Declare Options
-defineProps<{
+const props = defineProps<{
   devices: string[]
 }>();
 
@@ -34,8 +33,6 @@ const isOpen = defineModel<boolean>('isOpen', {
 });
 
 // Variables
-const events = ref<Event[]>();
-
 const loadingDelete = ref(false);
 
 const resolver = ref(zodResolver(
@@ -147,15 +144,7 @@ onBeforeMount(async () => {
             :title="'Помещение'"
             :value="form.zone_id"
           >
-            <Select
-              v-model="form.zone_id"
-              class="tw-w-full"
-              option-label="name"
-              option-value="code"
-              :options="storeRooms.getRoomsSelect"
-              required
-              show-clear
-            />
+            <SharedUIRoomSelect v-model="form.zone_id" />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
@@ -167,7 +156,10 @@ onBeforeMount(async () => {
             class="tw-mb-2"
             :title="'Иконка'"
           >
-            <SharedUIIconSelect v-model:icon="form.icon" />
+            <SharedUIIconSelect
+              v-model:icon="form.icon"
+              @change="changeItem"
+            />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogsDeleteDialog
@@ -189,7 +181,6 @@ onBeforeMount(async () => {
       <TabPanel value="events">
         <FormsEventForm
           :id="form.item_id"
-          v-model="events"
           :event-types="itemEventTypes"
           :model-type="form.type"
           :object="form"

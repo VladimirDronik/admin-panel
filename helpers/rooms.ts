@@ -1,25 +1,25 @@
-import type { RoomItem } from '~/stores/rooms/roomsTypes';
+import type { RoomItem, SelectRoom } from '~/stores/rooms/roomsTypes';
 import { colors } from '~/staticData/rooms';
-
-interface SelectRoom {
-  name: string;
-  code: number;
-}
 
 // API
 export const filterInListRoom = (rooms: RoomItem[] | undefined) => {
   if (!rooms) return [];
   let result: SelectRoom[] = [];
-  rooms.forEach((item) => {
-    if (item.rooms_in_group?.length) {
-      result = result.concat(result, item.rooms_in_group.map((item) => ({
+  rooms.forEach((room) => {
+    if (room.rooms_in_group?.length) {
+      result = result.concat(result, room.rooms_in_group.map((item) => ({
         name: item.name,
         code: item.id,
+        inGroup: {
+          color: room.style,
+          name: room.name,
+          code: room.id,
+        }
       })));
     } else {
       result.push({
-        name: item.name,
-        code: item.id,
+        name: room.name,
+        code: room.id,
       });
     }
   });
@@ -66,3 +66,4 @@ export const getRoomColorByValue = (value: string) => {
   const result = colors.find((item) => item.code === value);
   return result;
 };
+

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled,
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
@@ -41,6 +41,8 @@ const iconMap = {
   motion: IconRun,
   htu21d: IconCloudPlus,
   regulator: IconToggleRightFilled,
+  modbus: IconCpu,
+  wb_mrm2_mini: IconCurrency,
 } as const;
 
 type IconMapKey = keyof typeof iconMap;
@@ -109,7 +111,11 @@ const filters = ref<Filter[]>([
     label: 'Статус',
     key: 'filter_by_status',
     value: null,
-    options: ['ON', 'OFF', 'Enable', 'N/A'],
+    options: [
+      { title: 'Доступен', value: 'ON' },
+      { title: 'Недоступен', value: 'N/A' },
+      { title: 'Отключен', value: 'OFF' },
+    ],
   },
   {
     label: 'Теги',
@@ -247,6 +253,8 @@ const processedDevices = computed(() => {
   return result;
 });
 
+
+
 </script>
 
 <template>
@@ -267,7 +275,7 @@ const processedDevices = computed(() => {
       @created="created"
       @update="update"
     >
-      <Column expander>
+      <Column expander style="width: 15px;">
         <!-- <template #header>
           <DevicesTableHeader title="devices.id">
             <InputText
@@ -363,16 +371,17 @@ const processedDevices = computed(() => {
               class="tw-min-w-80"
               color="primary"
               :options="filters[5].options"
+              :option-label="'title'"
+              :option-value="'value'"
               :placeholder="filters[5].label"
               show-clear
             />
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          <div
-            class="tw-h-2.5 tw-w-2.5 tw-rounded-full"
-            :class="checkStatusBackgroundColor(node.data.status)"
-          />
+          <div :class="node.data.status === 'OFF' ? 'tw-text-danger tw-text-xl tw-flex tw-items-center' : 'tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(node.data.status)">
+            {{ node.data.status === 'OFF' ? '×' : '' }}
+          </div>
           {{ checkStatusText(node.data.status) }}
         </template>
       </Column>
@@ -465,5 +474,10 @@ tr[aria-level="2"] .p-treetable-node-toggle-button {
 tr[aria-level="1"] .p-treetable-node-toggle-button {
   margin-left: 5px !important;
 }
+
+// tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
+//   margin-left: -33px;
+// }
+
 
 </style>

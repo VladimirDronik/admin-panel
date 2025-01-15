@@ -23,7 +23,6 @@ export const roomSensors = z.object({
   enabled: z.boolean(),
   icon: z.string(),
   id: z.number(),
-  id_item: z.number(),
   name: z.string(),
   position_left: z.number(),
   position_top: z.number(),

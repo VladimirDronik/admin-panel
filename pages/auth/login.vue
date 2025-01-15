@@ -40,12 +40,7 @@ const params = ref({
 
 // Methods
 const success = (response: any) => {
-  localState.value = {
-      token: response.response.api_access_token,
-      openSidebar: true,
-      language: 'ru',
-    }
-
+  localState.value.token = response.response.api_access_token
   router.push({ name: 'general' });
 };
 

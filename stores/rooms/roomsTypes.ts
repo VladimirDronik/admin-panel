@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+export interface SelectRoom {
+  name: string;
+  code: number;
+  inGroup?: {
+    color: string,
+    name: string,
+    code: number,
+  }
+}
+
 export interface RequestData {
   data: {
     response: Room[]

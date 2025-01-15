@@ -230,8 +230,9 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       enable: false,
-      interface: DeviceInterface['DISCRETE'],
+      interface: DeviceInterface['MEGAIN'],
       period: 8,
+      mode: 'P',
     },
     children: {
       [DevicePropertyKey.Motion]: {
@@ -254,8 +255,9 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       enable: false,
-      interface: DeviceInterface['DISCRETE'],
+      interface: DeviceInterface['MEGAIN'],
       period: 120,
+      mode: 'P',
     },
     children: {
       [DevicePropertyKey.Motion]: {
@@ -408,6 +410,7 @@ const editFormByTypesMap = {
       update_interval: 300,
     },
     children: {},
+    status: '',
   },
   [Sensor.CS]: {
     id: 0,
@@ -418,6 +421,7 @@ const editFormByTypesMap = {
       update_interval: 300,
     },
     children: {},
+    status: '',
   },
   [Sensor.MOTION]: {
     id: 0,
@@ -426,8 +430,11 @@ const editFormByTypesMap = {
     props: {
       enable: false,
       period: 8,
+      mode: 'P',
+      interface: DeviceInterface['MEGAIN'],
     },
     children: {},
+    status: '',
   },
   [Sensor.PRESENCE]: {
     id: 0,
@@ -437,8 +444,11 @@ const editFormByTypesMap = {
     props: {
       enable: false,
       period: 120,
+      mode: 'P',
+      interface: DeviceInterface['MEGAIN'],
     },
     children: {},
+    status: '',
   },
   [Controller.MegaD]: {
     id: 0,
@@ -448,6 +458,7 @@ const editFormByTypesMap = {
       password: '',
       protocol: Connection.HTTP,
     },
+    status: '',
   },
   [GenericInput.GenericInput]: {
     id: 0,
@@ -457,6 +468,7 @@ const editFormByTypesMap = {
       interface: DeviceInterface['MEGAIN'],
       mode: '',
     },
+    status: '',
   },
   [Relay.Relay]: {
     id: 0,
@@ -465,6 +477,7 @@ const editFormByTypesMap = {
     props: {
       interface: DeviceInterface['MEGAOUT'],
     },
+    status: '',
   },
   [Regulator.Regulator]: {
     id: 0,
@@ -480,6 +493,7 @@ const editFormByTypesMap = {
       above_tolerance: 0,
       complex_tolerance: 0,
     },
+    status: '',
   },
   [Controller.WBMRM2mini]: {
     category: ObjectsCategory.Controller,
@@ -490,6 +504,7 @@ const editFormByTypesMap = {
       address: '',
     },
     children: {},
+    status: '',
   },
 };
 

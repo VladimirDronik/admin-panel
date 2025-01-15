@@ -82,8 +82,8 @@ const protocolOptions = schema.shape.protocol.options;
       />
     </SharedUILabel>
 
+    <!-- v-if="!props.isEditing" -->
     <SharedUILabel
-      v-if="!props.isEditing"
       class="tw-mb-2"
       name="address"
       required

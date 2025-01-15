@@ -19,6 +19,7 @@ const { updateData } = useUtils();
 const props = defineProps<{
   devices: string[],
   zoneId: number,
+  id: number | undefined
 }>();
 
 const emit = defineEmits<{
@@ -33,11 +34,19 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
-const form = ref({
+const form = ref<{
+  enabled: boolean,
+  title: string | null,
+  type: string | null,
+  color: string | null,
+  zone_id: number | null,
+  icon: string | null,
+}>({
+  enabled: true,
   title: null,
   type: null,
   color: null,
-  item_id: null,
+  zone_id: null,
   icon: null,
 });
 
@@ -61,10 +70,11 @@ const createItem = async () => {
     },
     success: () => {
       form.value = {
+        enabled: true,
         title: null,
         type: null,
         color: null,
-        item_id: null,
+        zone_id: null,
         icon: null,
       };
       isOpen.value = false;
@@ -75,18 +85,27 @@ const createItem = async () => {
   });
 };
 
+const quickSelectRoom = (id: number | undefined) => storeRooms.getRoomsSelect.find((item) => item.code === id || item.inGroup?.code === id)
+
+// Watchers
+watch(() => props.id, (newValue) => {
+  const room = quickSelectRoom(newValue)?.code
+  if (room) form.value.zone_id = room
+})
+
 // Hooks
 onBeforeMount(async () => {
   // Create Device
   const data: unknown = await useAPI(paths.privateWizard, {
     body: computed(() => ({
-      item: form.value,
+      item: {
+        ...form.value
+      },
       events: events.value?.map((item) => ({
         actions: item.actions,
         name: item.code,
       }))
         .filter((item) => item.actions.length > 0),
-      zone_id: props.zoneId,
     })),
     method: 'POST',
     immediate: false,
@@ -154,17 +173,9 @@ onBeforeMount(async () => {
             name="zone_id"
             required
             :title="'Помещение'"
-            :value="form.item_id"
+            :value="form.zone_id"
           >
-            <Select
-              v-model="form.item_id"
-              class="tw-w-full"
-              option-label="name"
-              option-value="code"
-              :options="storeRooms.getRoomsSelect"
-              required
-              show-clear
-            />
+            <SharedUIRoomSelect v-model="form.zone_id" />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"

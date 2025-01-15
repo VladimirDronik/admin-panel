@@ -5,8 +5,8 @@ import { colors } from '~/staticData/rooms';
 import { getRoomColorByValue } from '~/helpers/rooms';
 
 // Declare Options
-const value = defineModel<string | null>({
-  default: null,
+const value = defineModel<string | null | undefined>({
+  required: true,
 });
 
 </script>
@@ -29,7 +29,9 @@ const value = defineModel<string | null>({
           class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
           :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }"
         />
-        <div>{{ getRoomColorByValue(slotProps.value)?.name }}</div>
+        <div class="tw-min-h-6">
+          {{ getRoomColorByValue(slotProps.value)?.name }}
+        </div>
       </div>
     </template>
     <template #option="slotProps">

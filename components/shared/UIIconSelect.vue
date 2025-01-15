@@ -11,13 +11,19 @@ const icon = defineModel<string | null>('icon', {
 });
 
 // Declare Options
+const emit = defineEmits<{
+  (e: 'change'): void
+}>();
+
 const dialog = defineModel<boolean>({
   default: false,
 });
 
 // Methods
-const createRoom = () => {
-
+const selectIcon = (item: string) => {
+  icon.value = item
+  emit('change')
+  dialog.value = false;
 };
 </script>
 
@@ -54,7 +60,7 @@ const createRoom = () => {
           :key="item"
           class="tw-aspect-square"
           type="button"
-          @click="icon = item"
+          @click="selectIcon(item)"
         >
           <div
             class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
@@ -67,22 +73,6 @@ const createRoom = () => {
             >
           </div>
         </button>
-      </div>
-
-      <div class="tw-flex tw-justify-end">
-        <Button
-          class="tw-mr-2"
-          @click="createRoom"
-        >
-          {{ t('save') }}
-        </Button>
-        <Button
-          outlined
-          variant="outlined"
-          @click="dialog = false"
-        >
-          {{ t('cancel') }}
-        </Button>
       </div>
     </Dialog>
   </div>

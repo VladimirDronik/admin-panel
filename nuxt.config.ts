@@ -83,6 +83,29 @@ export default defineNuxtConfig({
           },
         },
       },
+      pt: {
+        steppanel: {
+          root: {
+            style: {
+              background: 'none'
+            }
+          }
+        },
+        TabPanels: {
+          root: {
+            style: {
+              background: 'none'
+            }
+          }
+        },
+        tabList: {
+          tabList: {
+            style: {
+              background: 'none'
+            }
+          }
+        },
+      }
     },
   },
 

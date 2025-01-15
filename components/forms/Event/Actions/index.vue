@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // Builtin modules
 import _ from 'lodash';
+import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical } from '@tabler/icons-vue';
 // Helper modules
@@ -10,6 +11,9 @@ import { paths } from '~/utils/endpoints';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
+
+// Composables
+const { t } = useI18n();
 
 // Declare Options
 const props = defineProps<{
@@ -38,6 +42,7 @@ const dialogMethod = ref(false);
 const dialogPause = ref(false);
 const dialogScript = ref(false);
 const dialogNotification = ref(false);
+const dialogCondition = ref(false);
 
 const dialogDelete = ref(false);
 
@@ -66,6 +71,20 @@ const confirmDelete = async () => {
   await apiDeleteMethods.value?.execute();
   await updateActions();
 };
+const addCondition = () => {
+  event.value.actions.push({
+    enabled: true,
+    target_id: props.id,
+    target_type: 'condition',
+    type: 'condition',
+    sort: 0,
+    qos: 0,
+    actions: [],
+    args: {
+      isOpen: true
+    }
+  });
+}
 
 const openEdit = (event: any) => {
   if (event.type === 'method') dialogMethod.value = true;
@@ -159,11 +178,19 @@ onBeforeMount(async () => {
             @click="dialogScript = true"
           />
           <Button
+            class="tw-mr-4"
             icon="pi pi-plus"
             label="Уведомление"
             outlined
             severity="danger"
             @click="dialogNotification = true"
+          />
+          <Button
+            icon="pi pi-plus"
+            label="Условия"
+            outlined
+            severity="secondary"
+            @click="addCondition"
           />
         </div>
 
@@ -194,60 +221,28 @@ onBeforeMount(async () => {
         <FormsEventActionsNotificationDialog
           v-model="dialogNotification"
         />
+        <FormsEventActionsConditionDialog
+          :id="id"
+          v-model="dialogCondition"
+          v-model:event="event"
+          :edit="edit"
+          :target-type="targetType"
+          @update-actions="updateActions"
+        />
 
         <div v-if="event">
-          <VueDraggableNext
-            v-model="event.actions"
-            :animation="300"
-            handle=".handle-item"
-          >
-            <div
-              v-for="event in event.actions"
-              :key="event.id"
-              class="tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
-              @click="openEdit(event)"
-              @keydown="openEdit(event)"
-            >
-              <div class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2">
-                <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
-                  <Tag
-                    class="tw-mr-3 !tw-w-32"
-                    :severity="getActionsColor(event.type)"
-                  >
-                    <p class="tw-font-normal">
-                      {{ getActionsTitle(event.type, event.args) }}
-                    </p>
-                  </Tag>
-                  <p v-if="event.type === 'delay'">
-                    {{ event?.name ? event.name : '-' }}
-                  </p>
-                  <p v-else-if="event.type === 'script'">
-                    {{ event?.args?.name ? event.args.name : '-' }}
-                  </p>
-                  <p v-else-if="event.type === 'method'">
-                    {{ event?.args?.object ? event.args.object : '-' }}
-                  </p>
-                  <p v-else>
-                    {{ event?.args?.description ? event.args.description : '-' }}
-                  </p>
-                </div>
-                <div class="tw-flex tw-items-center">
-                  <Button
-                    aria-label="Cancel"
-                    class="tw-mr-2"
-                    icon="pi pi-trash"
-                    rounded
-                    severity="secondary"
-                    text
-                    @click.stop="deleteItem(event.id)"
-                  />
-                  <IconGripVertical class="handle-item tw-w-5 tw-cursor-pointer" />
-                </div>
-              </div>
-            </div>
-          </VueDraggableNext>
+          <FormsEventActionsListItem
+            :event="event"
+            @delete="deleteItem"
+          />
           <div v-if="!event.actions?.length">
             Список событий пуст
+          </div>
+          <div class="tw-flex tw-justify-end tw-pt-3">
+            <Button
+              :label="t('save')"
+              @click="dialog = false"
+            />
           </div>
         </div>
 

@@ -137,6 +137,9 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('update_interval' in initialForm.props) {
     initialForm.props.update_interval = Number(updatedInterval);
   }
+  if ('status' in initialForm && data.status) {
+    initialForm.status = data.status;
+  }
   if (Object.keys(children).length > 0 && initialForm.children) {
     initialForm.children = children;
   }
