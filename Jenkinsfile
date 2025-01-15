@@ -22,14 +22,14 @@ pipeline {
         DEV_SRV = credentials('dev_server_ssh_cmd')
     }
     stages {
-        stage('Notification') {
-            steps {
-                script {
-                    initMessage = "${env.MESSAGE_BASE}STARTED"
-                }
-                func_telegram_sendMessage("$initMessage", "${env.TOKEN}", "${env.CHAT}")
-            }
-        }
+        // stage('Notification') {
+        //     steps {
+        //         script {
+        //             initMessage = "${env.MESSAGE_BASE}STARTED"
+        //         }
+        //         func_telegram_sendMessage("$initMessage", "${env.TOKEN}", "${env.CHAT}")
+        //     }
+        // }
         stage('Pull') {
             steps {
                 sh "git -C ${env.WORKDIR}${env.SERVICE} pull"
@@ -46,42 +46,42 @@ pipeline {
                 """
             }
         }
-        stage('Publish') {
-            steps {
-                sh """
-                    set -e
-                    ssh ${env.DEV_SRV} << EOF
-                    cd /opt/touchon/gobin
-                    docker-compose pull ${env.SERVICE}
-                    docker-compose up --force-recreate --build -d ${env.SERVICE}
-                    docker system prune -af
-                    << EOF
-                """
-            }
-        }
+        // stage('Publish') {
+        //     steps {
+        //         sh """
+        //             set -e
+        //             ssh ${env.DEV_SRV} << EOF
+        //             cd /opt/touchon/gobin
+        //             docker-compose pull ${env.SERVICE}
+        //             docker-compose up --force-recreate --build -d ${env.SERVICE}
+        //             docker system prune -af
+        //             << EOF
+        //         """
+        //     }
+        // }
     }
     
-    post {
-        success {
-            script {
-                gitCommit = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} log -n 1 --pretty=format:'%h'", returnStdout: true)
-                gitCommiter = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} show -s --pretty=%an", returnStdout: true)
-                gitCommitComment = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} show --pretty=format:'%B' --no-patch -n 1 $gitCommit", returnStdout: true)
-                successMessage = "${env.MESSAGE_BASE}SUCSESS%0ACommit $gitCommit by $gitCommiter$gitCommitComment"
-                func_telegram_sendMessage("$successMessage", "${env.TOKEN}", "${env.CHAT}")
-            }
-        }
-        aborted {
-            script {
-                abortMessage = "${env.MESSAGE_BASE}ABORTED"
-                func_telegram_sendMessage("$abortMessage", "${env.TOKEN}", "${env.CHAT}")
-            }
-        }
-        failure {
-            script {
-                failMessage = "${env.MESSAGE_BASE}FAILURE"
-                func_telegram_sendMessage("$failMessage", "${env.TOKEN}", "${env.CHAT}")
-            }
-        }
-    }
+    // post {
+    //     success {
+    //         script {
+    //             gitCommit = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} log -n 1 --pretty=format:'%h'", returnStdout: true)
+    //             gitCommiter = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} show -s --pretty=%an", returnStdout: true)
+    //             gitCommitComment = sh (script: "git -C ${env.WORKDIR}${env.SERVICE} show --pretty=format:'%B' --no-patch -n 1 $gitCommit", returnStdout: true)
+    //             successMessage = "${env.MESSAGE_BASE}SUCSESS%0ACommit $gitCommit by $gitCommiter$gitCommitComment"
+    //             func_telegram_sendMessage("$successMessage", "${env.TOKEN}", "${env.CHAT}")
+    //         }
+    //     }
+    //     aborted {
+    //         script {
+    //             abortMessage = "${env.MESSAGE_BASE}ABORTED"
+    //             func_telegram_sendMessage("$abortMessage", "${env.TOKEN}", "${env.CHAT}")
+    //         }
+    //     }
+    //     failure {
+    //         script {
+    //             failMessage = "${env.MESSAGE_BASE}FAILURE"
+    //             func_telegram_sendMessage("$failMessage", "${env.TOKEN}", "${env.CHAT}")
+    //         }
+    //     }
+    // }
 }
