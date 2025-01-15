@@ -32,7 +32,7 @@ pipeline {
         // }
         stage('Pull') {
             steps {
-                sh "git -C ${env.WORKDIR}${env.SERVICE} pull"
+                sh "git -C ${env.WORKDIR}${env.SERVICE} switch release/2.0 && git -C ${env.WORKDIR}${env.SERVICE} pull"
             }
         }
         stage('Build') {
