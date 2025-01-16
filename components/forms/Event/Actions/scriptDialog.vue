@@ -141,7 +141,7 @@ onBeforeMount(async () => {
         <div
           v-for="script in refScripts?.data?.response.list"
           :key="script.id"
-          class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
+          class="tw-mb-2 tw-flex tw-cursor-pointer tw-items-center tw-justify-between"
           @click="selectedScript = script"
           @keydown="selectedScript = script"
         >
