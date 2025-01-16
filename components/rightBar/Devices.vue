@@ -53,7 +53,7 @@ const apiUpdateDevice = ref<APIData<any>>();
 const apiDeleteDevice = ref<APIData<any>>();
 
 // Computed Properties
-const isUpdate = computed(() => apiPorts.value?.pending && apiDevice.value?.pending);
+const isUpdate = computed(() => apiPorts.value?.pending || apiDevice.value?.pending);
 
 // Methods
 const createFunction = (functionBody: string, props = {}) => {
@@ -126,7 +126,11 @@ const changeDevice = async () => {
 
 // Watchers
 watch(() => selectedObject.value?.id, () => {
-  if (selectedObject.value?.category === 'controller') apiPorts.value?.refresh();
+  if (selectedObject.value?.category === 'controller') {
+    apiPorts.value?.refresh();
+  } else {
+    if (tabs.value === 'ports') tabs.value = 'features'
+  }
 });
 
 watchEffect(() => {
@@ -256,16 +260,16 @@ onBeforeMount(async () => {
         outlined
         :severity="checkStatusColor(asideEditingForm.status)"
       >
-      <div class="tw-flex tw-items-center tw-font-normal">
-        <div
-        :class="asideEditingForm.status === 'OFF' 
-        ? 'tw-text-danger tw-text-xl tw-mr-3' 
-        : 'tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(asideEditingForm.status)"
-        >
-        {{ asideEditingForm.status === 'OFF' ? '×' : '' }}
+        <div class="tw-flex tw-items-center tw-font-normal">
+          <div
+            :class="asideEditingForm.status === 'OFF' 
+              ? 'tw-text-danger tw-text-xl tw-mr-3' 
+              : 'tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(asideEditingForm.status)"
+          >
+            {{ asideEditingForm.status === 'OFF' ? '×' : '' }}
+          </div>
+          {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
-      {{ checkStatusTextSmall(asideEditingForm.status) }}
-      </div>
       </Tag>
       <Tabs
         v-model:value="tabs"

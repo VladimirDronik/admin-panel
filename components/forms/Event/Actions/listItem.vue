@@ -50,7 +50,7 @@ const deleteItem = (id: number) => {
             </p>
           </Tag>
           <p v-if="eventItem.type === 'delay'">
-            {{ event?.name ? event.name : '-' }}
+            {{ eventItem?.name ? eventItem.name : '-' }}
           </p>
           <p v-else-if="eventItem.type === 'script'">
             {{ eventItem?.args?.name ? eventItem.args.name : '-' }}

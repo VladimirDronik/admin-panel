@@ -137,7 +137,7 @@ onBeforeMount(async () => {
         Позволяет выбрать скрипт для выполнения
       </p>
 
-      <div class="tw-min-h-60 tw-rounded tw-border tw-p-3">
+      <div class="border-base tw-min-h-60 tw-rounded tw-border tw-p-3">
         <div
           v-for="script in refScripts?.data?.response.list"
           :key="script.id"

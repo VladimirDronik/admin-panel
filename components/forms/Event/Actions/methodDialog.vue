@@ -179,7 +179,7 @@ onBeforeMount(async () => {
       <div
         class="tw-flex"
       >
-        <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
+        <div class="border-base tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <InputText
             v-model="search"
             class="tw-mb-2 tw-w-full"
@@ -209,7 +209,7 @@ onBeforeMount(async () => {
           </div>
         </div>
         <div class="tw-w-6/12">
-          <div class="tw-mb-2 tw-rounded tw-border tw-p-3">
+          <div class="border-base tw-mb-2 tw-rounded tw-border tw-p-3">
             <div v-if="selectedObject?.methods?.length">
               <button
                 v-for="method in selectedObject.methods"
