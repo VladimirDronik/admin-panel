@@ -17,7 +17,7 @@ pipeline {
         WORKDIR = '/opt/cicd/stage1/'
         TOKEN = credentials('telegram_bot_token')
         CHAT = credentials('telegram_chat_id')
-        MESSAGE_BASE = "\\[STAGE1] *${env.SERVICE}*: "
+        MESSAGE_BASE = "\\[ STAGE1 ] *${env.SERVICE}*: "
         REGISTRY = credentials('docker_registry_host')
         TARGET_SRV = credentials('stage1_ssh_cmd')
     }
