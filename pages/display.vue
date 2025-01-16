@@ -81,7 +81,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <SharedUIPanel>
+  <SharedUIPanel :is-update="apiItems?.pending">
     <SharedUIBreadcrumb title="pages.display">
       <DialogsDisplayCreateDialog />
     </SharedUIBreadcrumb>

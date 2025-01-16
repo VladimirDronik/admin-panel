@@ -80,7 +80,7 @@ onBeforeMount(async () => {
 <template>
   <SharedUIPanel :is-update="storeRooms.apiRooms?.pending">
     <SharedUIBreadcrumb title="pages.rooms">
-      <DialogsRoomCreateDialog />
+      <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
     </SharedUIBreadcrumb>
     <div v-if="storeRooms.apiRooms?.data">
       <VueDraggableNext
@@ -185,6 +185,7 @@ onBeforeMount(async () => {
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
         v-model:is-update="isLoading"
+        @update="storeRooms.getRoomsApi"
       />
     </template>
   </SharedUIPanel>

@@ -14,12 +14,12 @@ import type { APIData, Request } from '~/types/StoreTypes';
 const { t } = useI18n();
 const router = useRouter();
 const toast = useToast();
+const storeUser = useUserStore();
 const localState = useStorage('touch-on', {
   token: '',
   openSidebar: true,
   language: 'ru',
 })
-const runtimeConfig = useRuntimeConfig()
 
 useHead({
   titleTemplate: computed(() => t('pages.login')),
@@ -34,8 +34,8 @@ definePageMeta({
 const apiUser = ref<APIData<loginData> | null>();
 
 const params = ref({
-  login: 'web',
-  password: '12345',
+  login: import.meta.env.VITE_LOGIN_DEV ?? '',
+  password: import.meta.env.VITE_PASSWORD_DEV ?? '',
 });
 
 // Methods
@@ -98,7 +98,7 @@ onBeforeMount(async () => {
           {{ t('auth.title') }}
         </div>
         <p class="tw-text-center tw-text-sm tw-text-gray-500">
-          {{ runtimeConfig.public.version }}
+          {{ storeUser.version }}
         </p>
         <form>
           <SharedUILabel
