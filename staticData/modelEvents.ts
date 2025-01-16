@@ -41,6 +41,33 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
+   // Relay
+   relay: [
+    {
+      code: 'on_change_state',
+      name: 'on_change_state',
+      description: 'Изменение состояния объекта',
+      actions: [],
+    },
+    {
+      code: 'object.relay.on_state_on',
+      name: 'on_state_on',
+      description: 'Включение реле',
+      actions: [],
+    },
+    {
+      code: 'object.relay.on_state_off',
+      name: 'on_state_off',
+      description: 'Выключение реле',
+      actions: [],
+    },
+    {
+      code: 'object.relay.on_check',
+      name: 'on_check',
+      description: 'Проверка состояния реле',
+      actions: [],
+    },
+  ],
   // Generic Input
   generic_input: [
     {
