@@ -4,11 +4,9 @@ import axios from 'axios';
 export const useApiInstant = () => {
   // Composables
   const router = useRouter();
-  const runtimeConfig = useRuntimeConfig();
 
   // Config
   const api = axios.create({
-    baseURL: runtimeConfig.public.backendApi,
     timeout: 100000,
   });
 

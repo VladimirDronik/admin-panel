@@ -1,14 +1,21 @@
 <script lang="ts" setup>
 // Builtin modules
-import { IconX } from '@tabler/icons-vue';
 import { useI18n } from 'vue-i18n';
+// Types and Schemes modules
+import type { RoomItem } from '~/stores/rooms/roomsTypes';
+import type { APIData } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
+const { updateData } = useUtils();
 
 // Declare Options
-const form = defineModel<any>('form', {
-  required: false,
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
+const form = defineModel<RoomItem | null | undefined>('form', {
+  required: true,
 });
 
 const isOpen = defineModel<boolean>('isShow', {
@@ -20,6 +27,38 @@ const dialog = ref(false);
 
 const loading = ref(false);
 const loadingDelete = ref(false);
+
+// Apis
+const apiDeleteRoom = ref<APIData<any>>();
+
+const confirmDelete = async () => {
+  await updateData({
+    update: async () => {
+      await apiDeleteRoom.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+      isOpen.value = false;
+    },
+    successMessage: 'Помещение удалено',
+    errorMessage: 'Ошибка удаления помещения',
+  });
+}
+
+// Hooks
+onBeforeMount(async () => {
+  // Delete Device
+  const dataDelete: unknown = await useAPI(paths.privateRoom, {
+    query: computed(() => ({
+      id: form.value?.id,
+    })),
+    method: 'DELETE',
+    immediate: false,
+    watch: false,
+  });
+
+  apiDeleteRoom.value = dataDelete as APIData<any>;
+});
 </script>
 
 <template>
@@ -44,16 +83,17 @@ const loadingDelete = ref(false);
         required
         :title="t('room.colorCategory')"
       >
-        <SharedUIColorSelect v-model="form.color" />
+        <SharedUIColorSelect v-model="form.style" />
       </SharedUILabel>
     </div>
     <div class="tw-flex tw-justify-end tw-pt-2">
       <DialogsDeleteDialog
-        :id="form.item?.id ?? -1"
+        :id="form.id ?? -1"
         v-model="dialog"
         class="tw-mr-2"
         :loading="loadingDelete"
         :title="`Вы уверены, что хотите удалить «${form.name}»?`"
+        @delete="confirmDelete"
       />
 
       <Button

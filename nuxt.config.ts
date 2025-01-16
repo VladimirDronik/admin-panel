@@ -8,19 +8,6 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'layout', mode: 'out-in' },
   },
 
-  runtimeConfig: {
-    public: {
-      version: '2.0b',
-      backendApi: '',
-      mqttPort: '',
-      translatorPort: '',
-      objectManagetPort: '',
-      actionRouterPort: '',
-      websocketsPort: '',
-      cctvPort: '',
-    },
-  },
-
   vite: {
     server: {
       fs: {
