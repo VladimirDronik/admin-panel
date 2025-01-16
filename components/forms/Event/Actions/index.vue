@@ -230,12 +230,13 @@ onBeforeMount(async () => {
           @update-actions="updateActions"
         />
 
-        <div v-if="event">
+        <div>
           <FormsEventActionsListItem
+            v-if="event.actions?.length"
             :event="event"
             @delete="deleteItem"
           />
-          <div v-if="!event.actions?.length">
+          <div v-else>
             Список событий пуст
           </div>
           <div class="tw-flex tw-justify-end tw-pt-3">

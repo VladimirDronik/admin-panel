@@ -253,8 +253,6 @@ const processedDevices = computed(() => {
   return result;
 });
 
-
-
 </script>
 
 <template>
@@ -275,7 +273,10 @@ const processedDevices = computed(() => {
       @created="created"
       @update="update"
     >
-      <Column expander style="width: 15px;">
+      <Column
+        expander
+        style="width: 15px;"
+      >
         <!-- <template #header>
           <DevicesTableHeader title="devices.id">
             <InputText
@@ -370,9 +371,9 @@ const processedDevices = computed(() => {
               v-model="filters[5].value"
               class="tw-min-w-80"
               color="primary"
-              :options="filters[5].options"
               :option-label="'title'"
               :option-value="'value'"
+              :options="filters[5].options"
               :placeholder="filters[5].label"
               show-clear
             />
@@ -478,6 +479,5 @@ tr[aria-level="1"] .p-treetable-node-toggle-button {
 // tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
 //   margin-left: -33px;
 // }
-
 
 </style>

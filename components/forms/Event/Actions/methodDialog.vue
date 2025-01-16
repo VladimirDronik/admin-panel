@@ -16,6 +16,7 @@ interface Method {
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
+const { isDark } = useUserStore()
 
 // Declare Options
 const props = defineProps<{
@@ -179,14 +180,13 @@ onBeforeMount(async () => {
       <div
         class="tw-flex"
       >
-        <div class="tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
+        <div class="border-base tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <InputText
             v-model="search"
             class="tw-mb-2 tw-w-full"
           />
           <div v-if="filteredObjects?.length">
             <ScrollPanel
-              class="tw-pl-2"
               style="height: 300px"
             >
               <Button
@@ -202,7 +202,8 @@ onBeforeMount(async () => {
                     class="tw-max-w-80 tw-truncate tw-text-lg "
                     :class="{
                       '!tw-text-green-500': selectedObject?.id === object.id,
-                      '!tw-text-black': selectedObject?.id !== object.id,
+                      'tw-text-white': selectedObject?.id !== object.id && isDark,
+                      'tw-text-black': selectedObject?.id !== object.id && !isDark,
                     }"
                   >
                     {{ object.name }}
@@ -216,7 +217,7 @@ onBeforeMount(async () => {
           </div>
         </div>
         <div class="tw-w-6/12">
-          <div class="tw-mb-2 tw-rounded tw-border tw-p-3">
+          <div class="border-base tw-mb-2 tw-rounded tw-border tw-p-3">
             <div v-if="selectedObject?.methods?.length">
               <Button
                 v-for="method in selectedObject.methods"
@@ -228,7 +229,11 @@ onBeforeMount(async () => {
               >
                 <p
                   class="tw-text-lg"
-                  :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }"
+                  :class="{
+                    'tw-text-green-500': selectedMethod?.name === method.name,
+                    'tw-text-white': selectedMethod?.name !== method.name && isDark,
+                    'tw-text-black': selectedMethod?.name !== method.name && !isDark,
+                  }"
                 >
                   {{ method.name }}
                 </p>
