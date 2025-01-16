@@ -14,12 +14,9 @@ pipeline {
     agent any
     environment {
         SERVICE = 'admin-panel'
-        WORKDIR = '/opt/cicd_v2/'
-        TOKEN = credentials('telegram_bot_token')
-        CHAT = credentials('telegram_chat_id')
-        MESSAGE_BASE = "\\[CI/CD] *${env.SERVICE}*: "
+        WORKDIR = '/opt/cicd/stage1/'
         REGISTRY = credentials('docker_registry_host')
-        DEV_SRV = credentials('dev_server_ssh_cmd')
+        TARGET_SRV = credentials('stage1_ssh_cmd')
     }
     stages {
         // stage('Notification') {
@@ -32,7 +29,11 @@ pipeline {
         // }
         stage('Pull') {
             steps {
-                sh "git -C ${env.WORKDIR}${env.SERVICE} checkout release/2.0 && git -C ${env.WORKDIR}${env.SERVICE} pull"
+                sh """
+                    git -C ${env.WORKDIR}${env.SERVICE} fetch
+                    git -C ${env.WORKDIR}${env.SERVICE} checkout release/2.0
+                    git -C ${env.WORKDIR}${env.SERVICE} pull
+                """
             }
         }
         stage('Build') {
@@ -46,19 +47,19 @@ pipeline {
                 """
             }
         }
-        // stage('Publish') {
-        //     steps {
-        //         sh """
-        //             set -e
-        //             ssh ${env.DEV_SRV} << EOF
-        //             cd /opt/touchon/gobin
-        //             docker-compose pull ${env.SERVICE}
-        //             docker-compose up --force-recreate --build -d ${env.SERVICE}
-        //             docker system prune -af
-        //             << EOF
-        //         """
-        //     }
-        // }
+        stage('Publish') {
+            steps {
+                sh """
+                    set -e
+                    ssh ${env.TARGET_SRV} << EOF
+                    cd /opt/touchon
+                    sudo docker compose pull ${env.SERVICE}
+                    sudo docker compose up --force-recreate --build -d ${env.SERVICE}
+                    sudo docker system prune -af
+                    << EOF
+                """
+            }
+        }
     }
     
     // post {
