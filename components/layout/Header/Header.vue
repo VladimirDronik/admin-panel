@@ -1,23 +1,11 @@
 <script lang="ts" setup>
-
 // Composables
-const isDark = useDark({
-  selector: 'html',
-  attribute: 'class',
-  valueDark: 'p-dark',
-  valueLight: 'p-light',
-  storageKey: 'touch-on-color',
-})
+const storeUser = useUserStore()
 
 // Declare Options
 const open = defineModel<boolean>('open', {
   required: true,
 });
-
-const darkTheme = ref(false)
-
-// Methods
-const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -35,10 +23,10 @@ const toggleDark = useToggle(isDark)
       <div class="tw-flex tw-items-center">
         <Button
           class="tw-mr-2 tw-aspect-square"
-          :icon="darkTheme ? 'pi pi-moon' : 'pi pi-sun'"
+          :icon="storeUser.isDark ? 'pi pi-moon' : 'pi pi-sun'"
           size="small"
           text
-          @click="toggleDark()"
+          @click="storeUser.toggleDark()"
         />
         <LayoutHeaderLanguage class="tw-mr-2" />
 

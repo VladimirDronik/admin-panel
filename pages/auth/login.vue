@@ -8,7 +8,7 @@ import { useStorage } from '@vueuse/core'
 import { auth } from '~/utils/endpoints';
 // Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
-import type { APIData } from '~/types/StoreTypes';
+import type { APIData, Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -31,7 +31,7 @@ definePageMeta({
 });
 
 // Variables
-const user = ref<APIData<any> | null>();
+const apiUser = ref<APIData<loginData> | null>();
 
 const params = ref({
   login: 'web',
@@ -39,9 +39,13 @@ const params = ref({
 });
 
 // Methods
-const success = (response: any) => {
-  localState.value.token = response.response.api_access_token
-  router.push({ name: 'general' });
+const success = (response: Request<loginData>) => {
+  if (response?.response.api_access_token) {
+    localState.value.token = response.response.api_access_token
+    router.push({ name: 'general' });
+  } else {
+    error()
+  }
 };
 
 const error = () => {
@@ -64,17 +68,18 @@ onBeforeMount(async () => {
       headers: {
         'api-key': 'c041d36e381a835afce48c91686370c8',
       },
+      watch: false
     },
     loginSchema,
   );
 
-  user.value = data as APIData<loginData>;
+  apiUser.value = data as APIData<loginData>;
 });
 
 </script>
 <template>
   <div
-    v-if="user"
+    v-if="apiUser"
     class="auth-screen tw-h-screen"
   >
     <Toast :base-z-index="99999" />
@@ -119,8 +124,8 @@ onBeforeMount(async () => {
           <Button
             class="tw-w-full"
             :label="t('auth.signIn')"
-            :loading="!user.pending"
-            @click="user.refresh()"
+            :loading="apiUser.pending && apiUser.status !== 'idle'"
+            @click="apiUser.refresh()"
           />
         </form>
       </div>
