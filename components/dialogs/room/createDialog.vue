@@ -70,10 +70,6 @@ const createRoom = async () => {
   });
 };
 
-watch(() => form.value.is_group, (newValue) => {
-  if (!newValue) parentId.value = null
-})
-
 // Hooks
 onBeforeMount(async () => {
   // Create Device
@@ -139,7 +135,7 @@ onBeforeMount(async () => {
             class="tw-mb-2"
             name="style"
             required
-            :title="'Цвет Категории'"
+            :title="'Цвет'"
             :value="form.style"
           >
             <SharedUIColorSelect v-model="form.style" />

@@ -22,6 +22,7 @@ const roomSchema = z.object({
   style: z.string(),
   sort: z.number(),
   is_group: z.boolean(),
+  parent_id: z.number(),
 });
 
 type Room = z.infer<typeof roomSchema> & {

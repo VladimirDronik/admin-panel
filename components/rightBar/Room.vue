@@ -17,7 +17,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const form = defineModel<RoomItem | null | undefined>('form', {
+const room = defineModel<RoomItem | null | undefined>('form', {
   required: true,
 });
 
@@ -26,6 +26,8 @@ const isOpen = defineModel<boolean>('isShow', {
 });
 
 // Variables
+const form = ref<RoomItem | null | undefined>();
+
 const dialog = ref(false);
 
 const loading = ref(false);
@@ -71,17 +73,27 @@ const confirmDelete = async () => {
   });
 }
 
+// Watchers
+watch(room, () => {
+  if (room.value) form.value = {...room.value}
+})
+
 // Hooks
 onBeforeMount(async () => {
-  // Create Device
-  const dataCreate: unknown = await useAPI(paths.privateRoom, {
-    body: computed(() => form.value),
+  // Change Device
+  const dataChange: unknown = await useAPI(paths.privateRoomsList, {
+    // body: computed(() => ({
+    //   name: form.value?.name,
+    //   style: form.value?.style,
+    //   parent_id: form.value?.parent_id,
+    // })),
+    body: computed(() => [form.value]),
     method: 'PATCH',
     immediate: false,
     watch: false,
   });
 
-  apiChangeRoom.value = dataCreate as APIData<any>;
+  apiChangeRoom.value = dataChange as APIData<any>;
 
   // Delete Device
   const dataDelete: unknown = await useAPI(paths.privateRoom, {
