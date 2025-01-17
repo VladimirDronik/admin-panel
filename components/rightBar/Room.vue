@@ -101,7 +101,7 @@ onBeforeMount(async () => {
   <LayoutRightbar
     v-if="form"
     :is-open="isOpen"
-    :title="!form.is_group ? t('room.addCategory') : t('room.addRoom')"
+    :title="form.is_group ? t('room.addRoom') : t('room.addCategory')"
   >
     <Form
       :resolver
@@ -124,7 +124,7 @@ onBeforeMount(async () => {
           class="tw-mb-2"
           name="style"
           required
-          :title="t('room.colorCategory')"
+          :title="form.is_group ? t('room.colorCategory') : t('Цвет помещения')"
           :value="form.style"
         >
           <SharedUIColorSelect v-model="form.style" />
