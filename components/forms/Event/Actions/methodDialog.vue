@@ -185,23 +185,30 @@ onBeforeMount(async () => {
             class="tw-mb-2 tw-w-full"
           />
           <div v-if="filteredObjects?.length">
-            <ScrollPanel style="height: 300px">
-              <button
+            <ScrollPanel
+              class="tw-pl-2"
+              style="height: 300px"
+            >
+              <Button
                 v-for="object in filteredObjects"
                 :key="object.id"
-                class="tw-block"
+                class="tw-block tw-w-full"
+                text
                 type="button"
                 @click="selectObject(object)"
               >
-                <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between tw-text-xl">
+                <div class="tw-flex tw-items-center tw-justify-between tw-text-xl">
                   <p
                     class="tw-max-w-80 tw-truncate tw-text-lg "
-                    :class="{ 'tw-text-green-500': selectedObject?.id === object.id }"
+                    :class="{
+                      '!tw-text-green-500': selectedObject?.id === object.id,
+                      '!tw-text-black': selectedObject?.id !== object.id,
+                    }"
                   >
                     {{ object.name }}
                   </p>
                 </div>
-              </button>
+              </Button>
             </ScrollPanel>
           </div>
           <div v-else>
@@ -211,10 +218,11 @@ onBeforeMount(async () => {
         <div class="tw-w-6/12">
           <div class="border-base tw-mb-2 tw-rounded tw-border tw-p-3">
             <div v-if="selectedObject?.methods?.length">
-              <button
+              <Button
                 v-for="method in selectedObject.methods"
                 :key="method.name"
-                class="tw-flex tw-items-center tw-justify-between"
+                class="tw-flex tw-w-full tw-items-center tw-justify-between"
+                text
                 type="button"
                 @click="selectMethod(method)"
               >
@@ -224,7 +232,7 @@ onBeforeMount(async () => {
                 >
                   {{ method.name }}
                 </p>
-              </button>
+              </Button>
             </div>
             <div v-else>
               Список Методов пуст
