@@ -16,6 +16,7 @@ interface Method {
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
+const { isDark } = useUserStore()
 
 // Declare Options
 const props = defineProps<{
@@ -184,9 +185,11 @@ onBeforeMount(async () => {
             v-model="search"
             class="tw-mb-2 tw-w-full"
           />
-          <div v-if="filteredObjects?.length">
+          <div v-if="!filteredObjects?.length">
+            Список Обьектов пуст
+          </div>
+          <div>
             <ScrollPanel
-              class="tw-pl-2"
               style="height: 300px"
             >
               <Button
@@ -202,7 +205,8 @@ onBeforeMount(async () => {
                     class="tw-max-w-80 tw-truncate tw-text-lg "
                     :class="{
                       '!tw-text-green-500': selectedObject?.id === object.id,
-                      '!tw-text-black': selectedObject?.id !== object.id,
+                      'tw-text-white': selectedObject?.id !== object.id && isDark,
+                      'tw-text-black': selectedObject?.id !== object.id && !isDark,
                     }"
                   >
                     {{ object.name }}
@@ -210,9 +214,6 @@ onBeforeMount(async () => {
                 </div>
               </Button>
             </ScrollPanel>
-          </div>
-          <div v-else>
-            Список Обьектов пуст
           </div>
         </div>
         <div class="tw-w-6/12">
@@ -228,7 +229,11 @@ onBeforeMount(async () => {
               >
                 <p
                   class="tw-text-lg"
-                  :class="{ 'tw-text-green-500': selectedMethod?.name === method.name }"
+                  :class="{
+                    'tw-text-green-500': selectedMethod?.name === method.name,
+                    'tw-text-white': selectedMethod?.name !== method.name && isDark,
+                    'tw-text-black': selectedMethod?.name !== method.name && !isDark,
+                  }"
                 >
                   {{ method.name }}
                 </p>
