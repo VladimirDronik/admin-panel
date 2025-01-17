@@ -37,7 +37,6 @@ const apiCreateRoom = ref<APIData<any>>()
 const form = ref({
   name: null,
   style: null,
-  is_group: true,
   sort: 0,
 });
 
@@ -47,7 +46,6 @@ const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
     style: z.string(),
-    is_group: z.boolean(),
   }),
 ));
 
@@ -62,7 +60,6 @@ const createRoom = async () => {
       form.value = {
         name: null,
         style: null,
-        is_group: true,
         sort: 0,
       };
       parentId.value = null;
@@ -88,7 +85,9 @@ onBeforeMount(async () => {
           parent_id: parentId.value
         }
       }
-      return form.value;
+      return {
+          ...form.value,
+        }
     })
       ,
     method: 'POST',
@@ -147,22 +146,6 @@ onBeforeMount(async () => {
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
-            name="is_group"
-            required
-            :title="'Тип'"
-            :value="form.is_group"
-          >
-            <Select
-              v-model="form.is_group"
-              class="tw-w-full"
-              option-label="name"
-              option-value="code"
-              :options="type"
-            />
-          </SharedUILabel>
-          <SharedUILabel
-            v-if="!form.is_group"
-            class="tw-mb-2"
             :title="'Группа'"
           >
             <Select
@@ -170,7 +153,7 @@ onBeforeMount(async () => {
               class="tw-w-full"
               option-label="name"
               option-value="id"
-              :options="storeRooms.getGroupRooms"
+              :options="storeRooms.getRooms"
             />
           </SharedUILabel>
         </div>

@@ -14,6 +14,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
   // Computed
   const getRoomsSelect = computed<SelectRoom[]>(() => filterInListRoom(apiRooms.value?.data?.response ?? []));
   const getGroupRooms = computed<RoomItem[]>(() => apiRooms.value?.data?.response.filter((room) => room.is_group) ?? []);
+  const getRooms = computed<RoomItem[]>(() => apiRooms.value?.data?.response ?? []);
 
   // Methods
   const getRoomsApi = async (params = {}) => {
@@ -33,6 +34,7 @@ export const useRoomsStore = defineStore('Rooms', () => {
   };
 
   return {
+    getRooms,
     apiRooms,
     getRoomsApi,
     getRoomsSelect,
