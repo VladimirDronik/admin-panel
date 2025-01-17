@@ -13,6 +13,7 @@ import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
+const storeRooms = useRoomsStore();
 const localState = useStorage('touch-on', {
   token: '',
   openSidebar: true,
@@ -24,13 +25,32 @@ useHead({
 });
 
 // Variables
-const apiItems = ref<APIData<DisplayData>>();
 
 const id = ref<number>(0);
 const zoneId = ref<number>(0);
 
 const variant = ref('');
 const isShow = ref(false);
+
+// Apis
+const apiItems = ref<APIData<DisplayData>>();
+
+// Computed
+const itemIds = computed(() => apiItems.value?.data?.response.room_items.map((item) => item.id) ?? []);
+
+const filteredRooms = computed(() => {
+  let result: any[] = []
+  const items = apiItems.value?.data?.response.room_items
+  const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id))
+  if (items) {
+    result = [...result, ...items]
+  }
+  if (filteredRooms) {
+    result = [...result, ...filteredRooms]
+  }
+  console.log(result, apiItems.value?.data?.response.room_items)
+  return result
+})
 
 // Methods
 const showItemPanel = (zone_id: number, item_id: number | null = null) => {
@@ -65,6 +85,7 @@ const updateOrder = async (roomList: any, id: number) => {
 
 // Hooks
 onBeforeMount(async () => {
+  await storeRooms.getRoomsApi();
   // Get Buttons
   const dataItemsGet: unknown = await useAPI(
     paths.privateCp,
@@ -83,7 +104,7 @@ onBeforeMount(async () => {
 <template>
   <SharedUIPanel :is-update="apiItems?.pending">
     <SharedUIBreadcrumb title="pages.display">
-      <DialogsDisplayCreateDialog />
+      <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar
@@ -92,15 +113,15 @@ onBeforeMount(async () => {
       >
         <DisplayScenarioCard
           v-for="scenario in apiItems?.data?.response.scenario_items"
-          :key="scenario.id"
+          :key="scenario.item_id"
           :color="scenario.color"
           :icon="scenario.icon"
           :title="scenario.title"
-          @click="showScenarioPanel(scenario.id)"
+          @click="showScenarioPanel(scenario.item_id)"
         />
       </PerfectScrollbar>
       <div
-        v-for="rooms in apiItems?.data?.response.room_items"
+        v-for="rooms in filteredRooms"
         :key="rooms.id"
         class="border-base tw-rounded-md tw-border tw-p-3"
       >

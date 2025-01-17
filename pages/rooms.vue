@@ -34,15 +34,7 @@ const form = ref<RoomItem | null>();
 const isUpdateRightBar = ref(false);
 
 // Computed
-const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => {
-  if (item.is_group) {
-    // return {
-    //   id: item.id,
-    //   rooms_in_group: roomIds(item.rooms_in_group)
-    // }
-  }
-  return item.id;
-}));
+const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => item.id));
 
 // Methods
 const openRightBar = (item: RoomItem) => {
