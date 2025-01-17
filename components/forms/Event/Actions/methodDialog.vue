@@ -185,10 +185,7 @@ onBeforeMount(async () => {
             v-model="search"
             class="tw-mb-2 tw-w-full"
           />
-          <div v-if="!filteredObjects?.length">
-            Список Обьектов пуст
-          </div>
-          <div>
+          <div v-if="filteredObjects?.length">
             <ScrollPanel
               style="height: 300px"
             >
@@ -214,6 +211,13 @@ onBeforeMount(async () => {
                 </div>
               </Button>
             </ScrollPanel>
+          </div>
+          <div
+            v-else
+            class="tw-pl-3 tw-pt-2"
+            style="height: 300px"
+          >
+            Список Обьектов пуст
           </div>
         </div>
         <div class="tw-w-6/12">
