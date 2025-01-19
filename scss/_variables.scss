@@ -1,9 +1,17 @@
+.tw-border-primary {
+  border-color: var(--p-primary-800) !important;
+}
+
 .tw-text-success {
   color: var(--p-green-500);
 }
 
 .tw-bg-success {
   background: var(--p-green-400);
+}
+
+.tw-border-success {
+  border-color: var(--p-green-400);
 }
 
 .tw-text-warn {
@@ -14,12 +22,20 @@
   background: var(--p-orange-400);
 }
 
+.tw-border-warn {
+  border-color: var(--p-orange-400);
+}
+
 .tw-text-danger {
   color: var(--p-red-500);
 }
 
 .tw-bg-danger {
   background: var(--p-red-400);
+}
+
+.tw-border-danger {
+  border-color: var(--p-red-400);
 }
 
 .tw-text-info {
@@ -29,6 +45,11 @@
 .tw-bg-info {
   background: var(--p-sky-400);
 }
+
+.tw-border-info {
+  border-color: var(--p-sky-400);
+}
+
 
 .p-dark .bg-base {
   background-color: #121212;

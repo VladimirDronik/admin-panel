@@ -11,7 +11,6 @@ import { type ScriptType } from '~/stores/script/scriptTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeScript = useScriptStore();
 
 // Declare Options
 const props = defineProps<{
@@ -33,15 +32,41 @@ const dialog = defineModel<boolean>({
 });
 
 // Variables
-const deleteDialog = ref(false);
-
-const selectedScript = ref<ScriptType | null>();
+const selectedCondition = ref();
 
 // Apis
 const apiCreateMethod = ref<APIData<any>>();
 
-// Computed Properties
-const refScripts = computed(() => storeScript.scripts);
+const chooseCondition = (type: string) => {
+  if (type === 'if') {
+    selectedCondition.value = {
+      enabled: true,
+      target_id: props.id,
+      target_type: 'if',
+      type: 'if',
+      sort: 0,
+      qos: 0,
+      then: [],
+      args: {
+        isOpen: true
+      }
+    }
+  } else {
+    selectedCondition.value = {
+      enabled: true,
+      target_id: props.id,
+      target_type: 'if-else',
+      type: 'if-else',
+      sort: 0,
+      qos: 0,
+      then: [],
+      else: [],
+      args: {
+        isOpen: true
+      }
+    }
+  }
+}
 
 // Methods
 const createAction = async () => {
@@ -58,65 +83,41 @@ const createAction = async () => {
   //     errorMessage: 'Ошибка добавления Скрипта',
   //   });
   // } else {
-    event.value.actions.push({
-      enabled: true,
-      target_id: props.id,
-      target_type: 'condition',
-      type: 'condition',
-      sort: 0,
-      qos: 0,
-      actions: []
-    });
+    event.value.actions.push(selectedCondition.value);
     // emit('updateActions');
     dialog.value = false;
   // }
 };
 
-const deleteScript = (script: ScriptType) => {
-  selectedScript.value = script;
-  deleteDialog.value = true;
-};
-
-// Watchers
-watch(dialog, () => {
-  if (dialog.value) {
-    selectedScript.value = null;
-  }
-});
-
-storeScript.getScriptsApi({
-  limit: 99,
-});
-
 // Hooks
-onBeforeMount(async () => {
-  // Create Action
-  const dataDevice: unknown = await useAPI(
-    () => paths.eventsActions,
-    {
-      params: computed(() => ({
-        target_type: props.targetType,
-        target_id: props.id,
-        event_name: event.value.code,
-      })),
-      body: computed(() => ({
-        args: selectedScript.value,
-        enabled: true,
-        name: selectedScript.value?.name,
-        target_id: props.id,
-        target_type: 'script',
-        type: 'script',
-        sort: 0,
-        qos: 0,
-      })),
-      method: 'POST',
-      watch: false,
-      immediate: false,
-    },
-  );
-  apiCreateMethod.value = dataDevice as APIData<any>;
-  //
-});
+// onBeforeMount(async () => {
+//   // Create Action
+//   const dataDevice: unknown = await useAPI(
+//     () => paths.eventsActions,
+//     {
+//       params: computed(() => ({
+//         target_type: props.targetType,
+//         target_id: props.id,
+//         event_name: event.value.code,
+//       })),
+//       body: computed(() => ({
+//         args: selectedScript.value,
+//         enabled: true,
+//         name: selectedScript.value?.name,
+//         target_id: props.id,
+//         target_type: 'script',
+//         type: 'script',
+//         sort: 0,
+//         qos: 0,
+//       })),
+//       method: 'POST',
+//       watch: false,
+//       immediate: false,
+//     },
+//   );
+//   apiCreateMethod.value = dataDevice as APIData<any>;
+//   //
+// });
 </script>
 
 <template>
@@ -127,15 +128,72 @@ onBeforeMount(async () => {
       :header="'Выбор условия'"
       modal
       :style="{
-        'max-width': '1000px',
+        'max-width': '900px',
         width: '100%',
         margin: '0 20px',
       }"
     >
-      <div class="tw-min-h-60 tw-p-3">
-        <div class="tw-h-20 tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-xl">
-          Если
-        </div>
+      <div class="tw-mb-3 tw-flex tw-items-start tw-gap-3">
+        <button
+          class="border-base tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-left"
+          :class="{'tw-border-primary': selectedCondition?.type === 'if'}"
+          @click="chooseCondition('if')"
+        >
+          <p
+            class="tw-mb-2 tw-text-xl"
+            :class="{'tw-text-primary': selectedCondition?.type === 'if'}"
+          >
+            Если
+          </p>
+          <div class="tw-flex tw-h-14 tw-items-center">
+            <p 
+              class="tw-mr-2 tw-text-sm"
+              :class="{'tw-text-primary': selectedCondition?.type === 'if'}"
+            >
+              Тогда
+            </p>
+            <div 
+              class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
+              :class="{'tw-border-primary': selectedCondition?.type === 'if'}"
+            />
+          </div>
+        </button>
+        <button
+          class="border-base tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-left "
+          :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+          @click="chooseCondition('if-else')"
+        >
+          <p
+            class="tw-mb-2 tw-text-xl"
+            :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+          >
+            Если
+          </p>
+          <div class="tw-mb-2 tw-flex tw-items-center">
+            <p
+              class="tw-mr-2 tw-block tw-w-14 tw-text-sm"
+              :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+            >
+              Тогда
+            </p>
+            <div 
+              class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
+              :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+            />
+          </div>
+          <div class="tw-flex tw-items-center">
+            <p 
+              class="tw-mr-2 tw-block tw-w-14 tw-text-sm"
+              :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+            >
+              Если
+            </p>
+            <div 
+              class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
+              :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+            />
+          </div>
+        </button>
       </div>
 
       <div class="tw-pt-4">
@@ -155,12 +213,6 @@ onBeforeMount(async () => {
           {{ t('cancel') }}
         </Button>
       </div>
-
-      <DialogsDeleteDialog
-        :id="selectedScript?.id ?? -1"
-        v-model="deleteDialog"
-        :show-btn="false"
-      />
     </Dialog>
   </div>
 </template>

@@ -190,7 +190,7 @@ onBeforeMount(async () => {
             label="Условия"
             outlined
             severity="secondary"
-            @click="addCondition"
+            @click="dialogCondition = true"
           />
         </div>
 
@@ -229,11 +229,10 @@ onBeforeMount(async () => {
           :target-type="targetType"
           @update-actions="updateActions"
         />
-
         <div>
           <FormsEventActionsListItem
             v-if="event.actions?.length"
-            :event="event"
+            :items="event.actions"
             @delete="deleteItem"
           />
           <div v-else>

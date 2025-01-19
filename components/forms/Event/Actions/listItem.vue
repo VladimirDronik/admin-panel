@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical } from '@tabler/icons-vue';
-import type { Event } from '@/types/ModelEventTypes';
+import type { Event, Action } from '@/types/ModelEventTypes';
 // Helper modules
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 
@@ -9,8 +9,8 @@ import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 //   required: true,
 // })
 
-const { event } = defineProps<{
-  event: Event;
+const { items } = defineProps<{
+  items: Action[];
 }>()
 
 const emit = defineEmits<{
@@ -29,15 +29,15 @@ const deleteItem = (id: number) => {
     class="tw-min-h-10 tw-w-full"
     :group="{ name: 'g1' }"
     handle=".handle-item"
-    :list="event.actions"
+    :list="items"
   >
     <div
-      v-for="eventItem in event.actions"
+      v-for="eventItem in items"
       :key="eventItem.id"
       class="border-base tw-rounded tw-border-x tw-border-t [&:last-child]:tw-border-b"
     >
       <div
-        v-if="eventItem.type !== 'condition'"
+        v-if="eventItem.type !== 'if' && eventItem.type !== 'if-else'"
         class="tw-flex tw-items-center tw-justify-between tw-px-5 tw-py-2"
       >
         <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
@@ -140,10 +140,28 @@ const deleteItem = (id: number) => {
             
             <div
               class="border-base tw-flex tw-min-h-14 tw-w-full tw-flex-col tw-items-start tw-gap-2 tw-rounded-md tw-border"
-              :class="{'!tw-border-0': eventItem.actions.length}"
+              :class="{'!tw-border-0': eventItem.then.length}"
             >
               <FormsEventActionsListItem
-                :event="eventItem"
+                :items="eventItem.then"
+                @delete="deleteItem"
+              />
+            </div>
+          </div>
+          <div
+            v-if="eventItem.type === 'if-else'"
+            class="tw-flex tw-items-center tw-gap-2 tw-pt-5"
+          >
+            <p class="tw-w-20">
+              Если
+            </p>
+            
+            <div
+              class="border-base tw-flex tw-min-h-14 tw-w-full tw-flex-col tw-items-start tw-gap-2 tw-rounded-md tw-border"
+              :class="{'!tw-border-0': eventItem.else.length}"
+            >
+              <FormsEventActionsListItem
+                :items="eventItem.else"
                 @delete="deleteItem"
               />
             </div>
