@@ -49,7 +49,6 @@ onBeforeMount(async () => {
 });
 
 watch(() => id, () => {
-  console.log('dsds');
   apiGetSensor.value?.execute();
 });
 </script>

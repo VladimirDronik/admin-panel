@@ -42,13 +42,8 @@ const filteredRooms = computed(() => {
   let result: any[] = []
   const items = apiItems.value?.data?.response.room_items
   const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id))
-  if (items) {
-    result = [...result, ...items]
-  }
-  if (filteredRooms) {
-    result = [...result, ...filteredRooms]
-  }
-  console.log(result, apiItems.value?.data?.response.room_items)
+  if (items) result = [...result, ...items]
+  if (filteredRooms) result = [...result, ...filteredRooms]
   return result
 })
 
