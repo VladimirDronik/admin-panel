@@ -123,6 +123,9 @@ const changeDevice = async () => {
     errorMessage: selectedObject.value?.type === 'mega_d' 
       ? 'Ошибка обновления устройства. Проверьте правильность IP-адреса.' 
       : 'Ошибка обновления устройства',
+    success: () => {
+      window.location.reload();
+    },
   });
 };
 
