@@ -119,8 +119,10 @@ const changeDevice = async () => {
     update: async () => {
       await apiUpdateDevice.value?.execute();
     },
-    successMessage: 'Устройство обновленно',
-    errorMessage: 'Ошибка обновления устройства',
+    successMessage: 'Устройство обновлено',
+    errorMessage: selectedObject.value?.type === 'mega_d' 
+      ? 'Ошибка обновления устройства. Проверьте правильность IP-адреса.' 
+      : 'Ошибка обновления устройства',
   });
 };
 
