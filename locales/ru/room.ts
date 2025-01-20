@@ -1,8 +1,8 @@
 export default {
   room: {
     name: 'Наименование',
-    addRoom: 'Добавить категорию',
-    addCategory: 'Добавить помещение',
+    addRoom: 'Помещение',
+    addCategory: 'Категория',
     colorCategory: 'Цвет категории',
   },
 };

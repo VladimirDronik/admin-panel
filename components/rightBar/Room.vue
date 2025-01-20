@@ -113,7 +113,7 @@ onBeforeMount(async () => {
   <LayoutRightbar
     v-if="form"
     :is-open="isOpen"
-    :title="form.is_group ? t('room.addRoom') : t('room.addCategory')"
+    :title="form.is_group ? t('room.addCategory') : t('room.addRoom')"
   >
     <Form
       :resolver

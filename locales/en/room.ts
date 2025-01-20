@@ -1,8 +1,8 @@
 export default {
   room: {
     name: 'Name',
-    addRoom: 'Add Category',
-    addCategory: 'Add Category',
+    addRoom: 'Room',
+    addCategory: 'Category',
     colorCategory: 'Category Color',
   },
 };
