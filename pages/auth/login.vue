@@ -38,6 +38,8 @@ const params = ref({
   password: import.meta.env.VITE_PASSWORD_DEV ?? '',
 });
 
+console.log(import.meta.env)
+
 // Methods
 const success = (response: Request<loginData>) => {
   if (response?.response.api_access_token) {
