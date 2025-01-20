@@ -13,10 +13,9 @@ import { type itemType } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore();
 
 // Declare Options
-const props = defineProps<{
+defineProps<{
   devices: string[]
 }>();
 

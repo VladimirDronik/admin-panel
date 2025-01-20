@@ -23,8 +23,8 @@ defineProps<{
       </h4>
       <DialogsDisplayChangeSensorDialog
         v-for="sensor in sensors"
-        :id="sensor.id"
-        :key="sensor.id"
+        :id="sensor.item_id"
+        :key="sensor.item_id"
         :sensor
       />
       <DialogsDisplayAddSensorDialog :sensors />

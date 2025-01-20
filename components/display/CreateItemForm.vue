@@ -34,6 +34,8 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
+const isUpdateForm = ref(false)
+
 const form = ref<{
   enabled: boolean,
   title: string | null,
@@ -89,9 +91,16 @@ const quickSelectRoom = (id: number | undefined) => storeRooms.getRoomsSelect.fi
 
 // Watchers
 watch(() => props.id, (newValue) => {
+  isUpdateForm.value = true
   const room = quickSelectRoom(newValue)?.code
   if (room) form.value.zone_id = room
+  setTimeout(() => isUpdateForm.value = false, 0)
 })
+
+const f = (value: any) => {
+  console.log(value)
+  return value 
+}
 
 // Hooks
 onBeforeMount(async () => {
@@ -139,6 +148,7 @@ onBeforeMount(async () => {
       >
         <!-- Features Form -->
         <Form
+          v-if="!isUpdateForm"
           :resolver
           @submit="({ valid }) => { if (valid) activateCallback('2') }"
         >

@@ -9,7 +9,7 @@ import proUser3 from '~/assets/images/icon-tasks.svg';
 // Composables
 const { t } = useI18n();
 const router = useRouter();
-const runtimeConfig = useRuntimeConfig()
+const storeUser = useUserStore();
 
 // Variables
 const profileDD = [
@@ -126,7 +126,7 @@ const toggle = (event: any) => {
               {{ t('logout') }}
             </Button>
             <p class="tw-pt-1 tw-text-center tw-text-sm tw-text-gray-500">
-              {{ runtimeConfig.public.version }}
+              {{ storeUser.version }}
             </p>
           </div>
         </template>

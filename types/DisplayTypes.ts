@@ -21,8 +21,8 @@ export const roomBtns = z.object({
 export const roomSensors = z.object({
   current: z.number(),
   enabled: z.boolean(),
-  icon: z.string(),
-  id: z.number(),
+  icon: z.string().optional(),
+  item_id: z.number(),
   name: z.string(),
   position_left: z.number(),
   position_top: z.number(),
@@ -41,9 +41,9 @@ export const roomsItem = z.object({
   sensors: z.array(roomSensors).optional(),
 });
 export const scenarioItem = z.object({
-  id: z.number(),
+  item_id: z.number(),
   sort: z.number(),
-  id_item: z.number(),
+  item_id: z.number(),
   enabled: z.boolean(),
   title: z.string(),
   color: z.string(),

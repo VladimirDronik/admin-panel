@@ -212,7 +212,11 @@ onBeforeMount(async () => {
               </Button>
             </ScrollPanel>
           </div>
-          <div v-else>
+          <div
+            v-else
+            class="tw-pl-3 tw-pt-2"
+            style="height: 300px"
+          >
             Список Обьектов пуст
           </div>
         </div>

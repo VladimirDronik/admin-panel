@@ -53,7 +53,7 @@ const apiUpdateDevice = ref<APIData<any>>();
 const apiDeleteDevice = ref<APIData<any>>();
 
 // Computed Properties
-const isUpdate = computed(() => apiPorts.value?.pending || apiDevice.value?.pending);
+const isUpdate = computed(() => apiPorts.value?.status !== 'idle' && apiPorts.value?.pending || apiDevice.value?.status !== 'idle' && apiDevice.value?.pending);
 
 // Methods
 const createFunction = (functionBody: string, props = {}) => {
@@ -119,8 +119,16 @@ const changeDevice = async () => {
     update: async () => {
       await apiUpdateDevice.value?.execute();
     },
-    successMessage: 'Устройство обновленно',
-    errorMessage: 'Ошибка обновления устройства',
+    successMessage: 'Устройство обновлено',
+    errorMessage: selectedObject.value?.type === 'mega_d' 
+      ? 'Ошибка обновления устройства. Проверьте правильность IP-адреса.' 
+      : 'Ошибка обновления устройства',
+    success: async () => {
+      await storeDevices.getDevicesApi({
+        limit: 10000,
+        offset: 0,
+      });
+    },
   });
 };
 

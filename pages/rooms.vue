@@ -34,15 +34,7 @@ const form = ref<RoomItem | null>();
 const isUpdateRightBar = ref(false);
 
 // Computed
-const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => {
-  if (item.is_group) {
-    // return {
-    //   id: item.id,
-    //   rooms_in_group: roomIds(item.rooms_in_group)
-    // }
-  }
-  return item.id;
-}));
+const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => item.id));
 
 // Methods
 const openRightBar = (item: RoomItem) => {
@@ -80,7 +72,7 @@ onBeforeMount(async () => {
 <template>
   <SharedUIPanel :is-update="storeRooms.apiRooms?.pending">
     <SharedUIBreadcrumb title="pages.rooms">
-      <DialogsRoomCreateDialog />
+      <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
     </SharedUIBreadcrumb>
     <div v-if="storeRooms.apiRooms?.data">
       <VueDraggableNext
@@ -185,6 +177,7 @@ onBeforeMount(async () => {
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
         v-model:is-update="isLoading"
+        @update="storeRooms.getRoomsApi"
       />
     </template>
   </SharedUIPanel>

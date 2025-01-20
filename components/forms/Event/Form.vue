@@ -35,7 +35,6 @@ const filterEvents = async (type: string) => {
           target_type: props.targetType,
         },
       });
-      console.log(requests)
 
       events.value = objectEvents.map((item) => {
         if (requests.response[item.code]) {
