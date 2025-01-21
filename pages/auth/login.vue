@@ -119,6 +119,7 @@ onBeforeMount(async () => {
             <InputText
               v-model="params.password"
               class="tw-w-full"
+              type="password"
             />
           </SharedUILabel>
           <Button
