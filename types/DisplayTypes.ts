@@ -43,7 +43,6 @@ export const roomsItem = z.object({
 export const scenarioItem = z.object({
   item_id: z.number(),
   sort: z.number(),
-  item_id: z.number(),
   enabled: z.boolean(),
   title: z.string(),
   color: z.string(),

@@ -25,7 +25,6 @@ useHead({
 });
 
 // Variables
-
 const id = ref<number>(0);
 const zoneId = ref<number>(0);
 

@@ -17,10 +17,6 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const room = defineModel<RoomItem | null | undefined>('form', {
-  required: true,
-});
-
 const isOpen = defineModel<boolean>('isShow', {
   required: true,
 });
@@ -72,11 +68,6 @@ const confirmDelete = async () => {
     errorMessage: 'Ошибка удаления помещения',
   });
 }
-
-// Watchers
-watch(room, () => {
-  if (room.value) form.value = {...room.value}
-})
 
 // Hooks
 onBeforeMount(async () => {
