@@ -11,6 +11,7 @@ import type { APIData } from '~/types/StoreTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
+const storeRooms = useRoomsStore()
 
 // Declare Options
 const emit = defineEmits<{
@@ -33,6 +34,8 @@ const dialog = ref(false);
 const loading = ref(false);
 const loadingDelete = ref(false);
 
+const parentId = ref()
+
 const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
@@ -53,6 +56,8 @@ const changeRoom = async () => {
       await emit('update');
     },
     success: () => {
+      parentId.value = null;
+      isOpen.value = false;
     },
     successMessage: 'Помещение было успешно изменено',
     errorMessage: 'Помещение не было изменено',
@@ -82,12 +87,15 @@ watch(room, () => {
 onBeforeMount(async () => {
   // Change Device
   const dataChange: unknown = await useAPI(paths.privateRoomsList, {
-    // body: computed(() => ({
-    //   name: form.value?.name,
-    //   style: form.value?.style,
-    //   parent_id: form.value?.parent_id,
-    // })),
-    body: computed(() => [form.value]),
+    body: computed(() => {
+      if (form.value?.parent_id === null) {
+        return [{
+          ...form.value,
+          parent_id: 0,
+      }]
+      }
+      return [form.value]
+    }),
     method: 'PATCH',
     immediate: false,
     watch: false,
@@ -140,6 +148,24 @@ onBeforeMount(async () => {
           :value="form.style"
         >
           <SharedUIColorSelect v-model="form.style" />
+        </SharedUILabel>
+        <SharedUILabel
+          v-if="!form.is_group"
+          class="tw-mb-2"
+          :title="'Группа'"
+        >
+          <Select
+            v-model="form.parent_id"
+            class="tw-w-full"
+            option-label="name"
+            option-value="id"
+            :options="storeRooms.getRooms"
+            show-clear
+          >
+            <!-- <template #value="slotProps">
+              {{ slotProps.value == '0' ? : ''}}
+            </template> -->
+          </Select>
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">
