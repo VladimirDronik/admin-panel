@@ -19,6 +19,7 @@ import {
 import type {
   AddFieldToDynamicFormPayload, DeviceEditFormPayload, EditDeviceForm,
 } from '~/components/devices/form.types';
+import { onClickOutside } from '@vueuse/core';
 
 // Composables
 const { t } = useI18n();
@@ -32,6 +33,12 @@ const isOpen = defineModel<boolean>('isOpen', {
 
 const selectedObject = defineModel<FullDevice | undefined>('selectedObject', {
   required: true,
+});
+
+const rightBarRef = ref<HTMLElement | null>(null);
+
+onClickOutside(rightBarRef, () => {
+  isOpen.value = false;
 });
 
 // Variables
@@ -216,7 +223,7 @@ onBeforeMount(async () => {
     :is-open="isOpen"
     :is-update="isUpdate"
   >
-    <div>
+    <div ref="rightBarRef">
       <div
         :key="forceUpdateKey"
         class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
