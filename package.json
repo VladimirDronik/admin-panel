@@ -5,7 +5,7 @@
   "version": "2.0.0-alpha.1",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
-    "dev": "nuxt dev --dotenv .env.local",
+    "dev": "nuxt build --dotenv .env.dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:unit": "vitest",
@@ -17,7 +17,8 @@
     "docs:build": "vuepress build docs",
     "docs:clean-dev": "vuepress dev docs --clean-cache",
     "docs:dev": "vuepress dev docs",
-    "docs:update-package": "npx vp-update"
+    "docs:update-package": "npx vp-update",
+    "stage": "nuxt build --dotenv .env.prod"
   },
   "dependencies": {
     "@casl/ability": "^6.7.2",
