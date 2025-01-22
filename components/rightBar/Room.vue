@@ -156,7 +156,7 @@ onBeforeMount(async () => {
             class="tw-w-full"
             option-label="name"
             option-value="id"
-            :options="storeRooms.getRooms.filter((room) => room.id !== form.id)"
+            :options="storeRooms.getRooms.filter((room) => room.id !== form?.id)"
             show-clear
           >
             <!-- <template #value="slotProps">
