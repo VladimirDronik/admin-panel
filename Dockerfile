@@ -1,11 +1,13 @@
 FROM --platform=$BUILDPLATFORM node:18.20-alpine AS builder
 
+ARG SCRIPT
+
 WORKDIR /opt/app
 
 COPY . ./
 
 RUN npm ci && npm cache clean --force
-RUN npm run build
+RUN npm run ${SCRIPT}
 
 FROM node:18.20-alpine
 

@@ -45,6 +45,7 @@ pipeline {
                     docker buildx build \
                     -t ${env.REGISTRY}/${env.SERVICE}:2.0 \
                     --platform linux/arm64 \
+		    --build-arg SCRIPT=stage \
                     --push \
                     ${env.WORKDIR}${env.SERVICE}
                 """
