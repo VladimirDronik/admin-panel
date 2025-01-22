@@ -34,8 +34,6 @@ const dialog = ref(false);
 const loading = ref(false);
 const loadingDelete = ref(false);
 
-const parentId = ref()
-
 const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
@@ -56,7 +54,6 @@ const changeRoom = async () => {
       await emit('update');
     },
     success: () => {
-      parentId.value = null;
       isOpen.value = false;
     },
     successMessage: 'Помещение было успешно изменено',
@@ -159,7 +156,7 @@ onBeforeMount(async () => {
             class="tw-w-full"
             option-label="name"
             option-value="id"
-            :options="storeRooms.getRooms"
+            :options="storeRooms.getRooms.filter((room) => room.id !== form.id)"
             show-clear
           >
             <!-- <template #value="slotProps">
