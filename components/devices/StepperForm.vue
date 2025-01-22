@@ -80,7 +80,7 @@ watch(
 
 const valid = computed(() => {
   // checkValidInput(form.value.zone_id) &&
-  const main = checkValidInput(initialForm.value.tags) && checkValidInput(initialForm.value.category) && checkValidInput(initialForm.value.type) && checkValidInput(dynamicForm.name);
+  const main = checkValidInput(initialForm.value.type) && checkValidInput(dynamicForm.name);
 
   let props = true;
   let children = true;
@@ -171,6 +171,7 @@ const changeTypeHandler = () => {
 };
 
 const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulator');
+
 
 </script>
 
