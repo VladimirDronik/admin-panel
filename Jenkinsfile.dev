@@ -44,7 +44,7 @@ pipeline {
                     docker buildx build \
                     -t ${env.REGISTRY}/${env.SERVICE}:develop \
                     --platform linux/arm64 \
-		    --build-arg SCRIPT=dev.
+		    --build-arg SCRIPT=dev \
                     --push \
                     ${env.WORKDIR}${env.SERVICE}
                 """
