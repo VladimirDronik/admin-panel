@@ -88,6 +88,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedProtocol = data.props.find((prop) => prop.code === 'protocol');
   const updatedPassword = data.props.find((prop) => prop.code === 'password');
   const updatedID = data.props.find((prop) => prop.code === 'id');
+  const updatedMode = data.props.find((prop) => prop.code === 'mode');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -139,6 +140,9 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   }
   if ('status' in initialForm && data.status) {
     initialForm.status = data.status;
+  }
+  if ('mode' in initialForm.props && updatedMode) {
+    initialForm.props.mode = String(updatedMode.value);
   }
   if (Object.keys(children).length > 0 && initialForm.children) {
     initialForm.children = children;
