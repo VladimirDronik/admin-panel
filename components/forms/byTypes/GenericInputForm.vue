@@ -50,10 +50,10 @@ watch(
 );
 
 const modeOptions = ref([
-  { label: 'при замыкании (P)', value: 'P' },
-  { label: 'при размыкании (R)', value: 'R' },
-  { label: 'при замыкании и размыкании (P&R)', value: 'P&R' },
-  { label: 'режим фиксации замыкания (C)', value: 'C' },
+  { label: 'при замыкании (P)', value: 'p' },
+  { label: 'при размыкании (R)', value: 'r' },
+  { label: 'при замыкании и размыкании (P&R)', value: 'pr' },
+  { label: 'режим фиксации замыкания (C)', value: 'c' },
 ]);
 
 </script>
