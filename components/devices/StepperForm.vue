@@ -30,7 +30,8 @@ const initialForm = defineModel<CreateDeviceInitialForm>('form', {
   required: true,
 });
 
-const dynamicForm = reactive(getInitialCreateDeviceFormDataByTypes(initialForm.value)) as DynamicFormData;
+const initialFormData = _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})) as DynamicFormData;
+const dynamicForm = reactive(initialFormData);
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
   if (!dynamicForm.children) return;
@@ -153,7 +154,7 @@ onBeforeMount(async () => {
 });
 
 const changeTypeHandler = () => {
-  Object.assign(dynamicForm, getInitialCreateDeviceFormDataByTypes(initialForm.value));
+  Object.assign(dynamicForm, _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})));
   switch (initialForm.value.type) {
     case Controller.MegaD:
       dynamicForm.category = ObjectsCategory.Controller;
