@@ -3,6 +3,7 @@
 import { useI18n } from 'vue-i18n';
 // Types modules
 import { type DeviceZoneId } from '@/types/DevicesTypes';
+import { updateIntervals } from '~/staticData/updateIntervalOptions';
 
 // Types
 interface SensorHeaderProps {
@@ -83,12 +84,14 @@ const name = defineModel<string>('name');
     required
     :title="t('devices.polling')"
   >
-    <InputNumber
-      id="update_interval"
-      v-model="updateInterval"
-      class="tw-mr-10 tw-w-1/4"
-      suffix=" sec"
-    />
+  <Select
+    id="update_interval"
+    v-model="updateInterval"
+    :options="updateIntervals"
+    optionLabel="label"
+    optionValue="value"
+    class="tw-mr-10 tw-w-1/2"
+  />
   </SharedUILabel>
 
   <Divider class="tw-mt-0 tw-pb-3" />

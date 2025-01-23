@@ -14,7 +14,7 @@ const basicCreateDeviceForm = {
   parent_id: 0,
   category: ObjectsCategory.Sensor,
   props: {
-    update_interval: 300,
+    update_interval: '1m',
   },
   children: {},
 };
@@ -209,7 +209,7 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['1W'],
-      update_interval: 300,
+      update_interval: '1m',
     },
     children: {
       [DevicePropertyKey.Temperature]: {
@@ -331,7 +331,7 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['ADC'],
-      update_interval: 300,
+      update_interval: '1m',
     },
     children: {
       [DevicePropertyKey.Current]: {
@@ -370,7 +370,7 @@ export const initialEditFormData = {
   zone_id: 0,
   busAddress: 0,
   props: {
-    update_interval: 300,
+    update_interval: '1m',
     interface: DeviceInterface['1W'],
     address: '',
     id: '',
@@ -388,7 +388,7 @@ const editFormBasicsData = {
   sclPort: null,
   parent_id: 0,
   props: {
-    update_interval: 300,
+    update_interval: '1m',
   },
   children: {},
 };
@@ -407,7 +407,7 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {
       interface: DeviceInterface['1W'],
-      update_interval: 300,
+      update_interval: '1m',
     },
     children: {},
     status: '',
@@ -418,7 +418,7 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {
       interface: DeviceInterface['ADC'],
-      update_interval: 300,
+      update_interval: '1m',
     },
     children: {},
     status: '',
