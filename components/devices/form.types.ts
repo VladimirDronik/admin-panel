@@ -47,7 +47,7 @@ export interface CreateDeviceInitialForm {
 export interface DeviceProps {
     interface?: DeviceInterface;
     address?: string;
-    update_interval?: number;
+    update_interval?: string;
     id?: string;
     password?: string;
     protocol?: Connection;

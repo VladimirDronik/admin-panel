@@ -81,7 +81,7 @@ export const transformToDeviceEditFormPayload = (
 export const transformResponseToFormData = (data: GetCurrentDeviceResponse): EditDeviceForm | null => {
   if (!data.id) return null;
   const address = data.props.find((prop) => prop.code === 'address');
-  const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? 0;
+  const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? '';
   const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
   const updatedbusAddress = String(address?.value).split(';')[1];
   const ports = String(address?.value).split(';') ?? [null, null];
@@ -136,7 +136,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     initialForm.props.interface = updatedInterface;
   }
   if ('update_interval' in initialForm.props) {
-    initialForm.props.update_interval = Number(updatedInterval);
+    initialForm.props.update_interval = String(updatedInterval);
   }
   if ('status' in initialForm && data.status) {
     initialForm.status = data.status;
