@@ -35,7 +35,6 @@ const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   sclPort: z.number().min(1),
-  update_interval: z.string().default('1m'),
   minThresholdTemp: z.number().min(-10),
   maxThresholdTemp: z.number().max(60),
   minThresholdHumidity: z.number().min(0),

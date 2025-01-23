@@ -18,7 +18,7 @@ const storeRooms = useRoomsStore();
 // Declare Options
 const props = defineProps<SensorHeaderProps>();
 
-const updateInterval = defineModel<number>('update-interval');
+const updateInterval = defineModel<string>('update-interval');
 const zoneId = defineModel<DeviceZoneId>('zone-id');
 const name = defineModel<string>('name');
 
