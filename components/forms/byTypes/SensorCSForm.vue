@@ -35,7 +35,6 @@ const flatForm = computed(() => ({
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  update_interval: z.string().default('1m'),
   minThresholdTemp: z.number().min(0),
   maxThresholdTemp: z.number().max(10),
 });

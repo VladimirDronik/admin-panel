@@ -31,7 +31,6 @@ const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   sclPort: z.number().min(1),
-  update_interval: z.string().default('1m'),
   minThresholdIllumination: z.number().min(0),
   maxThresholdIllumination: z.number().max(65535),
 });
