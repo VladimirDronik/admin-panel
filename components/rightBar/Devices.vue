@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Helper modules
-import { checkStatusTextSmall, checkStatusBackgroundColor, checkStatusColor } from '~/helpers/main';
+import { checkStatusTextSmall, checkStatusSymbol, checkStatusColor } from '~/helpers/main';
 // Static Data modules
 import { deviceEventTypes } from '~/staticData/modelEvents';
 import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
@@ -268,16 +268,14 @@ onBeforeMount(async () => {
         outlined
         :severity="checkStatusColor(asideEditingForm.status)"
       >
-        <div class="tw-flex tw-items-center tw-font-normal">
-          <div
-            :class="asideEditingForm.status === 'OFF' 
-              ? 'tw-text-danger tw-text-xl tw-mr-3' 
-              : 'tw-mr-3 tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(asideEditingForm.status)"
-          >
-            {{ asideEditingForm.status === 'OFF' ? '×' : '' }}
-          </div>
-          {{ checkStatusTextSmall(asideEditingForm.status) }}
+      <div class="tw-flex tw-items-center tw-font-normal">
+        <div
+        :class="checkStatusSymbol(asideEditingForm.status).class + ' tw-mr-2'"
+        >
+        {{ checkStatusSymbol(asideEditingForm.status).symbol }}
         </div>
+      {{ checkStatusTextSmall(asideEditingForm.status) }}
+      </div>
       </Tag>
       <Tabs
         v-model:value="tabs"
