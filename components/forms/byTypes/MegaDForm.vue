@@ -71,6 +71,20 @@ const protocolOptions = schema.shape.protocol.options;
     </SharedUILabel>
 
     <SharedUILabel
+      class="tw-mb-2"
+      name="ptotocol"
+      required
+      :title="t('devices.protocol')"
+      :value="dynamicForm.props.protocol"
+    >
+      <Select
+        v-model="dynamicForm.props.protocol"
+        :options="protocolOptions"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
       v-if="dynamicForm.props.protocol === 'mqtt'"
       class="tw-mb-2"
       name="id"
@@ -107,18 +121,6 @@ const protocolOptions = schema.shape.protocol.options;
       <InputText
         id="password"
         v-model="dynamicForm.props.password"
-      />
-    </SharedUILabel>
-    <SharedUILabel
-      class="tw-mb-2"
-      name="ptotocol"
-      required
-      :title="t('devices.protocol')"
-      :value="dynamicForm.props.protocol"
-    >
-      <Select
-        v-model="dynamicForm.props.protocol"
-        :options="protocolOptions"
       />
     </SharedUILabel>
 
