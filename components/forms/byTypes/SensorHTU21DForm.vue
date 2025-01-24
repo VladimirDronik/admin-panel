@@ -129,7 +129,6 @@ const sensorDataToShow = computed(() => {
     <SharedUILabel :title="t('devices.graphing')">
       <ToggleSwitch v-model="dynamicForm.children.temperature.write_graph" />
     </SharedUILabel>
-    {{ dynamicForm.children.temperature.min_threshold }}
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
@@ -142,6 +141,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.min_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -154,6 +154,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.max_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
     </div>
@@ -202,6 +203,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.humidity.min_threshold"
           suffix=" %"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -214,6 +216,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.humidity.max_threshold"
           suffix=" %"
+          disabled
         />
       </SharedUILabel>
     </div>

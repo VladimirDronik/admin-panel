@@ -131,6 +131,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.illumination.min_threshold"
           suffix=" lx"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -143,6 +144,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.illumination.max_threshold"
           suffix=" lx"
+          disabled
         />
       </SharedUILabel>
     </div>

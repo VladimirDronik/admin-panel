@@ -153,6 +153,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.min_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -165,6 +166,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.max_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
     </div>
@@ -212,6 +214,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.humidity.min_threshold"
           suffix=" %"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -224,6 +227,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.humidity.max_threshold"
           suffix=" %"
+          disabled
         />
       </SharedUILabel>
     </div>
@@ -272,6 +276,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.pressure.min_threshold"
           suffix=" mmHg"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -284,6 +289,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.pressure.max_threshold"
           suffix=" mmHg"
+          disabled
         />
       </SharedUILabel>
     </div>
