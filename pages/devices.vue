@@ -54,6 +54,8 @@ const page = ref(1);
 const isUpdate = ref(true);
 const isOpen = ref(false);
 
+provide('isOpen', isOpen);
+
 const selectedObject = ref<FullDevice>();
 
 // Computed Properties
