@@ -142,6 +142,16 @@ onBeforeMount(async () => {
   apiDeviceModel.value = data as APIData<any>;
   //
 });
+
+const isOpen = inject<Ref<boolean>>('isOpen');
+
+const handleButtonClick = () => {
+  visible.value = true;
+  if (isOpen) {
+    isOpen.value = false;
+  }
+};
+
 </script>
 
 <template>
@@ -150,7 +160,7 @@ onBeforeMount(async () => {
       class="text-capitalize"
       icon="pi pi-plus"
       :label="t('devices.addDevice')"
-      @click="visible = true"
+      @click="handleButtonClick"
     />
 
     <Dialog
