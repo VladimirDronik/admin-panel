@@ -26,10 +26,10 @@ const flatForm = computed(() => ({
 }));
 
 const schema = z.object({
-  id: z.string().min(1).max(15),
+  id: z.string().max(15).optional(),
   address: z.string().min(1).max(15),
   password: z.string().min(1).max(6),
-  protocol: z.enum(['http', 'mqtt']),
+  protocol: z.enum(['http']),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -71,6 +71,7 @@ const protocolOptions = schema.shape.protocol.options;
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="dynamicForm.props.protocol === 'mqtt'"
       class="tw-mb-2"
       name="id"
       required
