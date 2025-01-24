@@ -35,8 +35,8 @@ const flatForm = computed(() => ({
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  minThresholdTemp: z.number().min(-40),
-  maxThresholdTemp: z.number().max(100),
+  minThresholdTemp: z.number().min(-55),
+  maxThresholdTemp: z.number().max(125),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -201,6 +201,7 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.temperature.min_threshold"
+          disabled
           suffix=" °C"
         />
       </SharedUILabel>
@@ -213,6 +214,7 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.temperature.max_threshold"
+          disabled
           suffix=" °C"
         />
       </SharedUILabel>
