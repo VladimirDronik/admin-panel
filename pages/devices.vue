@@ -116,7 +116,7 @@ const filters = ref<Filter[]>([
     options: [
       { title: 'Доступен', value: 'available' },
       { title: 'Недоступен', value: 'unavailable' },
-      { title: 'Неопределен', value: 'N/A' },
+      { title: 'Неопределён', value: 'N/A' },
       { title: 'Отключен', value: 'disabled' },
     ],
   },
