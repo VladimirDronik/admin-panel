@@ -11,16 +11,11 @@ import type { APIData } from '~/types/StoreTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore()
 
 // Declare Options
 const emit = defineEmits<{
   (e: 'update'): void
 }>();
-
-const room = defineModel<RoomItem | null | undefined>('form', {
-  required: true,
-});
 
 const isOpen = defineModel<boolean>('isShow', {
   required: true,
@@ -33,8 +28,6 @@ const dialog = ref(false);
 
 const loading = ref(false);
 const loadingDelete = ref(false);
-
-const parentId = ref()
 
 const resolver = ref(zodResolver(
   z.object({
@@ -56,7 +49,6 @@ const changeRoom = async () => {
       await emit('update');
     },
     success: () => {
-      isOpen.value = false;
     },
     successMessage: 'Помещение было успешно изменено',
     errorMessage: 'Помещение не было изменено',
@@ -77,24 +69,11 @@ const confirmDelete = async () => {
   });
 }
 
-// Watchers
-watch(room, () => {
-  if (room.value) form.value = {...room.value}
-})
-
 // Hooks
 onBeforeMount(async () => {
   // Change Device
   const dataChange: unknown = await useAPI(paths.privateRoomsList, {
-    body: computed(() => {
-      if (form.value?.parent_id === null) {
-        return [{
-          ...form.value,
-          parent_id: 0,
-      }]
-      }
-      return [form.value]
-    }),
+    body: computed(() => [form.value]),
     method: 'PATCH',
     immediate: false,
     watch: false,
@@ -147,24 +126,6 @@ onBeforeMount(async () => {
           :value="form.style"
         >
           <SharedUIColorSelect v-model="form.style" />
-        </SharedUILabel>
-        <SharedUILabel
-          v-if="!form.is_group"
-          class="tw-mb-2"
-          :title="'Группа'"
-        >
-          <Select
-            v-model="form.parent_id"
-            class="tw-w-full"
-            option-label="name"
-            option-value="id"
-            :options="storeRooms.getRooms.filter((room) => room.id !== form?.id)"
-            show-clear
-          >
-            <!-- <template #value="slotProps">
-              {{ slotProps.value == '0' ? : ''}}
-            </template> -->
-          </Select>
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">

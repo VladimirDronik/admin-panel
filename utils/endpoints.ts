@@ -9,6 +9,7 @@ export const paths = {
   privateCp: `${translator}/private/cp`,
   privateItem: `${translator}/private/item`,
   privateRoom: `${translator}/private/room`,
+  privateUsers: `${translator}/private/users`,
   privateSensor: `${translator}/private/sensor`,
   privateWizard: `${translator}/private/wizard/create_item`,
   privateRoomsList: `${translator}/private/rooms-list-all`,
