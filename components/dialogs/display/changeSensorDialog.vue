@@ -10,6 +10,7 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
+const storeUser = useUserStore()
 
 // Declare Options
 const { sensor, id } = defineProps<{
@@ -63,6 +64,9 @@ watch(() => id, () => {
       <img
         alt=""
         class="tw-mr-0.5"
+        :class="{
+          'tw-invert': storeUser.isDark
+        }"
         :src="`items/${sensor.icon}.png`"
       >
       {{ sensor.current }}

@@ -2,6 +2,9 @@
 // Helpers modules
 import { roomTextColor } from '~/helpers/rooms';
 
+// Composables
+const storeUser = useUserStore()
+
 // Declare Options
 defineProps<{
   icon: string,
@@ -20,6 +23,7 @@ defineProps<{
         <img
           alt=""
           class="tw-aspect-square tw-w-12"
+          :class="{ 'tw-invert': storeUser.isDark }"
           :src="`scenario_items/${icon}.png`"
         >
         <h4

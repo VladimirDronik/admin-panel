@@ -2,6 +2,9 @@
 // Helpers modules
 import { itemColor } from '~/helpers/rooms';
 
+// Composables
+const storeUser = useUserStore()
+
 // Declare Options
 defineProps<{
   icon: string,
@@ -26,7 +29,10 @@ defineProps<{
       <img
         alt=""
         class="tw-w-20"
-        :class="{ '!tw-opacity-60': !(status === 'on') }"
+        :class="{
+          '!tw-opacity-60': !(status === 'on'),
+          'tw-invert': storeUser.isDark
+        }"
         :src="`items/${icon}.png`"
       >
       <Badge

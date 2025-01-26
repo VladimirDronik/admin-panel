@@ -5,6 +5,7 @@ import { items } from '~/utils/icons';
 
 // Composables
 const { t } = useI18n();
+const storeUser = useUserStore()
 
 const icon = defineModel<string | null>('icon', {
   default: '',
@@ -39,6 +40,7 @@ const selectIcon = (item: string) => {
         <img
           alt=""
           class="tw-w-20"
+          :class="{ 'tw-invert': storeUser.isDark}"
           :src="`items/${icon}.png`"
         >
       </div>
@@ -69,6 +71,7 @@ const selectIcon = (item: string) => {
             <img
               alt=""
               class="tw-w-20"
+              :class="{ 'tw-invert': storeUser.isDark}"
               :src="`items/${item}.png`"
             >
           </div>
