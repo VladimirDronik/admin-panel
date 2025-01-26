@@ -6,7 +6,7 @@ import {
   IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency
 } from '@tabler/icons-vue';
 // Helpers modules
-import { checkStatusText, checkStatusBackgroundColor } from '~/helpers/main';
+import { checkStatusText, checkStatusSymbol } from '~/helpers/main';
 // Types modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
@@ -53,6 +53,8 @@ const page = ref(1);
 
 const isUpdate = ref(true);
 const isOpen = ref(false);
+
+provide('isOpen', isOpen);
 
 const selectedObject = ref<FullDevice>();
 
@@ -112,9 +114,10 @@ const filters = ref<Filter[]>([
     key: 'filter_by_status',
     value: null,
     options: [
-      { title: 'Доступен', value: 'ON' },
-      { title: 'Недоступен', value: 'N/A' },
-      { title: 'Отключен', value: 'OFF' },
+      { title: 'Доступен', value: 'available' },
+      { title: 'Недоступен', value: 'unavailable' },
+      { title: 'Неопределён', value: 'N/A' },
+      { title: 'Отключен', value: 'disabled' },
     ],
   },
   {
@@ -380,8 +383,8 @@ const processedDevices = computed(() => {
           </DevicesTableHeader>
         </template>
         <template #body="{ node }">
-          <div :class="node.data.status === 'OFF' ? 'tw-text-danger tw-text-xl tw-flex tw-items-center' : 'tw-h-2.5 tw-w-2.5 tw-rounded-full ' + checkStatusBackgroundColor(node.data.status)">
-            {{ node.data.status === 'OFF' ? '×' : '' }}
+          <div :class="checkStatusSymbol(node.data.status).class">
+            {{ checkStatusSymbol(node.data.status).symbol }}
           </div>
           {{ checkStatusText(node.data.status) }}
         </template>

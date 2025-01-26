@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core'
 // Static Data modules
 import { auth } from '~/utils/endpoints';
+import { Form } from '@primevue/forms';
 // Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
 import type { APIData, Request } from '~/types/StoreTypes';
@@ -100,7 +101,7 @@ onBeforeMount(async () => {
         <p class="tw-text-center tw-text-sm tw-text-gray-500">
           {{ storeUser.version }}
         </p>
-        <form>
+        <Form @submit="apiUser.refresh()">
           <SharedUILabel
             class="tw-mb-3"
             colomn
@@ -126,9 +127,9 @@ onBeforeMount(async () => {
             class="tw-w-full"
             :label="t('auth.signIn')"
             :loading="apiUser.pending && apiUser.status !== 'idle'"
-            @click="apiUser.refresh()"
+            type="submit"
           />
-        </form>
+        </Form>
       </div>
     </div>
   </div>

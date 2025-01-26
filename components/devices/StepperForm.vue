@@ -30,7 +30,8 @@ const initialForm = defineModel<CreateDeviceInitialForm>('form', {
   required: true,
 });
 
-const dynamicForm = reactive(getInitialCreateDeviceFormDataByTypes(initialForm.value)) as DynamicFormData;
+const initialFormData = _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})) as DynamicFormData;
+const dynamicForm = reactive(initialFormData);
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
   if (!dynamicForm.children) return;
@@ -79,7 +80,7 @@ watch(
 
 const valid = computed(() => {
   // checkValidInput(form.value.zone_id) &&
-  const main = checkValidInput(initialForm.value.tags) && checkValidInput(initialForm.value.category) && checkValidInput(initialForm.value.type) && checkValidInput(dynamicForm.name);
+  const main = checkValidInput(initialForm.value.type) && checkValidInput(dynamicForm.name);
 
   let props = true;
   let children = true;
@@ -153,7 +154,7 @@ onBeforeMount(async () => {
 });
 
 const changeTypeHandler = () => {
-  Object.assign(dynamicForm, getInitialCreateDeviceFormDataByTypes(initialForm.value));
+  Object.assign(dynamicForm, _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})));
   switch (initialForm.value.type) {
     case Controller.MegaD:
       dynamicForm.category = ObjectsCategory.Controller;
@@ -170,6 +171,7 @@ const changeTypeHandler = () => {
 };
 
 const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulator');
+
 
 </script>
 

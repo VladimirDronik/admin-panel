@@ -6,6 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData, DeviceChildrenRequired,
 } from '~/components/devices/form.types';
+import { updateIntervals } from '~/staticData/updateIntervalOptions';
 
 const props = defineProps<{
   isEditing: boolean;
@@ -32,7 +33,6 @@ const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   sclPort: z.number().min(1),
-  update_interval: z.number().default(300),
   minThresholdTemp: z.number().min(-40),
   maxThresholdTemp: z.number().max(85),
   minThresholdPressure: z.number().min(225),
@@ -106,12 +106,14 @@ const sensorDataToShow = computed(() => {
       :title="t('devices.polling')"
       :value="dynamicForm.props.update_interval"
     >
-      <InputNumber
-        id="update_interval"
-        v-model="dynamicForm.props.update_interval"
-        class="tw-mr-10 tw-w-1/4"
-        suffix=" sec"
-      />
+    <Select
+      id="update_interval"
+      v-model="dynamicForm.props.update_interval"
+      :options="updateIntervals"
+      optionLabel="label"
+      optionValue="value"
+      class="tw-mr-10 tw-w-1/4"
+/>
     </SharedUILabel>
 
     <Divider
@@ -140,6 +142,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.min_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -152,6 +155,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.temperature.max_threshold"
           suffix=" °C"
+          disabled
         />
       </SharedUILabel>
     </div>
@@ -200,6 +204,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.pressure.min_threshold"
           suffix=" mmHg"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -212,6 +217,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.pressure.max_threshold"
           suffix=" mmHg"
+          disabled
         />
       </SharedUILabel>
     </div>

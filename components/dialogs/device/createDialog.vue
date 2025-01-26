@@ -7,6 +7,7 @@ import { paths } from '~/utils/endpoints';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type Devices } from '~/types/DevicesTypes';
+import { type FormTypes } from '~/components/devices/form.types';
 
 // Composables
 defineOptions({
@@ -26,11 +27,12 @@ const model = ref<Devices>();
 
 const form = ref({
   name: '',
-  type: '',
+  type: null as unknown as FormTypes,
   zone_id: null,
-  category: 'controller',
+  category: '',
   tags: [],
 });
+
 
 // Apis
 const apiDeviceModel = ref<APIData<any>>();
@@ -109,7 +111,7 @@ watchEffect(() => {
 watch(() => form.value.type, getModel);
 
 watch(() => form.value.category, () => {
-  form.value.type = '';
+  form.value.type = null as unknown as FormTypes;
   apiDeviceModel.value?.clear();
   getModel();
 });
@@ -140,6 +142,16 @@ onBeforeMount(async () => {
   apiDeviceModel.value = data as APIData<any>;
   //
 });
+
+const isOpen = inject<Ref<boolean>>('isOpen');
+
+const handleButtonClick = () => {
+  visible.value = true;
+  if (isOpen) {
+    isOpen.value = false;
+  }
+};
+
 </script>
 
 <template>
@@ -148,7 +160,7 @@ onBeforeMount(async () => {
       class="text-capitalize"
       icon="pi pi-plus"
       :label="t('devices.addDevice')"
-      @click="visible = true"
+      @click="handleButtonClick"
     />
 
     <Dialog
@@ -157,6 +169,7 @@ onBeforeMount(async () => {
       :header="t('devices.addTitleDevice')"
       modal
       :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
+      @hide="form = { name: '', zone_id: null, type: null as unknown as FormTypes, tags: [], category: '' }"
     >
       <DevicesStepperForm
         v-model:dialog="visible"

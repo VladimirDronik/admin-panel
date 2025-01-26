@@ -29,7 +29,7 @@ const schema = z.object({
   id: z.string().min(1).max(15),
   address: z.string().min(1).max(15),
   password: z.string().min(1).max(6),
-  protocol: z.enum(['http', 'mqtt']),
+  protocol: z.enum(['http']),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -72,6 +72,20 @@ const protocolOptions = schema.shape.protocol.options;
 
     <SharedUILabel
       class="tw-mb-2"
+      name="ptotocol"
+      required
+      :title="t('devices.protocol')"
+      :value="dynamicForm.props.protocol"
+    >
+      <Select
+        v-model="dynamicForm.props.protocol"
+        :options="protocolOptions"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      class="tw-mb-2"
       name="id"
       required
       :title="t('devices.id')"
@@ -106,18 +120,6 @@ const protocolOptions = schema.shape.protocol.options;
       <InputText
         id="password"
         v-model="dynamicForm.props.password"
-      />
-    </SharedUILabel>
-    <SharedUILabel
-      class="tw-mb-2"
-      name="ptotocol"
-      required
-      :title="t('devices.protocol')"
-      :value="dynamicForm.props.protocol"
-    >
-      <Select
-        v-model="dynamicForm.props.protocol"
-        :options="protocolOptions"
       />
     </SharedUILabel>
 

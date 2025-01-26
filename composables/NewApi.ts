@@ -24,14 +24,13 @@ export function useAPI<T>(
           try {
             Schema.parse(response._data.response);
           } catch (err: any) {
-            if (import.meta.env.VITE_ENV === 'development') {
+            if (import.meta.env.VITE_ENV_TYPE === 'development') {
               console.error(`Zod Validation Error (${request}):\n`, err?.issues);
               console.error('The received data:\n', response._data.response);
-
             }
           }
         } else {
-          if (import.meta.env.VITE_ENV === 'development') console.warn('The Zod schema for data validation is not valid or missing.', request);
+          if (import.meta.env.VITE_ENV_TYPE === 'development') console.warn('The Zod schema for data validation is not valid or missing.', request);
         }
         options?.success?.(response._data);
       } else {

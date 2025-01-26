@@ -3,10 +3,11 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { Controller, DeviceInterface } from '~/types/DevicesEnums';
+import { Controller } from '~/types/DevicesEnums';
 import type {
   DynamicFormData, DeviceChildrenRequired,
 } from '~/components/devices/form.types';
+import { updateIntervals } from '~/staticData/updateIntervalOptions';
 
 const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
 
@@ -34,7 +35,6 @@ const flatForm = computed(() => ({
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  update_interval: z.number().default(300),
   minThresholdTemp: z.number().min(0),
   maxThresholdTemp: z.number().max(10),
 });
@@ -127,12 +127,14 @@ const sensorDataToShow = computed(() => {
       :title="t('devices.polling')"
       :value="dynamicForm.props.update_interval"
     >
-      <InputNumber
-        id="update_interval"
-        v-model="dynamicForm.props.update_interval"
-        class="tw-mr-10 tw-w-1/4"
-        suffix=" sec"
-      />
+    <Select
+      id="update_interval"
+      v-model="dynamicForm.props.update_interval"
+      :options="updateIntervals"
+      optionLabel="label"
+      optionValue="value"
+      class="tw-mr-10 tw-w-1/4"
+/>
     </SharedUILabel>
 
     <Divider
@@ -160,6 +162,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.current.min_threshold"
           suffix=" u"
+          disabled
         />
       </SharedUILabel>
       <SharedUILabel
@@ -172,6 +175,7 @@ const sensorDataToShow = computed(() => {
         <InputNumber
           v-model="dynamicForm.children.current.max_threshold"
           suffix=" u"
+          disabled
         />
       </SharedUILabel>
     </div>
