@@ -77,7 +77,7 @@ const sensorDataToShow = computed(() => {
       },
       {
         value: co2.value ?? 0,
-        unit: '%',
+        unit: 'ppm',
         label: t('devices.co2'),
       },
     ],
