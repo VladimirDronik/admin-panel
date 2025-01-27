@@ -141,9 +141,11 @@ const devicesDynamicFormValidityHandler = (isValid: boolean) => {
 
 onBeforeMount(async () => {
   // Create Device
-  const body = computed<DeviceCreateFormPayload>(() => transformToDeviceCreateFormPayload({
-    ...initialForm.value,
-    ...dynamicForm,
+  const body = computed<DeviceCreateFormPayload>(() => ({
+    ...transformToDeviceCreateFormPayload({
+      ...initialForm.value,
+      ...dynamicForm,
+    }),
     events: events.value?.map((item) => ({
         actions: item.actions,
         name: item.code,

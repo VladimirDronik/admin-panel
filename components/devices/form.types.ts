@@ -43,10 +43,6 @@ export interface CreateDeviceInitialForm {
     zone_id: DeviceZoneId;
     category: string;
     tags: string[];
-    events?: {
-      actions: any[];
-      name: string;
-    }[]
   }
 
 export interface DeviceProps {
