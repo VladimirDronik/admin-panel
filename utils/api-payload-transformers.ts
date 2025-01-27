@@ -39,7 +39,7 @@ export const transformToDeviceCreateFormPayload = (
 ): DeviceCreateFormPayload => {
   const children = formatChildren(formData.children);
 
-  const result = { object: { ...formData, children, events: [] } };
+  const result = { object: { ...formData, children } };
   result.object.props.address = createAddress(formData);
 
   if (!formData.children && 'children' in result.object) {

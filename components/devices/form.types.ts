@@ -3,6 +3,7 @@ import {
   Regulator, RegulatorType,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
+import type { Event } from '@/types/ModelEventTypes';
 
 export interface DevicePropertyData {
     value?: number;
@@ -42,6 +43,10 @@ export interface CreateDeviceInitialForm {
     zone_id: DeviceZoneId;
     category: string;
     tags: string[];
+    events?: {
+      actions: any[];
+      name: string;
+    }[]
   }
 
 export interface DeviceProps {
@@ -75,7 +80,6 @@ export interface DeviceCreateFormObject extends CreateDeviceInitialForm {
     parent_id?: number;
     props: DeviceProps;
     children?: DeviceChild[];
-    events: unknown[];
   }
 
 export interface DeviceCreateFormPayload {

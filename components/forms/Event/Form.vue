@@ -147,7 +147,7 @@ updateEvents();
         <p class="tw-mb-2">
           {{ event.description }}
         </p>
-        <p :class="{ 'tw-opacity-0': !event.actions?.length }">
+        <p :class="{ 'tw-opacity-0': !event?.actions?.length }">
           <span class="tw-mr-2 tw-text-primary">
             Метод {{ event.actionTypes?.method }}
           </span>

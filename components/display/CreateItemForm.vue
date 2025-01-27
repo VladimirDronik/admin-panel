@@ -97,11 +97,6 @@ watch(() => props.id, (newValue) => {
   setTimeout(() => isUpdateForm.value = false, 0)
 })
 
-const f = (value: any) => {
-  console.log(value)
-  return value 
-}
-
 // Hooks
 onBeforeMount(async () => {
   // Create Device
