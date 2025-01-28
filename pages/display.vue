@@ -96,7 +96,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <SharedUIPanel :is-update="apiItems?.pending">
+  <SharedUIPanel :is-update="apiItems ? apiItems.pending : true || storeRooms.apiRooms?.pending">
     <SharedUIBreadcrumb title="pages.display">
       <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
     </SharedUIBreadcrumb>

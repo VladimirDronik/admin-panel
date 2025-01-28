@@ -20,6 +20,7 @@ export const paths = {
   scripts: `${objectManager}/scripts`,
   objects: `${objectManager}/objects`,
   objectsTags: `${objectManager}/objects/tags`,
+  objectsByTags: `${objectManager}/objects/by_tags`,
   objectModel: `${objectManager}/objects/model`,
   objectsTypes: `${objectManager}/objects/types`,
   controllers: `${objectManager}/controllers`,

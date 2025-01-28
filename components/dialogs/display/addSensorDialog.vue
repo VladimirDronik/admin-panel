@@ -31,8 +31,8 @@ const apiGetSensor = ref<APIData<any>>();
 const apiGetModel = ref<APIData<any>>();
 
 const form = ref({
-  min: '',
-  max: '',
+  zone_id: null,
+  icon: null
 });
 
 const allSensor = [
@@ -66,24 +66,25 @@ const createRoom = async () => {
 const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.children.find((item: any) => item.type === selectedSensor.value)?.props);
 
 // Watchers
-watch(selectedModelSensor, () => {
-  if (!selectedParamSensor.value) {
-    form.value.min = '';
-    form.value.max = '';
-    return;
-  }
-  form.value.min = selectedModelSensor.value?.min_threshold?.value ?? '';
-  form.value.max = selectedModelSensor.value?.max_threshold?.value ?? '';
-}, {
-  immediate: false,
-});
+// watch(selectedModelSensor, () => {
+//   if (!selectedParamSensor.value) {
+//     form.value.min = '';
+//     form.value.max = '';
+//     return;
+//   }
+//   form.value.min = selectedModelSensor.value?.min_threshold?.value ?? '';
+//   form.value.max = selectedModelSensor.value?.max_threshold?.value ?? '';
+// }, {
+//   immediate: false,
+// });
 
 // Hooks
 onBeforeMount(async () => {
   // Get Sensor
-  const dataGetSensor: unknown = await useAPI(paths.objectsTypes, {
+  const dataGetSensor: unknown = await useAPI(paths.objectModel, {
     query: computed(() => ({
-      tags: selectedSensor.value,
+      category: 'sensor',
+      type: selectedSensor.value,
     })),
     immediate: false,
   });
@@ -91,12 +92,11 @@ onBeforeMount(async () => {
   apiGetSensor.value = dataGetSensor as APIData<any>;
 
   // Get Model
-  const dataGetModel: unknown = await useAPI(paths.objectModel, {
+  const dataGetModel: unknown = await useAPI(paths.objectsTypes, {
     query: computed(() => ({
-      category: 'sensor',
-      type: selectedParamSensor.value,
+      tags: 'sensor',
+      // type: selectedParamSensor.value,
     })),
-    immediate: false,
   });
 
   apiGetModel.value = dataGetModel as APIData<any>;
@@ -128,7 +128,7 @@ onBeforeMount(async () => {
           Доступные Датчики
         </h5>
 
-        <div class="tw-flex tw-items-center tw-gap-2">
+        <!-- <div class="tw-flex tw-items-center tw-gap-2">
           <label for="ingredient1">
             Все
           </label>
@@ -137,7 +137,7 @@ onBeforeMount(async () => {
             binary
             name="Все"
           />
-        </div>
+        </div> -->
       </div>
       <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
         <div class="tw-h-full">
@@ -146,24 +146,24 @@ onBeforeMount(async () => {
               class="tw-mb-2 tw-w-full"
             />
             <button
-              v-for="sensor in sensorList"
+              v-for="sensor in apiGetModel?.data?.response"
               :key="sensor"
               class="tw-flex tw-w-full tw-items-center tw-py-1"
               type="button"
-              @click="selectSensor(sensor)"
+              @click="selectSensor(sensor.type)"
             >
               <div class="tw-flex tw-items-center">
-                -
-                {{ sensor }}
+                - {{ sensor.type }}
               </div>
             </button>
           </div>
         </div>
         <div>
-          <div class="border-base tw-mb-4 tw-rounded-md tw-border tw-p-3">
+          <div class="border-base tw-mb-4 tw-min-h-12 tw-rounded-md tw-border tw-p-3">
+            <!-- {{ apiGetSensor?.data?.response.props }} -->
             <button
-              v-for="sensor in apiGetSensor?.data?.response"
-              :key="sensor.id"
+              v-for="sensor in apiGetSensor?.data?.response.children"
+              :key="sensor.type"
               class="tw-flex tw-w-full tw-items-center tw-py-1"
               type="button"
               @click="selectParamSensor(sensor.type)"
@@ -174,7 +174,24 @@ onBeforeMount(async () => {
               </div>
             </button>
           </div>
-          <p class="tw-mb-4 tw-text-xl">
+          <div>
+            <SharedUILabel
+              class="tw-mb-2"
+              name="zone_id"
+              required
+              :title="'Помещение'"
+              :value="form.zone_id"
+            >
+              <SharedUIRoomSelect v-model="form.zone_id" />
+            </SharedUILabel>
+            <SharedUILabel
+              class="tw-mb-2"
+              :title="'Иконка'"
+            >
+              <SharedUIIconSelect v-model:icon="form.icon" />
+            </SharedUILabel>
+          </div>
+          <!-- <p class="tw-mb-4 tw-text-xl">
             Текущее значение: {{ selectedParamSensor ? selectedModelSensor?.value?.value : '-' }}
             <span v-if="selectedSensor === 'temperature'">
               °
@@ -205,8 +222,8 @@ onBeforeMount(async () => {
                 class="tw-w-full"
               />
             </SharedUILabel>
-          </div>
-          <div class="tw-flex tw-items-center tw-gap-2">
+          </div> -->
+          <!-- <div class="tw-flex tw-items-center tw-gap-2">
             <Checkbox
               v-model="isRegulator"
               binary
@@ -214,7 +231,7 @@ onBeforeMount(async () => {
             <label for="ingredient1">
               Регулировка
             </label>
-          </div>
+          </div> -->
         </div>
       </div>
 
