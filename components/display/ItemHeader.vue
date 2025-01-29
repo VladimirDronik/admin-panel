@@ -8,8 +8,14 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 defineProps<{
   name: string,
   style: string,
+  zoneId: number,
   sensors: roomSensorTypes[] | undefined,
 }>();
+
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
 </script>
 
 <template>
@@ -27,7 +33,11 @@ defineProps<{
         :key="sensor.item_id"
         :sensor
       />
-      <DialogsDisplayAddSensorDialog :sensors />
+      <DialogsDisplayAddSensorDialog
+        :sensors
+        :zone-id
+        @update="emit('update')"
+      />
     </div>
   </div>
 </template>

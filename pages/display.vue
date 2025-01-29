@@ -123,6 +123,8 @@ onBeforeMount(async () => {
           :name="rooms.name"
           :sensors="rooms.sensors"
           :style="rooms.style"
+          :zone-id="rooms.id"
+          @update="storeRooms.getRoomsApi"
         />
         <div class="tw-pt-2">
           <VueDraggableNext

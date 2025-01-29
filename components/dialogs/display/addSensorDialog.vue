@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Builtin modules
-import _ from 'lodash';
+import _, { method } from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
@@ -13,10 +13,16 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
+const { updateData } = useUtils();
 
 // Declare Options
 const props = defineProps<{
   sensors: roomSensorTypes[] | undefined,
+  zoneId: number,
+}>();
+
+const emit = defineEmits<{
+  (e: 'update'): void
 }>();
 
 const dialog = defineModel<boolean>({
@@ -30,14 +36,22 @@ const isRegulator = ref(false);
 const selectedSensor = ref<string>();
 const selectedParamSensor = ref<string>();
 
+// Apis
 const apiGetSensor = ref<APIData<any>>();
-const apiGetModel = ref<APIData<any>>();
+const apiGetSensorType = ref<APIData<any>>();
+const apiCreateSensor = ref<APIData<any>>();
 
-const form = ref({
+const form = ref<{
+  name: string | null,
+  zone_id: number | null,
+  icon: string | null,
+  object_id: number | null,
+  type: string | null,
+}>({
   name: null,
   zone_id: null,
   icon: null,
-  object_type: null,
+  object_id: null,
   type: null,
 });
 
@@ -45,7 +59,7 @@ const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
     zone_id: z.number(),
-    object_type: z.string().min(1),
+    object_id: z.number(),
     type: z.string().min(1),
   }),
 ));
@@ -67,18 +81,38 @@ const sensorList = computed(() => {
 });
 
 // Methods
-const selectSensor = (sensor: string) => {
+const selectSensor = (sensor: string, id: number) => {
+  form.value.object_id = id
   selectedSensor.value = sensor;
-  selectedParamSensor.value = undefined;
+  form.value.type = null;
 };
-const selectParamSensor = (param: string) => {
-  selectedParamSensor.value = param;
+
+const selectParamSensor = (type: string) => {
+  form.value.type = type;
 };
 
 const createSensor = async () => {
+  await updateData({
+    update: async () => {
+      await apiCreateSensor.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+      form.value = {
+        name: null,
+        zone_id: null,
+        icon: null,
+        object_id: null,
+        type: null,
+      };
+      dialog.value = false;
+    },
+    successMessage: 'Датчик был успешно создана',
+    errorMessage: 'Датчик не был создан',
+  });
 };
 
-const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.children.find((item: any) => item.type === selectedSensor.value)?.props);
+// const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.children.find((item: any) => item.type === selectedSensor.value)?.props);
 
 // Watchers
 // watch(selectedModelSensor, () => {
@@ -96,7 +130,20 @@ const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.chi
 // Hooks
 onBeforeMount(async () => {
   // Get Sensor Values
-  const dataValues: unknown = await useAPI(paths.objectModel, {
+  const dataValues: unknown = await useAPI(paths.objects, {
+    query: computed(() => ({
+      filter_by_category: 'sensor',
+      limit: 9999,
+      type_struct: 'easy',
+      children: '1',
+    })),
+    watch: false,
+  });
+
+  apiGetSensor.value = dataValues as APIData<any>;
+
+  // Get Sensor Types
+  const dataGetModel: unknown = await useAPI(paths.objectModel, {
     query: computed(() => ({
       category: 'sensor',
       type: selectedSensor.value,
@@ -104,17 +151,19 @@ onBeforeMount(async () => {
     immediate: false,
   });
 
-  apiGetSensor.value = dataValues as APIData<any>;
+  apiGetSensorType.value = dataGetModel as APIData<any>;
 
-  // Get Sensors
-  const dataGetModel: unknown = await useAPI(paths.objectsTypes, {
-    query: computed(() => ({
-      tags: 'sensor',
-      // type: selectedParamSensor.value,
+  // Create Sensors
+  const dataCreateSensor: unknown = await useAPI(paths.privateItemsSensor, {
+    body: computed(() => ({
+      ...form.value
     })),
+    method: 'POST',
+    immediate: false,
+    watch: false,
   });
 
-  apiGetModel.value = dataGetModel as APIData<any>;
+  apiCreateSensor.value = dataCreateSensor as APIData<any>;
 });
 </script>
 
@@ -139,23 +188,20 @@ onBeforeMount(async () => {
       }"
     >
       <Form
+        v-slot="$form"
         :resolver
         @submit="({ valid }) => { if (valid) createSensor() }"
       >
         <div class="tw-mb-2 tw-grid tw-grid-cols-2 tw-items-center tw-justify-between">
           <SharedUILabel
             colomn
-            name="object_type"
             required
             title="Доступные Датчики"
-            :value="form.object_type"
           />
           <SharedUILabel
             colomn
-            name="object_type"
             required
             title="Тип Датчика"
-            :value="form.type"
           />
         </div>
         <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
@@ -164,39 +210,44 @@ onBeforeMount(async () => {
               <InputText
                 class="tw-mb-2 tw-w-full"
               />
-              <button
-                v-for="sensor in apiGetModel?.data?.response"
-                :key="sensor"
-                class="tw-flex tw-w-full tw-items-center tw-py-1"
-                type="button"
-                @click="selectSensor(sensor.type)"
+              <Button
+                v-for="sensor in apiGetSensor?.data?.response.list"
+                :key="sensor.id"
+                class="tw-mb-1 tw-flex tw-w-full tw-items-center tw-py-0.5"
+                text
+                @click="selectSensor(sensor.type, sensor.id)"
               >
                 <div
-                  class="tw-flex tw-items-center"
-                  :class="{'tw-text-primary': sensor.type === selectedSensor}"
+                  class="tw-flex tw-w-full tw-items-center tw-text-white"
+                  :class="{'!tw-text-primary': sensor.type === selectedSensor}"
                 >
-                  - {{ sensor.type }}
+                  <p class="tw-truncate tw-text-left">
+                    {{ sensor.name }}
+                    <span class="tw-block tw-text-sm tw-text-gray-500">
+                      {{ sensor.type }}
+                    </span>
+                  </p>
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
           <div>
             <div class="border-base tw-mb-4 tw-min-h-12 tw-rounded-md tw-border tw-p-3">
-              <button
-                v-for="sensor in apiGetSensor?.data?.response.children"
+              <Button
+                v-for="sensor in apiGetSensorType?.data?.response.children"
                 :key="sensor.type"
-                class="tw-flex tw-w-full tw-items-center tw-py-1"
+                class="tw-flex tw-w-full tw-py-1"
+                text
                 type="button"
                 @click="selectParamSensor(sensor.type)"
               >
                 <div
-                  class="tw-flex tw-items-center"
-                  :class="{'tw-text-primary': sensor.type === selectedParamSensor}"
+                  class="tw-w-full tw-text-left tw-text-white"
+                  :class="{'!tw-text-primary': sensor.type === form.type}"
                 >
-                  -
                   {{ sensor.type }}
                 </div>
-              </button>
+              </Button>
             </div>
             <div>
               <SharedUILabel
@@ -274,6 +325,7 @@ onBeforeMount(async () => {
         <div class="tw-flex tw-justify-end">
           <Button
             class="tw-mr-2"
+            :disabled="!(form.object_id && form.type)"
             type="submit"
           >
             {{ t('save') }}

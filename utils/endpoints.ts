@@ -15,6 +15,7 @@ export const paths = {
   privateRoomsList: `${translator}/private/rooms-list-all`,
   privateZonesOrder: `${translator}/private/zones/order`,
   privateItemsOrder: `${translator}/private/items/order`,
+  privateItemsSensor: `${translator}/private/item/sensor`,
 
   // Object Manager
   scripts: `${objectManager}/scripts`,
