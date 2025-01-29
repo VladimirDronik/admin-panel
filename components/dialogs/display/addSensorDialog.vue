@@ -2,6 +2,9 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
+import { z } from 'zod';
+import { Form } from '@primevue/forms';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Static data modules
 import { paths } from '~/utils/endpoints';
 // Types and Schemes modules
@@ -31,9 +34,21 @@ const apiGetSensor = ref<APIData<any>>();
 const apiGetModel = ref<APIData<any>>();
 
 const form = ref({
+  name: null,
   zone_id: null,
-  icon: null
+  icon: null,
+  object_type: null,
+  type: null,
 });
+
+const resolver = ref(zodResolver(
+  z.object({
+    name: z.string().min(1),
+    zone_id: z.number(),
+    object_type: z.string().min(1),
+    type: z.string().min(1),
+  }),
+));
 
 const allSensor = [
   'co2',
@@ -60,7 +75,7 @@ const selectParamSensor = (param: string) => {
   selectedParamSensor.value = param;
 };
 
-const createRoom = async () => {
+const createSensor = async () => {
 };
 
 const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.children.find((item: any) => item.type === selectedSensor.value)?.props);
@@ -80,8 +95,8 @@ const selectedModelSensor = computed(() => apiGetModel.value?.data?.response.chi
 
 // Hooks
 onBeforeMount(async () => {
-  // Get Sensor
-  const dataGetSensor: unknown = await useAPI(paths.objectModel, {
+  // Get Sensor Values
+  const dataValues: unknown = await useAPI(paths.objectModel, {
     query: computed(() => ({
       category: 'sensor',
       type: selectedSensor.value,
@@ -89,9 +104,9 @@ onBeforeMount(async () => {
     immediate: false,
   });
 
-  apiGetSensor.value = dataGetSensor as APIData<any>;
+  apiGetSensor.value = dataValues as APIData<any>;
 
-  // Get Model
+  // Get Sensors
   const dataGetModel: unknown = await useAPI(paths.objectsTypes, {
     query: computed(() => ({
       tags: 'sensor',
@@ -123,74 +138,95 @@ onBeforeMount(async () => {
         margin: '0 20px',
       }"
     >
-      <div class="tw-mb-2 tw-flex tw-items-center tw-justify-between">
-        <h5 class="tw-text-lg">
-          Доступные Датчики
-        </h5>
-
-        <!-- <div class="tw-flex tw-items-center tw-gap-2">
-          <label for="ingredient1">
-            Все
-          </label>
-          <Checkbox
-            v-model="isAllSensors"
-            binary
-            name="Все"
+      <Form
+        :resolver
+        @submit="({ valid }) => { if (valid) createSensor() }"
+      >
+        <div class="tw-mb-2 tw-grid tw-grid-cols-2 tw-items-center tw-justify-between">
+          <SharedUILabel
+            colomn
+            name="object_type"
+            required
+            title="Доступные Датчики"
+            :value="form.object_type"
           />
-        </div> -->
-      </div>
-      <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
-        <div class="tw-h-full">
-          <div class="border-base tw-h-full tw-rounded-md tw-border tw-p-3">
-            <InputText
-              class="tw-mb-2 tw-w-full"
-            />
-            <button
-              v-for="sensor in apiGetModel?.data?.response"
-              :key="sensor"
-              class="tw-flex tw-w-full tw-items-center tw-py-1"
-              type="button"
-              @click="selectSensor(sensor.type)"
-            >
-              <div class="tw-flex tw-items-center">
-                - {{ sensor.type }}
-              </div>
-            </button>
-          </div>
+          <SharedUILabel
+            colomn
+            name="object_type"
+            required
+            title="Тип Датчика"
+            :value="form.type"
+          />
         </div>
-        <div>
-          <div class="border-base tw-mb-4 tw-min-h-12 tw-rounded-md tw-border tw-p-3">
-            <!-- {{ apiGetSensor?.data?.response.props }} -->
-            <button
-              v-for="sensor in apiGetSensor?.data?.response.children"
-              :key="sensor.type"
-              class="tw-flex tw-w-full tw-items-center tw-py-1"
-              type="button"
-              @click="selectParamSensor(sensor.type)"
-            >
-              <div class="tw-flex tw-items-center">
-                -
-                {{ sensor.type }}
-              </div>
-            </button>
+        <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
+          <div class="tw-h-full">
+            <div class="border-base tw-h-full tw-rounded-md tw-border tw-p-3">
+              <InputText
+                class="tw-mb-2 tw-w-full"
+              />
+              <button
+                v-for="sensor in apiGetModel?.data?.response"
+                :key="sensor"
+                class="tw-flex tw-w-full tw-items-center tw-py-1"
+                type="button"
+                @click="selectSensor(sensor.type)"
+              >
+                <div
+                  class="tw-flex tw-items-center"
+                  :class="{'tw-text-primary': sensor.type === selectedSensor}"
+                >
+                  - {{ sensor.type }}
+                </div>
+              </button>
+            </div>
           </div>
           <div>
-            <SharedUILabel
-              class="tw-mb-2"
-              name="zone_id"
-              required
-              :title="'Помещение'"
-              :value="form.zone_id"
-            >
-              <SharedUIRoomSelect v-model="form.zone_id" />
-            </SharedUILabel>
-            <SharedUILabel
-              class="tw-mb-2"
-              :title="'Иконка'"
-            >
-              <SharedUIIconSelect v-model:icon="form.icon" />
-            </SharedUILabel>
-          </div>
+            <div class="border-base tw-mb-4 tw-min-h-12 tw-rounded-md tw-border tw-p-3">
+              <button
+                v-for="sensor in apiGetSensor?.data?.response.children"
+                :key="sensor.type"
+                class="tw-flex tw-w-full tw-items-center tw-py-1"
+                type="button"
+                @click="selectParamSensor(sensor.type)"
+              >
+                <div
+                  class="tw-flex tw-items-center"
+                  :class="{'tw-text-primary': sensor.type === selectedParamSensor}"
+                >
+                  -
+                  {{ sensor.type }}
+                </div>
+              </button>
+            </div>
+            <div>
+              <SharedUILabel
+                class="tw-mb-2"
+                name="name"
+                required
+                :title="'Название'"
+                :value="form.name"
+              >
+                <InputText
+                  v-model="form.name"
+                  class="tw-w-full"
+                />
+              </SharedUILabel>
+              <SharedUILabel
+                class="tw-mb-2"
+                name="zone_id"
+                required
+                :title="'Помещение'"
+                :value="form.zone_id"
+              >
+                <SharedUIRoomSelect v-model="form.zone_id" />
+              </SharedUILabel>
+              <SharedUILabel
+                class="tw-mb-2"
+                :title="'Иконка'"
+              >
+                <SharedUIIconSelect v-model:icon="form.icon" />
+              </SharedUILabel>
+            </div>
           <!-- <p class="tw-mb-4 tw-text-xl">
             Текущее значение: {{ selectedParamSensor ? selectedModelSensor?.value?.value : '-' }}
             <span v-if="selectedSensor === 'temperature'">
@@ -232,24 +268,25 @@ onBeforeMount(async () => {
               Регулировка
             </label>
           </div> -->
+          </div>
         </div>
-      </div>
 
-      <div class="tw-flex tw-justify-end">
-        <Button
-          class="tw-mr-2"
-          @click="createRoom"
-        >
-          {{ t('save') }}
-        </Button>
-        <Button
-          outlined
-          variant="outlined"
-          @click="dialog = false"
-        >
-          {{ t('cancel') }}
-        </Button>
-      </div>
+        <div class="tw-flex tw-justify-end">
+          <Button
+            class="tw-mr-2"
+            type="submit"
+          >
+            {{ t('save') }}
+          </Button>
+          <Button
+            outlined
+            variant="outlined"
+            @click="dialog = false"
+          >
+            {{ t('cancel') }}
+          </Button>
+        </div>
+      </Form>
     </Dialog>
   </div>
 </template>
