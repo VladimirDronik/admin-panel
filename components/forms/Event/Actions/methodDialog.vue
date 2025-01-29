@@ -48,7 +48,13 @@ const apiDevicesList = ref<APIData<any>>();
 const apiCreateMethod = ref<APIData<any>>();
 
 // Computed Properties
-const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.toLowerCase().includes(search.value.toLowerCase())));
+const filteredObjects = computed(() => 
+  apiDevicesList.value?.data?.response.list
+    .filter((item: any) => 
+      item.name.toLowerCase().includes(search.value.toLowerCase()) && 
+      item.type !== 'regulator'
+    )
+);
 
 // Methods
 const selectObject = (object: any) => {
@@ -127,7 +133,7 @@ onBeforeMount(async () => {
       params: computed(() => ({
         target_type: props.targetType,
         target_id: props.id,
-          event_name: event.value.code,
+        event_name: event.value.code,
       })),
       body: computed(() => ({
           args: {
