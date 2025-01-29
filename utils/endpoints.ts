@@ -15,11 +15,13 @@ export const paths = {
   privateRoomsList: `${translator}/private/rooms-list-all`,
   privateZonesOrder: `${translator}/private/zones/order`,
   privateItemsOrder: `${translator}/private/items/order`,
+  privateItemsSensor: `${translator}/private/item/sensor`,
 
   // Object Manager
   scripts: `${objectManager}/scripts`,
   objects: `${objectManager}/objects`,
   objectsTags: `${objectManager}/objects/tags`,
+  objectsByTags: `${objectManager}/objects/by_tags`,
   objectModel: `${objectManager}/objects/model`,
   objectsTypes: `${objectManager}/objects/types`,
   controllers: `${objectManager}/controllers`,

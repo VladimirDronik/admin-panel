@@ -10,6 +10,7 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
+const { updateData } = useUtils();
 const storeUser = useUserStore()
 
 // Declare Options
@@ -25,7 +26,11 @@ const dialog = defineModel<boolean>({
 // Variables
 const isRegulator = ref(false);
 
+const dialogDelete = ref(false)
+
+// Apis
 const apiGetSensor = ref<APIData<any>>();
+const apiDeleteSensor = ref<APIData<any>>();
 
 const form = ref({
   min: '',
@@ -35,6 +40,20 @@ const form = ref({
 // Methods
 const changeSensor = async () => {
 };
+
+const confirmDelete = async () => {
+  await updateData({
+      update: async () => {
+        await apiDeleteSensor.value?.execute();
+        await apiGetSensor.value?.refresh()
+      },
+      success: () => {
+        dialogDelete.value = false;
+      },
+      successMessage: 'Устройство удалено',
+      errorMessage: 'Ошибка удаления устройства',
+    });
+}
 
 // Hooks
 onBeforeMount(async () => {
@@ -47,6 +66,16 @@ onBeforeMount(async () => {
   });
 
   apiGetSensor.value = dataGetSensor as APIData<any>;
+
+  // Delete Sensor
+  const dataDeleteSensor: unknown = await useAPI(paths.privateSensor, {
+    query: computed(() => ({
+      id,
+    })),
+    immediate: false,
+  });
+
+  apiDeleteSensor.value = dataDeleteSensor as APIData<any>;
 });
 
 watch(() => id, () => {
@@ -141,13 +170,15 @@ watch(() => id, () => {
         >
           {{ t('save') }}
         </Button>
-        <Button
-          outlined
-          variant="outlined"
-          @click="dialog = false"
-        >
-          {{ t('delete') }}
-        </Button>
+        <DialogsDeleteDialog
+          :id="id ?? -1"
+          v-model="dialogDelete"
+          class="tw-mr-2"
+          :loading="apiDeleteSensor?.pending"
+          :subtitle="`Вы уверены, что хотите удалить «${sensor.name}»?`"
+          title="Удалить устройство"
+          @delete="confirmDelete"
+        />
       </div>
     </Dialog>
   </div>

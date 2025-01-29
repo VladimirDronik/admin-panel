@@ -58,6 +58,8 @@ const apiCreateDevice = ref<APIData<any>>();
 
 const events = ref<Event[]>();
 
+const eventTypes = ref(_.cloneDeep(deviceEventTypes))
+
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
 const typeOptions = computed(() => {
@@ -117,6 +119,7 @@ const createDevice = async () => {
     success: () => {
       dialog.value = false;
       model.value = undefined;
+      eventTypes.value = _.cloneDeep(deviceEventTypes)
       initialForm.value = {
         name: '',
         zone_id: null,
@@ -138,9 +141,18 @@ const devicesDynamicFormValidityHandler = (isValid: boolean) => {
 
 onBeforeMount(async () => {
   // Create Device
-  const body = computed<DeviceCreateFormPayload>(() => transformToDeviceCreateFormPayload({
-    ...initialForm.value, ...dynamicForm,
-  }));
+  const body = computed<DeviceCreateFormPayload>(() => ({
+    ...transformToDeviceCreateFormPayload({
+      ...initialForm.value,
+      ...dynamicForm,
+    }),
+    events: events.value?.map((item) => ({
+        actions: item.actions,
+        name: item.code,
+      }))
+        .filter((item) => item.actions.length > 0),
+  })
+);
   /// Консоль для работы, пока идут создания девайсов
   // console.log(body);
   const data: unknown = await useAPI(paths.objects, {
@@ -171,7 +183,6 @@ const changeTypeHandler = () => {
 };
 
 const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulator');
-
 
 </script>
 
@@ -221,9 +232,9 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
               <Select
                 v-model="initialForm.type"
                 class="tw-w-full"
-                :options="typeOptions"
                 option-label="label"
                 option-value="value"
+                :options="typeOptions"
                 @change="changeTypeHandler"
               />
             </SharedUILabel>
@@ -286,7 +297,7 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
       >
         <FormsEventForm
           v-model="events"
-          :event-types="deviceEventTypes"
+          :event-types="eventTypes"
           :model-type="initialForm.type"
           target-type="object"
         />

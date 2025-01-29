@@ -43,6 +43,8 @@ const form = ref<{
   color: string | null,
   zone_id: number | null,
   icon: string | null,
+  status: 'on',
+  target_type: 'item',
 }>({
   enabled: true,
   title: null,
@@ -50,6 +52,8 @@ const form = ref<{
   color: null,
   zone_id: null,
   icon: null,
+  status: 'on',
+  target_type: 'item',
 });
 
 const resolver = ref(zodResolver(
@@ -78,6 +82,8 @@ const createItem = async () => {
         color: null,
         zone_id: null,
         icon: null,
+        status: 'on',
+        target_type: 'item',
       };
       isOpen.value = false;
       step.value = '1';
@@ -96,11 +102,6 @@ watch(() => props.id, (newValue) => {
   if (room) form.value.zone_id = room
   setTimeout(() => isUpdateForm.value = false, 0)
 })
-
-const f = (value: any) => {
-  console.log(value)
-  return value 
-}
 
 // Hooks
 onBeforeMount(async () => {

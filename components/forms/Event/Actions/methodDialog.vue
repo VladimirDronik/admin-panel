@@ -48,7 +48,13 @@ const apiDevicesList = ref<APIData<any>>();
 const apiCreateMethod = ref<APIData<any>>();
 
 // Computed Properties
-const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list.filter((item: any) => item.name.toLowerCase().includes(search.value.toLowerCase())));
+const filteredObjects = computed(() => 
+  apiDevicesList.value?.data?.response.list
+    .filter((item: any) => 
+      item.name.toLowerCase().includes(search.value.toLowerCase()) && 
+      item.type !== 'regulator'
+    )
+);
 
 // Methods
 const selectObject = (object: any) => {
@@ -80,8 +86,8 @@ const createAction = async () => {
       },
       enabled: true,
       name: selectedMethod.value?.name,
-      target_id: props.id,
-      target_type: 'method',
+      target_id: selectedObject.value?.id,
+      target_type: 'object',
       type: 'method',
       sort: 0,
       qos: 0,
@@ -130,17 +136,17 @@ onBeforeMount(async () => {
         event_name: event.value.code,
       })),
       body: computed(() => ({
-        args: {
-          ...selectedMethod.value,
-          object: selectedObject.value.name,
-        },
-        enabled: true,
-        name: selectedMethod.value?.name,
-        target_id: props.id,
-        target_type: 'method',
-        type: 'method',
-        sort: 0,
-        qos: 0,
+          args: {
+            ...selectedMethod.value,
+            object: selectedObject.value.name,
+          },
+          enabled: true,
+          name: selectedMethod.value?.name,
+          target_id: selectedObject.value?.id,
+          target_type: 'object',
+          type: 'method',
+          sort: 0,
+          qos: 0,
       })),
       method: 'POST',
       watch: false,

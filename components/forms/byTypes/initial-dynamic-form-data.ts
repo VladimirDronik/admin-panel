@@ -391,6 +391,7 @@ const editFormBasicsData = {
     update_interval: '1m',
   },
   children: {},
+  status: '',
 };
 
 const editFormByTypesMap = {

@@ -33,7 +33,6 @@ const form = ref({
   tags: [],
 });
 
-
 // Apis
 const apiDeviceModel = ref<APIData<any>>();
 
