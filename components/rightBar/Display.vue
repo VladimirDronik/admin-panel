@@ -72,7 +72,7 @@ onBeforeMount(async () => {
 
 <template>
   <LayoutRightbar
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :title
   >
     <SharedUILoader
