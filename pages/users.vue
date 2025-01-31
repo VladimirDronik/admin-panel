@@ -3,6 +3,7 @@
 import { useI18n } from 'vue-i18n';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
+import { userListSchema, type UserType } from '~/stores/user/userTypes';
 
 // Composables
 const { t } = useI18n();
@@ -32,7 +33,7 @@ const deleteForm = ref({
 const dialogDelete = ref(false);
 
 // Apis
-const apiUsers = ref<APIData<any>>();
+const apiUsers = ref<APIData<UserType[]>>();
 const apiDeleteUser = ref<APIData<any>>();
 
 // Methods
@@ -70,6 +71,7 @@ onBeforeMount(async () => {
     {
       watch: false,
     },
+    userListSchema
   );
 
   apiUsers.value = dataUsers as APIData<any>;
@@ -88,7 +90,7 @@ onBeforeMount(async () => {
     },
   );
 
-  apiDeleteUser.value = dataUserDevice as APIData<any>;
+  apiDeleteUser.value = dataUserDevice as APIData<UserType>;
 });
 </script>
 
