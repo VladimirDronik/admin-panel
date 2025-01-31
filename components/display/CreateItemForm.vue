@@ -159,7 +159,6 @@ onBeforeMount(async () => {
           :resolver
           @submit="({ valid }) => { if (valid) activateCallback('2') }"
         >
-          {{ apiCreateItem }}
           <SharedUILabel
             class="tw-mb-2"
             name="title"
