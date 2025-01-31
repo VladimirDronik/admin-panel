@@ -40,6 +40,17 @@ export const useDevicesStore = defineStore('Devices', () => {
   // Computed Properties
   const getDevices = computed(() => filterInListDevices(list.value, 0, ''));
 
+  const findbyCategoryDevices = (list: any, type: string) => {
+    let result: any[] = []
+    list.forEach((item: any) => {
+      if (item.children) result = [...result, ...findbyCategoryDevices(item.children, type)]
+      if (item.category === type) result.push(item)
+    })
+    return result
+  }
+
+  const filterByCategoryDevices = computed(() => findbyCategoryDevices(list.value, 'relay'));
+
   // Methods
   const createFunction = (functionBody: string, props = {}) => {
     const func = new Function('userAccessLevel', 'props', functionBody);
@@ -128,6 +139,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     total,
     types,
     getDevices,
+    filterByCategoryDevices,
     userAccessLevel,
     getDevicesApi,
     getTypesApi,

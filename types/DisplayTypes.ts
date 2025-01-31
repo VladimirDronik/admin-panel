@@ -77,6 +77,7 @@ export const itemSchema = z.object({
   title: z.string(),
   type: z.string(),
   zone_id: z.number(),
+  control_object: z.number().optional(),
   color: z.string().optional(),
 });
 
