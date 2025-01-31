@@ -15,6 +15,7 @@ const basicCreateDeviceForm = {
   category: ObjectsCategory.Sensor,
   props: {
     update_interval: '1m',
+    interface: DeviceInterface['I2C'],
   },
   children: {},
 };
@@ -389,6 +390,7 @@ const editFormBasicsData = {
   parent_id: 0,
   props: {
     update_interval: '1m',
+    interface: DeviceInterface['I2C'],
   },
   children: {},
   status: '',
