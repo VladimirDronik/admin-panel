@@ -52,7 +52,8 @@ const filteredObjects = computed(() =>
   apiDevicesList.value?.data?.response.list
     .filter((item: any) => 
       item.name.toLowerCase().includes(search.value.toLowerCase()) && 
-      item.type !== 'regulator'
+      item.type !== 'regulator' &&
+      item.methods
     )
 );
 
@@ -204,16 +205,21 @@ onBeforeMount(async () => {
                 @click="selectObject(object)"
               >
                 <div class="tw-flex tw-items-center tw-justify-between tw-text-xl">
-                  <p
-                    class="tw-max-w-80 tw-truncate tw-text-lg "
+                  <div
+                    class="tw-flex tw-max-w-80 tw-truncate tw-text-lg"
                     :class="{
                       '!tw-text-green-500': selectedObject?.id === object.id,
                       'tw-text-white': selectedObject?.id !== object.id && isDark,
                       'tw-text-black': selectedObject?.id !== object.id && !isDark,
                     }"
                   >
-                    {{ object.name }}
-                  </p>
+                    <p class="tw-mr-1 tw-w-full tw-max-w-72 tw-truncate">
+                      {{ object.name }}
+                    </p>
+                    <span class="tw-text-xs">
+                      {{ object.methods.length }}
+                    </span>
+                  </div>
                 </div>
               </Button>
             </ScrollPanel>
