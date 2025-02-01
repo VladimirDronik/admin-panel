@@ -46,7 +46,7 @@ const form = ref<{
   color: string | null,
   zone_id: number | null,
   icon: string | null,
-  status: 'on',
+  status: 'off',
   target_type: 'item',
 }>({
   enabled: true,
@@ -55,7 +55,7 @@ const form = ref<{
   color: null,
   zone_id: null,
   icon: null,
-  status: 'on',
+  status: 'off',
   target_type: 'item',
 });
 
@@ -85,7 +85,7 @@ const createItem = async () => {
         color: null,
         zone_id: null,
         icon: null,
-        status: 'on',
+        status: 'off',
         target_type: 'item',
       };
       control_object.value = undefined
