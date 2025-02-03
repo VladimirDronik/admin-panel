@@ -14,6 +14,10 @@ const { updateData } = useUtils();
 const storeUser = useUserStore()
 
 // Declare Options
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
 const { sensor, id } = defineProps<{
   sensor: roomSensorTypes,
   id: number,
@@ -49,6 +53,8 @@ const confirmDelete = async () => {
       },
       success: () => {
         dialogDelete.value = false;
+        dialog.value = false;
+        emit('update')
       },
       successMessage: 'Устройство удалено',
       errorMessage: 'Ошибка удаления устройства',
@@ -68,10 +74,11 @@ onBeforeMount(async () => {
   apiGetSensor.value = dataGetSensor as APIData<any>;
 
   // Delete Sensor
-  const dataDeleteSensor: unknown = await useAPI(paths.privateSensor, {
+  const dataDeleteSensor: unknown = await useAPI(paths.privateItemsSensor, {
     query: computed(() => ({
       id,
     })),
+    method: 'DELETE',
     immediate: false,
   });
 
@@ -92,7 +99,7 @@ watch(() => id, () => {
     >
       <img
         alt=""
-        class="tw-mr-0.5"
+        class="tw-mr-0.5 tw-w-4"
         :class="{
           'tw-invert': storeUser.isDark
         }"
@@ -174,7 +181,7 @@ watch(() => id, () => {
           :id="id ?? -1"
           v-model="dialogDelete"
           class="tw-mr-2"
-          :loading="apiDeleteSensor?.pending"
+          :loading="apiDeleteSensor?.pending && apiDeleteSensor.status !== 'idle'"
           :subtitle="`Вы уверены, что хотите удалить «${sensor.name}»?`"
           title="Удалить устройство"
           @delete="confirmDelete"

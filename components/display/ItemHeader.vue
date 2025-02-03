@@ -32,6 +32,7 @@ const emit = defineEmits<{
         :id="sensor.item_id"
         :key="sensor.item_id"
         :sensor
+        @update="emit('update')"
       />
       <DialogsDisplayAddSensorDialog
         :sensors
