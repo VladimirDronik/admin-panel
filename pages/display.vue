@@ -77,6 +77,13 @@ const updateOrder = async (roomList: any, id: number) => {
   });
 }
 
+const update = async () => {
+  await Promise.all([
+    apiItems.value?.refresh(),
+    storeRooms.getRoomsApi()
+  ])
+}
+
 // Hooks
 onBeforeMount(async () => {
   await storeRooms.getRoomsApi();
@@ -124,7 +131,7 @@ onBeforeMount(async () => {
           :sensors="rooms.sensors"
           :style="rooms.style"
           :zone-id="rooms.id"
-          @update="storeRooms.getRoomsApi"
+          @update="update"
         />
         <div class="tw-pt-2">
           <VueDraggableNext
@@ -173,7 +180,7 @@ onBeforeMount(async () => {
         v-model:is-show="isShow"
         :variant="variant"
         :zone-id="zoneId"
-        @update="apiItems?.refresh"
+        @update="update"
       />
     </template>
   </SharedUIPanel>

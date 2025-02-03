@@ -49,7 +49,7 @@ const confirmDelete = async () => {
   await updateData({
       update: async () => {
         await apiDeleteSensor.value?.execute();
-        await apiGetSensor.value?.refresh()
+        await emit('update')
       },
       success: () => {
         dialogDelete.value = false;
