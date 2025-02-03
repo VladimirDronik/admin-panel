@@ -14,6 +14,7 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
+const storeUser = useUserStore();
 
 // Declare Options
 const props = defineProps<{
@@ -218,8 +219,11 @@ onBeforeMount(async () => {
                 @click="selectSensor(sensor.type, sensor.id)"
               >
                 <div
-                  class="tw-flex tw-w-full tw-items-center tw-text-white"
-                  :class="{'!tw-text-primary': sensor.type === selectedSensor}"
+                  class="tw-flex tw-w-full tw-items-center tw-text-black"
+                  :class="{
+                    '!tw-text-primary': sensor.type === selectedSensor,
+                    '!tw-text-white': storeUser.isDark
+                  }"
                 >
                   <p class="tw-truncate tw-text-left">
                     {{ sensor.name }}
@@ -242,8 +246,12 @@ onBeforeMount(async () => {
                 @click="selectParamSensor(sensor.type)"
               >
                 <div
-                  class="tw-w-full tw-text-left tw-text-white"
-                  :class="{'!tw-text-primary': sensor.type === form.type}"
+                  class="tw-w-full tw-text-left tw-text-black"
+                  
+                  :class="{
+                    '!tw-text-primary': sensor.type === form.type,
+                    '!tw-text-white': storeUser.isDark
+                  }"
                 >
                   {{ sensor.type }}
                 </div>
