@@ -32,7 +32,8 @@ const dialog = defineModel<boolean>({
 
 // Variables
 const isAllSensors = ref(false);
-const isRegulator = ref(false);
+
+const filter = ref('');
 
 const selectedSensor = ref<string>();
 const selectedParamSensor = ref<string>();
@@ -74,12 +75,7 @@ const allSensor = [
 ];
 
 // Computed Properties
-const sensorList = computed(() => {
-  if (isAllSensors.value) {
-    return allSensor;
-  }
-  return _.uniq(props.sensors?.map((item) => item.type));
-});
+const filteredSensorList = computed(() => apiGetSensor?.value?.data?.response.list.filter((item: any) => item.name.toLowerCase().includes(filter.value.toLowerCase())));
 
 // Methods
 const selectSensor = (sensor: string, id: number) => {
@@ -189,7 +185,6 @@ onBeforeMount(async () => {
       }"
     >
       <Form
-        v-slot="$form"
         :resolver
         @submit="({ valid }) => { if (valid) createSensor() }"
       >
@@ -209,10 +204,11 @@ onBeforeMount(async () => {
           <div class="tw-h-full">
             <div class="border-base tw-h-full tw-rounded-md tw-border tw-p-3">
               <InputText
+                v-model="filter"
                 class="tw-mb-2 tw-w-full"
               />
               <Button
-                v-for="sensor in apiGetSensor?.data?.response.list"
+                v-for="sensor in filteredSensorList"
                 :key="sensor.id"
                 class="tw-mb-1 tw-flex tw-w-full tw-items-center tw-py-0.5"
                 text
