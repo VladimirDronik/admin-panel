@@ -232,7 +232,7 @@ onBeforeMount(async () => {
             </div>
           </div>
           <div>
-            <div class="border-base tw-mb-4 tw-min-h-12 tw-rounded-md tw-border tw-p-3">
+            <div class="border-base tw-mb-4 tw-min-h-40 tw-rounded-md tw-border tw-p-3">
               <Button
                 v-for="sensor in apiGetSensorType?.data?.response.children"
                 :key="sensor.type"
