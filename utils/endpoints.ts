@@ -30,8 +30,8 @@ let result = {
   eventsActions: `${actionRouter}/events/actions`,
   eventsActionsOrder: `${actionRouter}/events/actions/order`,
 };
-console.log(import.meta.env, `${window.location.origin}:8081`)
 if (import.meta.env.VITE_USE_OWN_URL) {
+  console.log(import.meta.env, `${window.location.origin}:8081`)
   const apiPath = `${window.location.origin}:8081`
   result = {
     // Translator
@@ -60,5 +60,7 @@ if (import.meta.env.VITE_USE_OWN_URL) {
     eventsActionsOrder: `${apiPath}/events/actions/order`,
   };
 }
+
+console.log(result)
 
 export const paths = result
