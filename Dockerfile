@@ -6,7 +6,7 @@ WORKDIR /opt/app
 
 COPY . ./
 
-RUN npm ci && npm cache clean --force
+RUN npm ci --force && npm cache clean --force
 RUN npm run ${SCRIPT}
 
 FROM node:18.20-alpine
