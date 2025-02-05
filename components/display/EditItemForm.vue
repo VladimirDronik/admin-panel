@@ -13,6 +13,7 @@ import { type itemType } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
+const storeDevices = useDevicesStore();
 
 // Declare Options
 defineProps<{
@@ -33,6 +34,8 @@ const isOpen = defineModel<boolean>('isOpen', {
 
 // Variables
 const loadingDelete = ref(false);
+
+const control_object = ref()
 
 const resolver = ref(zodResolver(
   z.object({
@@ -77,7 +80,10 @@ const confirmDelete = async () => {
 onBeforeMount(async () => {
   // Create Device
   const dataCreate: unknown = await useAPI(paths.privateItem, {
-    body: computed(() => form.value),
+    body: computed(() => ({
+      ...form.value,
+      control_object: control_object.value
+  })),
     method: 'PATCH',
     immediate: false,
     watch: false,
@@ -144,6 +150,21 @@ onBeforeMount(async () => {
             :value="form.zone_id"
           >
             <SharedUIRoomSelect v-model="form.zone_id" />
+          </SharedUILabel>
+          <SharedUILabel
+            v-if="form.type === 'switch'"
+            class="tw-mb-2"
+            required
+            title="Объект"
+          >
+            <Select
+              v-model="control_object"
+              class="tw-w-full"
+              option-label="name"
+              option-value="id"
+              :options="storeDevices.filterByCategoryDevices"
+              show-clear
+            />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"

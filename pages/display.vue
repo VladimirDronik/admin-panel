@@ -110,7 +110,7 @@ onBeforeMount(async () => {
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar
         v-if="apiItems?.data?.response.scenario_items?.length"
-        class="border-base tw-flex tw-gap-2 tw-rounded-md tw-border tw-p-3"
+        class="border-base tw-flex tw-flex-wrap tw-gap-2 tw-rounded-md tw-border tw-p-3"
       >
         <DisplayScenarioCard
           v-for="scenario in apiItems?.data?.response.scenario_items"

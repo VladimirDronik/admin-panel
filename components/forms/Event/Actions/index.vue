@@ -2,10 +2,6 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import { VueDraggableNext } from 'vue-draggable-next';
-import { IconGripVertical } from '@tabler/icons-vue';
-// Helper modules
-import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 // Types and Schemes

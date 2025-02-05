@@ -13,6 +13,7 @@ import { itemEventTypes } from '~/staticData/modelEvents';
 // Composables
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
+const storeDevices = useDevicesStore();
 const { updateData } = useUtils();
 
 // Declare Options
@@ -34,6 +35,8 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
+const control_object = ref()
+
 const isUpdateForm = ref(false)
 
 const form = ref<{
@@ -43,7 +46,7 @@ const form = ref<{
   color: string | null,
   zone_id: number | null,
   icon: string | null,
-  status: 'on',
+  status: 'off',
   target_type: 'item',
 }>({
   enabled: true,
@@ -52,7 +55,7 @@ const form = ref<{
   color: null,
   zone_id: null,
   icon: null,
-  status: 'on',
+  status: 'off',
   target_type: 'item',
 });
 
@@ -82,9 +85,10 @@ const createItem = async () => {
         color: null,
         zone_id: null,
         icon: null,
-        status: 'on',
+        status: 'off',
         target_type: 'item',
       };
+      control_object.value = undefined
       isOpen.value = false;
       step.value = '1';
     },
@@ -105,11 +109,13 @@ watch(() => props.id, (newValue) => {
 
 // Hooks
 onBeforeMount(async () => {
+  storeDevices.getDevicesApi()
   // Create Device
   const data: unknown = await useAPI(paths.privateWizard, {
     body: computed(() => ({
       item: {
-        ...form.value
+        ...form.value,
+        control_object: control_object.value
       },
       events: events.value?.map((item) => ({
         actions: item.actions,
@@ -176,6 +182,20 @@ onBeforeMount(async () => {
               v-model="form.type"
               class="tw-w-full"
               :options="devices"
+              show-clear
+            />
+          </SharedUILabel>
+          <SharedUILabel
+            v-if="form.type === 'switch'"
+            class="tw-mb-2"
+            title="Объект"
+          >
+            <Select
+              v-model="control_object"
+              class="tw-w-full"
+              option-label="name"
+              option-value="id"
+              :options="storeDevices.filterByCategoryDevices"
               show-clear
             />
           </SharedUILabel>

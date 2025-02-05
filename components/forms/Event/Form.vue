@@ -168,7 +168,6 @@ updateEvents();
         :id="id"
         v-model="dialog"
         v-model:event="selectedEvent"
-        v-model:form="form"
         :edit="edit"
         :model-type="modelType"
         :target-type="targetType"

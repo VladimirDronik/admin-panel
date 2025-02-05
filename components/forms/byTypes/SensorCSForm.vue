@@ -74,8 +74,6 @@ const sensorDataToShow = computed(() => {
   <Form
     :form="dynamicForm"
     :resolver="resolver"
-    :validate-on-blur="true"
-    :validate-on-value-update="false"
   >
     <FormsSensorHeader
       v-if="props.isEditing"
