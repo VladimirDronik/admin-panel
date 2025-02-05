@@ -12,6 +12,8 @@ import type { APIData } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 
 // Composables
+
+const storeUser = useUserStore()
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 const localState = useStorage('touch-on', {
@@ -157,12 +159,14 @@ onBeforeMount(async () => {
               @click="showItemPanel(rooms.id)"
             >
               <div
-                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
+                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-border-2 tw-p-3"
+                  :class="storeUser.isDark ? 'tw-border-[#484848]' : 'tw-border-[#EDF3F2]'"
               >
                 <IconPlus
-                  height="80"
+                  height="60"
                   stroke-width="1.5"
-                  width="80"
+                  width="60"
+                  :style="{ color: storeUser.isDark ? '#9B9B9B' : '#83A39B' }"
                 />
               </div>
               <h5 class="tw-w-28 tw-truncate tw-text-center">
