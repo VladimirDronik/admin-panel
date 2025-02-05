@@ -67,7 +67,7 @@ const confirmDelete = async () => {
     successMessage: 'Помещение удалено',
     errorMessage: 'Ошибка удаления помещения',
   });
-}
+};
 
 // Hooks
 onBeforeMount(async () => {
@@ -137,7 +137,7 @@ onBeforeMount(async () => {
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"
           @delete="confirmDelete"
         />
-  
+
         <Button
           :label="t('save')"
           :loading="loading"

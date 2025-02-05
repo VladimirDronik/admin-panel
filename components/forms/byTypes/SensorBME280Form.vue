@@ -115,14 +115,14 @@ const sensorDataToShow = computed(() => {
       :title="t('devices.polling')"
       :value="dynamicForm.props.update_interval"
     >
-    <Select
-      id="update_interval"
-      v-model="dynamicForm.props.update_interval"
-      :options="updateIntervals"
-      optionLabel="label"
-      optionValue="value"
-      class="tw-mr-10 tw-w-1/4"
-/>
+      <Select
+        id="update_interval"
+        v-model="dynamicForm.props.update_interval"
+        class="tw-mr-10 tw-w-1/4"
+        option-label="label"
+        option-value="value"
+        :options="updateIntervals"
+      />
     </SharedUILabel>
 
     <Divider
@@ -150,8 +150,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.temperature.min_threshold"
-          suffix=" °C"
           disabled
+          suffix=" °C"
         />
       </SharedUILabel>
       <SharedUILabel
@@ -163,8 +163,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.temperature.max_threshold"
-          suffix=" °C"
           disabled
+          suffix=" °C"
         />
       </SharedUILabel>
     </div>
@@ -211,8 +211,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.humidity.min_threshold"
-          suffix=" %"
           disabled
+          suffix=" %"
         />
       </SharedUILabel>
       <SharedUILabel
@@ -224,8 +224,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.humidity.max_threshold"
-          suffix=" %"
           disabled
+          suffix=" %"
         />
       </SharedUILabel>
     </div>
@@ -273,8 +273,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.pressure.min_threshold"
-          suffix=" mmHg"
           disabled
+          suffix=" mmHg"
         />
       </SharedUILabel>
       <SharedUILabel
@@ -286,8 +286,8 @@ const sensorDataToShow = computed(() => {
       >
         <InputNumber
           v-model="dynamicForm.children.pressure.max_threshold"
-          suffix=" mmHg"
           disabled
+          suffix=" mmHg"
         />
       </SharedUILabel>
     </div>

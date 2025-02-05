@@ -79,8 +79,8 @@ const protocolOptions = schema.shape.protocol.options;
     >
       <Select
         v-model="dynamicForm.props.protocol"
-        :options="protocolOptions"
         disabled
+        :options="protocolOptions"
       />
     </SharedUILabel>
 

@@ -1,14 +1,15 @@
 <script setup lang="ts">
-const router = useRouter()
+const router = useRouter();
 
 const goBack = () => {
-  router.push({ name: 'devices' })
-}
+  router.push({ name: 'devices' });
+};
 </script>
 <template>
   <div class="logo">
     <button
       class="tw-flex tw-w-full tw-justify-center"
+      type="button"
       @click="goBack"
     >
       <svg

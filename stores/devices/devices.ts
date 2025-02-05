@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 // Composable modules
@@ -26,7 +26,7 @@ export const useDevicesStore = defineStore('Devices', () => {
     token: '',
     openSidebar: true,
     language: 'ru',
-  })
+  });
 
   // Variables
   const list = ref<Devices[]>([]);
@@ -41,13 +41,13 @@ export const useDevicesStore = defineStore('Devices', () => {
   const getDevices = computed(() => filterInListDevices(list.value, 0, ''));
 
   const findbyCategoryDevices = (list: any, type: string) => {
-    let result: any[] = []
+    let result: any[] = [];
     list.forEach((item: any) => {
-      if (item.children) result = [...result, ...findbyCategoryDevices(item.children, type)]
-      if (item.category === type) result.push(item)
-    })
-    return result
-  }
+      if (item.children) result = [...result, ...findbyCategoryDevices(item.children, type)];
+      if (item.category === type) result.push(item);
+    });
+    return result;
+  };
 
   const filterByCategoryDevices = computed(() => findbyCategoryDevices(list.value, 'relay'));
 

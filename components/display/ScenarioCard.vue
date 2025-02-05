@@ -3,7 +3,7 @@
 import { roomTextColor } from '~/helpers/rooms';
 
 // Composables
-const storeUser = useUserStore()
+const storeUser = useUserStore();
 
 // Declare Options
 defineProps<{
@@ -18,7 +18,7 @@ defineProps<{
     class="border-base tw-relative tw-aspect-square tw-w-32 tw-min-w-32 tw-rounded-md tw-border-2 tw-p-1"
     type="button"
   >
-    <div class="tw-flex tw-h-full tw-w-full tw-items-center tw-justify-between tw-pt-1">
+    <div class="tw-flex tw-size-full tw-items-center tw-justify-between tw-pt-1">
       <div class="tw-h-full tw-pt-2">
         <img
           alt=""

@@ -21,14 +21,14 @@ const headers = [
   },
 ];
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
-const form = ref({})
+const form = ref({});
 
 const deleteForm = ref({
   id: 0,
-  login: null
-})
+  login: null,
+});
 
 const dialogDelete = ref(false);
 
@@ -38,16 +38,16 @@ const apiDeleteUser = ref<APIData<any>>();
 
 // Methods
 const clickRow = () => {
-  isOpen.value = true
-}
+  isOpen.value = true;
+};
 
 const deleteItem = (item: any) => {
   deleteForm.value = {
     id: item.Id,
     login: item.login,
-  }
+  };
   dialogDelete.value = true;
-}
+};
 
 const confirmDelete = async () => {
   await updateData({
@@ -71,7 +71,7 @@ onBeforeMount(async () => {
     {
       watch: false,
     },
-    userListSchema
+    userListSchema,
   );
 
   apiUsers.value = dataUsers as APIData<any>;
@@ -82,7 +82,7 @@ onBeforeMount(async () => {
     () => paths.privateUsers,
     {
       query: computed(() => ({
-        id: deleteForm.value.id
+        id: deleteForm.value.id,
       })),
       immediate: false,
       watch: false,
@@ -120,7 +120,7 @@ onBeforeMount(async () => {
         <template #body="{ data }">
           <div class="tw-flex tw-items-center">
             <div
-              class="tw-mr-1.5 tw-h-2.5 tw-w-2.5 tw-rounded-full"
+              class="tw-mr-1.5 tw-size-2.5 tw-rounded-full"
               :class="data.send_push ? 'tw-bg-primary' : 'tw-bg-danger'"
             />
             {{ data.send_push ? 'Вкл' : 'Выкл' }}

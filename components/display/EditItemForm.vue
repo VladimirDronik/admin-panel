@@ -35,7 +35,7 @@ const isOpen = defineModel<boolean>('isOpen', {
 // Variables
 const loadingDelete = ref(false);
 
-const control_object = ref()
+const control_object = ref();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -82,8 +82,8 @@ onBeforeMount(async () => {
   const dataCreate: unknown = await useAPI(paths.privateItem, {
     body: computed(() => ({
       ...form.value,
-      control_object: control_object.value
-  })),
+      control_object: control_object.value,
+    })),
     method: 'PATCH',
     immediate: false,
     watch: false,

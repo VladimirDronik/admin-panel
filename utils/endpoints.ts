@@ -31,8 +31,7 @@ let result = {
   eventsActionsOrder: `${actionRouter}/events/actions/order`,
 };
 if (import.meta.env.VITE_USE_OWN_URL) {
-  
-  const apiPath = `${window.location.origin}:8081`
+  const apiPath = `${window.location.origin}:8081`;
   result = {
     // Translator
     privateCp: `${apiPath}/private/cp`,
@@ -45,7 +44,7 @@ if (import.meta.env.VITE_USE_OWN_URL) {
     privateZonesOrder: `${apiPath}/private/zones/order`,
     privateItemsOrder: `${apiPath}/private/items/order`,
     privateItemsSensor: `${apiPath}/private/item/sensor`,
-  
+
     // Object Manager
     scripts: `${apiPath}/scripts`,
     objects: `${apiPath}/objects`,
@@ -54,11 +53,11 @@ if (import.meta.env.VITE_USE_OWN_URL) {
     objectModel: `${apiPath}/objects/model`,
     objectsTypes: `${apiPath}/objects/types`,
     controllers: `${apiPath}/controllers`,
-  
+
     // Action Router
     eventsActions: `${apiPath}/events/actions`,
     eventsActionsOrder: `${apiPath}/events/actions/order`,
   };
 }
 
-export const paths = result
+export const paths = result;

@@ -168,7 +168,9 @@ const handleButtonClick = () => {
       :header="t('devices.addTitleDevice')"
       modal
       :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
-      @hide="form = { name: '', zone_id: null, type: null as unknown as FormTypes, tags: [], category: '' }"
+      @hide="form = {
+        name: '', zone_id: null, type: null as unknown as FormTypes, tags: [], category: '',
+      }"
     >
       <DevicesStepperForm
         v-model:dialog="visible"

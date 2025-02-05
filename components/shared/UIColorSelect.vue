@@ -26,7 +26,7 @@ const value = defineModel<string | null | undefined>({
         class="tw-flex tw-items-center"
       >
         <div
-          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+          class="tw-mr-2 tw-size-4 tw-rounded-full"
           :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }"
         />
         <div class="tw-min-h-6">
@@ -37,7 +37,7 @@ const value = defineModel<string | null | undefined>({
     <template #option="slotProps">
       <div class="tw-flex tw-items-center">
         <div
-          class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+          class="tw-mr-2 tw-size-4 tw-rounded-full"
           :style="{ backgroundColor: slotProps.option.color }"
         />
         <div>{{ slotProps.option.name }}</div>

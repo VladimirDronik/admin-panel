@@ -16,7 +16,7 @@ interface Method {
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const { isDark } = useUserStore()
+const { isDark } = useUserStore();
 
 // Declare Options
 const props = defineProps<{
@@ -48,14 +48,10 @@ const apiDevicesList = ref<APIData<any>>();
 const apiCreateMethod = ref<APIData<any>>();
 
 // Computed Properties
-const filteredObjects = computed(() => 
-  apiDevicesList.value?.data?.response.list
-    .filter((item: any) => 
-      item.name.toLowerCase().includes(search.value.toLowerCase()) && 
-      item.type !== 'regulator' &&
-      item.methods
-    )
-);
+const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list
+  .filter((item: any) => item.name.toLowerCase().includes(search.value.toLowerCase())
+      && item.type !== 'regulator'
+      && item.methods));
 
 // Methods
 const selectObject = (object: any) => {
@@ -137,17 +133,17 @@ onBeforeMount(async () => {
         event_name: event.value.code,
       })),
       body: computed(() => ({
-          args: {
-            ...selectedMethod.value,
-            object: selectedObject.value.name,
-          },
-          enabled: true,
-          name: selectedMethod.value?.name,
-          target_id: selectedObject.value?.id,
-          target_type: 'object',
-          type: 'method',
-          sort: 0,
-          qos: 0,
+        args: {
+          ...selectedMethod.value,
+          object: selectedObject.value.name,
+        },
+        enabled: true,
+        name: selectedMethod.value?.name,
+        target_id: selectedObject.value?.id,
+        target_type: 'object',
+        type: 'method',
+        sort: 0,
+        qos: 0,
       })),
       method: 'POST',
       watch: false,

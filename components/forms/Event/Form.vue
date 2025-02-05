@@ -46,7 +46,6 @@ const filterEvents = async (type: string) => {
         }
         return item;
       });
-      
     } else {
       events.value = props.eventTypes[type].map((item) => ({
         ...item,

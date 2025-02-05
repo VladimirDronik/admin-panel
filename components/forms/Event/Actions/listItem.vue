@@ -11,7 +11,7 @@ import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 
 const { items } = defineProps<{
   items: Action[];
-}>()
+}>();
 
 const emit = defineEmits<{
   (e: 'delete', id: number): void
@@ -85,7 +85,7 @@ const deleteItem = (id: number) => {
           <div class="tw-relative tw-right-3 tw-flex tw-items-center">
             <Button
               class="tw-mr-2"
-              :class="{'-tw-rotate-90': eventItem.args.isOpen}"
+              :class="{ '-tw-rotate-90': eventItem.args.isOpen }"
               icon="pi pi-angle-down"
               rounded
               severity="secondary"
@@ -117,7 +117,7 @@ const deleteItem = (id: number) => {
         </div>
         <div
           class="tw-pt-2"
-          :class="{'tw-hidden': eventItem.args.isOpen}"
+          :class="{ 'tw-hidden': eventItem.args.isOpen }"
         >
           <div class="tw-mb-3 tw-flex tw-items-center tw-gap-2">
             <p class="tw-w-20">
@@ -137,10 +137,10 @@ const deleteItem = (id: number) => {
             <p class="tw-w-20">
               Тогда
             </p>
-            
+
             <div
               class="border-base tw-flex tw-min-h-14 tw-w-full tw-flex-col tw-items-start tw-gap-2 tw-rounded-md tw-border"
-              :class="{'!tw-border-0': eventItem.then.length}"
+              :class="{ '!tw-border-0': eventItem.then.length }"
             >
               <FormsEventActionsListItem
                 :items="eventItem.then"
@@ -155,10 +155,10 @@ const deleteItem = (id: number) => {
             <p class="tw-w-20">
               Если
             </p>
-            
+
             <div
               class="border-base tw-flex tw-min-h-14 tw-w-full tw-flex-col tw-items-start tw-gap-2 tw-rounded-md tw-border"
-              :class="{'!tw-border-0': eventItem.else.length}"
+              :class="{ '!tw-border-0': eventItem.else.length }"
             >
               <FormsEventActionsListItem
                 :items="eventItem.else"

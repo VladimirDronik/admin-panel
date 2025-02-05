@@ -1,11 +1,11 @@
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 
 export default defineNuxtPlugin(() => {
   const localState = useStorage('touch-on', {
     token: '',
     openSidebar: true,
     language: 'ru',
-  })
+  });
 
   const router = useRouter();
 

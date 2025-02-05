@@ -77,10 +77,10 @@ const addCondition = () => {
     qos: 0,
     actions: [],
     args: {
-      isOpen: true
-    }
+      isOpen: true,
+    },
   });
-}
+};
 
 const openEdit = (event: any) => {
   if (event.type === 'method') dialogMethod.value = true;

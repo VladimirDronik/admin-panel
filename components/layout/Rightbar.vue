@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { IconX } from '@tabler/icons-vue'
+import { IconX } from '@tabler/icons-vue';
 
-const { width, height } = useWindowSize()
+const { width, height } = useWindowSize();
 
 // Declare Options
 defineProps<{
@@ -9,7 +9,7 @@ defineProps<{
   isUpdate?: boolean,
 }>();
 
-const isOpen = defineModel<boolean>('isOpen')
+const isOpen = defineModel<boolean>('isOpen');
 
 // Hooks
 onMounted(() => {

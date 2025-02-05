@@ -5,7 +5,7 @@ import { items } from '~/utils/icons';
 
 // Composables
 const { t } = useI18n();
-const storeUser = useUserStore()
+const storeUser = useUserStore();
 
 const icon = defineModel<string | null>('icon', {
   default: '',
@@ -22,8 +22,8 @@ const dialog = defineModel<boolean>({
 
 // Methods
 const selectIcon = (item: string) => {
-  icon.value = item
-  emit('change')
+  icon.value = item;
+  emit('change');
   dialog.value = false;
 };
 </script>
@@ -40,7 +40,7 @@ const selectIcon = (item: string) => {
         <img
           alt=""
           class="tw-w-20"
-          :class="{ 'tw-invert': storeUser.isDark}"
+          :class="{ 'tw-invert': storeUser.isDark }"
           :src="`items/${icon}.png`"
         >
       </div>
@@ -71,7 +71,7 @@ const selectIcon = (item: string) => {
             <img
               alt=""
               class="tw-w-20"
-              :class="{ 'tw-invert': storeUser.isDark}"
+              :class="{ 'tw-invert': storeUser.isDark }"
               :src="`items/${item}.png`"
             >
           </div>

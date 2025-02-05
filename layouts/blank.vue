@@ -6,7 +6,7 @@ useDark({
   valueDark: 'p-dark',
   valueLight: 'p-light',
   storageKey: 'touch-on-color',
-})
+});
 </script>
 <template>
   <div>

@@ -11,7 +11,7 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeUser = useUserStore()
+const storeUser = useUserStore();
 
 // Declare Options
 const emit = defineEmits<{
@@ -30,7 +30,7 @@ const dialog = defineModel<boolean>({
 // Variables
 const isRegulator = ref(false);
 
-const dialogDelete = ref(false)
+const dialogDelete = ref(false);
 
 // Apis
 const apiGetSensor = ref<APIData<any>>();
@@ -47,19 +47,19 @@ const changeSensor = async () => {
 
 const confirmDelete = async () => {
   await updateData({
-      update: async () => {
-        await apiDeleteSensor.value?.execute();
-        await emit('update')
-      },
-      success: () => {
-        dialogDelete.value = false;
-        dialog.value = false;
-        emit('update')
-      },
-      successMessage: 'Устройство удалено',
-      errorMessage: 'Ошибка удаления устройства',
-    });
-}
+    update: async () => {
+      await apiDeleteSensor.value?.execute();
+      await emit('update');
+    },
+    success: () => {
+      dialogDelete.value = false;
+      dialog.value = false;
+      emit('update');
+    },
+    successMessage: 'Устройство удалено',
+    errorMessage: 'Ошибка удаления устройства',
+  });
+};
 
 // Hooks
 onBeforeMount(async () => {
@@ -101,7 +101,7 @@ watch(() => id, () => {
         alt=""
         class="tw-mr-0.5 tw-w-4"
         :class="{
-          'tw-invert': storeUser.isDark
+          'tw-invert': storeUser.isDark,
         }"
         :src="`items/${sensor.icon}.png`"
       >

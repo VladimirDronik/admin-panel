@@ -84,14 +84,14 @@ const name = defineModel<string>('name');
     required
     :title="t('devices.polling')"
   >
-  <Select
-    id="update_interval"
-    v-model="updateInterval"
-    :options="updateIntervals"
-    optionLabel="label"
-    optionValue="value"
-    class="tw-mr-10 tw-w-1/2"
-  />
+    <Select
+      id="update_interval"
+      v-model="updateInterval"
+      class="tw-mr-10 tw-w-1/2"
+      option-label="label"
+      option-value="value"
+      :options="updateIntervals"
+    />
   </SharedUILabel>
 
   <Divider class="tw-mt-0 tw-pb-3" />

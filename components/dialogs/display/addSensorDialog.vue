@@ -79,7 +79,7 @@ const filteredSensorList = computed(() => apiGetSensor?.value?.data?.response.li
 
 // Methods
 const selectSensor = (sensor: string, id: number) => {
-  form.value.object_id = id
+  form.value.object_id = id;
   selectedSensor.value = sensor;
   form.value.type = null;
 };
@@ -153,7 +153,7 @@ onBeforeMount(async () => {
   // Create Sensors
   const dataCreateSensor: unknown = await useAPI(paths.privateItemsSensor, {
     body: computed(() => ({
-      ...form.value
+      ...form.value,
     })),
     method: 'POST',
     immediate: false,
@@ -218,7 +218,7 @@ onBeforeMount(async () => {
                   class="tw-flex tw-w-full tw-items-center tw-text-black"
                   :class="{
                     '!tw-text-primary': sensor.type === selectedSensor,
-                    '!tw-text-white': storeUser.isDark
+                    '!tw-text-white': storeUser.isDark,
                   }"
                 >
                   <p class="tw-truncate tw-text-left">
@@ -243,10 +243,10 @@ onBeforeMount(async () => {
               >
                 <div
                   class="tw-w-full tw-text-left tw-text-black"
-                  
+
                   :class="{
                     '!tw-text-primary': sensor.type === form.type,
-                    '!tw-text-white': storeUser.isDark
+                    '!tw-text-white': storeUser.isDark,
                   }"
                 >
                   {{ sensor.type }}

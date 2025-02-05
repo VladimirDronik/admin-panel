@@ -11,7 +11,7 @@ import type { APIData } from '~/types/StoreTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore()
+const storeRooms = useRoomsStore();
 
 // Declare Options
 const emit = defineEmits<{
@@ -34,7 +34,7 @@ const dialog = ref(false);
 const loading = ref(false);
 const loadingDelete = ref(false);
 
-const parentId = ref()
+const parentId = ref();
 
 const resolver = ref(zodResolver(
   z.object({
@@ -75,12 +75,12 @@ const confirmDelete = async () => {
     successMessage: 'Помещение удалено',
     errorMessage: 'Ошибка удаления помещения',
   });
-}
+};
 
 // Watchers
 watch(room, () => {
-  if (room.value) form.value = {...room.value}
-})
+  if (room.value) form.value = { ...room.value };
+});
 
 // Hooks
 onBeforeMount(async () => {
@@ -91,9 +91,9 @@ onBeforeMount(async () => {
         return [{
           ...form.value,
           parent_id: 0,
-      }]
+        }];
       }
-      return [form.value]
+      return [form.value];
     }),
     method: 'PATCH',
     immediate: false,
@@ -176,7 +176,7 @@ onBeforeMount(async () => {
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"
           @delete="confirmDelete"
         />
-  
+
         <Button
           :label="t('save')"
           :loading="loading"

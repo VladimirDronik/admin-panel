@@ -27,7 +27,7 @@ export default {
       xl: '1.125rem',
       '2xl': '1.375rem',
       '3xl': '1.75rem',
-    }
+    },
   },
   plugins: [tailwindPrimeVue],
 };

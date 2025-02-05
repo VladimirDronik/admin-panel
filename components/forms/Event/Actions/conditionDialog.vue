@@ -48,9 +48,9 @@ const chooseCondition = (type: string) => {
       qos: 0,
       then: [],
       args: {
-        isOpen: true
-      }
-    }
+        isOpen: true,
+      },
+    };
   } else {
     selectedCondition.value = {
       enabled: true,
@@ -62,11 +62,11 @@ const chooseCondition = (type: string) => {
       then: [],
       else: [],
       args: {
-        isOpen: true
-      }
-    }
+        isOpen: true,
+      },
+    };
   }
-}
+};
 
 // Methods
 const createAction = async () => {
@@ -83,9 +83,9 @@ const createAction = async () => {
   //     errorMessage: 'Ошибка добавления Скрипта',
   //   });
   // } else {
-    event.value.actions.push(selectedCondition.value);
-    // emit('updateActions');
-    dialog.value = false;
+  event.value.actions.push(selectedCondition.value);
+  // emit('updateActions');
+  dialog.value = false;
   // }
 };
 
@@ -136,61 +136,63 @@ const createAction = async () => {
       <div class="tw-mb-3 tw-flex tw-items-start tw-gap-3">
         <button
           class="border-base tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-left"
-          :class="{'tw-border-primary': selectedCondition?.type === 'if'}"
+          :class="{ 'tw-border-primary': selectedCondition?.type === 'if' }"
+          type="button"
           @click="chooseCondition('if')"
         >
           <p
             class="tw-mb-2 tw-text-xl"
-            :class="{'tw-text-primary': selectedCondition?.type === 'if'}"
+            :class="{ 'tw-text-primary': selectedCondition?.type === 'if' }"
           >
             Если
           </p>
           <div class="tw-flex tw-h-14 tw-items-center">
-            <p 
+            <p
               class="tw-mr-2 tw-text-sm"
-              :class="{'tw-text-primary': selectedCondition?.type === 'if'}"
+              :class="{ 'tw-text-primary': selectedCondition?.type === 'if' }"
             >
               Тогда
             </p>
-            <div 
+            <div
               class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
-              :class="{'tw-border-primary': selectedCondition?.type === 'if'}"
+              :class="{ 'tw-border-primary': selectedCondition?.type === 'if' }"
             />
           </div>
         </button>
         <button
-          class="border-base tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-left "
-          :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+          class="border-base tw-w-48 tw-rounded-md tw-border tw-p-3 tw-text-left"
+          :class="{ 'tw-border-primary': selectedCondition?.type === 'if-else' }"
+          type="button"
           @click="chooseCondition('if-else')"
         >
           <p
             class="tw-mb-2 tw-text-xl"
-            :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+            :class="{ 'tw-text-primary': selectedCondition?.type === 'if-else' }"
           >
             Если
           </p>
           <div class="tw-mb-2 tw-flex tw-items-center">
             <p
               class="tw-mr-2 tw-block tw-w-14 tw-text-sm"
-              :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+              :class="{ 'tw-text-primary': selectedCondition?.type === 'if-else' }"
             >
               Тогда
             </p>
-            <div 
+            <div
               class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
-              :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+              :class="{ 'tw-border-primary': selectedCondition?.type === 'if-else' }"
             />
           </div>
           <div class="tw-flex tw-items-center">
-            <p 
+            <p
               class="tw-mr-2 tw-block tw-w-14 tw-text-sm"
-              :class="{'tw-text-primary': selectedCondition?.type === 'if-else'}"
+              :class="{ 'tw-text-primary': selectedCondition?.type === 'if-else' }"
             >
               Если
             </p>
-            <div 
+            <div
               class="border-base tw-h-6 tw-w-full tw-rounded-sm tw-border"
-              :class="{'tw-border-primary': selectedCondition?.type === 'if-else'}"
+              :class="{ 'tw-border-primary': selectedCondition?.type === 'if-else' }"
             />
           </div>
         </button>

@@ -9,7 +9,7 @@ import type { APIData } from '~/types/StoreTypes';
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore()
+const storeRooms = useRoomsStore();
 
 // Declare Options
 const emit = defineEmits<{
@@ -30,9 +30,9 @@ const type = [
     name: 'Группа Помещений',
     code: true,
   },
-]
+];
 
-const apiCreateRoom = ref<APIData<any>>()
+const apiCreateRoom = ref<APIData<any>>();
 
 const form = ref({
   device_id: null,
@@ -41,7 +41,7 @@ const form = ref({
   send_push: false,
 });
 
-const parentId = ref()
+const parentId = ref();
 
 const resolver = ref(zodResolver(
   z.object({

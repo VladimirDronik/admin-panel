@@ -14,7 +14,7 @@ export const filterInListRoom = (rooms: RoomItem[] | undefined) => {
           color: room.style,
           name: room.name,
           code: room.id,
-        }
+        },
       })));
     } else {
       result.push({

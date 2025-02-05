@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 import { useUserStore } from '~/stores/user';
 // Images
 import England from '@/assets/images/flag/icon-flag-en.svg';
@@ -14,7 +14,7 @@ const localState = useStorage('touch-on', {
   token: '',
   openSidebar: true,
   language: 'ru',
-})
+});
 
 // Variables
 const languages = [
@@ -62,7 +62,7 @@ onBeforeMount(() => {
           <img
             v-if="$i18n.locale === language.value"
             :alt="$i18n.locale"
-            class="tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
+            class="tw-size-6 tw-rounded-full tw-object-cover"
             :src="language.avatar"
           >
         </div>
@@ -82,7 +82,7 @@ onBeforeMount(() => {
         >
           <img
             :alt="item.avatar"
-            class="tw-mr-2 tw-h-6 tw-w-6 tw-rounded-full tw-object-cover"
+            class="tw-mr-2 tw-size-6 tw-rounded-full tw-object-cover"
             :src="item.avatar"
           >
           <div class="text-subtitle-1 font-weight-regular">

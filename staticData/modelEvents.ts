@@ -41,8 +41,8 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
-   // Relay
-   relay: [
+  // Relay
+  relay: [
     {
       code: 'on_change_state',
       name: 'on_change_state',

@@ -34,7 +34,7 @@ const toggle = (event: any) => {
       type="button"
       @click="toggle"
     >
-      <IconFilterFilled class="tw-h-4 tw-w-4 tw-text-slate-400" />
+      <IconFilterFilled class="tw-size-4 tw-text-slate-400" />
     </button>
     <Popover ref="popover">
       <div class="category tw-flex tw-flex-col tw-gap-2 tw-p-2">

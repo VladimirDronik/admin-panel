@@ -77,7 +77,6 @@ watch(
       name="room"
       :title="t('devices.room')"
     >
-
       <Select
         v-model="dynamicForm.zone_id"
         class="tw-w-3/4"

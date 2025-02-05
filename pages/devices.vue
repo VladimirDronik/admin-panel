@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency,
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusSymbol } from '~/helpers/main';

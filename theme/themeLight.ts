@@ -38,7 +38,7 @@ const Noir = definePreset(Aura, {
           hoverColor: '{primary.900}',
           activeColor: '{primary.800}',
         },
-      }
+      },
     },
   },
 });

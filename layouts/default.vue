@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Builtin modules
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 
 // Composables
 const userStore = useUserStore();
@@ -8,7 +8,7 @@ const localState = useStorage('touch-on', {
   token: '',
   openSidebar: true,
   language: 'ru',
-})
+});
 
 // Variables
 const open = ref<boolean>(!!localState.value.openSidebar);

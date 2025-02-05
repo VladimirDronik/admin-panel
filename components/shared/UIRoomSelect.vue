@@ -8,7 +8,7 @@ const value = defineModel<number | null>({
 });
 
 // Methods
-const selectedRoom = (id: number) => storeRooms.getRoomsSelect.find((item) => item.code === id)
+const selectedRoom = (id: number) => storeRooms.getRoomsSelect.find((item) => item.code === id);
 </script>
 
 <template>

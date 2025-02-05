@@ -5,7 +5,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
-import pluginVue from 'eslint-plugin-vue'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,10 +25,9 @@ export default [
     languageOptions: { globals: globals.browser },
   },
   pluginJs.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
   ...compat.extends(
-    // "@vue/eslint-config-airbnb",
+    "@vue/eslint-config-airbnb",
     "@nuxt/eslint-config",
     "plugin:tailwindcss/recommended",
     "plugin:@intlify/vue-i18n/recommended",

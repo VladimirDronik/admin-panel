@@ -30,7 +30,7 @@ const initialForm = defineModel<CreateDeviceInitialForm>('form', {
   required: true,
 });
 
-const initialFormData = _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})) as DynamicFormData;
+const initialFormData = _.cloneDeep(getInitialCreateDeviceFormDataByTypes({ ...initialForm.value })) as DynamicFormData;
 const dynamicForm = reactive(initialFormData);
 
 const addChildrenToDynamicFormCB: AddFieldToDynamicFormPayload = (key, value) => {
@@ -58,16 +58,14 @@ const apiCreateDevice = ref<APIData<any>>();
 
 const events = ref<Event[]>();
 
-const eventTypes = ref(_.cloneDeep(deviceEventTypes))
+const eventTypes = ref(_.cloneDeep(deviceEventTypes));
 
 // Computed Properties
 const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
-const typeOptions = computed(() => {
-  return storeDevices.types?.data?.response?.map((item) => ({
-    label: item.name, 
-    value: item.type,
-  }));
-});
+const typeOptions = computed(() => storeDevices.types?.data?.response?.map((item) => ({
+  label: item.name,
+  value: item.type,
+})));
 const tags = computed(() => (storeDevices.tags?.data?.response ? _.uniq(Object.keys(storeDevices.tags?.data?.response)) : []));
 
 // const categories = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'category')));
@@ -119,7 +117,7 @@ const createDevice = async () => {
     success: () => {
       dialog.value = false;
       model.value = undefined;
-      eventTypes.value = _.cloneDeep(deviceEventTypes)
+      eventTypes.value = _.cloneDeep(deviceEventTypes);
       initialForm.value = {
         name: '',
         zone_id: null,
@@ -147,12 +145,11 @@ onBeforeMount(async () => {
       ...dynamicForm,
     }),
     events: events.value?.map((item) => ({
-        actions: item.actions,
-        name: item.code,
-      }))
-        .filter((item) => item.actions.length > 0),
-  })
-);
+      actions: item.actions,
+      name: item.code,
+    }))
+      .filter((item) => item.actions.length > 0),
+  }));
   /// Консоль для работы, пока идут создания девайсов
   // console.log(body);
   const data: unknown = await useAPI(paths.objects, {
@@ -166,7 +163,7 @@ onBeforeMount(async () => {
 });
 
 const changeTypeHandler = () => {
-  Object.assign(dynamicForm, _.cloneDeep(getInitialCreateDeviceFormDataByTypes({...initialForm.value})));
+  Object.assign(dynamicForm, _.cloneDeep(getInitialCreateDeviceFormDataByTypes({ ...initialForm.value })));
   switch (initialForm.value.type) {
     case Controller.MegaD:
       dynamicForm.category = ObjectsCategory.Controller;

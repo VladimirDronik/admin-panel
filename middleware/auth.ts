@@ -1,5 +1,5 @@
 // Composable modules
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 
 export default defineNuxtRouteMiddleware((_to, _from) => {
   // Composable
@@ -7,9 +7,9 @@ export default defineNuxtRouteMiddleware((_to, _from) => {
     token: '',
     openSidebar: true,
     language: 'ru',
-  })
+  });
 
   if (!localState.value.token) {
-      return navigateTo('/auth/login');
+    return navigateTo('/auth/login');
   }
 });

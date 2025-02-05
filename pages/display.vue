@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconPlus } from '@tabler/icons-vue';
-import { useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core';
 import { VueDraggableNext } from 'vue-draggable-next';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
@@ -13,14 +13,14 @@ import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 
 // Composables
 
-const storeUser = useUserStore()
+const storeUser = useUserStore();
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 const localState = useStorage('touch-on', {
   token: '',
   openSidebar: true,
   language: 'ru',
-})
+});
 
 useHead({
   titleTemplate: computed(() => t('pages.display')),
@@ -40,13 +40,13 @@ const apiItems = ref<APIData<DisplayData>>();
 const itemIds = computed(() => apiItems.value?.data?.response.room_items.map((item) => item.id) ?? []);
 
 const filteredRooms = computed(() => {
-  let result: any[] = []
-  const items = apiItems.value?.data?.response.room_items
-  const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id))
-  if (items) result = [...result, ...items]
-  if (filteredRooms) result = [...result, ...filteredRooms]
-  return result
-})
+  let result: any[] = [];
+  const items = apiItems.value?.data?.response.room_items;
+  const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id));
+  if (items) result = [...result, ...items];
+  if (filteredRooms) result = [...result, ...filteredRooms];
+  return result;
+});
 
 // Methods
 const showItemPanel = (zone_id: number, item_id: number | null = null) => {
@@ -77,14 +77,14 @@ const updateOrder = async (roomList: any, id: number) => {
       token: localState.value.token ?? '',
     },
   });
-}
+};
 
 const update = async () => {
   await Promise.all([
     apiItems.value?.refresh(),
-    storeRooms.getRoomsApi()
-  ])
-}
+    storeRooms.getRoomsApi(),
+  ]);
+};
 
 // Hooks
 onBeforeMount(async () => {
@@ -160,13 +160,13 @@ onBeforeMount(async () => {
             >
               <div
                 class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-border-2 tw-p-3"
-                  :class="storeUser.isDark ? 'tw-border-[#484848]' : 'tw-border-[#EDF3F2]'"
+                :class="storeUser.isDark ? 'tw-border-[#484848]' : 'tw-border-[#EDF3F2]'"
               >
                 <IconPlus
                   height="60"
                   stroke-width="1.5"
-                  width="60"
                   :style="{ color: storeUser.isDark ? '#9B9B9B' : '#83A39B' }"
+                  width="60"
                 />
               </div>
               <h5 class="tw-w-28 tw-truncate tw-text-center">

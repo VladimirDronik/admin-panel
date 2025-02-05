@@ -29,9 +29,7 @@ export function useAPI<T>(
               console.error('The received data:\n', response._data.response);
             }
           }
-        } else {
-          if (import.meta.env.VITE_ENV_TYPE === 'development') console.warn('The Zod schema for data validation is not valid or missing.', request);
-        }
+        } else if (import.meta.env.VITE_ENV_TYPE === 'development') console.warn('The Zod schema for data validation is not valid or missing.', request);
         options?.success?.(response._data);
       } else {
         options?.error?.();

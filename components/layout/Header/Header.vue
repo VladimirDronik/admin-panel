@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Composables
-const storeUser = useUserStore()
+const storeUser = useUserStore();
 
 // Declare Options
 const open = defineModel<boolean>('open', {
@@ -14,7 +14,7 @@ const open = defineModel<boolean>('open', {
   >
     <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
       <Button
-        class="tw-aspect-square tw-h-9 tw-w-9"
+        class="tw-aspect-square tw-size-9"
         icon="pi pi-align-justify"
         size="small"
         text

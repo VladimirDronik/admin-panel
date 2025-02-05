@@ -111,7 +111,7 @@ onBeforeMount(async () => {
                 >
                   <div class=" tw-flex tw-items-center">
                     <div
-                      class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+                      class="tw-mr-2 tw-size-4 tw-rounded-full"
                       :style="{ backgroundColor: roomColor(place.style) }"
                     />
                     <p class="text-base tw-text-lg tw-font-normal tw-text-black">
@@ -137,7 +137,7 @@ onBeforeMount(async () => {
                     <div class="tw-flex tw-w-full tw-justify-between">
                       <div class="tw-flex tw-items-center">
                         <div
-                          class="tw-mx-2 tw-h-4 tw-w-4 tw-rounded-full"
+                          class="tw-mx-2 tw-size-4 tw-rounded-full"
                           :style="{ backgroundColor: roomColor(room.style) }"
                         />
                         <p class="text-base tw-text-lg tw-font-normal">
@@ -158,7 +158,7 @@ onBeforeMount(async () => {
             @keydown="openRightBar(place)"
           >
             <div
-              class="tw-mr-2 tw-h-4 tw-w-4 tw-rounded-full"
+              class="tw-mr-2 tw-size-4 tw-rounded-full"
               :style="{ backgroundColor: roomColor(place.style) } "
             />
             <div class="tw-flex tw-w-full tw-justify-between">

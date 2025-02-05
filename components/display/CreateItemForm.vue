@@ -35,9 +35,9 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
-const control_object = ref()
+const control_object = ref();
 
-const isUpdateForm = ref(false)
+const isUpdateForm = ref(false);
 
 const form = ref<{
   enabled: boolean,
@@ -88,7 +88,7 @@ const createItem = async () => {
         status: 'off',
         target_type: 'item',
       };
-      control_object.value = undefined
+      control_object.value = undefined;
       isOpen.value = false;
       step.value = '1';
     },
@@ -97,25 +97,25 @@ const createItem = async () => {
   });
 };
 
-const quickSelectRoom = (id: number | undefined) => storeRooms.getRoomsSelect.find((item) => item.code === id || item.inGroup?.code === id)
+const quickSelectRoom = (id: number | undefined) => storeRooms.getRoomsSelect.find((item) => item.code === id || item.inGroup?.code === id);
 
 // Watchers
 watch(() => props.id, (newValue) => {
-  isUpdateForm.value = true
-  const room = quickSelectRoom(newValue)?.code
-  if (room) form.value.zone_id = room
-  setTimeout(() => isUpdateForm.value = false, 0)
-})
+  isUpdateForm.value = true;
+  const room = quickSelectRoom(newValue)?.code;
+  if (room) form.value.zone_id = room;
+  setTimeout(() => isUpdateForm.value = false, 0);
+});
 
 // Hooks
 onBeforeMount(async () => {
-  storeDevices.getDevicesApi()
+  storeDevices.getDevicesApi();
   // Create Device
   const data: unknown = await useAPI(paths.privateWizard, {
     body: computed(() => ({
       item: {
         ...form.value,
-        control_object: control_object.value
+        control_object: control_object.value,
       },
       events: events.value?.map((item) => ({
         actions: item.actions,

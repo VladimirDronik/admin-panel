@@ -53,7 +53,7 @@ const apiUpdateDevice = ref<APIData<any>>();
 const apiDeleteDevice = ref<APIData<any>>();
 
 // Computed Properties
-const isUpdate = computed(() => apiPorts.value?.status !== 'idle' && apiPorts.value?.pending || apiDevice.value?.status !== 'idle' && apiDevice.value?.pending);
+const isUpdate = computed(() => (apiPorts.value?.status !== 'idle' && apiPorts.value?.pending) || (apiDevice.value?.status !== 'idle' && apiDevice.value?.pending));
 
 // Methods
 const createFunction = (functionBody: string, props = {}) => {
@@ -120,8 +120,8 @@ const changeDevice = async () => {
       await apiUpdateDevice.value?.execute();
     },
     successMessage: 'Устройство обновлено',
-    errorMessage: selectedObject.value?.type === 'mega_d' 
-      ? 'Ошибка обновления устройства. Проверьте правильность IP-адреса.' 
+    errorMessage: selectedObject.value?.type === 'mega_d'
+      ? 'Ошибка обновления устройства. Проверьте правильность IP-адреса.'
       : 'Ошибка обновления устройства',
     success: async () => {
       await storeDevices.getDevicesApi({
@@ -136,9 +136,7 @@ const changeDevice = async () => {
 watch(() => selectedObject.value?.id, () => {
   if (selectedObject.value?.category === 'controller') {
     apiPorts.value?.refresh();
-  } else {
-    if (tabs.value === 'ports') tabs.value = 'features'
-  }
+  } else if (tabs.value === 'ports') tabs.value = 'features';
 });
 
 watchEffect(() => {
@@ -268,14 +266,14 @@ onBeforeMount(async () => {
         outlined
         :severity="checkStatusColor(asideEditingForm.status)"
       >
-      <div class="tw-flex tw-items-center tw-font-normal">
-        <div
-        :class="checkStatusSymbol(asideEditingForm.status).class + ' tw-mr-2'"
-        >
-        {{ checkStatusSymbol(asideEditingForm.status).symbol }}
+        <div class="tw-flex tw-items-center tw-font-normal">
+          <div
+            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`"
+          >
+            {{ checkStatusSymbol(asideEditingForm.status).symbol }}
+          </div>
+          {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
-      {{ checkStatusTextSmall(asideEditingForm.status) }}
-      </div>
       </Tag>
       <Tabs
         v-model:value="tabs"
