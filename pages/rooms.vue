@@ -10,9 +10,7 @@ import { paths } from '~/utils/endpoints';
 import { roomColor } from '~/helpers/rooms';
 // Types modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
-import type { APIData } from '~/types/StoreTypes';
 
-// Composables
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 
@@ -20,42 +18,39 @@ useHead({
   titleTemplate: computed(() => t('pages.rooms')),
 });
 
-// Declare Options
+const {
+  form,
+  isUpdateRightBar,
+  openRightBar,
+} = useRightbar();
+useChangeOrder();
+
 definePageMeta({
   middleware: ['auth'],
 });
 
-// Variables
-const isLoading = ref(false);
+function useRightbar() {
+  const form = ref<RoomItem | null>();
+  const isUpdateRightBar = ref(false);
 
-const orderRooms = ref<APIData<RoomItem[]>>();
+  const openRightBar = (item: RoomItem) => {
+    isUpdateRightBar.value = true;
+    form.value = item;
+  };
 
-const form = ref<RoomItem | null>();
-const isUpdateRightBar = ref(false);
+  return {
+    form,
+    isUpdateRightBar,
+    openRightBar,
+  };
+}
 
-// Computed
-const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item) => item.id));
+storeRooms.getRoomsApi();
 
-// Methods
-const openRightBar = (item: RoomItem) => {
-  isUpdateRightBar.value = true;
-  form.value = item;
-};
+function useChangeOrder() {
+  const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item: any) => item.id));
 
-const save = async () => {
-  await orderRooms.value?.refresh();
-  await storeRooms.getRoomsApi();
-};
-
-// Watchers
-watch(roomIds, (newValue, oldValue) => {
-  if (oldValue && !_.isEqual(newValue, oldValue)) save();
-});
-
-// Hooks
-onBeforeMount(async () => {
-  await storeRooms.getRoomsApi();
-  const data: unknown = await useAPI(
+  const { execute: executeOrder } = useAPI(
     paths.privateZonesOrder,
     {
       body: roomIds,
@@ -65,12 +60,14 @@ onBeforeMount(async () => {
     },
   );
 
-  orderRooms.value = data as APIData<RoomItem[]>;
-});
+  watch(roomIds, (newValue: any, oldValue: any) => {
+    if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
+  });
+}
 </script>
 
 <template>
-  <SharedUIPanel :is-update="storeRooms.apiRooms?.pending">
+  <SharedUIPanel :is-update="storeRooms.apiRooms?.status === 'pending'">
     <SharedUIBreadcrumb title="pages.rooms">
       <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
     </SharedUIBreadcrumb>
@@ -176,7 +173,6 @@ onBeforeMount(async () => {
       <RightBarRoom
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
-        v-model:is-update="isLoading"
         @update="storeRooms.getRoomsApi"
       />
     </template>

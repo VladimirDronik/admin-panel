@@ -1,4 +1,6 @@
 export default {
+  on: 'On',
+  off: 'Off',
   add: 'Add',
   name: 'Name',
   edit: 'Edit',

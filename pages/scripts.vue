@@ -17,19 +17,19 @@ const headers = [
     code: 'id',
   },
   {
-    label: t('script.name'),
+    label: t('scripts.name'),
     code: 'name',
   },
   {
-    label: t('script.code'),
+    label: t('scripts.code'),
     code: 'code',
   },
   {
-    label: t('script.count'),
+    label: t('scripts.count'),
     code: 'count',
   },
   {
-    label: t('script.system'),
+    label: t('scripts.system'),
     code: 'system',
   },
 ];

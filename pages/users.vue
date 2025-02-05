@@ -2,7 +2,7 @@
 // Builtin modules
 import { useI18n } from 'vue-i18n';
 // Types modules
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import { userListSchema, type UserType } from '~/stores/user/userTypes';
 
 // Composables
@@ -13,7 +13,26 @@ useHead({
   titleTemplate: computed(() => t('pages.users')),
 });
 
-// Variables
+const {
+  statusDeleteUser,
+  deleteForm,
+  dialogDelete,
+  deleteItem,
+  confirmDelete,
+} = useDeleteUser();
+
+const {
+  data: users,
+  refresh: refreshUsers,
+  status: statusUsers,
+} = useAPI<Request<UserType[]>>(
+  paths.privateUsers,
+  {
+    watch: false,
+  },
+  userListSchema,
+);
+
 const headers = [
   {
     label: 'ID',
@@ -21,64 +40,18 @@ const headers = [
   },
 ];
 
-const isOpen = ref(false);
+// const form = ref({});
+// const isOpen = ref(false);
 
-const form = ref({});
+function useDeleteUser() {
+  const dialogDelete = ref(false);
 
-const deleteForm = ref({
-  id: 0,
-  login: null,
-});
-
-const dialogDelete = ref(false);
-
-// Apis
-const apiUsers = ref<APIData<UserType[]>>();
-const apiDeleteUser = ref<APIData<any>>();
-
-// Methods
-const clickRow = () => {
-  isOpen.value = true;
-};
-
-const deleteItem = (item: any) => {
-  deleteForm.value = {
-    id: item.Id,
-    login: item.login,
-  };
-  dialogDelete.value = true;
-};
-
-const confirmDelete = async () => {
-  await updateData({
-    update: async () => {
-      await apiDeleteUser.value?.execute();
-      await apiUsers.value?.refresh();
-    },
-    success: () => {
-      dialogDelete.value = false;
-    },
-    successMessage: 'Пользователь удален',
-    errorMessage: 'Ошибка удаления пользователя',
+  const deleteForm = ref({
+    id: 0,
+    login: null,
   });
-};
 
-// Hooks
-onBeforeMount(async () => {
-  // Get Buttons
-  const dataUsers: unknown = await useAPI(
-    paths.privateUsers,
-    {
-      watch: false,
-    },
-    userListSchema,
-  );
-
-  apiUsers.value = dataUsers as APIData<any>;
-  //
-
-  // Delete Device
-  const dataUserDevice: unknown = await useAPI(
+  const { execute: executeDeleteUser, status: statusDeleteUser } = useAPI(
     () => paths.privateUsers,
     {
       query: computed(() => ({
@@ -90,20 +63,48 @@ onBeforeMount(async () => {
     },
   );
 
-  apiDeleteUser.value = dataUserDevice as APIData<UserType>;
-});
+  const deleteItem = (item: any) => {
+    deleteForm.value = {
+      id: item.Id,
+      login: item.login,
+    };
+    dialogDelete.value = true;
+  };
+
+  const confirmDelete = async () => {
+    await updateData({
+      update: async () => {
+        await executeDeleteUser();
+        await refreshUsers();
+      },
+      success: () => {
+        dialogDelete.value = false;
+      },
+      successMessage: 'Пользователь удален',
+      errorMessage: 'Ошибка удаления пользователя',
+    });
+  };
+
+  return {
+    statusDeleteUser,
+    deleteForm,
+    dialogDelete,
+    deleteItem,
+    confirmDelete,
+  };
+}
+
 </script>
 
 <template>
-  <SharedUIPanel>
+  <SharedUIPanel :is-update="statusUsers === 'pending'">
     <SharedUIBreadcrumb title="pages.users">
-      <DialogsUserCreateDialog @update="apiUsers?.refresh" />
+      <DialogsUserCreateDialog @update="refreshUsers" />
     </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
       :headers="headers"
-      :items="apiUsers?.data?.response"
-      @click-row="clickRow"
+      :items="users?.response"
     >
       <Column
         field="login"
@@ -123,7 +124,7 @@ onBeforeMount(async () => {
               class="tw-mr-1.5 tw-size-2.5 tw-rounded-full"
               :class="data.send_push ? 'tw-bg-primary' : 'tw-bg-danger'"
             />
-            {{ data.send_push ? 'Вкл' : 'Выкл' }}
+            {{ data.send_push ? t('on') : t('off') }}
           </div>
         </template>
       </Column>
@@ -147,18 +148,18 @@ onBeforeMount(async () => {
       :id="deleteForm?.id ?? -1"
       v-model="dialogDelete"
       class="tw-mr-2"
-      :loading="apiDeleteUser?.pending && apiDeleteUser.status !== 'idle'"
+      :loading="statusDeleteUser === 'pending'"
       :show-btn="false"
       :subtitle="`Вы уверены, что хотите удалить «${deleteForm?.login}»?`"
       title="Удалить устройство"
       @delete="confirmDelete"
     />
-    <template #rightbar>
+    <!-- <template #rightbar>
       <RightBarUser
         v-model:form="form"
         v-model:is-show="isOpen"
         @update="apiUsers?.refresh()"
       />
-    </template>
+    </template> -->
   </SharedUIPanel>
 </template>
