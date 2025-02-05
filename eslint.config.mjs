@@ -28,9 +28,9 @@ export default [
   ...tseslint.configs.recommended,
   ...compat.extends(
     "@vue/eslint-config-airbnb",
-    "@nuxt/eslint-config",
     "plugin:tailwindcss/recommended",
     "plugin:@intlify/vue-i18n/recommended",
+    "@nuxt/eslint-config",
   ),
   {
     files: ["**/*.vue"],
