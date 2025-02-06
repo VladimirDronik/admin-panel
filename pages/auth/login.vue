@@ -3,9 +3,8 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useStorage } from '@vueuse/core';
-// Static Data modules
 import { Form } from '@primevue/forms';
+// Static Data modules
 import { auth } from '~/utils/endpoints';
 // Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
@@ -16,11 +15,6 @@ const { t } = useI18n();
 const router = useRouter();
 const toast = useToast();
 const storeUser = useUserStore();
-const localState = useStorage('touch-on', {
-  token: '',
-  openSidebar: true,
-  language: 'ru',
-});
 
 useHead({
   titleTemplate: computed(() => t('pages.login')),
@@ -42,7 +36,7 @@ const params = ref({
 // Methods
 const success = (response: Request<loginData>) => {
   if (response?.response.api_access_token) {
-    localState.value.token = response.response.api_access_token;
+    storeUser.localState.token = response.response.api_access_token;
     router.push({ name: 'general' });
   } else {
     error();

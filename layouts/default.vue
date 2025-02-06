@@ -1,21 +1,12 @@
 <script setup lang="ts">
-// Builtin modules
-import { useStorage } from '@vueuse/core';
-
 // Composables
-const userStore = useUserStore();
-const localState = useStorage('touch-on', {
-  token: '',
-  openSidebar: true,
-  language: 'ru',
-});
+const storeUser = useUserStore();
 
 // Variables
-const open = ref<boolean>(!!localState.value.openSidebar);
+const open = ref<boolean>(!!storeUser.localState.openSidebar);
 
 // Watchers
-watch(open, (newValue) => localState.value.openSidebar = newValue);
-
+watch(open, (newValue) => storeUser.localState.openSidebar = newValue);
 </script>
 
 <template>

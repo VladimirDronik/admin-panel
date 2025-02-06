@@ -3,7 +3,6 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { IconPlus } from '@tabler/icons-vue';
-import { useStorage } from '@vueuse/core';
 import { VueDraggableNext } from 'vue-draggable-next';
 // Types modules
 import type { Request } from '~/types/StoreTypes';

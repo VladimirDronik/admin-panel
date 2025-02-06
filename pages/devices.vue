@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning,
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusSymbol } from '~/helpers/main';
@@ -47,7 +47,7 @@ const iconMap = {
   ...Object.fromEntries(
     Object.values(Conditioner)
       .filter((value) => typeof value === 'string')
-      .map((type) => [type, IconAirConditioning])
+      .map((type) => [type, IconAirConditioning]),
   ),
 } as const;
 
