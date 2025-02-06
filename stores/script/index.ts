@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 // Composables modules
-import { useAPI } from '~/composables/NewApi';
+import { useAPI } from '~/composables/useApi';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
 // Types and Schemes

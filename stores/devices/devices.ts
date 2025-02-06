@@ -1,10 +1,6 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
 // Static Data modules
 import { paths } from '~/utils/endpoints';
-// Composable modules
-import { useApiInstant } from '~/composables/Api';
-import { useUserStore } from '~/stores/user';
 // Helpers modules
 import { filterInListDevices } from '~/helpers/devices';
 // Types modules
@@ -18,16 +14,6 @@ import {
 } from './devicesTypes';
 
 export const useDevicesStore = defineStore('Devices', () => {
-  // Composables
-  const { api } = useApiInstant();
-  const storeUser = useUserStore();
-  const localState = useStorage('touchOn', {
-    darkTheme: false,
-    token: '',
-    openSidebar: true,
-    language: 'ru',
-  });
-
   // Variables
   const list = ref<Devices[]>([]);
   const total = ref<number>(0);
@@ -104,29 +90,30 @@ export const useDevicesStore = defineStore('Devices', () => {
     }
   };
 
-  const getDevicesApi = async (params = {}, updateStore: boolean = true) => {
-    const { data }: RequestData = await api.get(paths.objects, {
-      params,
-      headers: {
-        token: localState.value.token,
-      },
+  const getDevicesApi = async (query = {}, updateStore: boolean = true) => {
+    const data: unknown = await api(paths.objects, {
+      query,
     });
 
+    const devices = data as RequestData;
+
     if (updateStore) {
-      list.value = data.response.list;
-      total.value = data.response.total;
+      list.value = devices.response.list;
+      total.value = devices.response.total;
     }
 
-    return data;
+    return devices;
   };
 
   const getPortsApi = async (id: number, group: string = 'inputs,digital') => {
     try {
-      const { data }: GetDevicesPortsResponse = await api.get(`${paths.controllers}/${id}/ports`, {
-        params: { group },
+      const data = await api(`${paths.controllers}/${id}/ports`, {
+        query: { group },
       });
 
-      return data.response || [];
+      const ports = data as GetDevicesPortsResponse;
+
+      return ports.response || [];
     } catch (error) {
       console.error('Ошибка при получении портов:', error);
       throw error;

@@ -115,11 +115,9 @@ export interface ModelProps {
 }
 
 export interface RequestData {
-  data: {
-    response: {
-      list: Devices[];
-      total: number;
-    };
+  response: {
+    list: Devices[];
+    total: number;
   };
 }
 
@@ -143,7 +141,5 @@ export interface PortDataObject {
 }
 
 export interface GetDevicesPortsResponse {
-  data: {
-    response: PortDataObject[];
-  };
+  response: PortDataObject[];
 }

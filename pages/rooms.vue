@@ -28,9 +28,9 @@ definePageMeta({
   middleware: ['auth'],
 });
 
-storeRooms.getRoomsApi();
+await storeRooms.getRoomsApi();
 
-const { execute: executeOrder } = useAPI(
+const { execute: executeOrder } = await useAPI(
   paths.privateZonesOrder,
   {
     body: roomIds,
@@ -56,8 +56,6 @@ function useRightbar() {
   };
 }
 
-
-
 function useChangeOrder() {
   const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item: any) => item.id));
 
@@ -65,7 +63,7 @@ function useChangeOrder() {
     if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
   });
 
-  return { roomIds }
+  return { roomIds };
 }
 </script>
 

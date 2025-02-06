@@ -16,36 +16,22 @@ useHead({
 const {
   deleteForm,
   dialogDelete,
+  statusDeleteUser,
   deleteItem,
   confirmDelete,
-} = useDeleteUser();
+} = await useDeleteUser();
 
 const {
   data: users,
   refresh: refreshUsers,
   status: statusUsers,
-} = useAPI<Request<UserType[]>>(
+} = await useAPI<Request<UserType[]>>(
   paths.privateUsers,
   {
     watch: false,
   },
   userListSchema,
 );
-
-const {
-  status: statusDeleteUser,
-  execute: executeDeleteUser,
-} = useAPI(
-    () => paths.privateUsers,
-    {
-      query: computed(() => ({
-        id: deleteForm.value.id,
-      })),
-      immediate: false,
-      watch: false,
-      method: 'DELETE',
-    },
-  );
 
 const headers = [
   {
@@ -57,13 +43,28 @@ const headers = [
 // const form = ref({});
 // const isOpen = ref(false);
 
-function useDeleteUser() {
+async function useDeleteUser() {
   const dialogDelete = ref(false);
 
   const deleteForm = ref({
     id: 0,
     login: null,
   });
+
+  const {
+    status: statusDeleteUser,
+    execute: executeDeleteUser,
+  } = await useAPI(
+    () => paths.privateUsers,
+    {
+      query: computed(() => ({
+        id: deleteForm.value.id,
+      })),
+      immediate: false,
+      watch: false,
+      method: 'DELETE',
+    },
+  );
 
   const deleteItem = (item: any) => {
     deleteForm.value = {
@@ -89,6 +90,7 @@ function useDeleteUser() {
 
   return {
     deleteForm,
+    statusDeleteUser,
     dialogDelete,
     deleteItem,
     confirmDelete,

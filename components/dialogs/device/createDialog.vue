@@ -124,23 +124,21 @@ watch([props, childrenProps], (newValue, oldValue) => {
 });
 
 // Hooks
-onBeforeMount(async () => {
-  // Get Device Model
-  const data: unknown = await useAPI(
-    paths.objectModel,
-    {
-      body: computed(() => ({
-        type: form.value.type,
-        category: form.value.tags,
-      })),
-      immediate: false,
-      watch: false,
-    },
-  );
+// Get Device Model
+const data: unknown = await useAPI(
+  paths.objectModel,
+  {
+    body: computed(() => ({
+      type: form.value.type,
+      category: form.value.tags,
+    })),
+    immediate: false,
+    watch: false,
+  },
+);
 
-  apiDeviceModel.value = data as APIData<any>;
-  //
-});
+apiDeviceModel.value = data as APIData<any>;
+//
 
 const isOpen = inject<Ref<boolean>>('isOpen');
 

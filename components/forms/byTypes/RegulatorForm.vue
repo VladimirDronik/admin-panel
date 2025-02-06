@@ -9,7 +9,6 @@ import type {
 
 const storeDevices = useDevicesStore();
 const storeRooms = useRoomsStore();
-const { api } = useApiInstant();
 const { t } = useI18n();
 const sensorOptions = ref<{ label: string; value: number, zone_id: number }[]>([]);
 const mainSensorChildrenOptions = ref<{ label: string; value: number }[]>([]);
@@ -28,8 +27,8 @@ const fetchSensors = async () => {
     with_methods: false,
   };
   const data = await storeDevices.getDevicesApi(params, false);
-  const sensors = data.response.list.flatMap((item: any) => item.children.filter((child: any) => child.category === 'sensor'));
-  sensorOptions.value = sensors.map((sensor: any) => ({
+  // const sensors = data.response.list.flatMap((item: any) => item.children.filter((child: any) => child.category === 'sensor'));
+  sensorOptions.value = data.response.list.map((sensor: any) => ({
     label: sensor.type,
     value: sensor.id,
     zone_id: sensor.zone_id,
@@ -42,8 +41,8 @@ const handleMainSensorSelection = async (event: { value: number }) => {
   if (selectedSensor) {
     dynamicForm.value.zone_id = selectedSensor.zone_id;
   }
-  const { data } = await api.get(endpoint, {
-    params: { without_children: false },
+  const data: any = await api(endpoint, {
+    query: { without_children: false },
   });
   if (data?.response?.children) {
     mainSensorChildrenOptions.value = data.response.children.map((child: any) => ({
@@ -58,8 +57,8 @@ const handleMainSensorSelection = async (event: { value: number }) => {
 const handleAdditionalSensorSelection = async (event: { value: number }) => {
   const sensorId = event.value;
   const endpoint = `${objectManager}/objects/${sensorId}`;
-  const { data } = await api.get(endpoint, {
-    params: { without_children: false },
+  const data: any = await api(endpoint, {
+    query: { without_children: false },
   });
   if (data?.response?.children) {
     additionalSensorChildrenOptions.value = data.response.children.map((child: any) => ({
