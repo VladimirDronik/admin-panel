@@ -28,8 +28,10 @@ const to = computed(() => route.path);
   >
     <div class="border-base tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r tw-p-5 tw-pt-6 !tw-shadow-none">
       <div class="tw-mb-5">
-        <Logo v-if="open" />
-        <LogoRtlLogo v-else />
+        <RouterLink :to="{ name: 'general' }">
+          <Logo v-if="open" class="main-logo" :class="{ 'active-logo': route.name === 'general' }" />
+          <LogoRtlLogo v-else class="main-logo" :class="{ 'active-logo': route.name === 'general' }" />
+        </RouterLink>
       </div>
       <div
         v-for="item in sidebar"
@@ -81,5 +83,18 @@ const to = computed(() => route.path);
     border-color: var(--p-surface-800) !important;
     color: var(--p-primary-700) !important;
   }
+}
+</style>
+
+<style>
+.main-logo svg path {
+  transition: filter .15s linear;
+}
+.main-logo svg:hover path {
+  filter: drop-shadow( 0px 0px 1px #ABE4D6);
+}
+
+.active-logo svg path {
+  filter: drop-shadow( 0px 0px 1px #ABE4D6);
 }
 </style>
