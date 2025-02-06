@@ -64,5 +64,6 @@ export default {
     graphingMotion: 'Ведение графика движения',
     graphingPresence: 'Ведение графика присутствия',
     current: 'Ток',
+    modbus: 'Modbus',
   },
 };

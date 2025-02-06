@@ -3,14 +3,14 @@
 import { useI18n } from 'vue-i18n';
 import { type ModelRef } from 'vue';
 // Helper modules
-import { useControllersViaType } from '~/composables/useControllersViaType';
+import { useController } from '~/composables/useControllerModbus';
 // Types modules
 import { Controller } from '~/types/DevicesEnums';
 import type { DeviceParentId, DevicePort } from '~/types/DevicesTypes';
 
 // Composables
 const { t } = useI18n();
-const { controllers, getControllersViaType } = useControllersViaType();
+const { controllers, getController } = useController();
 
 // Declare Options
 const parentId = defineModel<DeviceParentId>('parent-id') as ModelRef<DeviceParentId>;
@@ -20,9 +20,9 @@ const sclPort = defineModel<DevicePort>('scl-port');
 // Computed Properties
 const controllerIdRef = computed(() => parentId.value);
 
-const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
+const { formattedPorts } = usePorts(controllerIdRef);
 
-getControllersViaType(Controller.MegaD);
+getController(Controller.MegaD);
 
 </script>
 

@@ -1,7 +1,7 @@
 // Builtin modules
 import { ref, watch, type Ref } from 'vue';
 
-export function useControllerPortsViaId(controllerId: Ref<number | null>, group: string = 'inputs,digital') {
+export function usePorts(controllerId: Ref<number | null>, group: string = 'inputs,digital') {
   // Composable
   const deviceStore = useDevicesStore();
 
@@ -46,3 +46,4 @@ export function useControllerPortsViaId(controllerId: Ref<number | null>, group:
     loadPorts,
   };
 }
+

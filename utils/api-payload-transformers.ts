@@ -5,13 +5,15 @@ import type {
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import type { DevicePropertyKey, Connection } from '~/types/DevicesEnums';
+import  { ObjectsCategory } from '~/types/DevicesEnums';
 import {
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
-  Regulator,
+  Regulator
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
+  const isConditioner = formData.category === ObjectsCategory.Conditioner;
   const isDS1820 = formData.type === Sensor.DS18B20;
   const isMegaD = formData.type === Controller.MegaD;
   const isRelayOrGenericInputOrMotionOrCS = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput || formData.type === Sensor.MOTION || formData.type === Sensor.CS;
@@ -22,6 +24,7 @@ const createAddress = (formData: FormDataToTransform | EditDeviceForm): string =
   if (isMegaD) address = String(formData.props.address);
   if (isRelayOrGenericInputOrMotionOrCS) address = `${formData.sdaPort}`;
   if (isRegulator) address = '';
+  if (isConditioner) address = Number(formData.props.address) as unknown as string;
   return address;
 };
 

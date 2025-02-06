@@ -10,10 +10,10 @@ import type {
 
 const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
 
-const { controllers, getControllersViaType } = useControllersViaType();
-getControllersViaType(Controller.MegaD);
+const { controllers, getController } = useController();
+getController(Controller.MegaD);
 const controllerIdRef = computed(() => dynamicForm.value.parent_id);
-const { formattedPorts } = useControllerPortsViaId(controllerIdRef);
+const { formattedPorts } = usePorts(controllerIdRef);
 
 const props = defineProps<{
   isEditing: boolean;
