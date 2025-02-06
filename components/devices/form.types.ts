@@ -1,9 +1,9 @@
 import {
   DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, Relay,
   Regulator, RegulatorType,
+  Conditioner,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
-import type { Event } from '@/types/ModelEventTypes';
 
 export interface DevicePropertyData {
     value?: number;
@@ -47,7 +47,7 @@ export interface CreateDeviceInitialForm {
 
 export interface DeviceProps {
     interface?: DeviceInterface;
-    address?: string;
+    address?: string | number;
     update_interval?: string;
     id?: string;
     password?: string;
@@ -90,4 +90,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner; 

@@ -1,7 +1,7 @@
 // Types modules
 import { type Component } from 'vue';
 import {
-  Controller, Sensor, Default, Relay, Regulator, GenericInput,
+  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner, 
 } from '@/types/DevicesEnums';
 
 // Components
@@ -15,6 +15,7 @@ import SensorSCD4XForm from '~/components/forms/byTypes/SensorSCD4XForm.vue';
 import SensorMotionForm from '~/components/forms/byTypes/SensorMotionForm.vue';
 import SensorPresenceForm from '~/components/forms/byTypes/SensorPresenceForm.vue';
 import SensorCSForm from '~/components/forms/byTypes/SensorCSForm.vue';
+import ConditionerForm from '~/components/forms/byTypes/ConditionerForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
 import WBMRM2miniForm from '~/components/forms/byTypes/WBMRM2miniForm.vue';
@@ -25,7 +26,20 @@ import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
 import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
 
 // Types
-type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner;
+
+export const ConditionerTypes = [
+  Conditioner.OnokomAUX1MBB,
+  Conditioner.OnokomDK1MBB,
+  Conditioner.OnokomGR1MBB,
+  Conditioner.OnokomGR3MBB,
+  Conditioner.OnokomHR1MBB,
+  Conditioner.OnokomHS3MBB,
+  Conditioner.OnokomHS6MBB,
+  Conditioner.OnokomME1MBB,
+  Conditioner.OnokomMH8MBB,
+  Conditioner.OnokomTCL1MBB,
+];
 
 interface DeviceFormMapping {
   type: DeviceType;
@@ -103,4 +117,8 @@ export const deviceFormMapping: DeviceFormMapping[] = [
     type: Sensor.CS,
     component: SensorCSForm,
   },
+  ...ConditionerTypes.map((ConditionerType) => ({
+    type: ConditionerType,
+    component: ConditionerForm,
+  })),
 ];

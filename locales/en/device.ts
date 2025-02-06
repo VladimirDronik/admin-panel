@@ -64,5 +64,6 @@ export default {
     graphingMotion: 'Enable Graphing Motion',
     graphingPresence: 'Enable Graphing Presence',
     current: 'Current',
+    modbus: 'Modbus',
   },
 };

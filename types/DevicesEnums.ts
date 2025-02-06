@@ -4,6 +4,7 @@ export enum ObjectsCategory {
   Relay = 'relay',
   Regulator = 'regulator',
   Sensor = 'sensor',
+  Conditioner = 'conditioner',
 }
 
 export enum DevicePropertyKey {
@@ -50,6 +51,20 @@ export enum Relay {
 export enum Regulator {
   Regulator = 'regulator',
 }
+
+export enum Conditioner {
+  OnokomAUX1MBB = 'onokom/aux_1_mb_b',
+  OnokomDK1MBB = 'onokom/dk_1_mb_b',
+  OnokomGR1MBB = 'onokom/gr_1_mb_b',
+  OnokomGR3MBB = 'onokom/gr_3_mb_b',
+  OnokomHR1MBB = 'onokom/hr_1_mb_b',
+  OnokomHS3MBB = 'onokom/hs_3_mb_b',
+  OnokomHS6MBB = 'onokom/hs_6_mb_b',
+  OnokomME1MBB = 'onokom/me_1_mb_b',
+  OnokomMH8MBB = 'onokom/mh_8_mb_b',
+  OnokomTCL1MBB = 'onokom/tcl_1_mb_b',
+}
+
 
 export enum Connection {
   HTTP = 'http',

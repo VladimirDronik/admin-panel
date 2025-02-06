@@ -14,10 +14,10 @@ const props = defineProps<{
   isEditing: boolean;
 }>();
 
-const { controllers, getControllersViaType } = useControllersViaType();
-getControllersViaType(Controller.MegaD);
+const { controllers, getController } = useController();
+getController(Controller.MegaD);
 const controllerIdRef = computed(() => dynamicForm.value.parent_id);
-const { formattedPorts } = useControllerPortsViaId(controllerIdRef, 'outputs');
+const { formattedPorts } = usePorts(controllerIdRef, 'outputs');
 
 const { t } = useI18n();
 const storeRooms = useRoomsStore();

@@ -6,6 +6,7 @@ import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.t
 import {
   Controller, GenericInput, Sensor, ObjectsCategory, Connection, DeviceInterface,
   DevicePropertyKey, Relay, Regulator, RegulatorType,
+  Conditioner,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -18,6 +19,14 @@ const basicCreateDeviceForm = {
     interface: DeviceInterface['I2C'],
   },
   children: {},
+};
+
+const basicCreateConditionerForm = {
+  parent_id: 0,
+  category: ObjectsCategory.Conditioner,
+  props: {
+    address: 1,
+  },
 };
 
 const createFormByTypesMap = {
@@ -357,7 +366,39 @@ const createFormByTypesMap = {
     },
     children: {},
   },
+  [Conditioner.OnokomAUX1MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomDK1MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomGR1MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomGR3MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomHR1MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomHS3MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomHS6MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomME1MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomMH8MBB]: {
+    ...basicCreateConditionerForm,
+  },
+  [Conditioner.OnokomTCL1MBB]: {
+    ...basicCreateConditionerForm,
+  },
 };
+
+console.log('createFormByTypesMap:', createFormByTypesMap);
 
 export const getInitialCreateDeviceFormDataByTypes = (initialForm: CreateDeviceInitialForm) => ({ ...createFormByTypesMap[initialForm.type], name: initialForm.name, zone_id: initialForm.zone_id });
 
@@ -393,6 +434,16 @@ const editFormBasicsData = {
     interface: DeviceInterface['I2C'],
   },
   children: {},
+  status: '',
+};
+
+const editFormConditionerBasicData = {
+  id: 0,
+  parent_id: 0,
+  category: ObjectsCategory.Conditioner,
+  props: {
+    address: 1,
+  },
   status: '',
 };
 
@@ -509,6 +560,16 @@ const editFormByTypesMap = {
     children: {},
     status: '',
   },
+  [Conditioner.OnokomAUX1MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomDK1MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomGR1MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomGR3MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomHR1MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomHS3MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomHS6MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomME1MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomMH8MBB]: editFormConditionerBasicData,
+  [Conditioner.OnokomTCL1MBB]: editFormConditionerBasicData,
 };
 
 export const getInitialEditDeviceFormDataByTypes = (data: GetCurrentDeviceResponse) => ({

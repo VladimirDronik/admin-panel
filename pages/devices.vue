@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency,
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusSymbol } from '~/helpers/main';
@@ -12,6 +12,7 @@ import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { Filter, Options } from '~/types/MainTypes';
 import type { TreeTableDevices } from '~/types/DevicesTypes';
+import { Conditioner } from '~/types/DevicesEnums';
 
 // Composables
 const { t } = useI18n();
@@ -43,6 +44,11 @@ const iconMap = {
   regulator: IconToggleRightFilled,
   modbus: IconCpu,
   wb_mrm2_mini: IconCurrency,
+  ...Object.fromEntries(
+    Object.values(Conditioner)
+      .filter((value) => typeof value === 'string')
+      .map((type) => [type, IconAirConditioning])
+  ),
 } as const;
 
 type IconMapKey = keyof typeof iconMap;

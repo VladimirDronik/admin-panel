@@ -15,7 +15,7 @@ import {
   type CreateDeviceInitialForm, type DynamicFormData, type DeviceCreateFormPayload, type AddFieldToDynamicFormPayload,
 } from './form.types';
 import {
-  Controller, GenericInput, Relay, ObjectsCategory,
+  Controller, GenericInput, Relay, ObjectsCategory, Conditioner,
 } from '~/types/DevicesEnums';
 import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
 import { getInitialCreateDeviceFormDataByTypes } from '../forms/byTypes/initial-dynamic-form-data';
@@ -173,6 +173,18 @@ const changeTypeHandler = () => {
       break;
     case GenericInput.GenericInput:
       dynamicForm.category = ObjectsCategory.GenericInput;
+      break;
+    case Conditioner.OnokomAUX1MBB:
+    case Conditioner.OnokomDK1MBB:
+    case Conditioner.OnokomGR1MBB:
+    case Conditioner.OnokomGR3MBB:
+    case Conditioner.OnokomHR1MBB:
+    case Conditioner.OnokomHS3MBB:
+    case Conditioner.OnokomHS6MBB:
+    case Conditioner.OnokomME1MBB:
+    case Conditioner.OnokomMH8MBB:
+    case Conditioner.OnokomTCL1MBB:
+      dynamicForm.category = ObjectsCategory.Conditioner;
       break;
     default:
       dynamicForm.category = ObjectsCategory.Sensor;
