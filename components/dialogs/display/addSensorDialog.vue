@@ -5,8 +5,6 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-// Static data modules
-import { paths } from '~/utils/endpoints';
 // Types and Schemes modules
 import type { APIData } from '~/types/StoreTypes';
 import type { roomSensorTypes } from '~/types/DisplayTypes';

@@ -8,8 +8,6 @@ import {
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
-// Static Data modules
-import { paths } from '~/utils/endpoints';
 import { deviceEventTypes } from '~/staticData/modelEvents';
 import {
   type CreateDeviceInitialForm, type DynamicFormData, type DeviceCreateFormPayload, type AddFieldToDynamicFormPayload,

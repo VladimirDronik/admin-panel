@@ -2,8 +2,6 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-// Static Data modules
-import { paths } from '~/utils/endpoints';
 // Types and Schemes
 import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';

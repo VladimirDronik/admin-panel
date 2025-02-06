@@ -5,16 +5,13 @@ import { useI18n } from 'vue-i18n';
 import { IconPlus } from '@tabler/icons-vue';
 import { useStorage } from '@vueuse/core';
 import { VueDraggableNext } from 'vue-draggable-next';
-// Static Data modules
-import { paths } from '~/utils/endpoints';
 // Types modules
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 
 // Composables
-
-const storeUser = useUserStore();
 const { t } = useI18n();
+const storeUser = useUserStore();
 const storeRooms = useRoomsStore();
 const localState = useStorage('touch-on', {
   token: '',
@@ -22,52 +19,30 @@ const localState = useStorage('touch-on', {
   language: 'ru',
 });
 
+const {
+  zoneId,
+  isShow,
+  variant,
+  showItemPanel,
+  showScenarioPanel,
+} = useRightBar();
+
+const {
+  dataItems,
+  statusItems,
+  filteredRooms,
+  update,
+} = await useGetData();
+
 useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
 
 // Variables
 const id = ref<number>(0);
-const zoneId = ref<number>(0);
-
-const variant = ref('');
-const isShow = ref(false);
-
-// Apis
-const apiItems = ref<APIData<DisplayData>>();
-
-// Computed
-const itemIds = computed(() => apiItems.value?.data?.response.room_items.map((item) => item.id) ?? []);
-
-const filteredRooms = computed(() => {
-  let result: any[] = [];
-  const items = apiItems.value?.data?.response.room_items;
-  const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id));
-  if (items) result = [...result, ...items];
-  if (filteredRooms) result = [...result, ...filteredRooms];
-  return result;
-});
-
-// Methods
-const showItemPanel = (zone_id: number, item_id: number | null = null) => {
-  zoneId.value = zone_id;
-  if (item_id) {
-    variant.value = 'Edit Item';
-    id.value = item_id;
-  } else {
-    variant.value = 'Create Item';
-  }
-  isShow.value = true;
-};
-
-const showScenarioPanel = (item_id: number) => {
-  id.value = item_id;
-  variant.value = 'Edit Scenario';
-  isShow.value = true;
-};
 
 const updateOrder = async (roomList: any, id: number) => {
-  await $fetch(paths.privateItemsOrder, {
+  await api(paths.privateItemsOrder, {
     method: 'PATCH',
     body: {
       zone_id: id,
@@ -79,43 +54,94 @@ const updateOrder = async (roomList: any, id: number) => {
   });
 };
 
-const update = async () => {
-  await Promise.all([
-    apiItems.value?.refresh(),
+async function useGetData() {
+  const createdData = await Promise.all([
+    useAPI<Request<DisplayData>>(
+      paths.privateCp,
+      {
+        watch: false,
+      },
+      displayRequestSchema,
+    ),
     storeRooms.getRoomsApi(),
   ]);
-};
 
-// Hooks
-onBeforeMount(async () => {
-  await storeRooms.getRoomsApi();
-  // Get Buttons
-  const dataItemsGet: unknown = await useAPI(
-    paths.privateCp,
-    {
-      watch: false,
-    },
-    displayRequestSchema,
-  );
+  const {
+    data: dataItems,
+    status: statusItems,
+    refresh: refrechItems,
+  } = createdData[0];
 
-  apiItems.value = dataItemsGet as APIData<DisplayData>;
-  //
-});
+  const itemIds = computed(() => dataItems.value?.response.room_items.map((item) => item.id) ?? []);
 
+  const update = async () => {
+    await Promise.all([
+      refrechItems(),
+      storeRooms.getRoomsApi(),
+    ]);
+  };
+
+  const filteredRooms = computed(() => {
+    let result: any[] = [];
+    const items = dataItems.value?.response.room_items;
+    const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id));
+    if (items) result = [...result, ...items];
+    if (filteredRooms) result = [...result, ...filteredRooms];
+    return result;
+  });
+
+  return {
+    dataItems,
+    statusItems,
+    filteredRooms,
+    update,
+  };
+}
+
+function useRightBar() {
+  const zoneId = ref<number>(0);
+  const isShow = ref(false);
+  const variant = ref('');
+
+  const showScenarioPanel = (item_id: number) => {
+    id.value = item_id;
+    variant.value = 'Edit Scenario';
+    isShow.value = true;
+  };
+
+  const showItemPanel = (zone_id: number, item_id: number | null = null) => {
+    zoneId.value = zone_id;
+    if (item_id) {
+      variant.value = 'Edit Item';
+      id.value = item_id;
+    } else {
+      variant.value = 'Create Item';
+    }
+    isShow.value = true;
+  };
+
+  return {
+    zoneId,
+    isShow,
+    variant,
+    showItemPanel,
+    showScenarioPanel,
+  };
+}
 </script>
 
 <template>
-  <SharedUIPanel :is-update="apiItems ? apiItems.pending : true || storeRooms.apiRooms?.pending">
+  <SharedUIPanel :is-update="statusItems === 'pending' || storeRooms.apiRooms?.status === 'pending'">
     <SharedUIBreadcrumb title="pages.display">
-      <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
+      <DialogsRoomCreateDialog @update="update" />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar
-        v-if="apiItems?.data?.response.scenario_items?.length"
+        v-if="dataItems?.response.scenario_items?.length"
         class="border-base tw-flex tw-flex-wrap tw-gap-2 tw-rounded-md tw-border tw-p-3"
       >
         <DisplayScenarioCard
-          v-for="scenario in apiItems?.data?.response.scenario_items"
+          v-for="scenario in dataItems?.response.scenario_items"
           :key="scenario.item_id"
           :color="scenario.color"
           :icon="scenario.icon"

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export interface Filter {
   label: string,
   key: string,
@@ -15,3 +17,5 @@ export interface Header {
   text: string,
   value: string,
 }
+
+export const nullSchema = z.object({}).optional();

@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia';
-// Static Data
-import { paths } from '~/utils/endpoints';
 // Helpers
 import { filterInListRoom } from '~/helpers/rooms';
 // Types

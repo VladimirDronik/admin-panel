@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia';
-// Static Data modules
-import { paths } from '~/utils/endpoints';
 // Helpers modules
 import { filterInListDevices } from '~/helpers/devices';
 // Types modules

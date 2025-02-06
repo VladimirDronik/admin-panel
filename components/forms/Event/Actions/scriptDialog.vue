@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-// Static Data modules
-import { paths } from '~/utils/endpoints';
 // Types Modules
 import type { Event } from '@/types/ModelEventTypes';
 import type { APIData } from '~/types/StoreTypes';

@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-// Builtin modules
-import { IconX } from '@tabler/icons-vue';
-// Types and Schemes modules
-import { paths } from '~/utils/endpoints';
+// Types
 import type { APIData } from '~/types/StoreTypes';
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 
