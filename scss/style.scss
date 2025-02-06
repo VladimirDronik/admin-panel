@@ -2,7 +2,7 @@
 @forward './components/tables';
 @forward './components/spinner.scss';
 @forward './animation';
-@forward './variables';
+@forward './base';
 
 @layer tailwind-base, primevue, tailwind-utilities;
 
