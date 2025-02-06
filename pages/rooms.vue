@@ -4,15 +4,17 @@ import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import { VueDraggableNext } from 'vue-draggable-next';
 import { IconGripVertical, IconChevronDown, IconChevronUp } from '@tabler/icons-vue';
-// Static Data modules
 // Helpers modules
 import { roomColor } from '~/helpers/rooms';
 // Types modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
+import type { Request } from '~/types/StoreTypes';
+
+definePageMeta({
+  middleware: ['auth'],
+});
 
 const { t } = useI18n();
-const storeRooms = useRoomsStore();
-
 useHead({
   titleTemplate: computed(() => t('pages.rooms')),
 });
@@ -22,15 +24,17 @@ const {
   isUpdateRightBar,
   openRightBar,
 } = useRightbar();
-const { roomIds } = useChangeOrder();
 
-definePageMeta({
-  middleware: ['auth'],
-});
+const {
+  roomIds,
+  dataRooms,
+  statusRooms,
+  refreshRooms,
+} = await useWorkWithRoomApi();
 
-await storeRooms.getRoomsApi();
-
-const { execute: executeOrder } = await useAPI(
+const {
+  execute: executeOrder,
+} = await useAPI(
   paths.privateZonesOrder,
   {
     body: roomIds,
@@ -56,30 +60,45 @@ function useRightbar() {
   };
 }
 
-function useChangeOrder() {
-  const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item: any) => item.id));
+async function useWorkWithRoomApi() {
+  const {
+    data: dataRooms,
+    status: statusRooms,
+    refresh: refreshRooms,
+  } = await useAPI<Request<RoomItem[]>>(
+    paths.privateRoomsList,
+    { watch: false },
+    roomRequestSchema,
+  );
+
+  const roomIds = computed(() => dataRooms?.value?.response.map((item: any) => item.id));
 
   watch(roomIds, (newValue: any, oldValue: any) => {
     if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
   });
 
-  return { roomIds };
+  return {
+    roomIds,
+    dataRooms,
+    statusRooms,
+    refreshRooms,
+  };
 }
 </script>
 
 <template>
-  <SharedUIPanel :is-update="storeRooms.apiRooms?.status === 'pending'">
+  <SharedUIPanel :is-update="statusRooms === 'pending'">
     <SharedUIBreadcrumb title="pages.rooms">
-      <DialogsRoomCreateDialog @update="storeRooms.getRoomsApi" />
+      <DialogsRoomCreateDialog @update="refreshRooms" />
     </SharedUIBreadcrumb>
-    <div v-if="storeRooms.apiRooms?.data">
+    <div v-if="dataRooms">
       <VueDraggableNext
-        v-model="storeRooms.apiRooms.data.response"
+        v-model="dataRooms.response"
         :animation="300"
         handle=".handle-list"
       >
         <div
-          v-for="place in storeRooms.apiRooms.data.response"
+          v-for="place in dataRooms.response"
           :key="place.id"
         >
           <Accordion
@@ -174,7 +193,7 @@ function useChangeOrder() {
       <RightBarRoom
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
-        @update="storeRooms.getRoomsApi"
+        @update="refreshRooms"
       />
     </template>
   </SharedUIPanel>

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useStorage } from '@vueuse/core';
 
 export const useUserStore = defineStore('UserStore', () => {
   // Variables
@@ -11,11 +12,18 @@ export const useUserStore = defineStore('UserStore', () => {
     valueLight: 'p-light',
     storageKey: 'touch-on-color',
   });
+  const localState = useStorage('touch-on', {
+    token: '',
+    openSidebar: true,
+    language: 'ru',
+  });
+
   // Methods
   const toggleDark = useToggle(isDark);
   return {
     version,
     isDark,
+    localState,
     toggleDark,
   };
 });

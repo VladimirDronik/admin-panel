@@ -12,12 +12,6 @@ import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const storeUser = useUserStore();
-const storeRooms = useRoomsStore();
-const localState = useStorage('touch-on', {
-  token: '',
-  openSidebar: true,
-  language: 'ru',
-});
 
 const {
   zoneId,
@@ -30,6 +24,7 @@ const {
 const {
   dataItems,
   statusItems,
+  statusRooms,
   filteredRooms,
   update,
 } = await useGetData();
@@ -49,7 +44,7 @@ const updateOrder = async (roomList: any, id: number) => {
       item_ids: roomList.map((item: any) => item.item_id),
     },
     headers: {
-      token: localState.value.token ?? '',
+      token: storeUser.localState.token ?? '',
     },
   });
 };
@@ -58,33 +53,39 @@ async function useGetData() {
   const createdData = await Promise.all([
     useAPI<Request<DisplayData>>(
       paths.privateCp,
-      {
-        watch: false,
-      },
+      { watch: false },
       displayRequestSchema,
     ),
-    storeRooms.getRoomsApi(),
+    useAPI<Request<RoomItem[]>>(
+      paths.privateRoomsList,
+      { watch: false },
+      roomRequestSchema,
+    ),
   ]);
 
-  const {
+  const [{
     data: dataItems,
     status: statusItems,
     refresh: refrechItems,
-  } = createdData[0];
+  }, {
+    data: dataRooms,
+    status: statusRooms,
+    refresh: refreshRooms,
+  }] = createdData;
 
   const itemIds = computed(() => dataItems.value?.response.room_items.map((item) => item.id) ?? []);
 
   const update = async () => {
     await Promise.all([
       refrechItems(),
-      storeRooms.getRoomsApi(),
+      refreshRooms(),
     ]);
   };
 
   const filteredRooms = computed(() => {
     let result: any[] = [];
     const items = dataItems.value?.response.room_items;
-    const filteredRooms = storeRooms.apiRooms?.data?.response.filter((item) => !itemIds.value.includes(item.id));
+    const filteredRooms = dataRooms.value?.response.filter((item) => !itemIds.value.includes(item.id));
     if (items) result = [...result, ...items];
     if (filteredRooms) result = [...result, ...filteredRooms];
     return result;
@@ -93,6 +94,7 @@ async function useGetData() {
   return {
     dataItems,
     statusItems,
+    statusRooms,
     filteredRooms,
     update,
   };
@@ -131,7 +133,7 @@ function useRightBar() {
 </script>
 
 <template>
-  <SharedUIPanel :is-update="statusItems === 'pending' || storeRooms.apiRooms?.status === 'pending'">
+  <SharedUIPanel :is-update="statusItems === 'pending' || statusRooms === 'pending'">
     <SharedUIBreadcrumb title="pages.display">
       <DialogsRoomCreateDialog @update="update" />
     </SharedUIBreadcrumb>
