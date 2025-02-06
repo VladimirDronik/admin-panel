@@ -14,7 +14,6 @@ useHead({
 });
 
 const {
-  statusDeleteUser,
   deleteForm,
   dialogDelete,
   deleteItem,
@@ -33,6 +32,21 @@ const {
   userListSchema,
 );
 
+const {
+  status: statusDeleteUser,
+  execute: executeDeleteUser,
+} = useAPI(
+    () => paths.privateUsers,
+    {
+      query: computed(() => ({
+        id: deleteForm.value.id,
+      })),
+      immediate: false,
+      watch: false,
+      method: 'DELETE',
+    },
+  );
+
 const headers = [
   {
     label: 'ID',
@@ -50,18 +64,6 @@ function useDeleteUser() {
     id: 0,
     login: null,
   });
-
-  const { execute: executeDeleteUser, status: statusDeleteUser } = useAPI(
-    () => paths.privateUsers,
-    {
-      query: computed(() => ({
-        id: deleteForm.value.id,
-      })),
-      immediate: false,
-      watch: false,
-      method: 'DELETE',
-    },
-  );
 
   const deleteItem = (item: any) => {
     deleteForm.value = {
@@ -86,7 +88,6 @@ function useDeleteUser() {
   };
 
   return {
-    statusDeleteUser,
     deleteForm,
     dialogDelete,
     deleteItem,

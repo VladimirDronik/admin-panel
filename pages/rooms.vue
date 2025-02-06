@@ -22,11 +22,23 @@ const {
   isUpdateRightBar,
   openRightBar,
 } = useRightbar();
-useChangeOrder();
+const { roomIds } = useChangeOrder();
 
 definePageMeta({
   middleware: ['auth'],
 });
+
+storeRooms.getRoomsApi();
+
+const { execute: executeOrder } = useAPI(
+  paths.privateZonesOrder,
+  {
+    body: roomIds,
+    method: 'PATCH',
+    immediate: false,
+    watch: false,
+  },
+);
 
 function useRightbar() {
   const form = ref<RoomItem | null>();
@@ -44,24 +56,16 @@ function useRightbar() {
   };
 }
 
-storeRooms.getRoomsApi();
+
 
 function useChangeOrder() {
   const roomIds = computed(() => storeRooms.apiRooms?.data?.response.map((item: any) => item.id));
 
-  const { execute: executeOrder } = useAPI(
-    paths.privateZonesOrder,
-    {
-      body: roomIds,
-      method: 'PATCH',
-      immediate: false,
-      watch: false,
-    },
-  );
-
   watch(roomIds, (newValue: any, oldValue: any) => {
     if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
   });
+
+  return { roomIds }
 }
 </script>
 
