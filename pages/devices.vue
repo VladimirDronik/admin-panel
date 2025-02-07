@@ -90,48 +90,18 @@ const tags = computed<(Options | string)[]>(() => {
 });
 
 const filters = ref<Filter[]>([
-  {
-    label: 'ID обьекта',
-    key: 'filter_by_id',
-    value: null,
-  },
-  {
-    label: 'ID родительского объекта',
-    key: 'filter_by_parent_id',
-    value: null,
-  },
-  {
-    label: 'Название',
-    key: 'filter_by_name',
-    value: null,
-  },
-  {
-    label: 'Тип',
-    key: 'filter_by_type',
-    value: null,
-  },
-  {
-    label: 'Помещения',
-    key: 'filter_by_zone_id',
-    value: null,
-  },
-  {
-    label: 'Статус',
-    key: 'filter_by_status',
-    value: null,
-    options: [
-      { title: 'Доступен', value: 'available' },
-      { title: 'Недоступен', value: 'unavailable' },
-      { title: 'Неопределён', value: 'N/A' },
-      { title: 'Отключен', value: 'disabled' },
-    ],
-  },
-  {
-    label: 'Теги',
-    key: 'tags',
-    value: null,
-    options: tags.value,
-  },
+  { label: 'ID обьекта', key: 'filter_by_id', value: null },
+  { label: 'ID родительского объекта', key: 'filter_by_parent_id', value: null },
+  { label: 'Название', key: 'filter_by_name', value: null },
+  { label: 'Тип', key: 'filter_by_type', value: null },
+  { label: 'Помещения', key: 'filter_by_zone_id', value: null },
+  { label: 'Статус', key: 'filter_by_status', value: null, options: [
+    { title: 'Доступен', value: 'available' },
+    { title: 'Недоступен', value: 'unavailable' },
+    { title: 'Неопределён', value: 'N/A' },
+    { title: 'Отключен', value: 'disabled' },
+  ]},
+  { label: 'Теги', key: 'tags', value: null, options: tags.value },
 ]);
 
 const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);

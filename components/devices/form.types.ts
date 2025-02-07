@@ -48,7 +48,7 @@ export interface CreateDeviceInitialForm {
 export interface DeviceProps {
     interface?: DeviceInterface;
     address?: string | number;
-    update_interval?: string;
+    update_interval?: string | number;
     id?: string;
     password?: string;
     protocol?: Connection;
@@ -64,6 +64,20 @@ export interface DeviceProps {
     fallback_sensor_value_id?: number;
     period?: number;
     mode?: string;
+    power_status?: boolean;
+    display_backlight?: boolean;
+    silent_mode?: boolean;
+    eco_mode?: boolean;
+    turbo_mode?: boolean;
+    sleep_mode?: boolean;
+    ionization?: boolean;
+    self_cleaning?: boolean;
+    sounds?: boolean;
+    operating_mode?: string;
+    fan_speed?: string;
+    horizontal_slats_mode?: string;
+    vertical_slats_mode?: string;
+
   }
 
 export interface DeviceChild {

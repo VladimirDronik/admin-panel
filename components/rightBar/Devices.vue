@@ -55,23 +55,14 @@ const apiDeleteDevice = ref<APIData<any>>();
 // Computed Properties
 const isUpdate = computed(() => (apiPorts.value?.status !== 'idle' && apiPorts.value?.pending) || (apiDevice.value?.status !== 'idle' && apiDevice.value?.pending));
 
-// Methods
-const createFunction = (functionBody: string, props = {}) => {
-  const func = new Function('userAccessLevel', 'props', functionBody);
-  return {
-    func,
-    funcText: String(func),
-    value: func(storeDevices.userAccessLevel, props),
-  };
-};
 
 const propsModel = (props: ModelProps | undefined): ModelProps[] => {
   if (!props) return [];
   const result = Object.values(props).map((item) => ({
     ...item,
-    required: item.required ? createFunction(item.required, props) : false,
-    editable: item.editable ? createFunction(item.editable, props) : false,
-    visible: item.visible ? createFunction(item.visible, props) : false,
+    required: item.required ?? false,
+    editable: item.editable ?? false,
+    visible: item.visible ?? false,
   }));
   return result;
 };

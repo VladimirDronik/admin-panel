@@ -398,8 +398,6 @@ const createFormByTypesMap = {
   },
 };
 
-console.log('createFormByTypesMap:', createFormByTypesMap);
-
 export const getInitialCreateDeviceFormDataByTypes = (initialForm: CreateDeviceInitialForm) => ({ ...createFormByTypesMap[initialForm.type], name: initialForm.name, zone_id: initialForm.zone_id });
 
 export const initialEditFormData = {
@@ -443,6 +441,21 @@ const editFormConditionerBasicData = {
   category: ObjectsCategory.Conditioner,
   props: {
     address: 1,
+    enable: true,
+    update_interval: 60,
+    power_status: false,
+    display_backlight: false,
+    silent_mode: false,
+    eco_mode: false,
+    turbo_mode: false,
+    sleep_mode: false,
+    ionization: false,
+    self_cleaning: false,
+    sounds: false,
+    operating_mode: "3",
+    fan_speed: "0",
+    horizontal_slats_mode: "1",
+    vertical_slats_mode: "1",
   },
   status: '',
 };
