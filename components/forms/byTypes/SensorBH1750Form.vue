@@ -6,7 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { updateIntervals } from '~/staticData/updateIntervalOptions';
 import type {
   DynamicFormData, DeviceChildrenRequired,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 
 const props = defineProps<{
   isEditing: boolean;

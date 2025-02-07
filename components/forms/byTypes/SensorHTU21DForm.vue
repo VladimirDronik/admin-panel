@@ -5,7 +5,7 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData, DeviceChildrenRequired,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 import { updateIntervals } from '~/staticData/updateIntervalOptions';
 
 const props = defineProps<{

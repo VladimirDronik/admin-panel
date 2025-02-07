@@ -6,7 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Controller } from '~/types/DevicesEnums';
 import type {
   DynamicFormData,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 
 const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: true });
 

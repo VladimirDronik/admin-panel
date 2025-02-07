@@ -1,7 +1,7 @@
 import type {
   CreateDeviceInitialForm,
   FormTypes,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import {
   Controller, GenericInput, Sensor, ObjectsCategory, Connection, DeviceInterface,
