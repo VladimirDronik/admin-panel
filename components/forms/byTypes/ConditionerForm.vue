@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 
-import type { DynamicFormData } from '~/components/devices/form.types';
+import type { DynamicFormData } from '~/components/device/form/form.types';
 
 const { modbus, getModbus } = useModbus();
 getModbus();

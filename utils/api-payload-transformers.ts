@@ -1,7 +1,7 @@
 import type {
   DeviceCreateFormPayload, FormDataToTransform, EditDeviceForm, DeviceEditFormPayload, DeviceChildren,
   DevicePropertyData,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import type { DevicePropertyKey, Connection } from '~/types/DevicesEnums';
