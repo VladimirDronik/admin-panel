@@ -4,7 +4,7 @@ import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 import messages from '@/locales/messages';
 // Styles
 import 'vue3-perfect-scrollbar/style.css';
-import '@/scss/style.scss';
+import '@/assets/scss/style.scss';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const i18n = createI18n({
