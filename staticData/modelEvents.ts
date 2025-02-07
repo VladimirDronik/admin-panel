@@ -1,4 +1,5 @@
 import type { EventsObject } from '@/types/ModelEventTypes';
+import { Conditioner } from '~/types/DevicesEnums';
 
 export const itemEventTypes: EventsObject = {
   button: [
@@ -228,4 +229,23 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
+  ...Object.fromEntries(
+    Object.values(Conditioner).map((type) => [
+      type,
+      [
+        {
+          code: 'object.onokom.gateway.on_check',
+          name: 'on_check',
+          description: 'Получение состояния устройства',
+          actions: [],
+        },
+        {
+          code: 'object.onokom.gateway.on_change',
+          name: 'on_change',
+          description: 'Изменение состояния устройства',
+          actions: [],
+        },
+      ],
+    ])
+  ),
 };

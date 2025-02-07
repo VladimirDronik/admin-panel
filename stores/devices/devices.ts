@@ -35,23 +35,14 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const filterByCategoryDevices = computed(() => findbyCategoryDevices(list.value, 'relay'));
 
-  // Methods
-  const createFunction = (functionBody: string, props = {}) => {
-    const func = new Function('userAccessLevel', 'props', functionBody);
-    return {
-      func,
-      funcText: String(func),
-      value: func(userAccessLevel.value, props),
-    };
-  };
 
   const propsModel = (props: ModelProps | undefined): ModelProps[] => {
     if (!props) return [];
     const result = Object.values(props).map((item) => ({
       ...item,
-      required: item.required ? createFunction(item.required, props) : false,
-      editable: item.editable ? createFunction(item.editable, props) : false,
-      visible: item.visible ? createFunction(item.visible, props) : false,
+      required: item.required ?? false,
+      editable: item.editable ?? false,
+      visible: item.visible ?? false,
     }));
     return result;
   };
@@ -105,16 +96,15 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const getPortsApi = async (id: number, group: string = 'inputs,digital') => {
     try {
-      const data = await api(`${paths.controllers}/${id}/ports`, {
+      const data: unknown = await api(`${paths.controllers}/${id}/ports`, {
         query: { group },
       });
-
+  
       const ports = data as GetDevicesPortsResponse;
-
+  
       return ports.response || [];
-    } catch (error) {
-      console.error('Ошибка при получении портов:', error);
-      throw error;
+    } catch {
+      return [];
     }
   };
 
@@ -130,7 +120,6 @@ export const useDevicesStore = defineStore('Devices', () => {
     getTypesApi,
     getTagsApi,
     propsModel,
-    createFunction,
     getPortsApi,
   };
 });
