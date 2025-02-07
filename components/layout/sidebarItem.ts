@@ -2,7 +2,7 @@
 import {
   IconVideo,
   IconDoor,
-  IconReportAnalytics,
+  IconScript,
   IconResize,
   IconTimeline,
   IconSettings,
@@ -62,6 +62,11 @@ const sidebarItem: Menu[] = [
     title: 'pages.parameters',
     icon: IconSettings,
     to: '/parameters',
+  },
+  {
+    title: 'pages.scenario',
+    icon: IconScript,
+    to: '/scenario',
   },
   { header: 'pages.diagnostics' },
   {

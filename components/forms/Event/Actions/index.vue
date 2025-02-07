@@ -8,6 +8,7 @@ import type { Event } from '@/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
+const router = useRouter();
 
 // Declare Options
 const props = defineProps<{
@@ -181,7 +182,7 @@ onBeforeMount(async () => {
           />
           <Button
             icon="pi pi-plus"
-            label="Условия"
+            label="Сценарии"
             outlined
             severity="secondary"
             @click="dialogCondition = true"
@@ -232,7 +233,11 @@ onBeforeMount(async () => {
           <div v-else>
             Список событий пуст
           </div>
-          <div class="tw-flex tw-justify-end tw-pt-3">
+          <div class="tw-flex tw-justify-between tw-pt-3">
+            <Button
+              label="Сценарии"
+              @click="router.push({ name: 'scenario' })"
+            />
             <Button
               :label="t('save')"
               @click="dialog = false"

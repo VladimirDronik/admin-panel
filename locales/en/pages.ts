@@ -4,6 +4,7 @@ export default {
     page: 'Page',
     login: 'Login',
     rooms: 'Rooms',
+    scenario: 'Scenario',
     settings: 'Settings',
     networkSettings: 'Network Settings',
     parameters: 'Parameters',

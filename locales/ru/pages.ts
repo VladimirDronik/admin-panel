@@ -4,6 +4,7 @@ export default {
     page: 'Страница',
     login: 'Логин',
     rooms: 'Помещения',
+    scenario: 'Сценарии',
     settings: 'Настройки',
     networkSettings: 'Настройки Сети',
     parameters: 'Параметры',
