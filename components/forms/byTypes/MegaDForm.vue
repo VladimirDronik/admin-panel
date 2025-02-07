@@ -5,7 +5,7 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData,
-} from '~/components/devices/form.types';
+} from '~/components/device/form/form.types';
 
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
