@@ -29,8 +29,16 @@ const to = computed(() => route.path);
     <div class="border-base tw-h-full tw-min-w-full tw-overflow-hidden !tw-rounded-none tw-border-r tw-p-5 tw-pt-6 !tw-shadow-none">
       <div class="tw-mb-5">
         <RouterLink :to="{ name: 'general' }">
-          <Logo v-if="open" class="main-logo" :class="{ 'active-logo': route.name === 'general' }" />
-          <LogoRtlLogo v-else class="main-logo" :class="{ 'active-logo': route.name === 'general' }" />
+          <Logo
+            v-if="open"
+            class="main-logo"
+            :class="{ 'active-logo': route.name === 'general' }"
+          />
+          <LogoRtlLogo
+            v-else
+            class="main-logo"
+            :class="{ 'active-logo': route.name === 'general' }"
+          />
         </RouterLink>
       </div>
       <div

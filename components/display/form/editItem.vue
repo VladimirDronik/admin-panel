@@ -167,7 +167,10 @@ async function useDeleteItem() {
             :title="'Помещение'"
             :value="form.zone_id"
           >
-            <SharedUIRoomSelect v-model="form.zone_id" :options />
+            <SharedUIRoomSelect
+              v-model="form.zone_id"
+              :options
+            />
           </SharedUILabel>
           <SharedUILabel
             v-if="form.type === 'switch'"

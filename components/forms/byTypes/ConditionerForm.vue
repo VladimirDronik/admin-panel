@@ -114,7 +114,10 @@ const verticalSlatsOptions = [
       />
     </SharedUILabel>
 
-    <Divider v-if="props.isEditing" class="tw-mt-0 tw-pb-3" />
+    <Divider
+      v-if="props.isEditing"
+      class="tw-mt-0 tw-pb-3"
+    />
 
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.placement') }}
@@ -163,60 +166,189 @@ const verticalSlatsOptions = [
       />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" required :title="t('devices.condition')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.enable" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      required
+      :title="t('devices.condition')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.enable"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.powerStatus')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.power_status" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.powerStatus')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.power_status"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.displayBacklight')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.display_backlight" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.displayBacklight')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.display_backlight"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.silentMode')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.silent_mode" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.silentMode')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.silent_mode"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.ecoMode')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.eco_mode" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.ecoMode')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.eco_mode"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.turboMode')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.turbo_mode" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.turboMode')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.turbo_mode"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.sleepMode')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.sleep_mode" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.sleepMode')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.sleep_mode"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.ionization')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.ionization" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.ionization')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.ionization"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.selfCleaning')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.self_cleaning" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.selfCleaning')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.self_cleaning"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.sounds')" :width="300">
-      <ToggleSwitch v-model="dynamicForm.props.sounds" disabled />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.sounds')"
+      :width="300"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.sounds"
+        disabled
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.operatingMode')" :width="300">
-      <Select v-model="dynamicForm.props.operating_mode" class="tw-w-3/4" disabled option-label="name" option-value="value" :options="operatingModeOptions" />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.operatingMode')"
+      :width="300"
+    >
+      <Select
+        v-model="dynamicForm.props.operating_mode"
+        class="tw-w-3/4"
+        disabled
+        option-label="name"
+        option-value="value"
+        :options="operatingModeOptions"
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.fanSpeed')" :width="300">
-      <Select v-model="dynamicForm.props.fan_speed" class="tw-w-3/4" disabled option-label="name" option-value="value" :options="fanSpeedOptions" />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.fanSpeed')"
+      :width="300"
+    >
+      <Select
+        v-model="dynamicForm.props.fan_speed"
+        class="tw-w-3/4"
+        disabled
+        option-label="name"
+        option-value="value"
+        :options="fanSpeedOptions"
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.horizontalSlatsMode')" :width="300">
-      <Select v-model="dynamicForm.props.horizontal_slats_mode" class="tw-w-3/4" disabled option-label="name" option-value="value" :options="horizontalSlatsOptions" />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.horizontalSlatsMode')"
+      :width="300"
+    >
+      <Select
+        v-model="dynamicForm.props.horizontal_slats_mode"
+        class="tw-w-3/4"
+        disabled
+        option-label="name"
+        option-value="value"
+        :options="horizontalSlatsOptions"
+      />
     </SharedUILabel>
 
-    <SharedUILabel v-if="props.isEditing" class="tw-mb-2" :title="t('devices.verticalSlatsMode')" :width="300">
-      <Select v-model="dynamicForm.props.vertical_slats_mode" class="tw-w-3/4" disabled option-label="name" option-value="value" :options="verticalSlatsOptions" />
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="t('devices.verticalSlatsMode')"
+      :width="300"
+    >
+      <Select
+        v-model="dynamicForm.props.vertical_slats_mode"
+        class="tw-w-3/4"
+        disabled
+        option-label="name"
+        option-value="value"
+        :options="verticalSlatsOptions"
+      />
     </SharedUILabel>
   </Form>
 </template>

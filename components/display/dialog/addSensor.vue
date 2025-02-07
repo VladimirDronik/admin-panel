@@ -284,7 +284,10 @@ async function useCreatedApi() {
                 :title="'Помещение'"
                 :value="form.zone_id"
               >
-                <SharedUIRoomSelect v-model="form.zone_id" :options />
+                <SharedUIRoomSelect
+                  v-model="form.zone_id"
+                  :options
+                />
               </SharedUILabel>
               <SharedUILabel
                 class="tw-mb-2"

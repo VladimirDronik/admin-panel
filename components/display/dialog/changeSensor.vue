@@ -143,7 +143,10 @@ async function useChangeItem() {
         margin: '0 20px',
       }"
     >
-      <div v-if="selectedSensor" class="tw-mb-3">
+      <div
+        v-if="selectedSensor"
+        class="tw-mb-3"
+      >
         <div>
           <p class="tw-mb-4 tw-text-xl">
             Текущее значение: {{ selectedSensor.name ? selectedSensor.name : '-' }}

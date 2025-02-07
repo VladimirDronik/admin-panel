@@ -77,6 +77,7 @@ export interface DeviceProps {
     fan_speed?: string;
     horizontal_slats_mode?: string;
     vertical_slats_mode?: string;
+
   }
 
 export interface DeviceChild {

@@ -68,6 +68,14 @@ export default [
       'no-multiple-empty-lines': ['error', {
         max: 1,
       }],
+      "vue/max-attributes-per-line": ["warn", {
+        "singleline": {
+          "max": 1
+        },      
+        "multiline": {
+          "max": 1
+        }
+      }],
       'no-spaced-func': 'off',
       'no-return-assign': 'off',
       'func-call-spacing': 'off',
@@ -95,7 +103,7 @@ export default [
 
       "@intlify/vue-i18n/no-raw-text": ["warn", {
           ignorePattern: "^[-#:()&%x,+]+$",
-          ignoreText: ["", "*", ".", "..."],
+          ignoreText: ["", "*", ".", "...", '°'],
       }],
 
       "@intlify/vue-i18n/no-unused-keys": ["error", {
