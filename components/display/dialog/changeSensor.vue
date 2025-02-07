@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Types and Schemes modules
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 // Composables
@@ -16,84 +16,105 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const { sensor, id } = defineProps<{
-  sensor: roomSensorTypes,
-  id: number,
+const { sensors } = defineProps<{
+  sensors: roomSensorTypes[] | undefined,
 }>();
 
 const dialog = defineModel<boolean>({
   default: false,
 });
 
-// Variables
-const isRegulator = ref(false);
+const selectedSensor = ref<roomSensorTypes>();
 
-const dialogDelete = ref(false);
-
-// Apis
-const apiGetSensor = ref<APIData<any>>();
-const apiDeleteSensor = ref<APIData<any>>();
-
-const form = ref({
-  min: '',
-  max: '',
-});
-
-// Methods
-const changeSensor = async () => {
+const selectSensor = (sensor: roomSensorTypes) => {
+  selectedSensor.value = sensor;
+  dialog.value = true;
 };
 
-const confirmDelete = async () => {
-  await updateData({
-    update: async () => {
-      await apiDeleteSensor.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      dialogDelete.value = false;
-      dialog.value = false;
-      emit('update');
-    },
-    successMessage: 'Устройство удалено',
-    errorMessage: 'Ошибка удаления устройства',
-  });
-};
+const {
+  form,
+  changeSensor,
+  statusChangeItem,
+} = await useChangeItem();
 
-// Hooks
-onBeforeMount(async () => {
-  // Get Sensor
-  const dataGetSensor: unknown = await useAPI(paths.privateSensor, {
+const {
+  dialogDelete,
+  statusDeleteSensor,
+  confirmDelete,
+} = await useDeleteItem();
+
+async function useDeleteItem() {
+  const {
+    status: statusDeleteSensor,
+    execute: executeDeleteSensor,
+  } = await useAPI<Request<any>>(paths.privateItemsSensor, {
     query: computed(() => ({
-      itemId: id,
-    })),
-    immediate: false,
-  });
-
-  apiGetSensor.value = dataGetSensor as APIData<any>;
-
-  // Delete Sensor
-  const dataDeleteSensor: unknown = await useAPI(paths.privateItemsSensor, {
-    query: computed(() => ({
-      id,
+      id: selectedSensor.value?.item_id,
     })),
     method: 'DELETE',
     immediate: false,
   });
 
-  apiDeleteSensor.value = dataDeleteSensor as APIData<any>;
-});
+  const dialogDelete = ref(false);
 
-watch(() => id, () => {
-  apiGetSensor.value?.execute();
-});
+  const confirmDelete = async () => {
+    await updateData({
+      update: async () => {
+        await executeDeleteSensor();
+        await emit('update');
+      },
+      success: () => {
+        dialogDelete.value = false;
+        dialog.value = false;
+        emit('update');
+      },
+      successMessage: 'Устройство удалено',
+      errorMessage: 'Ошибка удаления устройства',
+    });
+  };
+
+  return {
+    dialogDelete,
+    statusDeleteSensor,
+    confirmDelete,
+  };
+}
+
+async function useChangeItem() {
+  const {
+    status: statusChangeItem,
+    execute: executeChangeItem,
+  } = await useAPI<Request<any>>(paths.privateSensor, {
+    query: computed(() => ({
+      itemId: selectedSensor.value?.item_id,
+    })),
+    immediate: false,
+  });
+
+  const form = ref({
+    min: '',
+    max: '',
+  });
+
+  const changeSensor = async () => {
+  };
+
+  return {
+    form,
+    changeSensor,
+    statusChangeItem,
+  };
+}
 </script>
 
 <template>
-  <div>
+  <div class="tw-flex tw-items-center">
     <button
+      v-for="sensor in sensors"
+      :key="sensor.item_id"
       class="tw-mr-2 tw-flex tw-items-center"
       type="button"
-      @click="dialog = true"
+      @click="selectSensor(sensor)"
     >
       <img
         alt=""
@@ -122,14 +143,14 @@ watch(() => id, () => {
         margin: '0 20px',
       }"
     >
-      <div class="tw-mb-3">
+      <div v-if="selectedSensor" class="tw-mb-3">
         <div>
           <p class="tw-mb-4 tw-text-xl">
-            Текущее значение: {{ sensor.name ? sensor.name : '-' }}
-            <span v-if="sensor.type === 'temperature'">
+            Текущее значение: {{ selectedSensor.name ? selectedSensor.name : '-' }}
+            <span v-if="selectedSensor.type === 'temperature'">
               °
             </span>
-            <span v-else-if="sensor.type === 'humidity'">
+            <span v-else-if="selectedSensor.type === 'humidity'">
               %
             </span>
           </p>
@@ -156,31 +177,23 @@ watch(() => id, () => {
               />
             </SharedUILabel>
           </div>
-          <div class="tw-flex tw-items-center tw-gap-2">
-            <Checkbox
-              v-model="isRegulator"
-              binary
-            />
-            <label for="ingredient1">
-              Регулировка
-            </label>
-          </div>
         </div>
       </div>
 
       <div class="tw-flex tw-justify-end">
         <Button
           class="tw-mr-2"
+          :label="t('save')"
+          :loading="statusChangeItem === 'pending'"
           @click="changeSensor"
-        >
-          {{ t('save') }}
-        </Button>
+        />
         <DialogsDeleteDialog
-          :id="id ?? -1"
+          v-if="selectedSensor?.item_id"
+          :id="selectedSensor.item_id ?? -1"
           v-model="dialogDelete"
           class="tw-mr-2"
-          :loading="apiDeleteSensor?.pending && apiDeleteSensor.status !== 'idle'"
-          :subtitle="`Вы уверены, что хотите удалить «${sensor.name}»?`"
+          :loading="statusDeleteSensor === 'pending'"
+          :subtitle="`Вы уверены, что хотите удалить «${selectedSensor.name}»?`"
           title="Удалить устройство"
           @delete="confirmDelete"
         />

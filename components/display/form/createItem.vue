@@ -6,21 +6,24 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes
 import type { Event } from '@/types/ModelEventTypes';
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 
 // Composables
 const { t } = useI18n();
-const storeRooms = useRoomsStore();
 const storeDevices = useDevicesStore();
 const { updateData } = useUtils();
 
 // Declare Options
-const props = defineProps<{
-  devices: string[],
-  zoneId: number,
+const {
+  id,
+  devices,
+  options,
+} = defineProps<{
   id: number | undefined
+  devices: string[],
+  options: any[]
 }>();
 
 const emit = defineEmits<{
@@ -35,11 +38,42 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
-const control_object = ref();
+const {
+  isUpdateForm,
+} = useQuickSelectRoom();
 
-const isUpdateForm = ref(false);
+const {
+  form,
+  resolver,
+  control_object,
+  statusCreateItem,
+  createItem,
+} = await useCreateItem();
 
-const form = ref<{
+async function useCreateItem() {
+  const {
+    status: statusCreateItem,
+    execute: executeCreateItem,
+  } = await useAPI<Request<any>>(paths.privateWizard, {
+    body: computed(() => ({
+      item: {
+        ...form.value,
+        control_object: control_object.value,
+      },
+      events: events.value?.map((item) => ({
+        actions: item.actions,
+        name: item.code,
+      }))
+        .filter((item) => item.actions.length > 0),
+    })),
+    method: 'POST',
+    immediate: false,
+    watch: false,
+  });
+
+  const control_object = ref();
+
+  const form = ref<{
   enabled: boolean,
   title: string | null,
   type: string | null,
@@ -59,77 +93,65 @@ const form = ref<{
   target_type: 'item',
 });
 
-const resolver = ref(zodResolver(
-  z.object({
-    title: z.string().min(1),
-    type: z.string(),
-    zone_id: z.number(),
-  }),
-));
+  const resolver = ref(zodResolver(
+    z.object({
+      title: z.string().min(1),
+      type: z.string(),
+      zone_id: z.number(),
+    }),
+  ));
 
-// Apis
-const apiCreateItem = ref<APIData<any>>();
-
-// Methods
-const createItem = async () => {
-  await updateData({
-    update: async () => {
-      await apiCreateItem.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      form.value = {
-        enabled: true,
-        title: null,
-        type: null,
-        color: null,
-        zone_id: null,
-        icon: null,
-        status: 'off',
-        target_type: 'item',
-      };
-      control_object.value = undefined;
-      isOpen.value = false;
-      step.value = '1';
-    },
-    successMessage: 'Кнопка была успешно создана',
-    errorMessage: 'Кнопка не была создана',
-  });
-};
-
-const quickSelectRoom = (id: number | undefined) => storeRooms.getRoomsSelect.find((item) => item.code === id || item.inGroup?.code === id);
-
-// Watchers
-watch(() => props.id, (newValue) => {
-  isUpdateForm.value = true;
-  const room = quickSelectRoom(newValue)?.code;
-  if (room) form.value.zone_id = room;
-  setTimeout(() => isUpdateForm.value = false, 0);
-});
-
-// Hooks
-onBeforeMount(async () => {
-  storeDevices.getDevicesApi();
-  // Create Device
-  const data: unknown = await useAPI(paths.privateWizard, {
-    body: computed(() => ({
-      item: {
-        ...form.value,
-        control_object: control_object.value,
+  const createItem = async () => {
+    await updateData({
+      update: async () => {
+        await executeCreateItem();
+        await emit('update');
       },
-      events: events.value?.map((item) => ({
-        actions: item.actions,
-        name: item.code,
-      }))
-        .filter((item) => item.actions.length > 0),
-    })),
-    method: 'POST',
-    immediate: false,
-    watch: false,
+      success: () => {
+        form.value = {
+          enabled: true,
+          title: null,
+          type: null,
+          color: null,
+          zone_id: null,
+          icon: null,
+          status: 'off',
+          target_type: 'item',
+        };
+        control_object.value = undefined;
+        isOpen.value = false;
+        step.value = '1';
+      },
+      successMessage: 'Кнопка была успешно создана',
+      errorMessage: 'Кнопка не была создана',
+    });
+  };
+
+  return {
+    form,
+    resolver,
+    control_object,
+    statusCreateItem,
+    createItem,
+  };
+}
+
+function useQuickSelectRoom() {
+  const isUpdateForm = ref(false);
+  const quickSelectRoom = (id: number | undefined) => options?.find((item) => item.code === id || item.inGroup?.code === id);
+
+  // Watchers
+  watch(() => id, (newValue) => {
+    isUpdateForm.value = true;
+    const room = quickSelectRoom(newValue)?.code;
+    if (room) form.value.zone_id = room;
+    setTimeout(() => isUpdateForm.value = false, 0);
   });
 
-  apiCreateItem.value = data as APIData<any>;
-});
+  return {
+    isUpdateForm,
+  };
+}
 
 </script>
 
@@ -206,7 +228,7 @@ onBeforeMount(async () => {
             :title="'Помещение'"
             :value="form.zone_id"
           >
-            <SharedUIRoomSelect v-model="form.zone_id" />
+            <SharedUIRoomSelect v-model="form.zone_id" :options />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
@@ -251,7 +273,7 @@ onBeforeMount(async () => {
           />
           <Button
             :label="t('save')"
-            :loading="apiCreateItem?.pending && apiCreateItem.status !== 'idle'"
+            :loading="statusCreateItem === 'pending'"
             @click="createItem"
           />
         </div>

@@ -2,7 +2,7 @@ import type { RoomItem, SelectRoom } from '~/stores/rooms/roomsTypes';
 import { colors } from '~/staticData/rooms';
 
 // API
-export const filterInListRoom = (rooms: RoomItem[] | undefined) => {
+export const filterInListRoom = (rooms: RoomItem[] | undefined): any[] => {
   if (!rooms) return [];
   let result: SelectRoom[] = [];
   rooms.forEach((room) => {

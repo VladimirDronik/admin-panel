@@ -91,10 +91,10 @@ const to = computed(() => route.path);
   transition: filter .15s linear;
 }
 .main-logo svg:hover path {
-  filter: drop-shadow( 0px 0px 1px #ABE4D6);
+  filter: drop-shadow( 0px 0px 1px var(--p-primary-400));
 }
 
 .active-logo svg path {
-  filter: drop-shadow( 0px 0px 1px #ABE4D6);
+  filter: drop-shadow( 0px 0px 1px var(--p-primary-400));
 }
 </style>

@@ -7,7 +7,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import { type itemType } from '~/types/DisplayTypes';
 
 // Composables
@@ -18,6 +18,7 @@ const storeDevices = useDevicesStore();
 // Declare Options
 defineProps<{
   devices: string[]
+  options: any[]
 }>();
 
 const emit = defineEmits<{
@@ -32,54 +33,32 @@ const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
 
-// Variables
-const loadingDelete = ref(false);
+const {
+  control_object,
+  statusChange,
+  resolver,
+  changeItem,
+} = await useChangeItem();
 
-const control_object = ref();
+const {
+  statusDelete,
+  confirmDelete,
+} = await useDeleteItem();
 
-const resolver = ref(zodResolver(
-  z.object({
-    title: z.string().min(1),
-    zone_id: z.number(),
-  }),
-));
+async function useChangeItem() {
+  const control_object = ref();
 
-// Apis
-const apiChangeItem = ref<APIData<any>>();
-const apiDeleteItem = ref<APIData<any>>();
+  const resolver = ref(zodResolver(
+    z.object({
+      title: z.string().min(1),
+      zone_id: z.number(),
+    }),
+  ));
 
-// Methods
-const changeItem = async () => {
-  await updateData({
-    update: async () => {
-      await apiChangeItem.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-    },
-    successMessage: 'Кнопка была успешно изменена',
-    errorMessage: 'Кнопка не была изменена',
-  });
-};
-
-const confirmDelete = async () => {
-  await updateData({
-    update: async () => {
-      await apiDeleteItem.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      isOpen.value = false;
-    },
-    successMessage: 'Устройство удалено',
-    errorMessage: 'Ошибка удаления устройства',
-  });
-};
-
-// Hooks
-onBeforeMount(async () => {
-  // Create Device
-  const dataCreate: unknown = await useAPI(paths.privateItem, {
+  const {
+    status: statusChange,
+    execute: executeChangeItem,
+  } = await useAPI<Request<any>>(paths.privateItem, {
     body: computed(() => ({
       ...form.value,
       control_object: control_object.value,
@@ -89,10 +68,32 @@ onBeforeMount(async () => {
     watch: false,
   });
 
-  apiChangeItem.value = dataCreate as APIData<any>;
+  const changeItem = async () => {
+    await updateData({
+      update: async () => {
+        await executeChangeItem();
+        await emit('update');
+      },
+      success: () => {
+      },
+      successMessage: 'Кнопка была успешно изменена',
+      errorMessage: 'Кнопка не была изменена',
+    });
+  };
 
-  // Delete Device
-  const dataDelete: unknown = await useAPI(paths.privateItem, {
+  return {
+    control_object,
+    statusChange,
+    resolver,
+    changeItem,
+  };
+}
+
+async function useDeleteItem() {
+  const {
+    status: statusDelete,
+    execute: executeDeleteItem,
+  } = await useAPI<Request<any>>(paths.privateItem, {
     query: computed(() => ({
       id: form.value.item_id,
     })),
@@ -101,8 +102,25 @@ onBeforeMount(async () => {
     watch: false,
   });
 
-  apiDeleteItem.value = dataDelete as APIData<any>;
-});
+  const confirmDelete = async () => {
+    await updateData({
+      update: async () => {
+        await executeDeleteItem();
+        await emit('update');
+      },
+      success: () => {
+        isOpen.value = false;
+      },
+      successMessage: 'Устройство удалено',
+      errorMessage: 'Ошибка удаления устройства',
+    });
+  };
+
+  return {
+    statusDelete,
+    confirmDelete,
+  };
+}
 
 </script>
 
@@ -149,7 +167,7 @@ onBeforeMount(async () => {
             :title="'Помещение'"
             :value="form.zone_id"
           >
-            <SharedUIRoomSelect v-model="form.zone_id" />
+            <SharedUIRoomSelect v-model="form.zone_id" :options />
           </SharedUILabel>
           <SharedUILabel
             v-if="form.type === 'switch'"
@@ -185,14 +203,14 @@ onBeforeMount(async () => {
             <DialogsDeleteDialog
               :id="form.item_id ?? -1"
               class="tw-mr-2"
-              :loading="loadingDelete"
+              :loading="statusDelete === 'pending'"
               :title="`Вы уверены, что хотите удалить «${form.title}»?`"
               @delete="confirmDelete"
             />
 
             <Button
               :label="t('save')"
-              :loading="apiChangeItem?.pending && apiChangeItem.status !== 'idle'"
+              :loading="statusChange === 'pending'"
               type="submit"
             />
           </div>

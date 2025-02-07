@@ -1,24 +1,34 @@
 <script lang="ts" setup>
+import { filterInListRoom } from '~/helpers/rooms';
 // Types
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import { type itemType, itemSchema } from '~/types/DisplayTypes';
 
-// Composables
-const storeRooms = useRoomsStore();
-
 // Declare Options
-const { variant, zoneId } = defineProps<{
+const {
+  variant,
+  zoneId,
+  itemId,
+  rooms,
+  scenarioId,
+} = defineProps<{
   variant: string,
   zoneId: number,
+  itemId: number,
+  rooms: RoomItem[] | undefined,
+  scenarioId: number,
 }>();
+
+const {
+  dataItem,
+  statusItem,
+  dataScenario,
+  statusScenario,
+} = await useCreatedApi();
 
 const emit = defineEmits<{
   (e: 'update'): void
 }>();
-
-const id = defineModel<number>('id', {
-  required: false,
-});
 
 const isOpen = defineModel<boolean>('isShow', {
   required: true,
@@ -36,9 +46,6 @@ const devices = [
   'sensor',
 ];
 
-// Apis
-const apiItem = ref<APIData<itemType>>();
-
 // Computed Properties
 const title = computed(() => {
   if (variant === 'Edit Item') return 'Редактировать Кнопку';
@@ -46,25 +53,44 @@ const title = computed(() => {
   return 'Добавить Кнопку';
 });
 
-// Hooks
-onBeforeMount(async () => {
-  // Get Rooms
-  storeRooms.getRoomsApi();
-  // Get Item
-  const data: unknown = await useAPI(
+const options = computed(() => filterInListRoom(rooms ?? []));
+
+async function useCreatedApi() {
+  const {
+    data: dataItem,
+    status: statusItem,
+  } = await useAPI<Request<itemType>>(
     paths.privateItem,
     {
       query: computed(() => ({
-        id: id.value,
+        id: itemId,
       })),
       immediate: false,
     },
     itemSchema,
   );
 
-  apiItem.value = data as APIData<itemType>;
-  //
-});
+  const {
+    data: dataScenario,
+    status: statusScenario,
+  } = await useAPI<Request<any>>(
+    paths.privateItem,
+    {
+      query: computed(() => ({
+        id: scenarioId,
+      })),
+      immediate: false,
+    },
+    itemSchema,
+  );
+
+  return {
+    dataItem,
+    statusItem,
+    dataScenario,
+    statusScenario,
+  };
+}
 </script>
 
 <template>
@@ -73,33 +99,30 @@ onBeforeMount(async () => {
     :title
   >
     <SharedUILoader
-      v-if="apiItem?.data?.response && variant === 'Edit Item'"
-      :is-update="apiItem.pending"
+      :is-update="statusItem === 'pending' || statusScenario === 'pending'"
     >
-      <DisplayEditItemForm
-        v-model:form="apiItem.data.response"
+      <DisplayFormEditItem
+        v-if="dataItem?.response && variant === 'Edit Item'"
+        v-model:form="dataItem.response"
+        v-model:is-open="isOpen"
+        :devices="devices"
+        :options
+        @update="emit('update')"
+      />
+      <DisplayFormEditScenario
+        v-else-if="dataScenario?.response && variant === 'Edit Scenario'"
+        v-model:form="dataScenario.response"
         v-model:is-open="isOpen"
         :devices="devices"
         @update="emit('update')"
       />
     </SharedUILoader>
-    <SharedUILoader
-      v-else-if="apiItem?.data?.response && variant === 'Edit Scenario'"
-      :is-update="apiItem.pending"
-    >
-      <DisplayEditScenarioForm
-        v-model:form="apiItem.data.response"
-        v-model:is-open="isOpen"
-        :devices="devices"
-        @update="emit('update')"
-      />
-    </SharedUILoader>
-    <DisplayCreateItemForm
-      v-else
+    <DisplayFormCreateItem
+      v-if="variant !== 'Edit Scenario' && variant !== 'Edit Item'"
       :id="zoneId"
       v-model:is-open="isOpen"
       :devices="devices"
-      :zone-id="zoneId"
+      :options
       @update="emit('update')"
     />
   </LayoutRightbar>

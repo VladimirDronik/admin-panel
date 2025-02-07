@@ -44,7 +44,10 @@ const computedFilter = computed(() => {
   >
     <div
       class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-p-3"
-      :class="{ shadow: status === 'on' && !storeUser.isDark, 'border-dark': status === 'off' && storeUser.isDark }"
+      :class="{
+        shadow: status === 'on' && !storeUser.isDark,
+        'border-dark': status === 'off' && storeUser.isDark,
+      }"
       :style="{
         backgroundColor: !storeUser.isDark
           ? (status === 'off' ? '#EDF3F2' : 'transparent')

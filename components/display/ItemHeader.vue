@@ -9,6 +9,7 @@ defineProps<{
   name: string,
   style: string,
   zoneId: number,
+  rooms: RoomItem[] | undefined,
   sensors: roomSensorTypes[] | undefined,
 }>();
 
@@ -27,14 +28,12 @@ const emit = defineEmits<{
       >
         {{ name }}
       </h4>
-      <DialogsDisplayChangeSensorDialog
-        v-for="sensor in sensors"
-        :id="sensor.item_id"
-        :key="sensor.item_id"
-        :sensor
+      <DisplayDialogChangeSensor
+        :sensors
         @update="emit('update')"
       />
-      <DialogsDisplayAddSensorDialog
+      <DisplayDialogAddSensor
+        :rooms
         :sensors
         :zone-id
         @update="emit('update')"

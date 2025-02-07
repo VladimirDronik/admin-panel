@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-// Composables
-const storeRooms = useRoomsStore();
-
 // Declare Options
 const value = defineModel<number | null>({
   default: null,
 });
 
+const { options } = defineProps<{
+  options: any[],
+}>();
+
 // Methods
-const selectedRoom = (id: number) => storeRooms.getRoomsSelect.find((item) => item.code === id);
+const selectedRoom = (id: number) => options?.find((item) => item.code === id);
 </script>
 
 <template>
@@ -17,7 +18,7 @@ const selectedRoom = (id: number) => storeRooms.getRoomsSelect.find((item) => it
     class="tw-w-full"
     option-label="name"
     option-value="code"
-    :options="storeRooms.getRoomsSelect"
+    :options
     required
     show-clear
   >

@@ -11,9 +11,12 @@ import { type DisplayData, displayRequestSchema } from '~/types/DisplayTypes';
 // Composables
 const { t } = useI18n();
 const storeUser = useUserStore();
+const storeDevices = useDevicesStore();
 
 const {
   zoneId,
+  itemId,
+  scenarioId,
   isShow,
   variant,
   showItemPanel,
@@ -21,6 +24,7 @@ const {
 } = useRightBar();
 
 const {
+  dataRooms,
   dataItems,
   statusItems,
   statusRooms,
@@ -31,9 +35,6 @@ const {
 useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
-
-// Variables
-const id = ref<number>(0);
 
 const updateOrder = async (roomList: any, id: number) => {
   await api(paths.privateItemsOrder, {
@@ -60,17 +61,20 @@ async function useGetData() {
       { watch: false },
       roomRequestSchema,
     ),
+    storeDevices.getDevicesApi(),
   ]);
 
-  const [{
-    data: dataItems,
-    status: statusItems,
-    refresh: refrechItems,
-  }, {
-    data: dataRooms,
-    status: statusRooms,
-    refresh: refreshRooms,
-  }] = createdData;
+  const [
+    {
+      data: dataItems,
+      status: statusItems,
+      refresh: refrechItems,
+    }, {
+      data: dataRooms,
+      status: statusRooms,
+      refresh: refreshRooms,
+    },
+  ] = createdData;
 
   const itemIds = computed(() => dataItems.value?.response.room_items.map((item) => item.id) ?? []);
 
@@ -78,6 +82,7 @@ async function useGetData() {
     await Promise.all([
       refrechItems(),
       refreshRooms(),
+      storeDevices.getDevicesApi(),
     ]);
   };
 
@@ -92,6 +97,7 @@ async function useGetData() {
 
   return {
     dataItems,
+    dataRooms,
     statusItems,
     statusRooms,
     filteredRooms,
@@ -104,8 +110,11 @@ function useRightBar() {
   const isShow = ref(false);
   const variant = ref('');
 
+  const itemId = ref<number>(0);
+  const scenarioId = ref<number>(0);
+
   const showScenarioPanel = (item_id: number) => {
-    id.value = item_id;
+    scenarioId.value = item_id;
     variant.value = 'Edit Scenario';
     isShow.value = true;
   };
@@ -114,7 +123,7 @@ function useRightBar() {
     zoneId.value = zone_id;
     if (item_id) {
       variant.value = 'Edit Item';
-      id.value = item_id;
+      itemId.value = item_id;
     } else {
       variant.value = 'Create Item';
     }
@@ -123,6 +132,8 @@ function useRightBar() {
 
   return {
     zoneId,
+    itemId,
+    scenarioId,
     isShow,
     variant,
     showItemPanel,
@@ -141,7 +152,7 @@ function useRightBar() {
         v-if="dataItems?.response.scenario_items?.length"
         class="border-base tw-flex tw-flex-wrap tw-gap-2 tw-rounded-md tw-border tw-p-3"
       >
-        <DisplayScenarioCard
+        <DisplayCardScenario
           v-for="scenario in dataItems?.response.scenario_items"
           :key="scenario.item_id"
           :color="scenario.color"
@@ -157,6 +168,7 @@ function useRightBar() {
       >
         <DisplayItemHeader
           :name="rooms.name"
+          :rooms="dataRooms?.response"
           :sensors="rooms.sensors"
           :style="rooms.style"
           :zone-id="rooms.id"
@@ -169,7 +181,7 @@ function useRightBar() {
             class="tw-gap-3"
             @change="updateOrder(rooms.items, rooms.id)"
           >
-            <DisplayItemCard
+            <DisplayCardItem
               v-for="items in rooms.items"
               :key="items.item_id"
               :color="items.color"
@@ -207,8 +219,10 @@ function useRightBar() {
 
     <template #rightbar>
       <RightBarDisplay
-        v-model:id="id"
         v-model:is-show="isShow"
+        :item-id="itemId"
+        :rooms="dataRooms?.response"
+        :scenario-id="scenarioId"
         :variant="variant"
         :zone-id="zoneId"
         @update="update"

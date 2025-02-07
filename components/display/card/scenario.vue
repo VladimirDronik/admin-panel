@@ -32,7 +32,6 @@ defineProps<{
         >
           {{ title }}
         </h4>
-        <!-- <Button class="tw-aspect-square tw-w-8" outlined icon="pi pi-plus" size="small" /> -->
       </div>
     </div>
   </button>
