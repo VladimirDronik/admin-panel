@@ -194,7 +194,7 @@ onBeforeMount(async () => {
         </Button>
       </div>
 
-      <DialogsDeleteDialog
+      <DialogDelete
         :id="selectedScript?.id ?? -1"
         v-model="deleteDialog"
         :show-btn="false"

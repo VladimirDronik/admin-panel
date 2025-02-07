@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 // Types modules
 import type { APIData } from '~/types/StoreTypes';
 import { type Devices } from '~/types/DevicesTypes';
-import { type FormTypes } from '~/components/devices/form.types';
+import { type FormTypes } from '~/components/device/form/form.types';
 
 // Composables
 defineOptions({
@@ -168,7 +168,7 @@ const handleButtonClick = () => {
         name: '', zone_id: null, type: null as unknown as FormTypes, tags: [], category: '',
       }"
     >
-      <DevicesStepperForm
+      <DeviceFormStepper
         v-model:dialog="visible"
         v-model:form="form"
         v-model:model="model"

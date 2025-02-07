@@ -16,7 +16,7 @@ import {
   Controller, GenericInput, Relay, ObjectsCategory, Conditioner,
 } from '~/types/DevicesEnums';
 import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
-import { getInitialCreateDeviceFormDataByTypes } from '../forms/byTypes/initial-dynamic-form-data';
+import { getInitialCreateDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 
 // Composables
 const { t } = useI18n();
@@ -197,7 +197,7 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
   <Stepper
     class="basis-[50rem]"
     linear
-    value="1"
+    :value="1"
   >
     <StepList>
       <Step value="1">
@@ -278,10 +278,10 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
 
           <Divider class="tw-pb-3" />
 
-          <!-- <DevicesPropertiesForm v-model="model" :loadingModal="loadingModal" disableRoomSelect /> -->
+          <!-- <DeviceFormProperties v-model="model" :loadingModal="loadingModal" disableRoomSelect /> -->
 
           <!-- Dynamically renders the form component based on the selected device type -->
-          <DevicesDynamicDeviceForm
+          <DeviceFormDynamicDevice
             v-model:dynamic-form="dynamicForm"
             :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
             :device-type="initialForm.type"

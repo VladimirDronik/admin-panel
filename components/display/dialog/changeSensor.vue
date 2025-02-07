@@ -187,7 +187,7 @@ async function useChangeItem() {
           :loading="statusChangeItem === 'pending'"
           @click="changeSensor"
         />
-        <DialogsDeleteDialog
+        <DialogDelete
           v-if="selectedSensor?.item_id"
           :id="selectedSensor.item_id ?? -1"
           v-model="dialogDelete"

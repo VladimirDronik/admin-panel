@@ -200,7 +200,7 @@ async function useDeleteItem() {
             />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
-            <DialogsDeleteDialog
+            <DialogDelete
               :id="form.item_id ?? -1"
               class="tw-mr-2"
               :loading="statusDelete === 'pending'"

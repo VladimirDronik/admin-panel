@@ -146,7 +146,7 @@ onBeforeMount(async () => {
             <SharedUIColorSelect v-model="form.color" />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
-            <DialogsDeleteDialog
+            <DialogDelete
               :id="form.item_id ?? -1"
               class="tw-mr-2"
               :loading="loadingDelete"
