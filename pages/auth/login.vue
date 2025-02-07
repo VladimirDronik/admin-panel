@@ -84,10 +84,7 @@ async function useLogin() {
 
 </script>
 <template>
-  <div
-    v-if="dataLogin"
-    class="auth-screen tw-h-screen"
-  >
+  <div class="auth-screen tw-h-screen">
     <Toast :base-z-index="99999" />
     <div
       class="tw-flex tw-items-center tw-justify-center"
