@@ -197,7 +197,7 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
   <Stepper
     class="basis-[50rem]"
     linear
-    :value="1"
+    :value="'1'"
   >
     <StepList>
       <Step value="1">
