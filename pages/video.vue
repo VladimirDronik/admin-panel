@@ -50,7 +50,7 @@ const items = [
 <template>
   <SharedUIPanel>
     <SharedUIBreadcrumb title="pages.video">
-      <DialogsVideoSelectDialog />
+      <VideoDialogSelect />
     </SharedUIBreadcrumb>
 
     <div class="tw-mb-5 tw-flex tw-gap-2">

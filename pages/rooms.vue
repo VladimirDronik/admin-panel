@@ -89,7 +89,7 @@ async function useWorkWithRoomApi() {
 <template>
   <SharedUIPanel :is-update="statusRooms === 'pending'">
     <SharedUIBreadcrumb title="pages.rooms">
-      <DialogsRoomCreateDialog @update="refreshRooms" />
+      <RoomDialogCreate @update="refreshRooms" />
     </SharedUIBreadcrumb>
     <div v-if="dataRooms">
       <VueDraggableNext

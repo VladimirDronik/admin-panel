@@ -145,7 +145,7 @@ function useRightBar() {
 <template>
   <SharedUIPanel :is-update="statusItems === 'pending' || statusRooms === 'pending'">
     <SharedUIBreadcrumb title="pages.display">
-      <DialogsRoomCreateDialog @update="update" />
+      <RoomDialogCreate @update="update" />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
       <PerfectScrollbar

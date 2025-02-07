@@ -4,12 +4,11 @@ import { z } from 'zod';
 import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore();
 
 // Declare Options
 const emit = defineEmits<{
@@ -20,71 +19,66 @@ const dialog = defineModel<boolean>({
   default: false,
 });
 
-// Variables
-const type = [
-  {
-    name: 'Помещение',
-    code: false,
-  },
-  {
-    name: 'Группа Помещений',
-    code: true,
-  },
-];
+const {
+  form,
+  resolver,
+  statusCreateUser,
+  createRoom,
+} = await useCreateUser();
 
-const apiCreateRoom = ref<APIData<any>>();
-
-const form = ref({
-  device_id: null,
-  login: null,
-  password: null,
-  send_push: false,
-});
-
-const parentId = ref();
-
-const resolver = ref(zodResolver(
-  z.object({
-    device_id: z.string().min(1),
-    login: z.string().min(1),
-    password: z.string().min(1),
-  }),
-));
-
-// Methods
-const createRoom = async () => {
-  await updateData({
-    update: async () => {
-      await apiCreateRoom.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      form.value = {
-        device_id: null,
-        login: null,
-        password: null,
-        send_push: false,
-      };
-      parentId.value = null;
-      dialog.value = false;
-    },
-    successMessage: 'Помещение было успешно создана',
-    errorMessage: 'Помещение не было создана',
+async function useCreateUser() {
+  const form = ref({
+    device_id: null,
+    login: null,
+    password: null,
+    send_push: false,
   });
-};
 
-// Hooks
-onBeforeMount(async () => {
-  // Create Device
-  const data: unknown = await useAPI(paths.privateUsers, {
+  const resolver = ref(zodResolver(
+    z.object({
+      device_id: z.string().min(1),
+      login: z.string().min(1),
+      password: z.string().min(1),
+    }),
+  ));
+
+  const {
+    status: statusCreateUser,
+    execute: executeCreateUser,
+  } = await useAPI<Request<any>>(paths.privateUsers, {
     body: form,
     method: 'POST',
     immediate: false,
     watch: false,
   });
 
-  apiCreateRoom.value = data as APIData<any>;
-});
+  const createRoom = async () => {
+    await updateData({
+      update: async () => {
+        await executeCreateUser();
+        await emit('update');
+      },
+      success: () => {
+        form.value = {
+          device_id: null,
+          login: null,
+          password: null,
+          send_push: false,
+        };
+        dialog.value = false;
+      },
+      successMessage: 'Помещение было успешно создана',
+      errorMessage: 'Помещение не было создана',
+    });
+  };
+
+  return {
+    form,
+    resolver,
+    createRoom,
+    statusCreateUser,
+  };
+}
 
 </script>
 
@@ -154,6 +148,7 @@ onBeforeMount(async () => {
             <Button
               class="tw-mr-2"
               :label="t('save')"
+              :loading="statusCreateUser === 'pending'"
               type="submit"
             />
             <Button

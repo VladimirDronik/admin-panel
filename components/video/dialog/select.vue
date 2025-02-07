@@ -42,7 +42,7 @@ const selectType = ref();
           required
         />
       </SharedUILabel>
-      <DialogsVideoCreateDialog
+      <VideoDialogCreate
         v-model:type="selectType"
         :disabled="!selectType"
       />

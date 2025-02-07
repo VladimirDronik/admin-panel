@@ -102,7 +102,7 @@ async function useDeleteUser() {
 <template>
   <SharedUIPanel :is-update="statusUsers === 'pending'">
     <SharedUIBreadcrumb title="pages.users">
-      <DialogsUserCreateDialog @update="refreshUsers" />
+      <UserDialogCreate @update="refreshUsers" />
     </SharedUIBreadcrumb>
     <BaseTable
       class="data-table"
