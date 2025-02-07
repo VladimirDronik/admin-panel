@@ -178,18 +178,14 @@ onBeforeMount(async () => {
           Список Методов
         </h3>
       </div>
-      <div
-        class="tw-flex"
-      >
+      <div class="tw-flex">
         <div class="border-base tw-mr-2 tw-w-6/12 tw-rounded tw-border tw-p-3">
           <InputText
             v-model="search"
             class="tw-mb-2 tw-w-full"
           />
           <div v-if="filteredObjects?.length">
-            <ScrollPanel
-              style="height: 300px"
-            >
+            <ScrollPanel style="height: 300px">
               <Button
                 v-for="object in filteredObjects"
                 :key="object.id"

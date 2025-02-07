@@ -98,9 +98,7 @@ async function useCreatedApi() {
     v-model:is-open="isOpen"
     :title
   >
-    <SharedUILoader
-      :is-update="statusItem === 'pending' || statusScenario === 'pending'"
-    >
+    <SharedUILoader :is-update="statusItem === 'pending' || statusScenario === 'pending'">
       <DisplayFormEditItem
         v-if="dataItem?.response && variant === 'Edit Item'"
         v-model:form="dataItem.response"

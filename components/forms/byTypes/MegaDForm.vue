@@ -65,9 +65,7 @@ const protocolOptions = schema.shape.protocol.options;
       :title="t('devices.title')"
       :value="dynamicForm.name"
     >
-      <InputText
-        v-model="dynamicForm.name"
-      />
+      <InputText v-model="dynamicForm.name" />
     </SharedUILabel>
 
     <SharedUILabel
@@ -91,9 +89,7 @@ const protocolOptions = schema.shape.protocol.options;
       :title="t('devices.id')"
       :value="dynamicForm.props.id"
     >
-      <InputText
-        v-model="dynamicForm.props.id"
-      />
+      <InputText v-model="dynamicForm.props.id" />
     </SharedUILabel>
 
     <!-- v-if="!props.isEditing" -->

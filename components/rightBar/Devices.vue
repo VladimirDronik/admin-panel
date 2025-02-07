@@ -259,21 +259,15 @@ onBeforeMount(async () => {
         :severity="checkStatusColor(asideEditingForm.status)"
       >
         <div class="tw-flex tw-items-center tw-font-normal">
-          <div
-            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`"
-          >
+          <div :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`">
             {{ checkStatusSymbol(asideEditingForm.status).symbol }}
           </div>
           {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
       </Tag>
-      <Tabs
-        v-model:value="tabs"
-      >
+      <Tabs v-model:value="tabs">
         <TabList>
-          <Tab
-            value="features"
-          >
+          <Tab value="features">
             <p class="tw-font-normal">
               {{ t('devices.features') }}
             </p>

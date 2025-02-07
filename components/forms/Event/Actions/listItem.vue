@@ -79,9 +79,7 @@ const deleteItem = (id: number) => {
         v-else
         class="tw-px-5 tw-py-2"
       >
-        <div
-          class="tw-flex tw-items-center tw-justify-between"
-        >
+        <div class="tw-flex tw-items-center tw-justify-between">
           <div class="tw-relative tw-right-3 tw-flex tw-items-center">
             <Button
               class="tw-mr-2"

@@ -34,9 +34,7 @@ const selectIcon = (item: string) => {
       type="button"
       @click="dialog = true"
     >
-      <div
-        class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3"
-      >
+      <div class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3">
         <img
           alt=""
           class="tw-w-20"

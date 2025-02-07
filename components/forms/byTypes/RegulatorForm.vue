@@ -189,9 +189,7 @@ const typeOptions = schema.shape.type.options;
       :value="dynamicForm.props.sensor_value_ttl"
       :width="300"
     >
-      <InputNumber
-        v-model="dynamicForm.props.sensor_value_ttl"
-      />
+      <InputNumber v-model="dynamicForm.props.sensor_value_ttl" />
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel

@@ -213,9 +213,7 @@ onBeforeMount(async () => {
           :target-type="targetType"
           @update-actions="updateActions"
         />
-        <FormsEventActionsNotificationDialog
-          v-model="dialogNotification"
-        />
+        <FormsEventActionsNotificationDialog v-model="dialogNotification" />
         <FormsEventActionsConditionDialog
           :id="id"
           v-model="dialogCondition"
