@@ -79,6 +79,6 @@ export default {
     horizontalSlatsMode: 'Горизонтальные ламели',
     verticalSlatsMode: 'Вертикальных ламели',
     condition: 'Состояние',
-    
+
   },
 };

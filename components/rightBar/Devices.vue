@@ -55,7 +55,6 @@ const apiDeleteDevice = ref<APIData<any>>();
 // Computed Properties
 const isUpdate = computed(() => (apiPorts.value?.status !== 'idle' && apiPorts.value?.pending) || (apiDevice.value?.status !== 'idle' && apiDevice.value?.pending));
 
-
 const propsModel = (props: ModelProps | undefined): ModelProps[] => {
   if (!props) return [];
   const result = Object.values(props).map((item) => ({

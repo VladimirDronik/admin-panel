@@ -1,7 +1,7 @@
 // Types modules
 import { type Component } from 'vue';
 import {
-  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner, 
+  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner,
 } from '@/types/DevicesEnums';
 
 // Components

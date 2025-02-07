@@ -35,7 +35,6 @@ export const useDevicesStore = defineStore('Devices', () => {
 
   const filterByCategoryDevices = computed(() => findbyCategoryDevices(list.value, 'relay'));
 
-
   const propsModel = (props: ModelProps | undefined): ModelProps[] => {
     if (!props) return [];
     const result = Object.values(props).map((item) => ({
@@ -99,9 +98,9 @@ export const useDevicesStore = defineStore('Devices', () => {
       const data: unknown = await api(`${paths.controllers}/${id}/ports`, {
         query: { group },
       });
-  
+
       const ports = data as GetDevicesPortsResponse;
-  
+
       return ports.response || [];
     } catch {
       return [];

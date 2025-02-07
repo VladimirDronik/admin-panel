@@ -246,6 +246,6 @@ export const deviceEventTypes: EventsObject = {
           actions: [],
         },
       ],
-    ])
+    ]),
   ),
 };

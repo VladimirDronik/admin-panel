@@ -65,7 +65,6 @@ export enum Conditioner {
   OnokomTCL1MBB = 'onokom/tcl_1_mb_b',
 }
 
-
 export enum Connection {
   HTTP = 'http',
   MQTT = 'mqtt',

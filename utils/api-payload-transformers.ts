@@ -5,11 +5,11 @@ import type {
 import { getInitialEditDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
 import type { GetCurrentDeviceResponse } from '~/components/rightBar/right-bar.types';
 import type { DevicePropertyKey, Connection } from '~/types/DevicesEnums';
-import  { ObjectsCategory } from '~/types/DevicesEnums';
 import {
+  ObjectsCategory,
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
-  Regulator
+  Regulator,
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {

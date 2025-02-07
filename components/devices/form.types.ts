@@ -104,4 +104,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner; 
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner;
