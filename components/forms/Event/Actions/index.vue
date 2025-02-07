@@ -240,7 +240,7 @@ onBeforeMount(async () => {
           </div>
         </div>
 
-        <DialogsDeleteDialog
+        <DialogDelete
           :id="selectedId"
           v-model="dialogDelete"
           :loading="apiDeleteMethods?.pending && apiDeleteMethods.status !== 'idle'"

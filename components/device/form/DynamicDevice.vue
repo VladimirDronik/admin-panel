@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { deviceFormMapping } from '~/components/forms/FormMappings';
-import DefaultFormComponent from '../forms/byTypes/DefaultForm.vue';
-import { type DynamicFormData, type AddFieldToDynamicFormPayload } from './form.types';
+import DefaultFormComponent from '~/components/forms/byTypes/DefaultForm.vue';
+import { type DynamicFormData, type AddFieldToDynamicFormPayload } from '~/components/device/form/form.types';
 
 const props = withDefaults(defineProps<{
   addFieldToDynamicForm: AddFieldToDynamicFormPayload;

@@ -8,7 +8,11 @@ import { Form } from '@primevue/forms';
 import { auth } from '~/utils/endpoints';
 // Types modules
 import { loginSchema, type loginData } from '~/types/UserTypes';
-import type { APIData, Request } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
+
+definePageMeta({
+  layout: 'blank',
+});
 
 // Composables
 const { t } = useI18n();
@@ -20,40 +24,42 @@ useHead({
   titleTemplate: computed(() => t('pages.login')),
 });
 
-// Declare Options
-definePageMeta({
-  layout: 'blank',
-});
+const {
+  params,
+  dataLogin,
+  statusLogin,
+  executeLogin,
+} = await useLogin();
 
-// Variables
-const apiUser = ref<APIData<loginData> | null>();
-
-const params = ref({
-  login: import.meta.env.VITE_LOGIN_DEV ?? '',
-  password: import.meta.env.VITE_PASSWORD_DEV ?? '',
-});
-
-// Methods
-const success = (response: Request<loginData>) => {
-  if (response?.response.api_access_token) {
-    storeUser.localState.token = response.response.api_access_token;
-    router.push({ name: 'general' });
-  } else {
-    error();
-  }
-};
-
-const error = () => {
-  toast.add({
-    severity: 'error',
-    summary: 'Ошибка входа',
-    life: 5000,
+async function useLogin() {
+  const params = ref({
+    login: import.meta.env.VITE_LOGIN_DEV ?? '',
+    password: import.meta.env.VITE_PASSWORD_DEV ?? '',
   });
-};
 
-// Hooks
-onBeforeMount(async () => {
-  const data: unknown = await useAPI(
+  // Methods
+  const success = (response: Request<loginData>) => {
+    if (response?.response.api_access_token) {
+      storeUser.localState.token = response.response.api_access_token;
+      router.push({ name: 'general' });
+    } else {
+      error();
+    }
+  };
+
+  const error = () => {
+    toast.add({
+      severity: 'error',
+      summary: 'Ошибка входа',
+      life: 5000,
+    });
+  };
+
+  const {
+    data: dataLogin,
+    status: statusLogin,
+    execute: executeLogin,
+  } = await useAPI <Request<loginData>>(
     auth,
     {
       params,
@@ -68,13 +74,18 @@ onBeforeMount(async () => {
     loginSchema,
   );
 
-  apiUser.value = data as APIData<loginData>;
-});
+  return {
+    params,
+    dataLogin,
+    statusLogin,
+    executeLogin,
+  };
+}
 
 </script>
 <template>
   <div
-    v-if="apiUser"
+    v-if="dataLogin"
     class="auth-screen tw-h-screen"
   >
     <Toast :base-z-index="99999" />
@@ -95,7 +106,7 @@ onBeforeMount(async () => {
         <p class="tw-text-center tw-text-sm tw-text-gray-500">
           {{ storeUser.version }}
         </p>
-        <Form @submit="apiUser.refresh()">
+        <Form @submit="executeLogin()">
           <SharedUILabel
             class="tw-mb-3"
             colomn
@@ -120,7 +131,7 @@ onBeforeMount(async () => {
           <Button
             class="tw-w-full"
             :label="t('auth.signIn')"
-            :loading="apiUser.pending && apiUser.status !== 'idle'"
+            :loading="statusLogin === 'pending'"
             type="submit"
           />
         </Form>

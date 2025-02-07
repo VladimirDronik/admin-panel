@@ -270,7 +270,7 @@ const processedDevices = computed(() => {
       title="pages.devices"
       :total="storeDevices.total"
     >
-      <DialogsDeviceCreateDialog />
+      <DeviceDialogCreate />
     </SharedUIBreadcrumb>
     <BaseTreeTable
       v-model:filters="filters"
@@ -287,7 +287,7 @@ const processedDevices = computed(() => {
         style="width: 15px;"
       >
         <!-- <template #header>
-          <DevicesTableHeader title="devices.id">
+          <DeviceTableHeader title="devices.id">
             <InputText
               v-model.number="filters[0].value"
               :placeholder="filters[0].label"
@@ -307,12 +307,12 @@ const processedDevices = computed(() => {
               clearable
               type="number"
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template> -->
       </Column>
       <Column field="name">
         <template #header>
-          <DevicesTableHeader title="devices.title">
+          <DeviceTableHeader title="devices.title">
             <InputText
               v-model.number="filters[2].value"
               class="tw-min-w-96"
@@ -320,7 +320,7 @@ const processedDevices = computed(() => {
               :placeholder="filters[2].label"
               prepend-inner-icon="mdi-magnify"
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template>
         <template #body="{ node }">
           <span :style="{ paddingLeft: node.data.paddingLeft }" />
@@ -337,7 +337,7 @@ const processedDevices = computed(() => {
       </Column>
       <Column field="type">
         <template #header>
-          <DevicesTableHeader title="devices.type">
+          <DeviceTableHeader title="devices.type">
             <InputText
               v-model.number="filters[3].value"
               class="tw-min-w-80"
@@ -345,7 +345,7 @@ const processedDevices = computed(() => {
               :placeholder="filters[3].label"
               prepend-inner-icon="mdi-magnify"
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template>
       </Column>
       <Column
@@ -353,7 +353,7 @@ const processedDevices = computed(() => {
         field="address"
       >
         <template #header>
-          <DevicesTableHeader title="devices.room">
+          <DeviceTableHeader title="devices.room">
             <Select
               v-model.number="filters[4].value"
               class="tw-min-w-80"
@@ -364,7 +364,7 @@ const processedDevices = computed(() => {
               prepend-inner-icon="mdi-magnify"
               show-clear
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template>
         <template #body="{ node }">
           {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
@@ -375,7 +375,7 @@ const processedDevices = computed(() => {
         field="status"
       >
         <template #header>
-          <DevicesTableHeader title="devices.status">
+          <DeviceTableHeader title="devices.status">
             <Select
               v-model="filters[5].value"
               class="tw-min-w-80"
@@ -386,7 +386,7 @@ const processedDevices = computed(() => {
               :placeholder="filters[5].label"
               show-clear
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template>
         <template #body="{ node }">
           <div :class="checkStatusSymbol(node.data.status).class">
@@ -401,7 +401,7 @@ const processedDevices = computed(() => {
         style="width: 200px"
       >
         <template #header>
-          <DevicesTableHeader title="devices.tags">
+          <DeviceTableHeader title="devices.tags">
             <Select
               v-model="filters[6].value"
               chips
@@ -412,7 +412,7 @@ const processedDevices = computed(() => {
               :placeholder="filters[6].label"
               show-clear
             />
-          </DevicesTableHeader>
+          </DeviceTableHeader>
         </template>
         <template #body="{ node }">
           <div class="tags">

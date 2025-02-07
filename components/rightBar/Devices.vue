@@ -18,7 +18,7 @@ import {
 } from '~/stores/devices/devicesTypes';
 import type {
   AddFieldToDynamicFormPayload, DeviceEditFormPayload, EditDeviceForm,
-} from '~/components/devices/form.types';
+} from '~/components/device//form/form.types';
 
 // Composables
 const { t } = useI18n();
@@ -307,7 +307,7 @@ onBeforeMount(async () => {
         </TabList>
         <TabPanels>
           <TabPanel value="features">
-            <DevicesDynamicDeviceForm
+            <DeviceFormDynamicDevice
               :key="forceUpdateKey"
               v-model:dynamic-form="asideEditingForm"
               :add-field-to-dynamic-form="addChildrenToDynamicFormCB"
@@ -317,7 +317,7 @@ onBeforeMount(async () => {
             >
               <template #footer>
                 <div class="tw-mt-4 tw-flex tw-justify-end">
-                  <DialogsDeleteDialog
+                  <DialogDelete
                     :id="asideEditingForm?.id ?? -1"
                     v-model="dialogDelete"
                     class="tw-mr-2"
@@ -335,7 +335,7 @@ onBeforeMount(async () => {
                   />
                 </div>
               </template>
-            </DevicesDynamicDeviceForm>
+            </DeviceFormDynamicDevice>
           </TabPanel>
           <TabPanel value="events">
             <FormsEventForm
@@ -347,7 +347,7 @@ onBeforeMount(async () => {
             />
           </TabPanel>
           <TabPanel value="ports">
-            <DevicesPortsForm
+            <DeviceFormPorts
               v-if="apiPorts?.data?.response"
               :id="selectedObject?.id ?? 0"
               v-model:ports="apiPorts.data.response"

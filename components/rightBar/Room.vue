@@ -168,7 +168,7 @@ onBeforeMount(async () => {
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">
-        <DialogsDeleteDialog
+        <DialogDelete
           :id="form.id ?? -1"
           v-model="dialog"
           class="tw-mr-2"

@@ -147,7 +147,7 @@ async function useDeleteUser() {
         </template>
       </Column>
     </BaseTable>
-    <DialogsDeleteDialog
+    <DialogDelete
       :id="deleteForm?.id ?? -1"
       v-model="dialogDelete"
       class="tw-mr-2"
