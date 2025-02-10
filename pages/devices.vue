@@ -207,12 +207,14 @@ watch([props, childrenProps], (newValue, oldValue) => {
 });
 
 function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] {
-  return arr.map((obj) => {
-    if (obj.children) {
-      obj.children = processDevices(obj.children, depth + 1);
+  return arr.flatMap((obj) => {
+    const newObj = { ...obj, data: { ...obj.data } };
 
-      if (depth === 3 && obj.children.length > 0) {
-        return obj.children.map((child) => ({
+    if (obj.children) {
+      const processedChildren = processDevices(obj.children, depth + 1);
+
+      if ((depth === 3) && processedChildren.length > 0) {
+        return processedChildren.map((child) => ({
           ...child,
           data: {
             ...child.data,
@@ -221,17 +223,32 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
           },
         }));
       }
-      // if (depth >= 3) {
-      //   obj.data.hidden = true;
-      // }
+      newObj.children = processedChildren;
     }
-    obj.data = {
-      ...obj.data,
+
+    if (obj.children && obj.data.category === 'sensor_value') {
+      const processedChildren = processDevices(obj.children, depth + 1);
+
+      if ((depth === 2) && processedChildren.length > 0) {
+        return processedChildren.map((child) => ({
+          ...child,
+          data: {
+            ...child.data,
+            name: `${child.data.name} (${obj.data.name})`,
+            paddingLeft: `${depth * 20}px`,
+          },
+        }));
+      }
+      newObj.children = processedChildren;
+    }
+
+    newObj.data = {
+      ...newObj.data,
       ...(depth > 1 && { paddingLeft: `${depth * 20}px` }),
     };
 
-    return obj;
-  }).flat();
+    return newObj;
+  });
 }
 
 const processedDevices = computed(() => {

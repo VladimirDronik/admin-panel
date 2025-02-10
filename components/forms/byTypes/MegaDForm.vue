@@ -102,7 +102,7 @@ const protocolOptions = schema.shape.protocol.options;
     >
       <InputText
         id="address"
-        v-model="dynamicForm.props.address"
+        v-model="(dynamicForm.props.address as unknown as string)"
       />
     </SharedUILabel>
 

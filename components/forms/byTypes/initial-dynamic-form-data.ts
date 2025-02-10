@@ -361,7 +361,6 @@ const createFormByTypesMap = {
     props: {
       id: '',
       password: '',
-      protocol: Connection.HTTP,
       address: '',
     },
     children: {},
@@ -567,7 +566,6 @@ const editFormByTypesMap = {
     props: {
       id: '',
       password: '',
-      protocol: Connection.HTTP,
       address: '',
     },
     children: {},
@@ -586,5 +584,5 @@ const editFormByTypesMap = {
 };
 
 export const getInitialEditDeviceFormDataByTypes = (data: GetCurrentDeviceResponse) => ({
-  ...editFormByTypesMap[data.type], name: data.name, zone_id: data.zone_id, type: data.type, parent_id: data.parent_id,
+  ...editFormByTypesMap[data.type as keyof typeof editFormByTypesMap], name: data.name, zone_id: data.zone_id, type: data.type, parent_id: data.parent_id,
 }) as typeof initialEditFormData;
