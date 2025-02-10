@@ -101,12 +101,14 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
       const value = prop.value as DevicePropertyData[keyof DevicePropertyData];
       // @ts-expect-error ///
       acc[key] = value;
+
       return acc;
     }, {} as DevicePropertyData);
 
-    childrenAcc[key] = propertyData;
-
-    return childrenAcc;
+    return {
+      ...childrenAcc,
+      [key]: propertyData,
+    };
   }, {} as DeviceChildren) ?? {};
 
   const initialForm = getInitialEditDeviceFormDataByTypes(data);
