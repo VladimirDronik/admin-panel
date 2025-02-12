@@ -227,7 +227,7 @@ const typeOptions = schema.shape.type.options;
       :title="t('devices.regulation')"
       :width="300"
     >
-      <ToggleSwitch v-model="dynamicForm.props.enable" />
+      <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
     <SharedUILabel
       class="tw-mb-2"

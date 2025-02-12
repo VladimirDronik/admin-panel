@@ -26,14 +26,14 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
-  enable: dynamicForm.value.props.enable,
+  enabled: dynamicForm.value.enabled,
   period: dynamicForm.value.props.period,
 }));
 
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  enable: z.boolean().default(false),
+  enabled: z.boolean().default(false),
   period: z.number().default(8),
 });
 
@@ -132,7 +132,7 @@ watch(
       :title="t('devices.detecting')"
       :width="350"
     >
-      <ToggleSwitch v-model="dynamicForm.props.enable" />
+      <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
 
     <SharedUILabel

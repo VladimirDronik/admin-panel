@@ -61,7 +61,6 @@ export interface DeviceProps {
     below_tolerance?: number;
     above_tolerance?: number;
     complex_tolerance?: number;
-    enable?: boolean;
     fallback_sensor_value_id?: number;
     period?: number;
     mode?: string;
