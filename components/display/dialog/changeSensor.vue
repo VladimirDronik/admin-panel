@@ -89,6 +89,7 @@ async function useChangeItem() {
       itemId: selectedSensor.value?.item_id,
     })),
     immediate: false,
+    watch: false,
   });
 
   const form = ref({
