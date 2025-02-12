@@ -31,6 +31,7 @@ export interface DynamicFormDataBasic {
     zone_id: DeviceZoneId,
     category: ObjectsCategory,
     props: DeviceProps,
+    enabled?: boolean,
   }
 
 export interface DynamicFormData extends DynamicFormDataBasic {
@@ -77,6 +78,14 @@ export interface DeviceProps {
     fan_speed?: string;
     horizontal_slats_mode?: string;
     vertical_slats_mode?: string;
+    internal_temperature?: number;
+    external_temperature?: number;
+    target_temperature?: number;
+    anti_fungus?: boolean;
+    disable_display_on_power_off?: boolean;
+    on_duty_heating?: boolean;
+    soft_flow?: boolean;
+    display_high_brightness ?: boolean;
 
   }
 
