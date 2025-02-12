@@ -1,7 +1,7 @@
 // Types modules
 import { type Component } from 'vue';
 import {
-  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner,
+  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner, Modbus,
 } from '@/types/DevicesEnums';
 
 // Components
@@ -19,6 +19,7 @@ import ConditionerForm from '~/components/forms/byTypes/ConditionerForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
 import WBMRM2miniForm from '~/components/forms/byTypes/WBMRM2miniForm.vue';
+import ModbusForm from '~/components/forms/byTypes/ModbusForm.vue';
 import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
 
 import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
@@ -26,7 +27,7 @@ import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
 import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
 
 // Types
-type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner | Modbus;
 
 export const ConditionerTypes = [
   Conditioner.OnokomAUX1MBB,
@@ -121,4 +122,8 @@ export const deviceFormMapping: DeviceFormMapping[] = [
     type: ConditionerType,
     component: ConditionerForm,
   })),
+  {
+    type: Modbus.Modbus,
+    component: ModbusForm,
+  },
 ];

@@ -7,6 +7,7 @@ import {
   Controller, GenericInput, Sensor, ObjectsCategory, Connection, DeviceInterface,
   DevicePropertyKey, Relay, Regulator, RegulatorType,
   Conditioner,
+  Modbus,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -395,6 +396,10 @@ const createFormByTypesMap = {
   [Conditioner.OnokomTCL1MBB]: {
     ...basicCreateConditionerForm,
   },
+  [Modbus.Modbus]: {
+    category: ObjectsCategory.Modbus,
+    props: {},
+  },
 };
 
 export const getInitialCreateDeviceFormDataByTypes = (initialForm: CreateDeviceInitialForm) => ({ ...createFormByTypesMap[initialForm.type], name: initialForm.name, zone_id: initialForm.zone_id });
@@ -778,6 +783,11 @@ const editFormByTypesMap = {
       horizontal_slats_mode: '0',
       vertical_slats_mode: '0',
     },
+    status: '',
+  },
+  [Modbus.Modbus]: {
+    category: ObjectsCategory.Modbus,
+    props: {},
     status: '',
   },
 };
