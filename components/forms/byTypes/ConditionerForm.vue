@@ -4,12 +4,12 @@ import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 
-import type { DynamicFormData } from '~/components/device/form/form.types';
+import type { EditDeviceForm } from '~/components/device/form/form.types';
 
 const { modbus, getModbus } = useModbus();
 getModbus();
 
-const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: true });
+const dynamicForm = defineModel<EditDeviceForm>('dynamic-form', { required: true });
 
 const props = defineProps<{
   isEditing: boolean;
@@ -51,12 +51,16 @@ const operatingModeOptions = [
 
 const fanSpeedOptions = [
   { value: '0', name: 'Авто' },
-  { value: '1', name: 'Первая скорость' },
-  { value: '2', name: 'Вторая скорость' },
-  { value: '3', name: 'Третья скорость' },
+  { value: '1', name: 'Тихий режим' },
+  { value: '2', name: 'Первая скорость' },
+  { value: '3', name: 'Вторая скорость' },
+  { value: '4', name: 'Третья скорость' },
+  { value: '5', name: 'Четвертая скорость' },
+  { value: '6', name: 'Пятая скорость' },
 ];
 
 const horizontalSlatsOptions = [
+  { value: '0', name: 'Остановлено' },
   { value: '1', name: 'Качание' },
   { value: '2', name: 'Нижнее положение' },
   { value: '3', name: 'Второе положение' },
@@ -68,13 +72,127 @@ const horizontalSlatsOptions = [
 ];
 
 const verticalSlatsOptions = [
+  { value: '0', name: 'Остановлено' },
   { value: '1', name: 'Качание' },
   { value: '2', name: 'Левое положение' },
   { value: '3', name: 'Второе положение' },
   { value: '4', name: 'Третье положение' },
   { value: '5', name: 'Четвертое положение' },
   { value: '6', name: 'Пятое положение' },
+  { value: '7', name: 'Мягкий поток' },
 ];
+
+const silentModeConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/me_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/hs_3_mb_b',
+  'onokom/dk_1_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/gr_3_mb_b',
+  'onokom/hr_1_mb_b',
+]);
+
+const soundsConditioners = new Set([
+  'onokom/tcl_1_mb_b',
+  'onokom/hr_1_mb_b',
+]);
+
+const ecoModeConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/hr_1_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/hr_1_mb_b',
+  'onokom/hs_3_mb_b',
+]);
+
+const turboModeConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/hs_6_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/hr_1_mb_b',
+]);
+
+const sleepModeConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/hs_6_mb_b',
+  'onokom/gr_3_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/hr_1_mb_b',
+  'onokom/hs_3_mb_b',
+]);
+
+const ionizationConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/hr_1_mb_b',
+]);
+
+const selfCleaningConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/gr_3_mb_b',
+  'onokom/hr_1_mb_b',
+]);
+
+const antiFungusConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+]);
+
+const disableDisplayOnPowerOffConditioners = new Set([
+  'onokom/gr_1_mb_b',
+]);
+
+const onDutyHeatingConditioners = new Set([
+  'onokom/tcl_1_mb_b',
+]);
+
+const softFlowConditioners = new Set([
+  'onokom/tcl_1_mb_b',
+]);
+
+const externalTemperatureConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/gr_3_mb_b',
+  'onokom/hr_1_mb_b',
+  'onokom/hs_3_mb_b',
+  'onokom/dk_1_mb_b',
+]);
+
+const displayBacklightConditioners = new Set([
+  'onokom/aux_1_mb_b',
+  'onokom/tcl_1_mb_b',
+  'onokom/dk_1_mb_b',
+  'onokom/gr_1_mb_b',
+  'onokom/hr_1_mb_b',
+  'onokom/hs_3_mb_b',
+]);
+
+const displayHighBrightnessConditioners = new Set([
+  'onokom/dk_1_mb_b',
+]);
+
+const hasSilentMode = computed(() => silentModeConditioners.has(dynamicForm.value?.type));
+const hasSounds = computed(() => soundsConditioners.has(dynamicForm.value?.type));
+const hasEcoMode = computed(() => ecoModeConditioners.has(dynamicForm.value?.type));
+const hasTurboMode = computed(() => turboModeConditioners.has(dynamicForm.value?.type));
+const hasSleepMode = computed(() => sleepModeConditioners.has(dynamicForm.value?.type));
+const hasIonization = computed(() => ionizationConditioners.has(dynamicForm.value?.type));
+const hasSelfCleaning = computed(() => selfCleaningConditioners.has(dynamicForm.value?.type));
+const hasAntiFungus = computed(() => antiFungusConditioners.has(dynamicForm.value?.type));
+const hasDisableDisplayOnPowerOff = computed(() => disableDisplayOnPowerOffConditioners.has(dynamicForm.value?.type));
+const hasOnDutyHeating = computed(() => onDutyHeatingConditioners.has(dynamicForm.value?.type));
+const hasSoftFlow = computed(() => softFlowConditioners.has(dynamicForm.value?.type));
+const hasExternalTemperature = computed(() => externalTemperatureConditioners.has(dynamicForm.value?.type));
+const hasDisplayBacklight = computed(() => displayBacklightConditioners.has(dynamicForm.value?.type));
+const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioners.has(dynamicForm.value?.type));
 </script>
 
 <template>
@@ -171,10 +289,10 @@ const verticalSlatsOptions = [
       class="tw-mb-2"
       required
       :title="t('devices.condition')"
-      :width="300"
+      :width="350"
     >
       <ToggleSwitch
-        v-model="dynamicForm.props.enable"
+        v-model="dynamicForm.enabled"
         disabled
       />
     </SharedUILabel>
@@ -183,7 +301,7 @@ const verticalSlatsOptions = [
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.powerStatus')"
-      :width="300"
+      :width="350"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.power_status"
@@ -194,104 +312,8 @@ const verticalSlatsOptions = [
     <SharedUILabel
       v-if="props.isEditing"
       class="tw-mb-2"
-      :title="t('devices.displayBacklight')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.display_backlight"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.silentMode')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.silent_mode"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.ecoMode')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.eco_mode"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.turboMode')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.turbo_mode"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.sleepMode')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.sleep_mode"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.ionization')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.ionization"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.selfCleaning')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.self_cleaning"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.sounds')"
-      :width="300"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.sounds"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
       :title="t('devices.operatingMode')"
-      :width="300"
+      :width="350"
     >
       <Select
         v-model="dynamicForm.props.operating_mode"
@@ -306,8 +328,53 @@ const verticalSlatsOptions = [
     <SharedUILabel
       v-if="props.isEditing"
       class="tw-mb-2"
+      :title="`${t('devices.internalTemperature')}`"
+      :value="dynamicForm.props.internal_temperature"
+      :width="350"
+    >
+      <InputNumber
+        v-model="dynamicForm.props.internal_temperature"
+        class="tw-w-3/4"
+        disabled
+        suffix=" °C"
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasExternalTemperature"
+      class="tw-mb-2"
+      :title="`${t('devices.externalTemperature')}`"
+      :value="dynamicForm.props.external_temperature"
+      :width="350"
+    >
+      <InputNumber
+        v-model="dynamicForm.props.external_temperature"
+        class="tw-w-3/4"
+        disabled
+        suffix=" °C"
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      :title="`${t('devices.targetTemperature')}`"
+      :value="dynamicForm.props.target_temperature"
+      :width="350"
+    >
+      <InputNumber
+        v-model="dynamicForm.props.target_temperature"
+        class="tw-w-3/4"
+        disabled
+        suffix=" °C"
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
       :title="t('devices.fanSpeed')"
-      :width="300"
+      :width="350"
     >
       <Select
         v-model="dynamicForm.props.fan_speed"
@@ -323,7 +390,7 @@ const verticalSlatsOptions = [
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.horizontalSlatsMode')"
-      :width="300"
+      :width="350"
     >
       <Select
         v-model="dynamicForm.props.horizontal_slats_mode"
@@ -339,7 +406,7 @@ const verticalSlatsOptions = [
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.verticalSlatsMode')"
-      :width="300"
+      :width="350"
     >
       <Select
         v-model="dynamicForm.props.vertical_slats_mode"
@@ -348,6 +415,164 @@ const verticalSlatsOptions = [
         option-label="name"
         option-value="value"
         :options="verticalSlatsOptions"
+      />
+    </SharedUILabel>
+
+    <!-- Не для всех -->
+
+    <SharedUILabel
+      v-if="props.isEditing && hasDisplayBacklight"
+      class="tw-mb-2"
+      :title="t('devices.displayBacklight')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.display_backlight"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasSilentMode"
+      class="tw-mb-2"
+      :title="t('devices.silentMode')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.silent_mode"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasEcoMode"
+      class="tw-mb-2"
+      :title="t('devices.ecoMode')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.eco_mode"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasTurboMode"
+      class="tw-mb-2"
+      :title="t('devices.turboMode')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.turbo_mode"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasSleepMode"
+      class="tw-mb-2"
+      :title="t('devices.sleepMode')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.sleep_mode"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasIonization"
+      class="tw-mb-2"
+      :title="t('devices.ionization')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.ionization"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasSelfCleaning"
+      class="tw-mb-2"
+      :title="t('devices.selfCleaning')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.self_cleaning"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasAntiFungus"
+      class="tw-mb-2"
+      :title="t('devices.antiFungus')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.anti_fungus"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasDisableDisplayOnPowerOff"
+      class="tw-mb-2"
+      :title="t('devices.disableDisplayOnPowerOff ')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.disable_display_on_power_off"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasSounds"
+      class="tw-mb-2"
+      :title="t('devices.sounds')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.sounds"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasOnDutyHeating"
+      class="tw-mb-2"
+      :title="t('devices.onDutyHeating')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.on_duty_heating"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasSoftFlow"
+      class="tw-mb-2"
+      :title="t('devices.softFlow')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.soft_flow"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="props.isEditing && hasDisplayHighBrightness"
+      class="tw-mb-2"
+      :title="t('devices.displayHighBrightness')"
+      :width="350"
+    >
+      <ToggleSwitch
+        v-model="dynamicForm.props.display_high_brightness "
+        disabled
       />
     </SharedUILabel>
   </Form>

@@ -79,6 +79,13 @@ export default {
     horizontalSlatsMode: 'Горизонтальные ламели',
     verticalSlatsMode: 'Вертикальных ламели',
     condition: 'Состояние',
-
+    internalTemperature: 'Температура в помещении',
+    externalTemperature: 'Температура на улице',
+    targetTemperature: 'Целевая температура',
+    onDutyHeating: 'Дежурный обогрев',
+    softFlow: 'Мягкий поток',
+    disableDisplayOnPowerOff: 'Выключение дисплея при отключении',
+    displayHighBrightness: 'Высокая яркость дисплея',
+    antiFungus: 'Антиплесень',
   },
 };

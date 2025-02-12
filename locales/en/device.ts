@@ -79,5 +79,13 @@ export default {
     horizontalSlatsMode: 'Horizontal slats mode',
     verticalSlatsMode: 'Vertical slats mode',
     condition: 'Condition',
+    internalTemperature: 'Indoor temperature',
+    externalTemperature: 'Outdoor temperature',
+    targetTemperature: 'Target temperature',
+    onDutyHeating: 'Standby heating',
+    softFlow: 'Soft airflow',
+    disableDisplayOnPowerOff: 'Disable display on power off',
+    displayHighBrightness: 'High display brightness',
+    antiFungus: 'Antifungus',
   },
 };
