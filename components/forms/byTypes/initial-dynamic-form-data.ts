@@ -239,8 +239,8 @@ const createFormByTypesMap = {
     parent_id: 0,
     sdaPort: 0,
     category: ObjectsCategory.Sensor,
+    enabled: false,
     props: {
-      enable: false,
       interface: DeviceInterface['MEGAIN'],
       period: 8,
       mode: 'P',
@@ -264,8 +264,8 @@ const createFormByTypesMap = {
     sdaPort: 0,
     sclPort: 0,
     category: ObjectsCategory.Sensor,
+    enabled: false,
     props: {
-      enable: false,
       interface: DeviceInterface['MEGAIN'],
       period: 120,
       mode: 'P',
@@ -323,8 +323,8 @@ const createFormByTypesMap = {
   [Regulator.Regulator]: {
     parent_id: 0,
     category: ObjectsCategory.Regulator,
+    enabled: false,
     props: {
-      enable: false,
       type: RegulatorType.Simple,
       fallback_sensor_value_id: 0,
       sensor_value_ttl: 30,
@@ -473,8 +473,8 @@ const editFormByTypesMap = {
     id: 0,
     parent_id: 0,
     sdaPort: null,
+    enabled: false,
     props: {
-      enable: false,
       period: 8,
       mode: 'P',
       interface: DeviceInterface['MEGAIN'],
@@ -487,8 +487,8 @@ const editFormByTypesMap = {
     parent_id: 0,
     sdaPort: null,
     sclPort: null,
+    enabled: false,
     props: {
-      enable: false,
       period: 120,
       mode: 'P',
       interface: DeviceInterface['MEGAIN'],
@@ -527,8 +527,8 @@ const editFormByTypesMap = {
   },
   [Regulator.Regulator]: {
     id: 0,
+    enabled: false,
     props: {
-      enable: false,
       type: RegulatorType.Simple,
       fallback_sensor_value_id: 0,
       sensor_value_ttl: 30,
