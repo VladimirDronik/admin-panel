@@ -33,7 +33,7 @@ withDefaults(defineProps<{
   >
     <p
       v-if="title"
-      class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg"
+      class="tw-mb-1.5 tw-whitespace-nowrap tw-pr-2 tw-text-lg tw-font-bold"
       :style="{ width: `${width}px` }"
     >
       <span v-tooltip="tooltip">

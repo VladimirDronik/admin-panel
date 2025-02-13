@@ -256,6 +256,14 @@ const processedDevices = computed(() => {
   return result;
 });
 
+const isDropdownOpen = ref(false);
+
+const dropdownClasses = computed(() => ({
+  dropdownIcon: {
+    class: `tw-transition-transform tw-duration-200 ${isDropdownOpen.value ? 'tw-rotate-180' : 'tw-rotate-0'}`,
+  },
+}));
+
 </script>
 
 <template>
@@ -321,7 +329,7 @@ const processedDevices = computed(() => {
           <component
             :is="iconMap[node.data.type as IconMapKey]"
             color="#555"
-            size="24"
+            size="18"
             stroke-width="1.5"
           />
           <p class="tw-max-w-48 tw-truncate">
@@ -356,7 +364,10 @@ const processedDevices = computed(() => {
               :options="storeRooms.getRoomsSelect"
               :placeholder="filters[4].label"
               prepend-inner-icon="mdi-magnify"
+              :pt="dropdownClasses"
               show-clear
+              @hide="isDropdownOpen = false"
+              @show="isDropdownOpen = true"
             />
           </DeviceTableHeader>
         </template>
@@ -378,7 +389,10 @@ const processedDevices = computed(() => {
               :option-value="'value'"
               :options="filters[5].options"
               :placeholder="filters[5].label"
+              :pt="dropdownClasses"
               show-clear
+              @hide="isDropdownOpen = false"
+              @show="isDropdownOpen = true"
             />
           </DeviceTableHeader>
         </template>
@@ -404,7 +418,10 @@ const processedDevices = computed(() => {
               multiple
               :options="typeOptions"
               :placeholder="filters[6].label"
+              :pt="dropdownClasses"
               show-clear
+              @hide="isDropdownOpen = false"
+              @show="isDropdownOpen = true"
             />
           </DeviceTableHeader>
         </template>
@@ -477,6 +494,11 @@ tr[aria-level="2"] .p-treetable-node-toggle-button {
 
 tr[aria-level="1"] .p-treetable-node-toggle-button {
   margin-left: 5px !important;
+}
+
+:deep(.p-select[aria-expanded="true"] .p-dropdown-trigger-icon) {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease-in-out;
 }
 
 // tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {

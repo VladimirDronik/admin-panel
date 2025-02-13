@@ -40,7 +40,7 @@ export const checkStatusSymbol = (item: string | undefined) => {
     return { symbol: '', class: 'tw-h-2.5 tw-w-2.5 tw-rounded-full tw-bg-warn tw-inline-block' };
   }
   if (item === 'disabled') {
-    return { symbol: '×', class: 'tw-text-danger tw-font-bold tw-text-2xl' };
+    return { symbol: '×', class: 'tw-text-danger tw-font-bold tw-text-xl' };
   }
   return { symbol: '?', class: 'tw-text-black tw-font-bold tw-text-l' };
 };
