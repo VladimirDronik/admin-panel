@@ -8,7 +8,7 @@ const isUpdate = defineModel<boolean>('isUpdate', {
 <template>
   <SharedUILoader :is-update="isUpdate">
     <div class="panel-wrapper tw-relative tw-flex">
-      <div class="tw-w-full tw-px-6 tw-pt-6">
+      <div class="tw-w-full tw-px-6 tw-pt-4">
         <slot />
       </div>
       <slot name="rightbar" />

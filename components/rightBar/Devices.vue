@@ -217,7 +217,7 @@ onBeforeMount(async () => {
           class="tw-w-full"
         >
           <template #display>
-            <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
+            <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
               {{ asideEditingForm?.name }} ({{ asideEditingForm.type }})
             </h3>
           </template>
@@ -268,12 +268,12 @@ onBeforeMount(async () => {
       <Tabs v-model:value="tabs">
         <TabList>
           <Tab value="features">
-            <p class="tw-font-normal">
+            <p>
               {{ t('devices.features') }}
             </p>
           </Tab>
           <Tab value="events">
-            <p class="tw-font-normal">
+            <p>
               {{ t('devices.events') }}
             </p>
           </Tab>
@@ -281,12 +281,12 @@ onBeforeMount(async () => {
             v-if="selectedObject?.category === 'controller'"
             value="ports"
           >
-            <p class="tw-font-normal">
+            <p>
               {{ t('devices.ports') }}
             </p>
           </Tab>
           <Tab value="four">
-            <p class="tw-font-normal">
+            <p>
               {{ t('devices.management') }}
             </p>
           </Tab>
@@ -302,7 +302,7 @@ onBeforeMount(async () => {
               @update:valid="devicesDynamicFormValidityHandler"
             >
               <template #footer>
-                <div class="tw-mt-4 tw-flex tw-justify-end">
+                <div class="tw-mt-4 tw-flex tw-justify-start">
                   <DialogDelete
                     :id="asideEditingForm?.id ?? -1"
                     v-model="dialogDelete"
@@ -347,3 +347,30 @@ onBeforeMount(async () => {
     </div>
   </LayoutRightbar>
 </template>
+
+<style scoped lang="scss">
+::v-deep .p-tablist .p-tablist-content .p-tablist-tab-list {
+  width: 85%;
+}
+
+::v-deep .p-tablist .p-tablist-content span.p-tablist-active-bar {
+  height: 1.5px;
+}
+
+::v-deep button[aria-controls="pv_id_12_tabpanel_features"][aria-selected="true"] ~ .p-tablist-active-bar {
+  min-width: 95px;
+}
+
+::v-deep button[aria-controls="pv_id_12_tabpanel_events"][aria-selected="true"] ~ .p-tablist-active-bar {
+  min-width: 90px;
+}
+
+::v-deep button[aria-controls="pv_id_12_tabpanel_ports"][aria-selected="true"] ~ .p-tablist-active-bar {
+  min-width: 74px;
+}
+
+::v-deep button[aria-controls="pv_id_12_tabpanel_four"][aria-selected="true"] ~ .p-tablist-active-bar {
+  min-width: 112px;
+}
+
+</style>

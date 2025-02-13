@@ -71,3 +71,7 @@ html {
 .p-dark .border-base {
   border-color: var(--p-surface-700);
 }
+
+:root {
+  --p-button-label-font-weight: 800;
+}
