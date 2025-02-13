@@ -32,7 +32,6 @@ const event = defineModel<Event>('event', {
 
 // Variables
 const loading = ref(false);
-const visible = ref(false);
 
 const dialogMethod = ref(false);
 const dialogPause = ref(false);
@@ -233,24 +232,7 @@ onBeforeMount(async () => {
             Список событий пуст
           </div>
           <div class="tw-flex tw-justify-between tw-pt-3">
-            <Button
-              label="Сценарии"
-              @click="visible = true"
-            />
-            <Dialog
-              v-model:visible="visible"
-              header="Header"
-              maximizable
-              modal
-              :style="{ width: '70rem' }"
-            >
-              <iframe
-                class="tw-size-full tw-min-h-96"
-                frameborder="0"
-                src="http://127.0.0.1:1880"
-                title="Node Red"
-              />
-            </Dialog>
+            <DialogNodeRed />
             <Button
               :label="t('save')"
               @click="dialog = false"
