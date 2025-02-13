@@ -232,10 +232,7 @@ onBeforeMount(async () => {
             Список событий пуст
           </div>
           <div class="tw-flex tw-justify-between tw-pt-3">
-            <Button
-              label="Сценарии"
-              @click="router.push({ name: 'scenario' })"
-            />
+            <DialogNodeRed />
             <Button
               :label="t('save')"
               @click="dialog = false"
