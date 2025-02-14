@@ -55,8 +55,8 @@ const items = [
 
     <div class="tw-mb-5 tw-flex tw-gap-2">
       <Select
+        :model-value="'Видеорегистраторы'"
         :options="['Видеорегистраторы', 'Камеры']"
-        placeholder="Выберите Категорию"
       />
       <InputText placeholder="Поиск" />
     </div>
@@ -70,7 +70,7 @@ const items = [
         <div class="bg-base tw-absolute tw-bottom-2 tw-left-2 tw-rounded-full tw-bg-slate-300 tw-px-3 tw-py-2 tw-text-sm">
           {{ item.name }}
         </div>
-        <div class="bg-base tw-absolute tw-right-2 tw-top-2 tw-flex tw-items-center tw-rounded-full tw-bg-slate-300 tw-px-3 tw-py-2 tw-text-sm">
+        <div class="bg-base tw-absolute tw-left-2 tw-top-2 tw-flex tw-items-center tw-rounded-full tw-bg-slate-300 tw-px-3 tw-py-2 tw-text-sm">
           <div
             class="tw-mr-2 tw-size-2.5 tw-rounded-full"
             :class="checkStatusBackgroundColor(item.status)"
