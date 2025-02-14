@@ -160,6 +160,9 @@ onBeforeMount(async () => {
       dismissable-mask
       :header="'Выбор метода обьекта'"
       modal
+      :pt="{
+        header: { class: 'tw-pb-0' },
+      }"
       :style="{
         'max-width': '1000px',
         width: '100%',
@@ -170,7 +173,7 @@ onBeforeMount(async () => {
         Позволяет выбрать метод любого обьекта в системе
       </p>
 
-      <div class="tw-flex">
+      <div class="tw-mb-2 tw-flex">
         <h3 class="tw-mr-2 tw-w-6/12 tw-text-lg">
           Список Обьектов
         </h3>

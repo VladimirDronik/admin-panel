@@ -147,7 +147,7 @@ async function useWorkWithRoomApi() {
                   <div
                     v-for="room in place.rooms_in_group"
                     :key="room.id"
-                    class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-10 tw-text-lg"
+                    class="room-item tw-flex tw-items-center tw-rounded-md tw-py-4 !tw-pl-[26px] tw-text-lg"
                     @click="openRightBar(room)"
                     @keydown="openRightBar(room)"
                   >
