@@ -1,7 +1,7 @@
 import {
   DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, Relay,
   Regulator, RegulatorType,
-  Conditioner,
+  Conditioner, Modbus,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
 
@@ -85,7 +85,15 @@ export interface DeviceProps {
     on_duty_heating?: boolean;
     soft_flow?: boolean;
     display_high_brightness ?: boolean;
-
+    connection_string?: string;
+    speed?: string;
+    data_bits?: number;
+    parity?: string;
+    stop_bits?: string;
+    timeout?: number;
+    tries?: number;
+    port?: number;
+    ip?: string;
   }
 
 export interface DeviceChild {
@@ -112,4 +120,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner;
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner | Modbus;

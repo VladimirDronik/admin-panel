@@ -87,5 +87,12 @@ export default {
     disableDisplayOnPowerOff: 'Disable display on power off',
     displayHighBrightness: 'High display brightness',
     antiFungus: 'Antifungus',
+    connectionString: 'Connection string',
+    speed: 'Speed',
+    dataBits: 'Number of data bits',
+    parity: 'Parity check',
+    stopBits: 'Stop bits',
+    timeout: 'Timeout',
+    tries: 'Number of attempts',
   },
 };

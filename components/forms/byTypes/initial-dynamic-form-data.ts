@@ -397,8 +397,17 @@ const createFormByTypesMap = {
     ...basicCreateConditionerForm,
   },
   [Modbus.Modbus]: {
-    category: ObjectsCategory.Modbus,
-    props: {},
+    category: Modbus.Modbus,
+    props: {
+      ip: '10.35.16.7',
+      port: 50,
+      speed: '19200',
+      data_bits: 8,
+      parity: '0',
+      stop_bits: '2',
+      timeout: 3,
+      tries: 3,
+    },
   },
 };
 
@@ -786,9 +795,19 @@ const editFormByTypesMap = {
     status: '',
   },
   [Modbus.Modbus]: {
-    category: ObjectsCategory.Modbus,
-    props: {},
+    id: 0,
     status: '',
+    category: Modbus.Modbus,
+    props: {
+      ip: '10.35.16.7',
+      port: 50,
+      speed: '19200',
+      data_bits: 8,
+      parity: '0',
+      stop_bits: '2',
+      timeout: 3,
+      tries: 3,
+    },
   },
 };
 

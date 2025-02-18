@@ -87,5 +87,12 @@ export default {
     disableDisplayOnPowerOff: 'Выключение дисплея при отключении',
     displayHighBrightness: 'Высокая яркость дисплея',
     antiFungus: 'Антиплесень',
+    connectionString: 'Строка подключения',
+    speed: 'Скорость',
+    dataBits: 'Количество бит данных',
+    parity: 'Контроль четности',
+    stopBits: 'Стоповые биты',
+    timeout: 'Таймаут',
+    tries: 'Количество попыток',
   },
 };
