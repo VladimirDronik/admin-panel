@@ -84,6 +84,7 @@ watch(room, () => {
 
 // Hooks
 onBeforeMount(async () => {
+  await storeRooms.getRoomsApi();
   // Change Device
   const dataChange: unknown = await useAPI(paths.privateRoomsList, {
     body: computed(() => {
@@ -160,11 +161,7 @@ onBeforeMount(async () => {
             option-value="id"
             :options="storeRooms.getRooms.filter((room) => room.id !== form?.id)"
             show-clear
-          >
-            <!-- <template #value="slotProps">
-              {{ slotProps.value == '0' ? : ''}}
-            </template> -->
-          </Select>
+          />
         </SharedUILabel>
       </div>
       <div class="tw-flex tw-justify-end tw-pt-2">
