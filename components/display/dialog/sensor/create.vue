@@ -23,21 +23,40 @@ const dialog = defineModel<boolean>({
 
 const options = computed(() => filterInListRoom(rooms ?? []));
 
+interface Sensor {
+  id: number;
+  zone_id: number;
+  category: string;
+  name: string;
+  internal: boolean;
+  status: string;
+  type: string
+  children: {
+    id: number;
+    category: string;
+    type: string;
+    internal: boolean;
+    name: string;
+    status: string;
+    enabled: boolean;
+  }[];
+}
+
 // Composables
 const { t } = useI18n();
 const storeUser = useUserStore();
 const { updateData } = useUtils();
 
 // Variables
-const selectedSensor = ref<string>();
+const selectedSensor = ref<Sensor>();
 
 const {
   dataSensors,
-  dataSensorTypes,
 } = await useCreatedApi();
 
 const {
   form,
+  params,
   resolver,
   createSensor,
   selectSensor,
@@ -67,13 +86,25 @@ async function useCreateSensor() {
     icon: string | null,
     object_id: number | null,
     type: string | null,
+    adjustment: boolean,
   }>({
     name: null,
     zone_id: null,
     icon: null,
     object_id: null,
     type: null,
+    adjustment: false,
   });
+
+  const params = ref<{
+    max_threshold: string | null,
+    min_threshold: string | null,
+  }>({
+    max_threshold: null,
+    min_threshold: null,
+  });
+
+  const objectId = ref();
 
   const resolver = ref(zodResolver(
     z.object({
@@ -88,21 +119,27 @@ async function useCreateSensor() {
     status: statusCreateSensor,
     execute: executeCreateSensor,
   } = await useAPI<Request<any>>(paths.privateItemsSensor, {
-    body: computed(() => ({
-      ...form.value,
-    })),
+    body: computed(() => {
+      if (!form.value.adjustment) return form.value;
+      return {
+        ...form.value,
+        max_threshold: Number(params.value.max_threshold),
+        min_threshold: Number(params.value.min_threshold),
+      };
+    }),
     method: 'POST',
     immediate: false,
     watch: false,
   });
 
-  const selectSensor = (sensor: string, id: number) => {
-    form.value.object_id = id;
+  const selectSensor = (sensor: Sensor, id: number) => {
+    objectId.value = id;
     selectedSensor.value = sensor;
     form.value.type = null;
   };
 
-  const selectParamSensor = (type: string) => {
+  const selectParamSensor = (id: number, type: string) => {
+    form.value.object_id = id;
     form.value.type = type;
   };
 
@@ -119,8 +156,14 @@ async function useCreateSensor() {
           icon: null,
           object_id: null,
           type: null,
+          adjustment: false,
+        };
+        params.value = {
+          max_threshold: null,
+          min_threshold: null,
         };
         dialog.value = false;
+        selectedSensor.value = undefined;
       },
       successMessage: 'Датчик был успешно создана',
       errorMessage: 'Датчик не был создан',
@@ -129,6 +172,7 @@ async function useCreateSensor() {
 
   return {
     form,
+    params,
     resolver,
     selectedSensor,
     createSensor,
@@ -141,21 +185,16 @@ async function useCreateSensor() {
 
 async function useCreatedApi() {
   const data = await Promise.all([
-    useAPI<Request<any>>(paths.objects, {
+    useAPI<Request<{list: Sensor[]}>>(paths.objects, {
       query: computed(() => ({
         filter_by_category: 'sensor',
         limit: 9999,
-        type_struct: 'easy',
+        type_children: 'internal',
         children: '1',
+        with_tags: false,
+        simple_tree: true,
       })),
       watch: false,
-    }),
-    useAPI<Request<any>>(paths.objectModel, {
-      query: computed(() => ({
-        category: 'sensor',
-        type: selectedSensor.value,
-      })),
-      immediate: false,
     }),
   ]);
 
@@ -163,14 +202,10 @@ async function useCreatedApi() {
     {
       data: dataSensors,
     },
-    {
-      data: dataSensorTypes,
-    },
   ] = data;
 
   return {
     dataSensors,
-    dataSensorTypes,
   };
 }
 </script>
@@ -223,13 +258,13 @@ async function useCreatedApi() {
                 :key="sensor.id"
                 class="tw-mb-1 tw-flex tw-w-full tw-items-center tw-py-0.5"
                 text
-                @click="selectSensor(sensor.type, sensor.id)"
+                @click="selectSensor(sensor, sensor.id)"
               >
                 <div
                   class="tw-flex tw-w-full tw-items-center tw-text-black"
                   :class="{
-                    '!tw-text-primary': sensor.type === selectedSensor,
-                    '!tw-text-white': storeUser.isDark,
+                    '!tw-text-primary': sensor.type === selectedSensor?.type,
+                    'tw-text-white': storeUser.isDark,
                   }"
                 >
                   <p class="tw-truncate tw-text-left">
@@ -245,24 +280,39 @@ async function useCreatedApi() {
           <div>
             <div class="border-base tw-mb-4 tw-min-h-40 tw-rounded-md tw-border tw-p-3">
               <Button
-                v-for="sensor in dataSensorTypes?.response.children"
+                v-for="sensor in selectedSensor?.children"
                 :key="sensor.type"
                 class="tw-flex tw-w-full tw-py-1"
                 text
                 type="button"
-                @click="selectParamSensor(sensor.type)"
+                @click="selectParamSensor(sensor.id, sensor.type)"
               >
                 <div
                   class="tw-w-full tw-text-left tw-text-black"
 
                   :class="{
                     '!tw-text-primary': sensor.type === form.type,
-                    '!tw-text-white': storeUser.isDark,
+                    'tw-text-white': storeUser.isDark,
                   }"
                 >
                   {{ sensor.type }}
                 </div>
               </Button>
+            </div>
+
+            <div class="tw-mb-2 tw-flex tw-items-center tw-justify-end tw-gap-2">
+              <Checkbox
+                v-model="form.adjustment"
+                binary
+                input-id="regulator"
+                name="Регулировка"
+              />
+              <label
+                class="tw-cursor-pointer tw-text-lg"
+                for="regulator"
+              >
+                Регулировка
+              </label>
             </div>
             <div>
               <SharedUILabel
@@ -289,6 +339,36 @@ async function useCreatedApi() {
                   :options
                 />
               </SharedUILabel>
+              <div v-if="form.adjustment">
+                <SharedUILabel
+                  class="tw-mb-2"
+                  name="max_threshold"
+                  required
+                  :title="'Минимальное значение'"
+                  :value="params.max_threshold"
+                  :width="300"
+                >
+                  <InputText
+                    v-model="params.max_threshold"
+                    class="tw-w-full"
+                    type="number"
+                  />
+                </SharedUILabel>
+                <SharedUILabel
+                  class="tw-mb-2"
+                  name="min_threshold"
+                  required
+                  :title="'Максимальное значение'"
+                  :value="params.min_threshold"
+                  :width="300"
+                >
+                  <InputText
+                    v-model="params.min_threshold"
+                    class="tw-w-full"
+                    type="number"
+                  />
+                </SharedUILabel>
+              </div>
               <SharedUILabel
                 class="tw-mb-2"
                 :title="'Иконка'"
@@ -302,7 +382,7 @@ async function useCreatedApi() {
         <div class="tw-flex tw-justify-end">
           <Button
             class="tw-mr-2"
-            :disabled="!(form.object_id && form.type)"
+            :disabled="!(form.object_id && form.type) || statusCreateSensor === 'pending'"
             :label="t('save')"
             :loading="statusCreateSensor === 'pending'"
             type="submit"
