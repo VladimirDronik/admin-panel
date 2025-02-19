@@ -52,6 +52,7 @@ const selectedSensor = ref<Sensor>();
 
 const {
   dataSensors,
+  statusSensors,
 } = await useCreatedApi();
 
 const {
@@ -141,6 +142,7 @@ async function useCreateSensor() {
   const selectParamSensor = (id: number, type: string) => {
     form.value.object_id = id;
     form.value.type = type;
+    form.value.adjustment = false;
   };
 
   const createSensor = async () => {
@@ -184,28 +186,24 @@ async function useCreateSensor() {
 }
 
 async function useCreatedApi() {
-  const data = await Promise.all([
-    useAPI<Request<{list: Sensor[]}>>(paths.objects, {
-      query: computed(() => ({
-        filter_by_category: 'sensor',
-        limit: 9999,
-        type_children: 'internal',
-        children: '1',
-        with_tags: false,
-        simple_tree: true,
-      })),
-      watch: false,
-    }),
-  ]);
-
-  const [
-    {
-      data: dataSensors,
-    },
-  ] = data;
+  const {
+    data: dataSensors,
+    status: statusSensors,
+  } = await useAPI<Request<{list: Sensor[]}>>(paths.objects, {
+    query: computed(() => ({
+      filter_by_category: 'sensor',
+      limit: 9999,
+      type_children: 'internal',
+      children: '1',
+      with_tags: false,
+      simple_tree: true,
+    })),
+    watch: false,
+  });
 
   return {
     dataSensors,
+    statusSensors,
   };
 }
 </script>
@@ -235,16 +233,24 @@ async function useCreatedApi() {
         @submit="({ valid }) => { if (valid) createSensor() }"
       >
         <div class="tw-mb-2 tw-grid tw-grid-cols-2 tw-items-center tw-justify-between">
-          <SharedUILabel
-            colomn
-            required
-            title="Доступные Датчики"
-          />
-          <SharedUILabel
-            colomn
-            required
-            title="Тип Датчика"
-          />
+          <div class="tw-flex tw-justify-start">
+            <h4 class="tw-mr-2">
+              Доступные Датчики
+            </h4>
+            <ProgressSpinner
+              v-if="statusSensors === 'pending'"
+              aria-label="Сохранение"
+              class="tw-m-0"
+              stroke="#19B58F"
+              stroke-width="3"
+              style="width: 21px; height: 21px"
+            />
+          </div>
+          <div class="tw-flex tw-justify-start">
+            <h4 class="tw-mr-2">
+              Тип Датчика
+            </h4>
+          </div>
         </div>
         <div class="tw-mb-3 tw-grid tw-grid-cols-2 tw-grid-rows-1 tw-gap-2">
           <div class="tw-h-full">
@@ -300,7 +306,10 @@ async function useCreatedApi() {
               </Button>
             </div>
 
-            <div class="tw-mb-2 tw-flex tw-items-center tw-justify-end tw-gap-2">
+            <div
+              v-if="!(form.type === 'motion' || form.type === 'presence')"
+              class="tw-mb-2 tw-flex tw-items-center tw-justify-end tw-gap-2"
+            >
               <Checkbox
                 v-model="form.adjustment"
                 binary
