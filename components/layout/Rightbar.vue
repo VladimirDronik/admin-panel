@@ -31,7 +31,7 @@ onMounted(() => {
     }"
   >
     <SharedUILoader :is-update="isUpdate">
-      <ScrollPanel :style="{ height: `${height - 90}px`, width: '100%' }">
+      <PerfectScrollbar :style="{ height: `${height - 90}px`, width: '100%' }">
         <div class="tw-min-h-80 tw-p-6">
           <div
             v-if="title"
@@ -53,7 +53,7 @@ onMounted(() => {
           </div>
           <slot />
         </div>
-      </ScrollPanel>
+      </PerfectScrollbar>
     </SharedUILoader>
   </div>
 </template>

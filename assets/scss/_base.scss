@@ -1,5 +1,13 @@
+html {
+  font-size: 14px;
+}
+
+.ps__thumb-y {
+  background-color: var(--p-surface-700);
+}
+
 .tw-border-primary {
-  border-color: var(--p-primary-800) !important;
+  border-color: var(--p-primary-900) !important;
 }
 
 .tw-text-success {
@@ -49,12 +57,6 @@
 .tw-border-info {
   border-color: var(--p-sky-400);
 }
-
-
-html {
-  font-size: 14px;
-}
-
 
 .p-dark .bg-base {
   background-color: #121212;
