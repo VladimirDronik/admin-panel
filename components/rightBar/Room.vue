@@ -6,16 +6,19 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes modules
 import type { RoomItem } from '~/stores/rooms/roomsTypes';
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
 const { updateData } = useUtils();
-const storeRooms = useRoomsStore();
 
 // Declare Options
 const emit = defineEmits<{
   (e: 'update'): void
+}>();
+
+defineProps<{
+  rooms: Request<RoomItem[]> | null
 }>();
 
 const room = defineModel<RoomItem | null | undefined>('form', {
@@ -29,13 +32,6 @@ const isOpen = defineModel<boolean>('isShow', {
 // Variables
 const form = ref<RoomItem | null | undefined>();
 
-const dialog = ref(false);
-
-const loading = ref(false);
-const loadingDelete = ref(false);
-
-const parentId = ref();
-
 const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
@@ -44,49 +40,27 @@ const resolver = ref(zodResolver(
   }),
 ));
 
-// Apis
-const apiChangeRoom = ref<APIData<any>>();
-const apiDeleteRoom = ref<APIData<any>>();
-
-// Methods
-const changeRoom = async () => {
-  await updateData({
-    update: async () => {
-      await apiChangeRoom.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      isOpen.value = false;
-    },
-    successMessage: 'Помещение было успешно изменено',
-    errorMessage: 'Помещение не было изменено',
-  });
-};
-
-const confirmDelete = async () => {
-  await updateData({
-    update: async () => {
-      await apiDeleteRoom.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      isOpen.value = false;
-    },
-    successMessage: 'Помещение удалено',
-    errorMessage: 'Ошибка удаления помещения',
-  });
-};
-
 // Watchers
 watch(room, () => {
   if (room.value) form.value = { ...room.value };
 });
 
-// Hooks
-onBeforeMount(async () => {
-  await storeRooms.getRoomsApi();
-  // Change Device
-  const dataChange: unknown = await useAPI(paths.privateRoomsList, {
+const {
+  changeRoom,
+  statusChangeRoom,
+} = await useChangeRoom();
+
+const {
+  confirmDelete,
+  statusDeleteRoom,
+} = await useDeleteRoom();
+
+async function useChangeRoom() {
+  // Api
+  const {
+    status: statusChangeRoom,
+    execute: executeChangeRoom,
+  } = await useAPI(paths.privateRoomsList, {
     body: computed(() => {
       if (form.value?.parent_id === null) {
         return [{
@@ -101,10 +75,33 @@ onBeforeMount(async () => {
     watch: false,
   });
 
-  apiChangeRoom.value = dataChange as APIData<any>;
+  // Methods
+  const changeRoom = async () => {
+    await updateData({
+      update: async () => {
+        await executeChangeRoom();
+        await emit('update');
+      },
+      success: () => {
+        isOpen.value = false;
+      },
+      successMessage: 'Помещение было успешно изменено',
+      errorMessage: 'Помещение не было изменено',
+    });
+  };
 
-  // Delete Device
-  const dataDelete: unknown = await useAPI(paths.privateRoom, {
+  return {
+    statusChangeRoom,
+    changeRoom,
+  };
+}
+
+async function useDeleteRoom() {
+  // Api
+  const {
+    status: statusDeleteRoom,
+    execute: executeDeleteRoom,
+  } = await useAPI(paths.privateRoom, {
     query: computed(() => ({
       id: form.value?.id,
     })),
@@ -113,8 +110,26 @@ onBeforeMount(async () => {
     watch: false,
   });
 
-  apiDeleteRoom.value = dataDelete as APIData<any>;
-});
+  // Methods
+  const confirmDelete = async () => {
+    await updateData({
+      update: async () => {
+        await executeDeleteRoom();
+        await emit('update');
+      },
+      success: () => {
+        isOpen.value = false;
+      },
+      successMessage: 'Помещение удалено',
+      errorMessage: 'Ошибка удаления помещения',
+    });
+  };
+
+  return {
+    statusDeleteRoom,
+    confirmDelete,
+  };
+}
 </script>
 
 <template>
@@ -159,7 +174,7 @@ onBeforeMount(async () => {
             class="tw-w-full"
             option-label="name"
             option-value="id"
-            :options="storeRooms.getRooms.filter((room) => room.id !== form?.id)"
+            :options="rooms?.response.filter((room) => room.id !== form?.id)"
             show-clear
           />
         </SharedUILabel>
@@ -167,16 +182,15 @@ onBeforeMount(async () => {
       <div class="tw-flex tw-justify-end tw-pt-2">
         <DialogDelete
           :id="form.id ?? -1"
-          v-model="dialog"
           class="tw-mr-2"
-          :loading="loadingDelete"
+          :loading="statusDeleteRoom === 'pending'"
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"
           @delete="confirmDelete"
         />
 
         <Button
           :label="t('save')"
-          :loading="loading"
+          :loading="statusChangeRoom === 'pending'"
           type="submit"
         />
       </div>

@@ -62,7 +62,7 @@
     "@vuepress/plugin-search": "^2.0.0-rc.61",
     "@vuepress/theme-default": "^2.0.0-rc.60",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.57.1",
+    "eslint": "^9.20.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-tailwindcss": "^3.18.0",

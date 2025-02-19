@@ -71,9 +71,9 @@ async function useWorkWithRoomApi() {
     roomRequestSchema,
   );
 
-  const roomIds = computed(() => dataRooms?.value?.response.map((item: any) => item.id));
+  const roomIds = computed(() => dataRooms?.value?.response.map((item) => item.id));
 
-  watch(roomIds, (newValue: any, oldValue: any) => {
+  watch(roomIds, (newValue, oldValue) => {
     if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
   });
 
@@ -193,6 +193,7 @@ async function useWorkWithRoomApi() {
       <RightBarRoom
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
+        :rooms="dataRooms"
         @update="refreshRooms"
       />
     </template>
