@@ -33,6 +33,7 @@ const {
 } = await useWorkWithRoomApi();
 
 const {
+  status: statusOrder,
   execute: executeOrder,
 } = await useAPI(
   paths.privateZonesOrder,
@@ -88,7 +89,10 @@ async function useWorkWithRoomApi() {
 
 <template>
   <SharedUIPanel :is-update="statusRooms === 'pending'">
-    <SharedUIBreadcrumb title="pages.rooms">
+    <SharedUIBreadcrumb
+      :is-loading="statusOrder === 'pending'"
+      title="pages.rooms"
+    >
       <RoomDialogCreate @update="refreshRooms" />
     </SharedUIBreadcrumb>
     <div v-if="dataRooms">

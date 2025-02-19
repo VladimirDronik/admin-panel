@@ -36,7 +36,10 @@ useHead({
   titleTemplate: computed(() => t('pages.display')),
 });
 
+const isLoadingOrder = ref(false);
+
 const updateOrder = async (roomList: any, id: number) => {
+  isLoadingOrder.value = true;
   await api(paths.privateItemsOrder, {
     method: 'PATCH',
     body: {
@@ -47,6 +50,7 @@ const updateOrder = async (roomList: any, id: number) => {
       token: storeUser.localState.token ?? '',
     },
   });
+  isLoadingOrder.value = false;
 };
 
 async function useGetData() {
@@ -144,7 +148,10 @@ function useRightBar() {
 
 <template>
   <SharedUIPanel :is-update="statusItems === 'pending' || statusRooms === 'pending'">
-    <SharedUIBreadcrumb title="pages.display">
+    <SharedUIBreadcrumb
+      :is-loading="isLoadingOrder"
+      title="pages.display"
+    >
       <RoomDialogCreate @update="update" />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
