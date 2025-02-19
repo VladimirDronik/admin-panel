@@ -206,7 +206,7 @@ watch(
 
 <style scoped>
 
-::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+:deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
  width: 100px;
 }
 </style>

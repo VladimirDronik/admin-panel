@@ -35,16 +35,19 @@ const isOpen = defineModel<boolean>('isShow', {
 });
 
 // Variables
-const devices = [
-  'switch',
-  'button',
-  'group',
-  'conditioner',
-  'light',
-  'curtain',
+const deviceOptions = [
+  { value: 'switch', label: 'Кнопка с фиксацией' },
+  { value: 'button', label: 'Кнопка без фиксации' },
+  { value: 'group', label: 'Группа кнопок' },
+  { value: 'conditioner', label: 'Кондиционер' },
+  { value: 'light', label: 'Освещение' },
+  { value: 'curtain', label: 'Штора' },
+  { value: 'link', label: 'Котёл' },
   // Должен быть удален в будущем
-  'sensor',
+  { value: 'sensor', label: 'Сенсор' },
 ];
+
+const devices = computed(() => deviceOptions.map((device) => device.value));
 
 // Computed Properties
 const title = computed(() => {
@@ -103,7 +106,7 @@ async function useCreatedApi() {
         v-if="dataItem?.response && variant === 'Edit Item'"
         v-model:form="dataItem.response"
         v-model:is-open="isOpen"
-        :devices="devices"
+        :devices="deviceOptions"
         :options
         @update="emit('update')"
       />
@@ -119,7 +122,7 @@ async function useCreatedApi() {
       v-if="variant !== 'Edit Scenario' && variant !== 'Edit Item'"
       :id="zoneId"
       v-model:is-open="isOpen"
-      :devices="devices"
+      :devices="deviceOptions"
       :options
       @update="emit('update')"
     />

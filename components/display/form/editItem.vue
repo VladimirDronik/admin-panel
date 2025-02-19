@@ -17,7 +17,7 @@ const storeDevices = useDevicesStore();
 
 // Declare Options
 defineProps<{
-  devices: string[]
+  devices: { value: string, label: string }[],
   options: any[]
 }>();
 
@@ -126,6 +126,13 @@ async function useDeleteItem() {
 
 <template>
   <Tabs value="features">
+    <span
+      class="tw-text-base"
+      style="color: var(--p-tabs-tab-color);"
+    >
+      {{ t('display.type') }}:
+      {{ devices.find(d => d.value === form.type)?.label || form.type }}
+    </span>
     <!-- Header -->
     <TabList>
       <Tab value="features">

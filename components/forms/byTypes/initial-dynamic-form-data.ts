@@ -457,8 +457,8 @@ const editFormByTypesMap = {
   [Sensor.SCD4X]: editFormBasicsData,
   [Sensor.DS18B20]: {
     id: 0,
-    sdaPort: null,
-    busAddress: null,
+    sdaPort: 0,
+    busAddress: 0,
     parent_id: 0,
     props: {
       interface: DeviceInterface['1W'],
