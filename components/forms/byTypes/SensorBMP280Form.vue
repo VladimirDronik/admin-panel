@@ -247,7 +247,7 @@ const sensorDataToShow = computed(() => {
 
 <style scoped>
 
-::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+:deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
  width: 150px;
 }
 </style>

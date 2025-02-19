@@ -311,7 +311,7 @@ const typeOptions = schema.shape.type.options;
   </Form>
 </template>
 <style scoped>
-::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+:deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
  width: 150px;
 }
 

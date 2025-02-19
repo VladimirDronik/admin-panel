@@ -22,7 +22,7 @@ const {
   options,
 } = defineProps<{
   id: number | undefined
-  devices: string[],
+  devices: { value: string, label: string }[],
   options: any[]
 }>();
 
@@ -203,6 +203,8 @@ function useQuickSelectRoom() {
             <Select
               v-model="form.type"
               class="tw-w-full"
+              option-label="label"
+              option-value="value"
               :options="devices"
               show-clear
             />

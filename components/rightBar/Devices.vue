@@ -349,27 +349,27 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped lang="scss">
-::v-deep .p-tablist .p-tablist-content .p-tablist-tab-list {
+:deep .p-tablist .p-tablist-content .p-tablist-tab-list {
   width: 85%;
 }
 
-::v-deep .p-tablist .p-tablist-content span.p-tablist-active-bar {
+:deep .p-tablist .p-tablist-content span.p-tablist-active-bar {
   height: 1.5px;
 }
 
-::v-deep button[aria-controls="pv_id_12_tabpanel_features"][aria-selected="true"] ~ .p-tablist-active-bar {
+:deep button[aria-controls="pv_id_12_tabpanel_features"][aria-selected="true"] ~ .p-tablist-active-bar {
   min-width: 95px;
 }
 
-::v-deep button[aria-controls="pv_id_12_tabpanel_events"][aria-selected="true"] ~ .p-tablist-active-bar {
+:deep button[aria-controls="pv_id_12_tabpanel_events"][aria-selected="true"] ~ .p-tablist-active-bar {
   min-width: 90px;
 }
 
-::v-deep button[aria-controls="pv_id_12_tabpanel_ports"][aria-selected="true"] ~ .p-tablist-active-bar {
+:deep button[aria-controls="pv_id_12_tabpanel_ports"][aria-selected="true"] ~ .p-tablist-active-bar {
   min-width: 74px;
 }
 
-::v-deep button[aria-controls="pv_id_12_tabpanel_four"][aria-selected="true"] ~ .p-tablist-active-bar {
+:deep button[aria-controls="pv_id_12_tabpanel_four"][aria-selected="true"] ~ .p-tablist-active-bar {
   min-width: 112px;
 }
 

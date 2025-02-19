@@ -149,9 +149,8 @@ const sensorDataToShow = computed(() => {
       :title="t('devices.address16')"
     >
       <InputNumber
-        id="address"
         v-model="dynamicForm.busAddress"
-        class="tw-w-full"
+        class="tw-w-3/4"
       />
     </SharedUILabel>
 
@@ -245,7 +244,7 @@ const sensorDataToShow = computed(() => {
 
 <style scoped>
 
-::v-deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
+:deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
  width: 150px;
 }
 </style>

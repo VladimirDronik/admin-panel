@@ -108,7 +108,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const address = data.props.find((prop) => prop.code === 'address');
   const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? '';
   const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
-  const updatedbusAddress = String(address?.value).split(';')[1];
+  const updatedbusAddress = typeof address?.value === 'string' && address.value.includes(';') ? String(address.value).split(';')[1] ?? null : null;
   const ports = String(address?.value).split(';') ?? [null, null];
   const updatedProtocol = data.props.find((prop) => prop.code === 'protocol');
   const updatedPassword = data.props.find((prop) => prop.code === 'password');
@@ -164,7 +164,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('sclPort' in initialForm) {
     initialForm.sclPort = Number(ports[1]);
   }
-  if ('busAddress' in initialForm) {
+  if ('busAddress' in initialForm && updatedbusAddress !== null) {
     initialForm.busAddress = Number(updatedbusAddress);
   }
   if ('interface' in initialForm.props) {
