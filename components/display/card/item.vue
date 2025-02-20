@@ -56,7 +56,7 @@ const computedFilter = computed(() => {
       }"
     >
       <img
-        alt=""
+        alt="item"
         class="tw-w-20"
         :class="{
           '!tw-opacity-60': !(status === 'on'),

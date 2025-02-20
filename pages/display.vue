@@ -155,19 +155,43 @@ function useRightBar() {
       <RoomDialogCreate @update="update" />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
-      <PerfectScrollbar
-        v-if="dataItems?.response.scenario_items?.length"
-        class="border-base tw-flex tw-flex-wrap tw-gap-2 tw-rounded-md tw-border tw-p-3"
-      >
-        <DisplayCardScenario
-          v-for="scenario in dataItems?.response.scenario_items"
-          :key="scenario.item_id"
-          :color="scenario.color"
-          :icon="scenario.icon"
-          :title="scenario.title"
-          @click="showScenarioPanel(scenario.item_id)"
-        />
-      </PerfectScrollbar>
+      <div class="border-base tw-rounded-md tw-border tw-p-3">
+        <h2 class="tw-mb-2 tw-text-xl">
+          Сценарии
+        </h2>
+        <PerfectScrollbar
+          v-if="dataItems?.response.scenario_items?.length"
+          class="tw-flex tw-flex-wrap"
+        >
+          <DisplayCardScenario
+            v-for="scenario in dataItems?.response.scenario_items"
+            :key="scenario.item_id"
+            :color="scenario.color"
+            :icon="scenario.icon"
+            :title="scenario.title"
+            @click="showScenarioPanel(scenario.item_id)"
+          />
+          <button
+            class="tw-m-1.5"
+            type="button"
+          >
+            <div
+              class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-p-3"
+              :class="storeUser.isDark ? 'tw-bg-[#323232]' : 'tw-bg-[#D6E4E1]'"
+            >
+              <IconPlus
+                height="60"
+                stroke-width="1.5"
+                :style="{ color: storeUser.isDark ? '#9B9B9B' : '#83A39B' }"
+                width="60"
+              />
+            </div>
+            <h5 class="tw-w-28 tw-truncate tw-text-center">
+              {{ t('add') }}
+            </h5>
+          </button>
+        </PerfectScrollbar>
+      </div>
       <div
         v-for="rooms in filteredRooms"
         :key="rooms.id"
