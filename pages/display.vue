@@ -205,8 +205,8 @@ function useRightBar() {
               @click="showItemPanel(rooms.id)"
             >
               <div
-                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-border-2 tw-p-3"
-                :class="storeUser.isDark ? 'tw-border-[#484848]' : 'tw-border-[#EDF3F2]'"
+                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-p-3"
+                :class="storeUser.isDark ? 'tw-bg-[#323232]' : 'tw-bg-[#D6E4E1]'"
               >
                 <IconPlus
                   height="60"
