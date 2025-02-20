@@ -47,12 +47,18 @@ const deviceOptions = [
   { value: 'sensor', label: 'Сенсор' },
 ];
 
+const deviceScenarioOptions = [
+  { value: 'switch', label: 'Кнопка с фиксацией' },
+  { value: 'button', label: 'Кнопка без фиксации' },
+];
+
 const devices = computed(() => deviceOptions.map((device) => device.value));
 
 // Computed Properties
 const title = computed(() => {
-  if (variant === 'Edit Item') return 'Редактировать Кнопку';
   if (variant === 'Edit Scenario') return 'Редактировать Сценарий';
+  if (variant === 'Create Scenario') return 'Добавить Сценарий';
+  if (variant === 'Edit Item') return 'Редактировать Кнопку';
   return 'Добавить Кнопку';
 });
 
@@ -119,10 +125,18 @@ async function useCreatedApi() {
       />
     </SharedUILoader>
     <DisplayFormCreateItem
-      v-if="variant !== 'Edit Scenario' && variant !== 'Edit Item'"
+      v-if="variant === 'Create Item'"
       :id="zoneId"
       v-model:is-open="isOpen"
       :devices="deviceOptions"
+      :options
+      @update="emit('update')"
+    />
+    <DisplayFormCreateScenario
+      v-else-if="variant === 'Create Scenario'"
+      :id="zoneId"
+      v-model:is-open="isOpen"
+      :devices="deviceScenarioOptions"
       :options
       @update="emit('update')"
     />

@@ -2,7 +2,7 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import { IconPlus } from '@tabler/icons-vue';
+
 import { VueDraggableNext } from 'vue-draggable-next';
 // Types modules
 import type { Request } from '~/types/StoreTypes';
@@ -117,9 +117,13 @@ function useRightBar() {
   const itemId = ref<number>(0);
   const scenarioId = ref<number>(0);
 
-  const showScenarioPanel = (item_id: number) => {
-    scenarioId.value = item_id;
-    variant.value = 'Edit Scenario';
+  const showScenarioPanel = (item_id?: number) => {
+    if (item_id !== undefined) {
+      scenarioId.value = item_id;
+      variant.value = 'Edit Scenario';
+    } else {
+      variant.value = 'Create Scenario';
+    }
     isShow.value = true;
   };
 
@@ -171,25 +175,7 @@ function useRightBar() {
             :title="scenario.title"
             @click="showScenarioPanel(scenario.item_id)"
           />
-          <button
-            class="tw-m-1.5"
-            type="button"
-          >
-            <div
-              class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-p-3"
-              :class="storeUser.isDark ? 'tw-bg-[#323232]' : 'tw-bg-[#D6E4E1]'"
-            >
-              <IconPlus
-                height="60"
-                stroke-width="1.5"
-                :style="{ color: storeUser.isDark ? '#9B9B9B' : '#83A39B' }"
-                width="60"
-              />
-            </div>
-            <h5 class="tw-w-28 tw-truncate tw-text-center">
-              {{ t('add') }}
-            </h5>
-          </button>
+          <DisplayCardCreate @click="showScenarioPanel()" />
         </PerfectScrollbar>
       </div>
       <div
@@ -223,26 +209,7 @@ function useRightBar() {
               :title="items.title"
               @click="showItemPanel(rooms.id, items.item_id)"
             />
-            <button
-              class="tw-m-1.5"
-              type="button"
-              @click="showItemPanel(rooms.id)"
-            >
-              <div
-                class="tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-[15%] tw-p-3"
-                :class="storeUser.isDark ? 'tw-bg-[#323232]' : 'tw-bg-[#D6E4E1]'"
-              >
-                <IconPlus
-                  height="60"
-                  stroke-width="1.5"
-                  :style="{ color: storeUser.isDark ? '#9B9B9B' : '#83A39B' }"
-                  width="60"
-                />
-              </div>
-              <h5 class="tw-w-28 tw-truncate tw-text-center">
-                {{ t('add') }}
-              </h5>
-            </button>
+            <DisplayCardCreate @click="showItemPanel(rooms.id)" />
           </VueDraggableNext>
         </div>
       </div>
