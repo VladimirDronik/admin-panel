@@ -145,12 +145,12 @@ const sensorDataToShow = computed(() => {
       <ToggleSwitch v-model="dynamicForm.children.temperature.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
         name="minThresholdTemp"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.temperature.min_threshold"
       >
@@ -164,7 +164,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdTemp"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.temperature.max_threshold"
       >
         <InputNumber
@@ -174,10 +174,10 @@ const sensorDataToShow = computed(() => {
         />
       </SharedUILabel>
     </div>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.temperature.min_error_value"
       >
@@ -188,7 +188,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.temperature.max_error_value"
       >
         <InputNumber
@@ -206,12 +206,12 @@ const sensorDataToShow = computed(() => {
       <ToggleSwitch v-model="dynamicForm.children.pressure.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
         name="minThresholdPressure"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.pressure.min_threshold"
       >
@@ -225,7 +225,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdPressure"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.pressure.max_threshold"
       >
         <InputNumber
@@ -235,10 +235,10 @@ const sensorDataToShow = computed(() => {
         />
       </SharedUILabel>
     </div>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.pressure.min_error_value"
       >
@@ -249,7 +249,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.pressure.max_error_value"
       >
         <InputNumber
@@ -267,12 +267,12 @@ const sensorDataToShow = computed(() => {
       <ToggleSwitch v-model="dynamicForm.children.humidity.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
         name="minThresholdHumidity"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.humidity.min_threshold"
       >
@@ -286,7 +286,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdHumidity"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.humidity.max_threshold"
       >
         <InputNumber
@@ -296,10 +296,10 @@ const sensorDataToShow = computed(() => {
         />
       </SharedUILabel>
     </div>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.humidity.min_error_value"
       >
@@ -310,7 +310,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.humidity.max_error_value"
       >
         <InputNumber
@@ -328,12 +328,12 @@ const sensorDataToShow = computed(() => {
       <ToggleSwitch v-model="dynamicForm.children.illumination.write_graph" />
     </SharedUILabel>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
         name="minAvailableIllumination"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.illumination.min_threshold"
       >
@@ -347,7 +347,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxAvailableIllumination"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.illumination.max_threshold"
       >
         <InputNumber
@@ -358,11 +358,11 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
     </div>
 
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] tw-gap-4">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr] ">
       <SharedUILabel
         class="tw-flex-col"
         name="minAlarmIllumination"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.illumination.min_error_value"
       >
@@ -374,7 +374,7 @@ const sensorDataToShow = computed(() => {
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name="maxAlarmIllumination"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.illumination.max_error_value"
       >
         <InputNumber

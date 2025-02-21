@@ -3,12 +3,15 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { useToast } from 'primevue/usetoast';
+import { useCheckAddressAvailability } from '~/composables/useCheck';
 
 import type { EditDeviceForm } from '~/components/device/form/form.types';
 
 const { modbus, getModbus } = useModbus();
 getModbus();
-
+const { occupiedDeviceId, checking, checkAddressAvailability } = useCheckAddressAvailability();
+const toast = useToast();
 const dynamicForm = defineModel<EditDeviceForm>('dynamic-form', { required: true });
 
 const props = defineProps<{
@@ -18,6 +21,7 @@ const props = defineProps<{
 const { t } = useI18n();
 const storeRooms = useRoomsStore();
 const emit = defineEmits(['update:valid']);
+const addressApproved = ref(false);
 
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
@@ -31,12 +35,58 @@ const schema = z.object({
 
 const resolver = ref(zodResolver(schema));
 
+const check = async () => {
+  const numericAddress = Number(dynamicForm.value.props.address);
+  if (!Number.isNaN(numericAddress) && dynamicForm.value.parent_id) {
+    await checkAddressAvailability(numericAddress, dynamicForm.value.parent_id);
+
+    if (occupiedDeviceId.value === 0) {
+      toast.add({
+        severity: 'success',
+        summary: 'Адрес свободен',
+        detail: `Адрес ${numericAddress} доступен`,
+        life: 5000,
+      });
+      addressApproved.value = true;
+    } else if (occupiedDeviceId.value === dynamicForm.value.id) {
+      toast.add({
+        severity: 'info',
+        summary: 'Адрес не изменился',
+        detail: 'Вы можете сохранить изменения',
+        life: 5000,
+      });
+      addressApproved.value = true;
+    } else {
+      toast.add({
+        severity: 'error',
+        summary: 'Адрес занят',
+        detail: `Устройство ID ${occupiedDeviceId.value} уже использует этот адрес. Выберите другой.`,
+        life: 5000,
+      });
+      addressApproved.value = false;
+    }
+  }
+};
+
 watch(
-  () => dynamicForm.value,
+  () => dynamicForm.value.props.address,
+  () => {
+    addressApproved.value = false;
+  },
+);
+
+watch(
+  () => [dynamicForm.value, occupiedDeviceId.value, addressApproved.value],
   () => {
     const flatFormData = flatForm.value;
-    const validationResult = schema.safeParse(flatFormData);
-    emit('update:valid', validationResult.success);
+    let validationSuccess = schema.safeParse(flatFormData).success;
+
+    if (props.isEditing && occupiedDeviceId.value === dynamicForm.value.id) {
+      addressApproved.value = true;
+      validationSuccess = true;
+    }
+
+    emit('update:valid', validationSuccess && addressApproved.value);
   },
   { deep: true },
 );
@@ -263,10 +313,15 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       required
       :title="t('devices.address16')"
     >
-      <InputNumber
-        v-model="(dynamicForm.props.address as unknown as number)"
-        class="tw-w-3/4"
-      />
+      <InputGroup class="tw-w-3/4">
+        <InputNumber v-model="(dynamicForm.props.address as unknown as number)" />
+        <Button
+          :disabled="!dynamicForm.parent_id"
+          label="Проверить адрес"
+          :loading="checking"
+          @click="check"
+        />
+      </InputGroup>
     </SharedUILabel>
 
     <SharedUILabel
@@ -289,7 +344,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       class="tw-mb-2"
       required
       :title="t('devices.condition')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.enabled"
@@ -301,7 +356,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.powerStatus')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.power_status"
@@ -313,7 +368,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.operatingMode')"
-      :width="350"
+      :width="150"
     >
       <Select
         v-model="dynamicForm.props.operating_mode"
@@ -330,7 +385,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       class="tw-mb-2"
       :title="`${t('devices.internalTemperature')}`"
       :value="dynamicForm.props.internal_temperature"
-      :width="350"
+      :width="150"
     >
       <InputNumber
         v-model="dynamicForm.props.internal_temperature"
@@ -345,7 +400,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       class="tw-mb-2"
       :title="`${t('devices.externalTemperature')}`"
       :value="dynamicForm.props.external_temperature"
-      :width="350"
+      :width="150"
     >
       <InputNumber
         v-model="dynamicForm.props.external_temperature"
@@ -360,7 +415,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       class="tw-mb-2"
       :title="`${t('devices.targetTemperature')}`"
       :value="dynamicForm.props.target_temperature"
-      :width="350"
+      :width="150"
     >
       <InputNumber
         v-model="dynamicForm.props.target_temperature"
@@ -374,7 +429,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.fanSpeed')"
-      :width="350"
+      :width="150"
     >
       <Select
         v-model="dynamicForm.props.fan_speed"
@@ -390,7 +445,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.horizontalSlatsMode')"
-      :width="350"
+      :width="150"
     >
       <Select
         v-model="dynamicForm.props.horizontal_slats_mode"
@@ -406,7 +461,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing"
       class="tw-mb-2"
       :title="t('devices.verticalSlatsMode')"
-      :width="350"
+      :width="150"
     >
       <Select
         v-model="dynamicForm.props.vertical_slats_mode"
@@ -424,7 +479,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasDisplayBacklight"
       class="tw-mb-2"
       :title="t('devices.displayBacklight')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.display_backlight"
@@ -436,7 +491,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasSilentMode"
       class="tw-mb-2"
       :title="t('devices.silentMode')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.silent_mode"
@@ -448,7 +503,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasEcoMode"
       class="tw-mb-2"
       :title="t('devices.ecoMode')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.eco_mode"
@@ -460,7 +515,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasTurboMode"
       class="tw-mb-2"
       :title="t('devices.turboMode')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.turbo_mode"
@@ -472,7 +527,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasSleepMode"
       class="tw-mb-2"
       :title="t('devices.sleepMode')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.sleep_mode"
@@ -484,7 +539,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasIonization"
       class="tw-mb-2"
       :title="t('devices.ionization')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.ionization"
@@ -496,7 +551,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasSelfCleaning"
       class="tw-mb-2"
       :title="t('devices.selfCleaning')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.self_cleaning"
@@ -508,7 +563,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasAntiFungus"
       class="tw-mb-2"
       :title="t('devices.antiFungus')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.anti_fungus"
@@ -520,7 +575,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasDisableDisplayOnPowerOff"
       class="tw-mb-2"
       :title="t('devices.disableDisplayOnPowerOff ')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.disable_display_on_power_off"
@@ -532,7 +587,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasSounds"
       class="tw-mb-2"
       :title="t('devices.sounds')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.sounds"
@@ -544,7 +599,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasOnDutyHeating"
       class="tw-mb-2"
       :title="t('devices.onDutyHeating')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.on_duty_heating"
@@ -556,7 +611,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasSoftFlow"
       class="tw-mb-2"
       :title="t('devices.softFlow')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.soft_flow"
@@ -568,7 +623,7 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
       v-if="props.isEditing && hasDisplayHighBrightness"
       class="tw-mb-2"
       :title="t('devices.displayHighBrightness')"
-      :width="350"
+      :width="150"
     >
       <ToggleSwitch
         v-model="dynamicForm.props.display_high_brightness "

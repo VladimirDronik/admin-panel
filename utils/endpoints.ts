@@ -25,6 +25,7 @@ let result = {
   objectModel: `${objectManager}/objects/model`,
   objectsTypes: `${objectManager}/objects/types`,
   controllers: `${objectManager}/controllers`,
+  objectsByProps: `${objectManager}/objects/by_props`,
 
   // Action Router
   eventsActions: `${actionRouter}/events/actions`,
@@ -53,6 +54,7 @@ if (import.meta.env.VITE_USE_OWN_URL) {
     objectModel: `${apiPath}/objects/model`,
     objectsTypes: `${apiPath}/objects/types`,
     controllers: `${apiPath}/controllers`,
+    objectsByProps: `${objectManager}/objects/by_props`,
 
     // Action Router
     eventsActions: `${apiPath}/events/actions`,

@@ -100,13 +100,15 @@ const sensorDataToShow = computed(() => {
         :options="controllers"
       />
     </SharedUILabel>
-    <SharedUILabel
-      class="tw-mb-2"
-      name="interface"
-      required
-      :title="t('devices.mode')"
-      :value="dynamicForm.props.interface"
-    >
+    <div class="tw-mb-2 tw-flex tw-items-center ">
+      <label
+        class="tw-text-lg tw-font-bold"
+        for="single-mode"
+      >
+        {{ t('devices.mode') }}
+        <span class="tw-text-primary">*</span>
+      </label>
+
       <div class="tw-flex tw-items-center">
         <RadioButton
           v-model="dynamicForm.props.interface"
@@ -117,16 +119,17 @@ const sensorDataToShow = computed(() => {
         <label
           class="tw-mr-4"
           for="single-mode"
-        > {{ t('devices.single') }}</label>
+        >{{ t('devices.single') }}</label>
+
         <RadioButton
           v-model="dynamicForm.props.interface"
           class="tw-mr-1"
           input-id="bus-mode"
           :value="DeviceInterface['1WBUS']"
         />
-        <label for="bus-mode"> {{ t('devices.bus') }}</label>
+        <label for="bus-mode">{{ t('devices.bus') }}</label>
       </div>
-    </SharedUILabel>
+    </div>
 
     <SharedUILabel
       class="tw-mb-2"
@@ -192,7 +195,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col"
         name="minThresholdTemp"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.temperature.min_threshold"
       >
@@ -206,7 +209,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdTemp"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.temperature.max_threshold"
       >
         <InputNumber
@@ -219,7 +222,7 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.temperature.min_error_value"
       >
@@ -230,7 +233,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.temperature.max_error_value"
       >
         <InputNumber
