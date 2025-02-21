@@ -31,28 +31,25 @@ const computedFilter = computed(() => {
       class="border-base tw-aspect-square tw-rounded-[15%] tw-border-2 tw-p-3.5"
       type="button"
     >
-      <div class="tw-flex tw-size-full tw-items-center tw-justify-between">
-        <div
+      <!-- <div class="tw-flex tw-size-full tw-items-center tw-justify-between"> -->
+      <!-- <div
           class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md"
           :style="{
             borderRadius: '15px',
           }"
-        >
-          <img
-            alt="scenario"
-            class="tw-aspect-square"
-            height="70"
-            :src="`items/${icon}.png`"
-            :style="{ filter: computedFilter }"
-            width="70"
-          >
-        </div>
-      </div>
+        > -->
+      <img
+        alt="scenario"
+        class="tw-aspect-square"
+        height="70"
+        :src="`items/${icon}.png`"
+        :style="{ filter: computedFilter }"
+        width="70"
+      >
+      <!-- </div> -->
+      <!-- </div> -->
     </button>
-    <h4
-      class="tw-w-28 tw-truncate tw-text-center tw-text-primary"
-      :style="{ color: roomTextColor(color) }"
-    >
+    <h4 class="tw-w-28 tw-truncate tw-text-center">
       {{ title }}
     </h4>
   </div>
