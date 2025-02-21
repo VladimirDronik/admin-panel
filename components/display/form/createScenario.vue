@@ -8,6 +8,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type { Event } from '@/types/ModelEventTypes';
 import type { Request } from '~/types/StoreTypes';
 // Static modules
+import { scenarioColors } from '~/staticData/rooms';
 import { itemEventTypes } from '~/staticData/modelEvents';
 
 // Composables
@@ -227,7 +228,10 @@ function useQuickSelectRoom() {
             class="tw-mb-2"
             :title="'Цвет'"
           >
-            <SharedUIColorSelect v-model="form.color" />
+            <SharedUIColorSelect
+              v-model="form.color"
+              :options="scenarioColors"
+            />
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"

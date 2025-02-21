@@ -5,6 +5,7 @@ import { Form } from '@primevue/forms';
 import { useI18n } from 'vue-i18n';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Static modules
+import { scenarioColors } from '~/staticData/rooms';
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
@@ -143,7 +144,19 @@ onBeforeMount(async () => {
             class="tw-mb-2"
             :title="'Цвет'"
           >
-            <SharedUIColorSelect v-model="form.color" />
+            <SharedUIColorSelect
+              v-model="form.color"
+              :options="scenarioColors"
+            />
+          </SharedUILabel>
+          <SharedUILabel
+            class="tw-mb-2"
+            :title="'Иконка'"
+          >
+            <SharedUIIconSelect
+              v-model:icon="form.icon"
+              @change="changeItem"
+            />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogDelete

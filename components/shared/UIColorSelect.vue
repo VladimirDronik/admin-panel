@@ -9,6 +9,16 @@ const value = defineModel<string | null | undefined>({
   required: true,
 });
 
+withDefaults(defineProps<{
+  options?: {
+    name: string;
+    code: string;
+    color: string;
+  }[]
+}>(), {
+  options: () => colors,
+});
+
 </script>
 
 <template>
@@ -17,7 +27,7 @@ const value = defineModel<string | null | undefined>({
     class="tw-w-full"
     option-label="name"
     option-value="code"
-    :options="colors"
+    :options
     show-clear
   >
     <template #value="slotProps">
