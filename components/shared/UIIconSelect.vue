@@ -35,12 +35,15 @@ const selectIcon = (item: string) => {
       @click="dialog = true"
     >
       <div class="border-base tw-relative tw-flex tw-aspect-square tw-items-center tw-justify-center tw-rounded-md tw-border-2 tw-p-3">
-        <img
-          alt=""
-          class="tw-w-20"
-          :class="{ 'tw-invert': storeUser.isDark }"
-          :src="`items/${icon}.png`"
-        >
+        <div class="tw-w-20">
+          <img
+            v-if="icon"
+            alt=""
+            class="tw-w-20"
+            :class="{ 'tw-invert': storeUser.isDark }"
+            :src="`items/${icon}.png`"
+          >
+        </div>
       </div>
     </button>
     <Dialog
