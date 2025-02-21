@@ -38,4 +38,6 @@ export const Components = [
   'InputSwitch',
   'InputMask',
   'Checkbox',
+  'InputGroup',
+  'FloatLabel',
 ];

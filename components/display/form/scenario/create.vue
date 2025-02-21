@@ -235,6 +235,7 @@ function useQuickSelectRoom() {
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
+            colomn
             :title="'Иконка'"
           >
             <SharedUIIconSelect v-model:icon="form.icon" />

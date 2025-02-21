@@ -132,7 +132,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col"
         name="minThresholdTemp"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.temperature.min_threshold"
       >
@@ -146,7 +146,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdTemp"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.temperature.max_threshold"
       >
         <InputNumber
@@ -159,7 +159,7 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.temperature.min_error_value"
       >
@@ -170,7 +170,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.temperature.max_error_value"
       >
         <InputNumber
@@ -194,7 +194,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col"
         name="minThresholdHumidity"
         required
-        :title="`${t('devices.minAvailability')}:`"
+        :title="`${t('devices.minAvailability')}`"
         :tooltip="t('devices.tooltipMinAvailability')"
         :value="dynamicForm.children.humidity.min_threshold"
       >
@@ -208,7 +208,7 @@ const sensorDataToShow = computed(() => {
         class="tw-flex-col !tw-items-start"
         name="maxThresholdHumidity"
         required
-        :title="`${t('devices.maxAvailability')}:`"
+        :title="`${t('devices.maxAvailability')}`"
         :value="dynamicForm.children.humidity.max_threshold"
       >
         <InputNumber
@@ -221,7 +221,7 @@ const sensorDataToShow = computed(() => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[1fr_2fr_1fr_2fr]">
       <SharedUILabel
         class="tw-flex-col"
-        :title="`${t('devices.minAlarm')}:`"
+        :title="`${t('devices.minAlarm')}`"
         :tooltip="t('devices.tooltipMinAlarm')"
         :value="dynamicForm.children.humidity.min_error_value"
       >
@@ -232,7 +232,7 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        :title="`${t('devices.maxAlarm')}:`"
+        :title="`${t('devices.maxAlarm')}`"
         :value="dynamicForm.children.humidity.max_error_value"
       >
         <InputNumber

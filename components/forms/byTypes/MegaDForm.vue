@@ -65,7 +65,10 @@ const protocolOptions = schema.shape.protocol.options;
       :title="t('devices.title')"
       :value="dynamicForm.name"
     >
-      <InputText v-model="dynamicForm.name" />
+      <InputText
+        v-model="dynamicForm.name"
+        class="tw-w-2/4"
+      />
     </SharedUILabel>
 
     <SharedUILabel
@@ -77,6 +80,7 @@ const protocolOptions = schema.shape.protocol.options;
     >
       <Select
         v-model="dynamicForm.props.protocol"
+        class="tw-w-2/4"
         disabled
         :options="protocolOptions"
       />
@@ -89,7 +93,10 @@ const protocolOptions = schema.shape.protocol.options;
       :title="t('devices.id')"
       :value="dynamicForm.props.id"
     >
-      <InputText v-model="dynamicForm.props.id" />
+      <InputText
+        v-model="dynamicForm.props.id"
+        class="tw-w-2/4"
+      />
     </SharedUILabel>
 
     <!-- v-if="!props.isEditing" -->
@@ -103,6 +110,7 @@ const protocolOptions = schema.shape.protocol.options;
       <InputText
         id="address"
         v-model="(dynamicForm.props.address as unknown as string)"
+        class="tw-w-2/4"
       />
     </SharedUILabel>
 
@@ -116,6 +124,7 @@ const protocolOptions = schema.shape.protocol.options;
       <InputText
         id="password"
         v-model="dynamicForm.props.password"
+        class="tw-w-2/4"
       />
     </SharedUILabel>
 
@@ -127,7 +136,7 @@ const protocolOptions = schema.shape.protocol.options;
     >
       <Select
         v-model="dynamicForm.zone_id"
-        class="tw-w-3/4"
+        class="tw-w-2/4"
         option-label="name"
         option-value="code"
         :options="storeRooms.getRoomsSelect"

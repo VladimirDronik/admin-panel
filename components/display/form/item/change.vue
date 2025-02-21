@@ -202,6 +202,7 @@ async function useDeleteItem() {
           </SharedUILabel>
           <SharedUILabel
             class="tw-mb-2"
+            colomn
             :title="'Иконка'"
           >
             <SharedUIIconSelect

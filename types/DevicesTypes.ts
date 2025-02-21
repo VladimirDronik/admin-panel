@@ -143,3 +143,12 @@ export interface PortDataObject {
 export interface GetDevicesPortsResponse {
   response: PortDataObject[];
 }
+
+export type GetCheckAddressResponse = {
+  response: number;
+  meta: {
+    duration: number;
+    content_length: string;
+  };
+};
+

@@ -130,7 +130,7 @@ watch(
     <SharedUILabel
       required
       :title="t('devices.detecting')"
-      :width="350"
+      :width="200"
     >
       <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
@@ -141,12 +141,11 @@ watch(
       required
       :title="t('devices.period')"
       :value="dynamicForm.props.period"
-      :width="350"
     >
       <InputNumber
         id="period"
         v-model="dynamicForm.props.period"
-        class="tw-mr-10 tw-w-1/4"
+        class="tw-mr-10 tw-w-3/4"
         suffix=" sec"
       />
     </SharedUILabel>
