@@ -108,7 +108,7 @@ async function useCreatedApi() {
     :title
   >
     <SharedUILoader :is-update="statusItem === 'pending' || statusScenario === 'pending'">
-      <DisplayFormEditItem
+      <DisplayFormItemChange
         v-if="dataItem?.response && variant === 'Edit Item'"
         v-model:form="dataItem.response"
         v-model:is-open="isOpen"
@@ -116,7 +116,7 @@ async function useCreatedApi() {
         :options
         @update="emit('update')"
       />
-      <DisplayFormEditScenario
+      <DisplayFormScenarioChange
         v-else-if="dataScenario?.response && variant === 'Edit Scenario'"
         v-model:form="dataScenario.response"
         v-model:is-open="isOpen"
@@ -124,7 +124,7 @@ async function useCreatedApi() {
         @update="emit('update')"
       />
     </SharedUILoader>
-    <DisplayFormCreateItem
+    <DisplayFormItemCreate
       v-if="variant === 'Create Item'"
       :id="zoneId"
       v-model:is-open="isOpen"
@@ -132,7 +132,7 @@ async function useCreatedApi() {
       :options
       @update="emit('update')"
     />
-    <DisplayFormCreateScenario
+    <DisplayFormScenarioCreate
       v-else-if="variant === 'Create Scenario'"
       :id="zoneId"
       v-model:is-open="isOpen"

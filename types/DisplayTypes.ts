@@ -19,14 +19,9 @@ export const roomBtns = z.object({
 });
 
 export const roomSensors = z.object({
-  current: z.number(),
-  enabled: z.boolean(),
   icon: z.string().optional(),
   item_id: z.number(),
-  name: z.string(),
-  position_left: z.number(),
-  position_top: z.number(),
-  sort: z.number(),
+  title: z.string(),
   type: z.string(),
   zone_id: z.number(),
 });
