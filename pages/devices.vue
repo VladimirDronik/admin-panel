@@ -119,6 +119,9 @@ const checkRoom = (item: RoomItem | undefined) => {
   return '-';
 };
 
+const filterActive = (filterValue: string | number | null | undefined): string => (filterValue !== null && filterValue !== undefined && filterValue !== ''
+  ? 'tw-text-primary' : '');
+
 const update = async (params: any = {}) => {
   isUpdate.value = true;
   await storeDevices.getDevicesApi({
@@ -314,7 +317,10 @@ const dropdownClasses = computed(() => ({
       </Column>
       <Column field="name">
         <template #header>
-          <DeviceTableHeader title="devices.title">
+          <DeviceTableHeader
+            :class="filterActive(filters[2].value)"
+            title="devices.title"
+          >
             <InputText
               v-model.number="filters[2].value"
               class="tw-min-w-96"
@@ -339,7 +345,10 @@ const dropdownClasses = computed(() => ({
       </Column>
       <Column field="type">
         <template #header>
-          <DeviceTableHeader title="devices.type">
+          <DeviceTableHeader
+            :class="filterActive(filters[3].value)"
+            title="devices.type"
+          >
             <InputText
               v-model.number="filters[3].value"
               class="tw-min-w-80"
@@ -355,7 +364,10 @@ const dropdownClasses = computed(() => ({
         field="address"
       >
         <template #header>
-          <DeviceTableHeader title="devices.room">
+          <DeviceTableHeader
+            :class="filterActive(filters[4].value)"
+            title="devices.room"
+          >
             <Select
               v-model.number="filters[4].value"
               class="tw-min-w-80"
@@ -380,7 +392,10 @@ const dropdownClasses = computed(() => ({
         field="status"
       >
         <template #header>
-          <DeviceTableHeader title="devices.status">
+          <DeviceTableHeader
+            :class="filterActive(filters[5].value)"
+            title="devices.status"
+          >
             <Select
               v-model="filters[5].value"
               class="tw-min-w-80"
@@ -409,7 +424,10 @@ const dropdownClasses = computed(() => ({
         style="width: 200px"
       >
         <template #header>
-          <DeviceTableHeader title="devices.tags">
+          <DeviceTableHeader
+            :class="filterActive(filters[6].value)"
+            title="devices.tags"
+          >
             <Select
               v-model="filters[6].value"
               chips
