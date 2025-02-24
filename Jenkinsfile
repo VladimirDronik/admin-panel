@@ -25,6 +25,7 @@ pipeline {
         TARGET_SRV = "${env.BRANCH_NAME == "develop" ? "${env.DEV}" : "${env.STAGE}"}"
         TARGET_PATH = "${env.BRANCH_NAME == "develop" ? "/opt/touchon/gobin" : "/opt/touchon"}"
         IMG_TAG = "${env.BRANCH_NAME == "develop" ? "develop" : "${env.BRANCH_NAME.replaceFirst('release/', '')}"}"
+        SCRIPT = "${env.BRANCH_NAME == "develop" ? "dev" : "stage"}"
     }
     stages {
         stage('Notification') {
@@ -50,6 +51,7 @@ pipeline {
                     docker buildx build \
                     -t ${env.REGISTRY}/${env.SERVICE}:${env.IMG_TAG} \
                     --platform linux/arm64 \
+                    --build-arg SCRIPT=${env.SCRIPT} \
                     --push \
                     ${env.WORKDIR}${env.SERVICE}
                 """
