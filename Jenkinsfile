@@ -51,7 +51,7 @@ pipeline {
                     docker buildx build \
                     -t ${env.REGISTRY}/${env.SERVICE}:${env.IMG_TAG} \
                     --platform linux/arm64 \
-                    --build-arg SCRIPT=${env.SCRIPT}
+                    --build-arg SCRIPT=${env.SCRIPT} \
                     --push \
                     ${env.WORKDIR}${env.SERVICE}
                 """
