@@ -132,6 +132,31 @@ const createFormByTypesMap = {
       },
     },
   },
+  [Sensor.HTU31D]: {
+    ...basicCreateDeviceForm,
+    children: {
+      [DevicePropertyKey.Temperature]: {
+        value: 0,
+        value_updated_at: '',
+        min_error_value: -40,
+        min_threshold: -40,
+        max_threshold: 105,
+        max_error_value: 105,
+        unit: '°C',
+        write_graph: false,
+      },
+      [DevicePropertyKey.Humidity]: {
+        value: 0,
+        value_updated_at: '',
+        min_error_value: 0,
+        min_threshold: 0,
+        max_threshold: 100,
+        max_error_value: 100,
+        unit: '%',
+        write_graph: false,
+      },
+    },
+  },
   [Sensor.OUTDOOR]: {
     ...basicCreateDeviceForm,
     children: {
@@ -453,6 +478,7 @@ const editFormByTypesMap = {
   [Sensor.BME280]: editFormBasicsData,
   [Sensor.BMP280]: editFormBasicsData,
   [Sensor.HTU21D]: editFormBasicsData,
+  [Sensor.HTU31D]: editFormBasicsData,
   [Sensor.OUTDOOR]: editFormBasicsData,
   [Sensor.SCD4X]: editFormBasicsData,
   [Sensor.DS18B20]: {
