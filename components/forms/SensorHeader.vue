@@ -26,22 +26,22 @@ const name = defineModel<string>('name');
 
 <template>
   <!-- Данные -->
-  <div class="tw-mt-4 tw-grid tw-grid-cols-3 tw-gap-4 tw-text-center">
+  <div class="tw-grid tw-grid-cols-4 tw-gap-4">
     <div
       v-for="(item, index) in props.data"
       :key="index"
     >
-      <p class="tw-text-2xl tw-font-bold">
-        {{ item.value }} {{ item.unit }}
-      </p>
-      <span class="tw-text-sm tw-text-gray-500">
+      <span class="text-primary-custom tw-text-[12px]">
         {{ item.label }}
       </span>
+      <p class="tw-text-xl">
+        {{ item.value }} {{ item.unit }}
+      </p>
     </div>
   </div>
 
   <!-- Дата обновления -->
-  <div class="tw-mt-4">
+  <div class="text-primary-custom tw-my-4 tw-text-[12px]">
     {{ t('devices.dataUpdated') }}:
     <span>
       {{ props.lastUpdate }}
@@ -58,41 +58,43 @@ const name = defineModel<string>('name');
   >
     <InputText
       v-model="name"
-      class="tw-w-3/4"
+      class="tw-w-full"
       required
     />
   </SharedUILabel>
 
-  <SharedUILabel
-    class="tw-mb-2"
-    name="room"
-    :title="t('devices.room')"
-  >
-    <Select
-      v-model="zoneId"
-      class="tw-w-3/4"
-      option-label="name"
-      option-value="code"
-      :options="storeRooms.getRoomsSelect"
-      :show-clear="true"
-    />
-  </SharedUILabel>
+  <div class="tw-mb-4 tw-flex tw-items-center tw-gap-4">
+    <SharedUILabel
+      class="tw-w-1/2"
+      name="room"
+      :title="t('devices.room')"
+    >
+      <Select
+        v-model="zoneId"
+        class="tw-w-full"
+        option-label="name"
+        option-value="code"
+        :options="storeRooms.getRoomsSelect"
+        :show-clear="true"
+      />
+    </SharedUILabel>
 
-  <SharedUILabel
-    class="tw-mb-2"
-    name="update_interval"
-    required
-    :title="t('devices.polling')"
-  >
-    <Select
-      id="update_interval"
-      v-model="updateInterval"
-      class="tw-mr-10 tw-w-1/2"
-      option-label="label"
-      option-value="value"
-      :options="updateIntervals"
-    />
-  </SharedUILabel>
+    <SharedUILabel
+      class="tw-w-1/2"
+      name="update_interval"
+      required
+      :title="t('devices.polling')"
+    >
+      <Select
+        id="update_interval"
+        v-model="updateInterval"
+        class="tw-w-full"
+        option-label="label"
+        option-value="value"
+        :options="updateIntervals"
+      />
+    </SharedUILabel>
+  </div>
 
   <Divider class="tw-mt-0 tw-pb-3" />
 </template>

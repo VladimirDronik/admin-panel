@@ -223,9 +223,10 @@ const typeOptions = schema.shape.type.options;
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel
+      class="text-primary-custom tw-mb-2"
       required
       :title="t('devices.regulation')"
-      :width="300"
+      :width="165"
     >
       <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
@@ -247,7 +248,7 @@ const typeOptions = schema.shape.type.options;
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.setpoint') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
@@ -279,7 +280,7 @@ const typeOptions = schema.shape.type.options;
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.hysteresis') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
@@ -312,7 +313,7 @@ const typeOptions = schema.shape.type.options;
 </template>
 <style scoped>
 :deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
- width: 150px;
+ width: 200px;
 }
 
 </style>
