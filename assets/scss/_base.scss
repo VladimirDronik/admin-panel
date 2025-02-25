@@ -75,6 +75,42 @@ html {
 }
 
 :root {
-  --p-button-label-font-weight: 800;
+  --p-button-label-font-weight: 600;
   --p-dialog-title-font-size: 16px;
+  --p-common-background: #F3F6F5;
+  --p-inputtext-background: var(--p-common-background);
+  --p-select-background: var(--p-common-background);
+  --p-common-border-color: transparent;
+  --p-inputtext-border-color: var(--p-common-border-color);
+  --p-select-border-color: var(--p-common-border-color);
+  --p-common-float-label-color: #5D897F; 
+  --p-floatlabel-focus-color: var(--p-common-float-label-color);
+  --p-form-field-float-label-color: var(--p-common-float-label-color);
+  --p-form-field-float-label-active-color: var(--p-common-float-label-color);
+  --p-floatlabel-active-font-size: 12px;
+  --p-inputtext-focus-background: #FFFFFF;
+  --p-disabled-text-color: #A0BAB4;
 }
+
+.p-inputtext:focus {
+  background-color: var(--p-inputtext-focus-background) !important;
+}
+
+.p-inputtext:disabled {
+  background-color: var(--p-inputtext-background) !important;
+  color: var(--p-disabled-text-color) !important;
+}
+
+.p-select:not(.p-disabled).p-focus {
+  background-color: var(--p-inputtext-focus-background) !important;
+}
+
+@layer utilities {
+  .text-primary-custom {
+    color: var(--p-common-float-label-color) !important;
+  }
+}
+
+
+
+

@@ -25,7 +25,7 @@ withDefaults(defineProps<{
 >(), {
   name: '',
   title: '',
-  width: 120,
+  width: 100,
   colomn: false,
   required: false,
   value: {},
@@ -48,7 +48,7 @@ withDefaults(defineProps<{
         <div class="tw-mb-2 tw-flex tw-items-center tw-gap-2">
           <label
             v-if="title"
-            class="tw-text-lg tw-font-bold"
+            class="tw-text-[12px] tw-font-bold"
             :for="name"
             :style="{ width: `${width}px` }"
           >
@@ -83,7 +83,7 @@ withDefaults(defineProps<{
       <template v-else>
         <FloatLabel
           v-tooltip="tooltip"
-          class="tw-mr-2 tw-w-full"
+          class="tw-mr-4 tw-w-full"
           variant="in"
         >
           <slot />
