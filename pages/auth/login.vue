@@ -26,7 +26,6 @@ useHead({
 
 const {
   params,
-  dataLogin,
   statusLogin,
   executeLogin,
 } = await useLogin();

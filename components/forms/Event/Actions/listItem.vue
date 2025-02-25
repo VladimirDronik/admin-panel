@@ -5,10 +5,6 @@ import type { Event, Action } from '@/types/ModelEventTypes';
 // Helper modules
 import { getActionsColor, getActionsTitle } from '~/helpers/devices';
 
-// const event = defineModel<Event>({
-//   required: true,
-// })
-
 const { items } = defineProps<{
   items: Action[];
 }>();
@@ -27,7 +23,7 @@ const deleteItem = (id: number) => {
   <VueDraggableNext
     :animation="300"
     class="tw-min-h-10 tw-w-full"
-    :group="{ name: 'g1' }"
+    :group="{ name: 'event' }"
     handle=".handle-item"
     :list="items"
   >

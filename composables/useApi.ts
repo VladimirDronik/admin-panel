@@ -14,9 +14,16 @@ export function useAPI<T>(
   options?: UseFetchOptions<T> & MyOptions,
   Schema?: unknown | null,
 ) {
+  const storeUser = useUserStore();
+  const router = useRouter();
+
   return useFetch(url, {
     ...options,
-    $fetch: useNuxtApp().$api as typeof $fetch,
+    // $fetch: useNuxtApp().$api as typeof $fetch,
+    onRequest({ options }) {
+      if (storeUser.localState.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
+      if (storeUser.localState.token) options.headers.set('token', storeUser.localState.token);
+    },
     onResponse({ response, request }) {
       // Обрабатывает данные ответа
       if (response.status < 400) {
@@ -34,6 +41,9 @@ export function useAPI<T>(
       } else {
         options?.error?.();
       }
+    },
+    onResponseError({ response }) {
+      if (response.status === 401) router.push({ name: 'auth-login' });
     },
   });
 }
