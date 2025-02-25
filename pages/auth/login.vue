@@ -111,6 +111,7 @@ async function useLogin() {
             <InputText
               v-model="params.login"
               class=" tw-w-full"
+              data-test="login"
             />
           </SharedUILabel>
           <SharedUILabel
@@ -121,11 +122,13 @@ async function useLogin() {
             <InputText
               v-model="params.password"
               class="tw-w-full"
+              data-test="password"
               type="password"
             />
           </SharedUILabel>
           <Button
             class="tw-w-full"
+            data-test="login-btn"
             :label="t('auth.signIn')"
             :loading="statusLogin === 'pending'"
             type="submit"
