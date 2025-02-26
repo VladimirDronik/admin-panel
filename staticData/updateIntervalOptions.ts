@@ -18,3 +18,10 @@ export const updateIntervals = [
   { label: '6h', value: '6h' },
   { label: '12h', value: '12h' },
 ];
+
+export const units = [
+  { label: 'ms', value: 'ms' },
+  { label: 's', value: 's' },
+  { label: 'm', value: 'm' },
+  { label: 'h', value: 'h' },
+];

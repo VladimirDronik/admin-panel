@@ -6,6 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData,
 } from '~/components/device/form/form.types';
+import { units } from '~/staticData/updateIntervalOptions';
 
 const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: true });
 
@@ -20,16 +21,14 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   ip: dynamicForm.value.props.ip,
   port: dynamicForm.value.props.port,
-  data_bits: dynamicForm.value.props.data_bits,
-  timeout: dynamicForm.value.props.timeout,
+  // data_bits: dynamicForm.value.props.data_bits,
   tries: dynamicForm.value.props.tries,
 }));
 
 const schema = z.object({
   ip: z.string().min(1),
   port: z.number().min(1),
-  data_bits: z.number().min(1),
-  timeout: z.number().min(1),
+  // data_bits: z.number().min(1),
   tries: z.number().min(1).max(10),
 });
 
@@ -45,30 +44,30 @@ watch(
   { deep: true },
 );
 
-const speedOptions = [
-  { value: '115200', name: '115200' },
-  { value: '1200', name: '1200' },
-  { value: '128000', name: '128000' },
-  { value: '19200', name: '19200' },
-  { value: '2400', name: '2400' },
-  { value: '256000', name: '256000' },
-  { value: '38400', name: '38400' },
-  { value: '4800', name: '4800' },
-  { value: '57600', name: '57600' },
-  { value: '9600', name: '9600' },
-];
+// const speedOptions = [
+//   { value: '115200', name: '115200' },
+//   { value: '1200', name: '1200' },
+//   { value: '128000', name: '128000' },
+//   { value: '19200', name: '19200' },
+//   { value: '2400', name: '2400' },
+//   { value: '256000', name: '256000' },
+//   { value: '38400', name: '38400' },
+//   { value: '4800', name: '4800' },
+//   { value: '57600', name: '57600' },
+//   { value: '9600', name: '9600' },
+// ];
 
-const parityOptions = [
-  { value: '0', name: 'none' },
-  { value: '1', name: 'even' },
-  { value: '2', name: 'odd' },
-];
+// const parityOptions = [
+//   { value: '0', name: 'none' },
+//   { value: '1', name: 'even' },
+//   { value: '2', name: 'odd' },
+// ];
 
-const stopBitsOptions = [
-  { value: '0', name: '0' },
-  { value: '1', name: '1' },
-  { value: '2', name: '2' },
-];
+// const stopBitsOptions = [
+//   { value: '0', name: '0' },
+//   { value: '1', name: '1' },
+//   { value: '2', name: '2' },
+// ];
 </script>
 
 <template>
@@ -141,7 +140,7 @@ const stopBitsOptions = [
       />
     </SharedUILabel>
 
-    <SharedUILabel
+    <!-- <SharedUILabel
       class="tw-mb-2"
       required
       :title="t('devices.speed')"
@@ -201,21 +200,26 @@ const stopBitsOptions = [
         option-value="value"
         :options="stopBitsOptions"
       />
-    </SharedUILabel>
+    </SharedUILabel> -->
 
     <SharedUILabel
-      class="tw-mb-2"
-      name="timeout"
+      class="tw-mb-4"
       required
       :title="t('devices.timeout')"
-      :value="dynamicForm.props.timeout"
-      :width="300"
     >
-      <InputNumber
-        v-model="dynamicForm.props.timeout"
-        class="tw-w-2/4"
-        suffix=" ms"
-      />
+      <div class="p-inputgroup tw-w-2/4">
+        <InputNumber
+          v-model="dynamicForm.props.numericValue"
+          class="tw-w-1/2"
+        />
+        <Select
+          v-model="dynamicForm.props.selectedUnit"
+          class="tw-w-1/2"
+          option-label="label"
+          option-value="value"
+          :options="units"
+        />
+      </div>
     </SharedUILabel>
 
     <SharedUILabel

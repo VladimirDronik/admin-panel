@@ -80,9 +80,11 @@ html {
   --p-common-background: #F3F6F5;
   --p-inputtext-background: var(--p-common-background);
   --p-select-background: var(--p-common-background);
+  --p-multiselect-background: var(--p-common-background);
   --p-common-border-color: transparent;
   --p-inputtext-border-color: var(--p-common-border-color);
   --p-select-border-color: var(--p-common-border-color);
+  --p-multiselect-border-color: var(--p-common-border-color);
   --p-common-float-label-color: #5D897F; 
   --p-floatlabel-focus-color: var(--p-common-float-label-color);
   --p-form-field-float-label-color: var(--p-common-float-label-color);
@@ -102,6 +104,10 @@ html {
 }
 
 .p-select:not(.p-disabled).p-focus {
+  background-color: var(--p-inputtext-focus-background) !important;
+}
+
+.p-multiselect:not(.p-disabled).p-focus {
   background-color: var(--p-inputtext-focus-background) !important;
 }
 

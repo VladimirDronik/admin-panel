@@ -232,7 +232,6 @@ const isRoomSelectDisabled = computed(() => initialForm.value.type === 'regulato
               <MultiSelect
                 v-model="initialForm.tags"
                 class="tw-w-full"
-                display="chip"
                 filter
                 :max-selected-labels="5"
                 :options="tags"
