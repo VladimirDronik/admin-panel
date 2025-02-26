@@ -46,7 +46,7 @@ export default {
     mainSensor: 'Основной датчик',
     indicator: 'Показатель',
     sensorTTL: 'TTL датчика',
-    additionalSensor: 'Доп. датчик',
+    additionalSensor: 'Дополнительный датчик',
     regulation: 'Включение регулирования',
     regulatorType: 'Тип регулятора',
     setpoint: 'Уставка',

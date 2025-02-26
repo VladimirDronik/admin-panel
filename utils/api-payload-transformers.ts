@@ -43,6 +43,8 @@ const createConnectionString = (formData: FormDataToTransform | EditDeviceForm):
   return `tcp://${formData.props.ip}:${formData.props.port}`;
 };
 
+const createNumericValueWithUnit = (formData: FormDataToTransform | EditDeviceForm): string => `${formData.props.numericValue}${formData.props.selectedUnit}`;
+
 export const transformToDeviceCreateFormPayload = (
   formData: FormDataToTransform,
 ): DeviceCreateFormPayload => {
@@ -54,6 +56,11 @@ export const transformToDeviceCreateFormPayload = (
   }
   if (formData.type === Modbus.Modbus) {
     result.object.props.connection_string = createConnectionString(formData);
+    result.object.props.timeout = createNumericValueWithUnit(formData);
+  }
+
+  if (formData.type === Regulator.Regulator) {
+    result.object.props.sensor_value_ttl = createNumericValueWithUnit(formData);
   }
   if (!formData.children && 'children' in result.object) {
     // @ts-expect-error ///
@@ -64,6 +71,8 @@ export const transformToDeviceCreateFormPayload = (
   delete result.object.busAddress;
   delete result.object.props.ip;
   delete result.object.props.port;
+  delete result.object.props.numericValue;
+  delete result.object.props.selectedUnit;
 
   return result;
 };
@@ -78,6 +87,10 @@ export const transformToDeviceEditFormPayload = (
   }
   if (formData.type === Modbus.Modbus) {
     result.props.connection_string = createConnectionString(formData);
+    result.props.timeout = createNumericValueWithUnit(formData);
+  }
+  if (formData.type === Regulator.Regulator) {
+    result.props.sensor_value_ttl = createNumericValueWithUnit(formData);
   }
 
   const resultWithoutPorts = Object.fromEntries(
@@ -85,7 +98,7 @@ export const transformToDeviceEditFormPayload = (
   );
 
   const resultPropsWithoutPorts = Object.fromEntries(
-    Object.entries(result.props).filter(([key]) => key !== 'ip' && key !== 'port'),
+    Object.entries(result.props).filter(([key]) => key !== 'ip' && key !== 'port' && key !== 'numericValue' && key !== 'selectedUnit'),
   );
 
   let finalResult = {
@@ -116,11 +129,29 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedMode = data.props.find((prop) => prop.code === 'mode');
   const updatedConnectionString = data.props.find((prop) => prop.code === 'connection_string');
   const [ip, port] = String(updatedConnectionString?.value).match(/^tcp:\/\/([\d.]+):(\d+)$/)?.slice(1) ?? [null, null];
-  const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
-  const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
-  const updatedParity = data.props.find((prop) => prop.code === 'parity');
-  const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
-  const updatedTimeout = data.props.find((prop) => prop.code === 'timeout');
+
+  const parseNumericValueWithUnit = (value: unknown): { numericValue: number | null; selectedUnit: string } => {
+    const stringValue = String(value ?? '');
+    const match = stringValue.match(/^(\d+)(ms|s|m|h)$/);
+    return {
+      numericValue: match ? parseInt(match[1], 10) : null,
+      selectedUnit: match ? match[2] : 's',
+    };
+  };
+
+  const updatedSensorValueTTL = data.props.find((prop) => prop.code === 'sensor_value_ttl')?.value;
+  const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
+
+  const { numericValue: ttlNumericValue, selectedUnit: ttlUnit } = parseNumericValueWithUnit(updatedSensorValueTTL);
+  const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);
+
+  const numericValue = ttlNumericValue ?? timeoutNumericValue;
+  const selectedUnit = ttlUnit ?? timeoutUnit;
+
+  // const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
+  // const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
+  // const updatedParity = data.props.find((prop) => prop.code === 'parity');
+  // const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
   const updatedTries = data.props.find((prop) => prop.code === 'tries');
 
   const children = data.children?.reduce((childrenAcc, child) => {
@@ -185,21 +216,25 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('port' in initialForm.props) {
     initialForm.props.port = port ? Number(port) : null;
   }
-  if ('speed' in initialForm.props && updatedSpeed) {
-    initialForm.props.speed = String(updatedSpeed.value);
+  if ('numericValue' in initialForm.props) {
+    initialForm.props.numericValue = numericValue;
   }
-  if ('data_bits' in initialForm.props && updatedDataBits) {
-    initialForm.props.data_bits = Number(updatedDataBits.value);
+  if ('selectedUnit' in initialForm.props) {
+    initialForm.props.selectedUnit = selectedUnit;
   }
-  if ('parity' in initialForm.props && updatedParity) {
-    initialForm.props.parity = String(updatedParity.value);
-  }
-  if ('stop_bits' in initialForm.props && updatedStopBits) {
-    initialForm.props.stop_bits = String(updatedStopBits.value);
-  }
-  if ('timeout' in initialForm.props && updatedTimeout) {
-    initialForm.props.timeout = Number(updatedTimeout.value);
-  }
+  // if ('speed' in initialForm.props && updatedSpeed) {
+  //   initialForm.props.speed = String(updatedSpeed.value);
+  // }
+  // if ('data_bits' in initialForm.props && updatedDataBits) {
+  //   initialForm.props.data_bits = Number(updatedDataBits.value);
+  // }
+  // if ('parity' in initialForm.props && updatedParity) {
+  //   initialForm.props.parity = String(updatedParity.value);
+  // }
+  // if ('stop_bits' in initialForm.props && updatedStopBits) {
+  //   initialForm.props.stop_bits = String(updatedStopBits.value);
+  // }
+
   if ('tries' in initialForm.props && updatedTries) {
     initialForm.props.tries = Number(updatedTries.value);
   }
