@@ -41,6 +41,7 @@ const iconMap = {
   scd4x: IconAlertSquareRounded,
   motion: IconRun,
   htu21d: IconCloudPlus,
+  htu31d: IconCloudPlus,
   regulator: IconToggleRightFilled,
   modbus: IconCpu,
   wb_mrm2_mini: IconCurrency,
