@@ -16,7 +16,8 @@ const basicCreateDeviceForm = {
   parent_id: 0,
   category: ObjectsCategory.Sensor,
   props: {
-    update_interval: '1m',
+    numericValue: 5,
+    selectedUnit: 's',
     interface: DeviceInterface['I2C'],
   },
   children: {},
@@ -245,7 +246,8 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['1W'],
-      update_interval: '1m',
+      numericValue: 5,
+      selectedUnit: 's',
     },
     children: {
       [DevicePropertyKey.Temperature]: {
@@ -267,7 +269,8 @@ const createFormByTypesMap = {
     enabled: false,
     props: {
       interface: DeviceInterface['MEGAIN'],
-      period: 8,
+      numericValue: 30,
+      selectedUnit: 's',
       mode: 'P',
     },
     children: {
@@ -292,7 +295,8 @@ const createFormByTypesMap = {
     enabled: false,
     props: {
       interface: DeviceInterface['MEGAIN'],
-      period: 120,
+      numericValue: 30,
+      selectedUnit: 's',
       mode: 'P',
     },
     children: {
@@ -368,7 +372,8 @@ const createFormByTypesMap = {
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['ADC'],
-      update_interval: '1m',
+      numericValue: 5,
+      selectedUnit: 's',
     },
     children: {
       [DevicePropertyKey.Current]: {
@@ -450,7 +455,8 @@ export const initialEditFormData = {
   zone_id: 0,
   busAddress: 0,
   props: {
-    update_interval: '1m',
+    numericValue: 5,
+    selectedUnit: 's',
     interface: DeviceInterface['1W'],
     address: '',
     id: '',
@@ -468,7 +474,8 @@ const editFormBasicsData = {
   sclPort: null,
   parent_id: 0,
   props: {
-    update_interval: '1m',
+    numericValue: 5,
+    selectedUnit: 's',
     interface: DeviceInterface['I2C'],
   },
   children: {},
@@ -490,7 +497,8 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {
       interface: DeviceInterface['1W'],
-      update_interval: '1m',
+      numericValue: 5,
+      selectedUnit: 's',
     },
     children: {},
     status: '',
@@ -501,7 +509,8 @@ const editFormByTypesMap = {
     parent_id: 0,
     props: {
       interface: DeviceInterface['ADC'],
-      update_interval: '1m',
+      numericValue: 5,
+      selectedUnit: 's',
     },
     children: {},
     status: '',
@@ -512,7 +521,8 @@ const editFormByTypesMap = {
     sdaPort: null,
     enabled: false,
     props: {
-      period: 8,
+      numericValue: 30,
+      selectedUnit: 's',
       mode: 'P',
       interface: DeviceInterface['MEGAIN'],
     },
@@ -526,7 +536,8 @@ const editFormByTypesMap = {
     sclPort: null,
     enabled: false,
     props: {
-      period: 120,
+      numericValue: 30,
+      selectedUnit: 's',
       mode: 'P',
       interface: DeviceInterface['MEGAIN'],
     },
@@ -596,7 +607,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       silent_mode: false,
@@ -623,7 +635,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       display_high_brightness: false,
@@ -647,7 +660,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       silent_mode: false,
@@ -673,7 +687,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       silent_mode: false,
       sleep_mode: false,
@@ -695,7 +710,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       silent_mode: false,
@@ -722,7 +738,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       silent_mode: false,
@@ -745,7 +762,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       sleep_mode: false,
       operating_mode: '1',
@@ -764,7 +782,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       silent_mode: false,
       operating_mode: '1',
@@ -783,7 +802,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       operating_mode: '1',
       internal_temperature: 25,
@@ -800,7 +820,8 @@ const editFormByTypesMap = {
     enabled: true,
     props: {
       address: 0,
-      update_interval: 60,
+      numericValue: 1,
+      selectedUnit: 'm',
       power_status: false,
       display_backlight: false,
       silent_mode: false,

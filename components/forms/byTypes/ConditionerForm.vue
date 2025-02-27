@@ -5,8 +5,8 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { useToast } from 'primevue/usetoast';
 import { useCheckAddressAvailability } from '~/composables/useCheck';
-
 import type { EditDeviceForm } from '~/components/device/form/form.types';
+import { units } from '~/staticData/updateIntervalOptions';
 
 const { modbus, getModbus } = useModbus();
 getModbus();
@@ -326,17 +326,25 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
 
     <SharedUILabel
       v-if="props.isEditing"
-      class="tw-mb-2"
+      class="tw-mb-4"
       required
       :title="t('devices.polling')"
-      :value="dynamicForm.props.update_interval"
     >
-      <InputNumber
-        v-model="(dynamicForm.props.update_interval as unknown as number)"
-        class="tw-mr-10 tw-w-3/4"
-        disabled
-        suffix=" sec"
-      />
+      <div class="p-inputgroup tw-w-2/4">
+        <InputNumber
+          v-model="dynamicForm.props.numericValue"
+          class="tw-w-1/2"
+          disabled
+        />
+        <Select
+          v-model="dynamicForm.props.selectedUnit"
+          class="tw-w-1/2"
+          disabled
+          option-label="label"
+          option-value="value"
+          :options="units"
+        />
+      </div>
     </SharedUILabel>
 
     <SharedUILabel
