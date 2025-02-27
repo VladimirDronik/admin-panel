@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { number, z } from 'zod';
 
 export const roomBtns = z.object({
   description: z.string(),
@@ -21,9 +21,9 @@ export const roomBtns = z.object({
 export const roomSensors = z.object({
   icon: z.string().optional(),
   item_id: z.number(),
-  title: z.string(),
   type: z.string(),
   zone_id: z.number(),
+  current: number(),
 });
 
 export const roomsItem = z.object({

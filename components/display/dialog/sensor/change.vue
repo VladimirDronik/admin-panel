@@ -53,6 +53,7 @@ async function useDeleteItem() {
     })),
     method: 'DELETE',
     immediate: false,
+    watch: false,
   });
 
   const dialogDelete = ref(false);
@@ -125,7 +126,7 @@ async function useChangeItem() {
         }"
         :src="`items/${sensor.icon}.png`"
       >
-      {{ sensor }}
+      {{ sensor.current }}
       <span v-if="sensor.type === 'temperature'">
         °
       </span>
