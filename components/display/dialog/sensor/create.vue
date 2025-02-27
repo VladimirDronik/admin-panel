@@ -380,9 +380,13 @@ async function useCreatedApi() {
               </div>
               <SharedUILabel
                 class="tw-mb-2"
+                colomn
                 :title="'Иконка'"
               >
-                <SharedUIIconSelect v-model:icon="form.icon" />
+                <SharedUIIconSelect
+                  v-model:icon="form.icon"
+                  type="sensors"
+                />
               </SharedUILabel>
             </div>
           </div>
