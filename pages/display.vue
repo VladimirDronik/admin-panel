@@ -163,10 +163,7 @@ function useRightBar() {
         <h2 class="tw-mb-2 tw-text-xl">
           Сценарии
         </h2>
-        <PerfectScrollbar
-          v-if="dataItems?.response.scenario_items?.length"
-          class="tw-flex tw-flex-wrap"
-        >
+        <PerfectScrollbar class="tw-flex tw-flex-wrap">
           <DisplayCardScenario
             v-for="scenario in dataItems?.response?.scenario_items"
             :key="scenario.item_id"
