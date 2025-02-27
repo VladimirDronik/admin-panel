@@ -153,10 +153,15 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const [ip, port] = String(updatedConnectionString?.value).match(/^tcp:\/\/([\d.]+):(\d+)$/)?.slice(1) ?? [null, null];
 
   const parseNumericValueWithUnit = (value: unknown): { numericValue: number; selectedUnit: string } => {
-    const stringValue = String(value ?? '');
-    const match = stringValue.match(/^(\d+)(ms|s|m|h)$/);
+    const stringValue = String(value ?? '').trim();
+    console.log('Raw value:', value);
+    console.log('Processed stringValue:', stringValue);
+
+    const match = stringValue.match(/^(\d+)(ms|s|m|h)$/i);
+    console.log('Regex match:', match);
+
     return {
-      numericValue: match ? parseInt(match[1], 10) : 0,
+      numericValue: match ? Number(match[1]) : 0,
       selectedUnit: match ? match[2] : 's',
     };
   };
@@ -165,14 +170,29 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
   const updatedPeriod = data.props.find((prop) => prop.code === 'period')?.value;
   const updatedUpdateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
+  console.log('Raw period value:', updatedPeriod);
 
   const { numericValue: ttlNumericValue, selectedUnit: ttlUnit } = parseNumericValueWithUnit(updatedSensorValueTTL);
   const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);
   const { numericValue: periodNumericValue, selectedUnit: periodUnit } = parseNumericValueWithUnit(updatedPeriod);
   const { numericValue: updateIntervalNumericValue, selectedUnit: updateIntervalUnit } = parseNumericValueWithUnit(updatedUpdateInterval);
 
-  const numericValue = updateIntervalNumericValue ?? periodNumericValue ?? ttlNumericValue ?? timeoutNumericValue;
-  const selectedUnit = updateIntervalUnit ?? periodUnit ?? ttlUnit ?? timeoutUnit;
+  let numericValue = 0;
+  let selectedUnit = 's';
+
+  if (updatedPeriod !== undefined) {
+    numericValue = periodNumericValue;
+    selectedUnit = periodUnit;
+  } else if (updatedSensorValueTTL !== undefined) {
+    numericValue = ttlNumericValue;
+    selectedUnit = ttlUnit;
+  } else if (updatedTimeout !== undefined) {
+    numericValue = timeoutNumericValue;
+    selectedUnit = timeoutUnit;
+  } else if (updatedUpdateInterval !== undefined) {
+    numericValue = updateIntervalNumericValue;
+    selectedUnit = updateIntervalUnit;
+  }
 
   // const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
   // const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
