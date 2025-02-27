@@ -1,5 +1,4 @@
 import type { RoomItem, SelectRoom } from '~/stores/rooms/roomsTypes';
-import { colors } from '~/staticData/rooms';
 
 // API
 export const filterInListRoom = (rooms: RoomItem[] | undefined): any[] => {
@@ -62,7 +61,13 @@ export const itemColor = (colorRoom: string, colorBtn: string | undefined = unde
   return '#EAEFF4';
 };
 
-export const getRoomColorByValue = (value: string) => {
+interface Color {
+  name: string;
+  code: string;
+  color: string;
+}
+
+export const getRoomColorByValue = (colors: Color[], value: string) => {
   const result = colors.find((item) => item.code === value);
   return result;
 };
