@@ -38,7 +38,7 @@ const fetchSensors = async () => {
 const handleMainSensorSelection = async (event: { value: number }) => {
   const sensorId = event.value;
   const selectedSensor = sensorOptions.value.find((sensor) => sensor.value === sensorId);
-  const endpoint = `${objectManager}/objects/${sensorId}`;
+  const endpoint = `${backendApi}/objects/${sensorId}`;
   if (selectedSensor) {
     dynamicForm.value.zone_id = selectedSensor.zone_id;
   }
@@ -57,7 +57,7 @@ const handleMainSensorSelection = async (event: { value: number }) => {
 
 const handleAdditionalSensorSelection = async (event: { value: number }) => {
   const sensorId = event.value;
-  const endpoint = `${objectManager}/objects/${sensorId}`;
+  const endpoint = `${backendApi}/objects/${sensorId}`;
   const data: any = await api(endpoint, {
     query: { without_children: false },
   });
