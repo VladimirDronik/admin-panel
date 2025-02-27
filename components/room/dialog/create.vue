@@ -21,19 +21,6 @@ const dialog = defineModel<boolean>({
 });
 
 // Variables
-const type = [
-  {
-    name: 'Помещение',
-    code: false,
-  },
-  {
-    name: 'Группа Помещений',
-    code: true,
-  },
-];
-
-const apiCreateRoom = ref<APIData<any>>();
-
 const form = ref({
   name: null,
   style: null,
@@ -50,10 +37,28 @@ const resolver = ref(zodResolver(
 ));
 
 // Methods
+const {
+  status: statusCreateRoom,
+  execute: executeCreateRoom,
+} = await useAPI(paths.privateRoom, {
+  body: computed(() => {
+    if (parentId.value) {
+      return {
+        ...form.value,
+        parent_id: parentId.value,
+      };
+    }
+    return form.value;
+  }),
+  method: 'POST',
+  immediate: false,
+  watch: false,
+});
+
 const createRoom = async () => {
   await updateData({
     update: async () => {
-      await apiCreateRoom.value?.execute();
+      await executeCreateRoom();
       await emit('update');
     },
     success: () => {
@@ -69,29 +74,6 @@ const createRoom = async () => {
     errorMessage: 'Помещение не было создана',
   });
 };
-
-// Hooks
-onBeforeMount(async () => {
-  // Create Device
-  const data: unknown = await useAPI(paths.privateRoom, {
-    body: computed(() => {
-      if (parentId.value) {
-        return {
-          ...form.value,
-          parent_id: parentId.value,
-        };
-      }
-      return {
-        ...form.value,
-      };
-    }),
-    method: 'POST',
-    immediate: false,
-    watch: false,
-  });
-
-  apiCreateRoom.value = data as APIData<any>;
-});
 
 </script>
 
@@ -156,6 +138,7 @@ onBeforeMount(async () => {
           <Button
             class="tw-mr-2"
             :label="t('save')"
+            :loading="statusCreateRoom === 'pending'"
             type="submit"
           />
           <Button

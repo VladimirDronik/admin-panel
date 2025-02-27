@@ -34,6 +34,7 @@ export enum Sensor {
   BMP280 = 'bmp280',
   DS18B20 = 'ds18b20',
   HTU21D = 'htu21d',
+  HTU31D = 'htu31d',
   OUTDOOR = 'outdoor',
   SCD4X = 'scd4x',
   MOTION = 'motion',

@@ -161,6 +161,20 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
+  htu31d: [
+    {
+      code: 'object.sensor.on_check',
+      name: 'on_check',
+      description: 'Данные датчика обновлены',
+      actions: [],
+    },
+    {
+      code: 'object.sensor.on_alarm',
+      name: 'on_alarm',
+      description: 'Данные датчика вышли за пороговые значения',
+      actions: [],
+    },
+  ],
   outdoor: [
     {
       code: 'object.sensor.on_check',

@@ -13,6 +13,7 @@ const open = defineModel<boolean>('open', {
     <div class="tw-flex tw-w-full tw-items-center tw-justify-between">
       <Button
         class="tw-aspect-square tw-size-9"
+        data-test="sidebar-btn"
         icon="pi pi-align-justify"
         size="small"
         text

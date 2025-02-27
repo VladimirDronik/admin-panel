@@ -128,9 +128,10 @@ watch(
 
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel
+      class="text-primary-custom tw-mb-2"
       required
       :title="t('devices.detecting')"
-      :width="200"
+      :width="165"
     >
       <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
@@ -152,7 +153,10 @@ watch(
 
     <Divider class="tw-mt-0 tw-pb-3" />
 
-    <SharedUILabel :title="t('devices.graphing')">
+    <SharedUILabel
+      class="text-primary-custom tw-mb-2"
+      :title="t('devices.graphing')"
+    >
       <ToggleSwitch v-model="dynamicForm.children.motion.write_graph" />
     </SharedUILabel>
   </Form>

@@ -53,7 +53,7 @@ export interface DeviceProps {
     id?: string;
     password?: string;
     protocol?: Connection;
-    sensor_value_ttl?: number;
+    sensor_value_ttl?: string;
     type?: RegulatorType;
     min_sp?: number;
     target_sp?: number;
@@ -90,10 +90,12 @@ export interface DeviceProps {
     data_bits?: number;
     parity?: string;
     stop_bits?: string;
-    timeout?: number;
+    timeout?: string;
     tries?: number;
     port?: number;
     ip?: string;
+    numericValue?: number;
+    selectedUnit?: string;
   }
 
 export interface DeviceChild {

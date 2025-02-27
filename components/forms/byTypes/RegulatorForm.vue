@@ -6,6 +6,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import type {
   DynamicFormData,
 } from '~/components/device/form/form.types';
+import { units } from '~/staticData/updateIntervalOptions';
 
 const storeDevices = useDevicesStore();
 const storeRooms = useRoomsStore();
@@ -27,8 +28,8 @@ const fetchSensors = async () => {
     with_methods: false,
   };
   const data = await storeDevices.getDevicesApi(params, false);
-  // const sensors = data.response.list.flatMap((item: any) => item.children.filter((child: any) => child.category === 'sensor'));
-  sensorOptions.value = data.response.list.map((sensor: any) => ({
+  const sensors = data.response.list.flatMap((item: any) => item.children.filter((child: any) => child.category === 'sensor'));
+  sensorOptions.value = sensors.map((sensor: any) => ({
     label: sensor.type,
     value: sensor.id,
     zone_id: sensor.zone_id,
@@ -73,7 +74,6 @@ onMounted(fetchSensors);
 
 const flatForm = computed(() => ({
   type: dynamicForm.value.props.type,
-  sensor_value_ttl: dynamicForm.value.props.sensor_value_ttl,
   min_sp: dynamicForm.value.props.min_sp,
   target_sp: dynamicForm.value.props.target_sp,
   max_sp: dynamicForm.value.props.max_sp,
@@ -83,7 +83,6 @@ const flatForm = computed(() => ({
 }));
 const schema = z.object({
   type: z.enum(['complex', 'pid', 'simple']),
-  sensor_value_ttl: z.number().default(30),
   min_sp: z.number().default(0),
   target_sp: z.number().default(0),
   max_sp: z.number().default(0),
@@ -181,16 +180,27 @@ const typeOptions = schema.shape.type.options;
         :options="mainSensorChildrenOptions"
       />
     </SharedUILabel>
+
     <SharedUILabel
-      class="tw-mb-2"
-      name="sensor_value_ttl"
+      class="tw-mb-4"
       required
       :title="t('devices.sensorTTL')"
-      :value="dynamicForm.props.sensor_value_ttl"
-      :width="300"
     >
-      <InputNumber v-model="dynamicForm.props.sensor_value_ttl" />
+      <div class="p-inputgroup tw-w-2/4">
+        <InputNumber
+          v-model="dynamicForm.props.numericValue"
+          class="tw-w-1/2"
+        />
+        <Select
+          v-model="dynamicForm.props.selectedUnit"
+          class="tw-w-1/2"
+          option-label="label"
+          option-value="value"
+          :options="units"
+        />
+      </div>
     </SharedUILabel>
+
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel
       class="tw-mb-2"
@@ -223,9 +233,10 @@ const typeOptions = schema.shape.type.options;
     </SharedUILabel>
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel
+      class="text-primary-custom tw-mb-2"
       required
       :title="t('devices.regulation')"
-      :width="300"
+      :width="165"
     >
       <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
@@ -247,7 +258,7 @@ const typeOptions = schema.shape.type.options;
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.setpoint') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
@@ -279,7 +290,7 @@ const typeOptions = schema.shape.type.options;
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.hysteresis') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_150px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
@@ -312,7 +323,7 @@ const typeOptions = schema.shape.type.options;
 </template>
 <style scoped>
 :deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
- width: 150px;
+ width: 200px;
 }
 
 </style>

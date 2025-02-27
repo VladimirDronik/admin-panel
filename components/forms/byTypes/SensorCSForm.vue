@@ -144,7 +144,10 @@ const sensorDataToShow = computed(() => {
       {{ t('devices.current') }}
     </p>
 
-    <SharedUILabel :title="t('devices.graphing')">
+    <SharedUILabel
+      class="text-primary-custom tw-mb-2"
+      :title="t('devices.graphing')"
+    >
       <ToggleSwitch v-model="dynamicForm.children.current.write_graph" />
     </SharedUILabel>
 
@@ -206,6 +209,6 @@ const sensorDataToShow = computed(() => {
 <style scoped>
 
 :deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
- width: 150px;
+ width: 200px;
 }
 </style>

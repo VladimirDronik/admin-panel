@@ -126,4 +126,8 @@ export const deviceFormMapping: DeviceFormMapping[] = [
     type: Modbus.Modbus,
     component: ModbusForm,
   },
+  {
+    type: Sensor.HTU31D,
+    component: SensorHTU21DForm,
+  },
 ];

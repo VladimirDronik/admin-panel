@@ -99,6 +99,7 @@ async function useWorkWithRoomApi() {
       <VueDraggableNext
         v-model="dataRooms.response"
         :animation="300"
+        :group="{ name: 'room' }"
         handle=".handle-list"
       >
         <div
@@ -146,6 +147,7 @@ async function useWorkWithRoomApi() {
                 <VueDraggableNext
                   v-model="place.rooms_in_group"
                   :animation="300"
+                  :group="{ name: 'room' }"
                   handle=".handle-item"
                 >
                   <div
