@@ -28,7 +28,13 @@ const fetchSensors = async () => {
     with_methods: false,
   };
   const data = await storeDevices.getDevicesApi(params, false);
-  const sensors = data.response.list.flatMap((item: any) => item.children.filter((child: any) => child.category === 'sensor'));
+  const sensors = data.response.list.flatMap((item: any) => {
+    const childSensors = Array.isArray(item.children)
+      ? item.children.filter((child: any) => child.category === 'sensor')
+      : [];
+
+    return item.category === 'sensor' ? [item, ...childSensors] : childSensors;
+  });
   sensorOptions.value = sensors.map((sensor: any) => ({
     label: sensor.type,
     value: sensor.id,
