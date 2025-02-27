@@ -37,10 +37,10 @@ withDefaults(defineProps<{
       >
         <div
           class="tw-mr-2 tw-size-4 tw-rounded-full"
-          :style="{ backgroundColor: getRoomColorByValue(slotProps.value)?.color }"
+          :style="{ backgroundColor: getRoomColorByValue(options, slotProps.value)?.color }"
         />
         <div class="tw-min-h-6">
-          {{ getRoomColorByValue(slotProps.value)?.name }}
+          {{ getRoomColorByValue(options, slotProps.value)?.name }}
         </div>
       </div>
     </template>

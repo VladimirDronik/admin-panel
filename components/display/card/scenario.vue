@@ -14,11 +14,14 @@ const props = defineProps<{
 
 const computedFilter = computed(() => {
   const filters: Record<string, string> = {
-    blue: 'brightness(0) saturate(100%) invert(66%) sepia(50%) saturate(5712%) hue-rotate(197deg) brightness(103%) contrast(102%)',
+    light_blue: 'brightness(0) saturate(100%) invert(55%) sepia(22%) saturate(3912%) hue-rotate(195deg) brightness(101%) contrast(101%)',
     green: 'brightness(0) saturate(100%) invert(52%) sepia(94%) saturate(3201%) hue-rotate(135deg) brightness(105%) contrast(80%)',
+    light_green: 'brightness(0) saturate(100%) invert(48%) sepia(27%) saturate(1108%) hue-rotate(89deg) brightness(98%) contrast(104%)',
     yellow: 'brightness(0) saturate(100%) invert(81%) sepia(31%) saturate(844%) hue-rotate(345deg) brightness(103%) contrast(101%)',
     orange: 'brightness(0) saturate(100%) invert(78%) sepia(56%) saturate(1570%) hue-rotate(318deg) brightness(101%) contrast(101%)',
     red: 'brightness(0) saturate(100%) invert(46%) sepia(69%) saturate(1120%) hue-rotate(329deg) brightness(101%) contrast(101%)',
+    light_purple: 'brightness(0) saturate(100%) invert(41%) sepia(93%) saturate(627%) hue-rotate(231deg) brightness(101%) contrast(101%)',
+    dark_purple: 'brightness(0) saturate(100%) invert(10%) sepia(97%) saturate(7253%) hue-rotate(285deg) brightness(87%) contrast(111%)',
   };
 
   return filters[props.color as keyof typeof filters] || filters.green;
