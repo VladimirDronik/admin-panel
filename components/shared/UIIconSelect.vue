@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-import { items } from '~/utils/icons';
+import { items, sensors } from '~/utils/icons';
 
 // Composables
-const { t } = useI18n();
 const storeUser = useUserStore();
 
 const icon = defineModel<string | null>('icon', {
@@ -16,9 +15,17 @@ const emit = defineEmits<{
   (e: 'change'): void
 }>();
 
+const props = withDefaults(defineProps<{
+  type?: string
+}>(), {
+  type: 'items',
+});
+
 const dialog = defineModel<boolean>({
   default: false,
 });
+
+const variant = computed(() => (props.type === 'items' ? items : sensors));
 
 // Methods
 const selectIcon = (item: string) => {
@@ -59,7 +66,7 @@ const selectIcon = (item: string) => {
     >
       <div class="tw-mb-3 tw-grid tw-grid-cols-6 tw-gap-3">
         <button
-          v-for="item in items"
+          v-for="item in variant"
           :key="item"
           class="tw-aspect-square"
           type="button"

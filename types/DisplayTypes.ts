@@ -48,7 +48,7 @@ export const scenarioItem = z.object({
 });
 
 export const displayRequestSchema = z.object({
-  room_items: z.array(roomsItem),
+  room_items: z.array(roomsItem).optional(),
   scenario_items: z.array(scenarioItem),
 });
 

@@ -104,16 +104,25 @@ export const items = [
   'book',
   'cat',
   'chart-up',
-  'CO2',
   'confetti',
   'controller',
   'couch',
   'crown',
   'dog',
   'dressing-table',
-  'Drop',
   'eco',
   'education',
   'electricity',
   'electricity_meter',
+];
+
+export const sensors = [
+  'CO2@3x',
+  'Drop@3x',
+  'Wind@3x',
+  'motion3x',
+  'lux@3x',
+  'amphere@3x',
+  'pascal@3x',
+  'floor',
 ];
