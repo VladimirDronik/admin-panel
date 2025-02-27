@@ -156,6 +156,7 @@ onBeforeMount(async () => {
           >
             <SharedUIIconSelect
               v-model:icon="form.icon"
+              type="scenario"
               @change="changeItem"
             />
           </SharedUILabel>
