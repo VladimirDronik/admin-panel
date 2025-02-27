@@ -43,7 +43,7 @@ const createConnectionString = (formData: FormDataToTransform | EditDeviceForm):
   return `tcp://${formData.props.ip}:${formData.props.port}`;
 };
 
-const createNumericValueWithUnit = (formData: FormDataToTransform | EditDeviceForm): string => `${formData.props.numericValue}${formData.props.selectedUnit}`;
+const createNumericValueWithUnit = (formData: FormDataToTransform | EditDeviceForm): string => `${formData.props.numericValue ?? 0}${formData.props.selectedUnit ?? 's'}`;
 
 export const transformToDeviceCreateFormPayload = (
   formData: FormDataToTransform,
@@ -62,6 +62,19 @@ export const transformToDeviceCreateFormPayload = (
   if (formData.type === Regulator.Regulator) {
     result.object.props.sensor_value_ttl = createNumericValueWithUnit(formData);
   }
+
+  if (formData.type === Sensor.MOTION || formData.type === Sensor.PRESENCE) {
+    result.object.props.period = createNumericValueWithUnit(formData);
+  }
+
+  if (
+    formData.category === 'sensor'
+    && formData.type !== Sensor.MOTION
+    && formData.type !== Sensor.PRESENCE
+  ) {
+    result.object.props.update_interval = createNumericValueWithUnit(formData);
+  }
+
   if (!formData.children && 'children' in result.object) {
     // @ts-expect-error ///
     delete result.object['children'];
@@ -92,6 +105,16 @@ export const transformToDeviceEditFormPayload = (
   if (formData.type === Regulator.Regulator) {
     result.props.sensor_value_ttl = createNumericValueWithUnit(formData);
   }
+  if (formData.type === Sensor.MOTION || formData.type === Sensor.PRESENCE) {
+    result.props.period = createNumericValueWithUnit(formData);
+  }
+  if (
+    formData.category === 'sensor'
+    && formData.type !== Sensor.MOTION
+    && formData.type !== Sensor.PRESENCE
+  ) {
+    result.props.update_interval = createNumericValueWithUnit(formData);
+  }
 
   const resultWithoutPorts = Object.fromEntries(
     Object.entries(result).filter(([key]) => key !== 'sdaPort' && key !== 'sclPort' && key !== 'busAddress'),
@@ -119,7 +142,6 @@ export const transformToDeviceEditFormPayload = (
 export const transformResponseToFormData = (data: GetCurrentDeviceResponse): EditDeviceForm | null => {
   if (!data.id) return null;
   const address = data.props.find((prop) => prop.code === 'address');
-  const updatedInterval = data.props.find((prop) => prop.code === 'update_interval')?.value ?? '';
   const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
   const updatedbusAddress = typeof address?.value === 'string' && address.value.includes(';') ? String(address.value).split(';')[1] ?? null : null;
   const ports = String(address?.value).split(';') ?? [null, null];
@@ -130,23 +152,27 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedConnectionString = data.props.find((prop) => prop.code === 'connection_string');
   const [ip, port] = String(updatedConnectionString?.value).match(/^tcp:\/\/([\d.]+):(\d+)$/)?.slice(1) ?? [null, null];
 
-  const parseNumericValueWithUnit = (value: unknown): { numericValue: number | null; selectedUnit: string } => {
+  const parseNumericValueWithUnit = (value: unknown): { numericValue: number; selectedUnit: string } => {
     const stringValue = String(value ?? '');
     const match = stringValue.match(/^(\d+)(ms|s|m|h)$/);
     return {
-      numericValue: match ? parseInt(match[1], 10) : null,
+      numericValue: match ? parseInt(match[1], 10) : 0,
       selectedUnit: match ? match[2] : 's',
     };
   };
 
   const updatedSensorValueTTL = data.props.find((prop) => prop.code === 'sensor_value_ttl')?.value;
   const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
+  const updatedPeriod = data.props.find((prop) => prop.code === 'period')?.value;
+  const updatedUpdateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
 
   const { numericValue: ttlNumericValue, selectedUnit: ttlUnit } = parseNumericValueWithUnit(updatedSensorValueTTL);
   const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);
+  const { numericValue: periodNumericValue, selectedUnit: periodUnit } = parseNumericValueWithUnit(updatedPeriod);
+  const { numericValue: updateIntervalNumericValue, selectedUnit: updateIntervalUnit } = parseNumericValueWithUnit(updatedUpdateInterval);
 
-  const numericValue = ttlNumericValue ?? timeoutNumericValue;
-  const selectedUnit = ttlUnit ?? timeoutUnit;
+  const numericValue = updateIntervalNumericValue ?? periodNumericValue ?? ttlNumericValue ?? timeoutNumericValue;
+  const selectedUnit = updateIntervalUnit ?? periodUnit ?? ttlUnit ?? timeoutUnit;
 
   // const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
   // const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
@@ -200,9 +226,6 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   }
   if ('interface' in initialForm.props) {
     initialForm.props.interface = updatedInterface;
-  }
-  if ('update_interval' in initialForm.props) {
-    initialForm.props.update_interval = String(updatedInterval);
   }
   if ('status' in initialForm && data.status) {
     initialForm.status = data.status;

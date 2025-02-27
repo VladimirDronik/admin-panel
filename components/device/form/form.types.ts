@@ -49,7 +49,7 @@ export interface CreateDeviceInitialForm {
 export interface DeviceProps {
     interface?: DeviceInterface;
     address?: string | number;
-    update_interval?: string | number;
+    update_interval?: string;
     id?: string;
     password?: string;
     protocol?: Connection;
@@ -62,7 +62,7 @@ export interface DeviceProps {
     above_tolerance?: number;
     complex_tolerance?: number;
     fallback_sensor_value_id?: number;
-    period?: number;
+    period?: string;
     mode?: string;
     power_status?: boolean;
     display_backlight?: boolean;

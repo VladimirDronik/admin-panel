@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { updateIntervals } from '~/staticData/updateIntervalOptions';
+import { units } from '~/staticData/updateIntervalOptions';
 import type {
   DynamicFormData, DeviceChildrenRequired,
 } from '~/components/device/form/form.types';
@@ -22,7 +22,6 @@ const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
   sclPort: dynamicForm.value.sclPort,
-  update_interval: dynamicForm.value.props.update_interval,
   minThresholdIllumination: dynamicForm.value.children.illumination.min_threshold,
   maxThresholdIllumination: dynamicForm.value.children.illumination.max_threshold,
 }));
@@ -77,7 +76,8 @@ const sensorDataToShow = computed(() => {
       v-if="props.isEditing"
       v-bind="{ ...sensorDataToShow }"
       v-model:name="dynamicForm.name"
-      v-model:update-interval="dynamicForm.props.update_interval"
+      v-model:numeric-value="dynamicForm.props.numericValue"
+      v-model:selected-unit="dynamicForm.props.selectedUnit"
       v-model:zone-id="dynamicForm.zone_id"
     />
     <FormsSensorBasicPlacement
@@ -88,20 +88,23 @@ const sensorDataToShow = computed(() => {
 
     <SharedUILabel
       v-if="!props.isEditing"
-      class="tw-mb-2"
-      name="update_interval"
+      class="tw-mb-4"
       required
       :title="t('devices.polling')"
-      :value="dynamicForm.props.update_interval"
     >
-      <Select
-        id="update_interval"
-        v-model="dynamicForm.props.update_interval"
-        class="tw-mr-10 tw-w-1/4"
-        option-label="label"
-        option-value="value"
-        :options="updateIntervals"
-      />
+      <div class="p-inputgroup tw-w-2/4">
+        <InputNumber
+          v-model="dynamicForm.props.numericValue"
+          class="tw-w-1/2"
+        />
+        <Select
+          v-model="dynamicForm.props.selectedUnit"
+          class="tw-w-1/2"
+          option-label="label"
+          option-value="value"
+          :options="units"
+        />
+      </div>
     </SharedUILabel>
 
     <Divider

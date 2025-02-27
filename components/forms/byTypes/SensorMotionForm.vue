@@ -7,6 +7,7 @@ import { Controller } from '~/types/DevicesEnums';
 import type {
   DynamicFormData, DeviceChildrenRequired,
 } from '~/components/device/form/form.types';
+import { units } from '~/staticData/updateIntervalOptions';
 
 const dynamicForm = defineModel<DynamicFormData & { children: DeviceChildrenRequired } >('dynamic-form', { required: true });
 
@@ -27,14 +28,12 @@ const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
   sdaPort: dynamicForm.value.sdaPort,
   enabled: dynamicForm.value.enabled,
-  period: dynamicForm.value.props.period,
 }));
 
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
   enabled: z.boolean().default(false),
-  period: z.number().default(8),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -137,18 +136,23 @@ watch(
     </SharedUILabel>
 
     <SharedUILabel
-      class="tw-mb-2"
-      name="period"
+      class="tw-mb-4"
       required
       :title="t('devices.period')"
-      :value="dynamicForm.props.period"
     >
-      <InputNumber
-        id="period"
-        v-model="dynamicForm.props.period"
-        class="tw-mr-10 tw-w-3/4"
-        suffix=" sec"
-      />
+      <div class="p-inputgroup tw-w-2/4">
+        <InputNumber
+          v-model="dynamicForm.props.numericValue"
+          class="tw-w-1/2"
+        />
+        <Select
+          v-model="dynamicForm.props.selectedUnit"
+          class="tw-w-1/2"
+          option-label="label"
+          option-value="value"
+          :options="units"
+        />
+      </div>
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
