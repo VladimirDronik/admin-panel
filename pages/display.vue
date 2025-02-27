@@ -92,8 +92,8 @@ async function useGetData() {
 
   const filteredRooms = computed(() => {
     let result: any[] = [];
-    const items = dataItems.value?.response.room_items;
-    const filteredRooms = dataRooms.value?.response.filter((item) => !itemIds.value.includes(item.id));
+    const items = dataItems.value?.response.room_items ?? [];
+    const filteredRooms = dataRooms.value?.response?.filter((item) => !itemIds.value.includes(item.id));
     if (items) result = [...result, ...items];
     if (filteredRooms) result = [...result, ...filteredRooms];
     return result;
@@ -168,7 +168,7 @@ function useRightBar() {
           class="tw-flex tw-flex-wrap"
         >
           <DisplayCardScenario
-            v-for="scenario in dataItems?.response.scenario_items"
+            v-for="scenario in dataItems?.response?.scenario_items"
             :key="scenario.item_id"
             :color="scenario.color"
             :icon="scenario.icon"
