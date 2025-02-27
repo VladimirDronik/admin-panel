@@ -7,7 +7,6 @@ import { checkStatusTextSmall, checkStatusSymbol, checkStatusColor } from '~/hel
 // Static Data modules
 import { deviceEventTypes } from '~/staticData/modelEvents';
 import { initialEditFormData } from '../forms/byTypes/initial-dynamic-form-data.js';
-import { objectManager, paths } from '~/utils/endpoints';
 import { transformToDeviceEditFormPayload } from '~/utils/api-payload-transformers';
 // Types and Schemes modules
 import type { APIData } from '~/types/StoreTypes';
@@ -187,7 +186,7 @@ onBeforeMount(async () => {
 
   // Get Port List
   const dataPorts: unknown = await useAPI(
-    () => `${objectManager}/controllers/${selectedObject.value?.id}/ports`,
+    () => `${backendApi}/controllers/${selectedObject.value?.id}/ports`,
     {
       immediate: false,
       watch: false,
