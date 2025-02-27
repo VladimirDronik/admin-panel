@@ -238,7 +238,10 @@ function useQuickSelectRoom() {
             colomn
             :title="'Иконка'"
           >
-            <SharedUIIconSelect v-model:icon="form.icon" />
+            <SharedUIIconSelect
+              v-model:icon="form.icon"
+              type="scenario"
+            />
           </SharedUILabel>
           <!-- Actions -->
           <div class="tw-flex tw-justify-end tw-pt-2">

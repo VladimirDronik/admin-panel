@@ -80,7 +80,7 @@ async function useGetData() {
     },
   ] = createdData;
 
-  const itemIds = computed(() => dataItems.value?.response.room_items.map((item) => item.id) ?? []);
+  const itemIds = computed(() => dataItems.value?.response.room_items?.map((item) => item.id) ?? []);
 
   const update = async () => {
     await Promise.all([

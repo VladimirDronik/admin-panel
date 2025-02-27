@@ -125,7 +125,7 @@ async function useChangeItem() {
         }"
         :src="`items/${sensor.icon}.png`"
       >
-      {{ sensor.current }}
+      {{ sensor }}
       <span v-if="sensor.type === 'temperature'">
         °
       </span>
@@ -150,7 +150,7 @@ async function useChangeItem() {
       >
         <div>
           <p class="tw-mb-4 tw-text-xl">
-            Текущее значение: {{ selectedSensor.name ? selectedSensor.name : '-' }}
+            Текущее значение:
             <span v-if="selectedSensor.type === 'temperature'">
               °
             </span>
@@ -197,7 +197,7 @@ async function useChangeItem() {
           v-model="dialogDelete"
           class="tw-mr-2"
           :loading="statusDeleteSensor === 'pending'"
-          :subtitle="`Вы уверены, что хотите удалить «${selectedSensor.name}»?`"
+          :subtitle="`Вы уверены, что хотите удалить «${selectedSensor}»?`"
           title="Удалить устройство"
           @delete="confirmDelete"
         />
