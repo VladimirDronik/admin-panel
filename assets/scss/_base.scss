@@ -77,6 +77,7 @@ html {
 :root {
   --p-button-label-font-weight: 600;
   --p-dialog-title-font-size: 16px;
+  --p-floatlabel-active-font-size: 12px;
 }
 
 html.p-light {
@@ -92,7 +93,6 @@ html.p-light {
   --p-floatlabel-focus-color: var(--p-common-float-label-color);
   --p-form-field-float-label-color: var(--p-common-float-label-color);
   --p-form-field-float-label-active-color: var(--p-common-float-label-color);
-  --p-floatlabel-active-font-size: 12px;
   --p-inputtext-focus-background: #FFFFFF;
   --p-disabled-text-color: #A0BAB4;
 
@@ -107,6 +107,16 @@ html.p-light {
 
   .p-select:not(.p-disabled).p-focus {
     background-color: var(--p-inputtext-focus-background) !important;
+  }
+
+  .p-select.p-disabled {
+    background-color: var(--p-inputtext-background) !important;
+    color: var(--p-disabled-text-color) !important;
+  }
+
+  .p-multiselect.p-disabled {
+    background-color: var(--p-inputtext-background) !important;
+    color: var(--p-disabled-text-color) !important;
   }
 
   .p-multiselect:not(.p-disabled).p-focus {
