@@ -10,6 +10,7 @@ export function useController() {
     const storeDevices = useDevicesStore();
 
     const { response } = await storeDevices.getDevicesApi({
+      filter_by_category: 'controller',
       filter_by_type: type,
       type_struct: 'easy',
       with_methods: false,
