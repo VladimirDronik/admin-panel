@@ -38,14 +38,35 @@ const isOpen = defineModel<boolean>('isOpen', {
 const step = ref('1');
 const events = ref<Event[]>();
 
+// Variables
+const form = ref<{
+  enabled: boolean,
+  title: string | null,
+  type: string | null,
+  color: string | null,
+  zone_id: number | null,
+  icon: string | null,
+  status: 'off',
+  target_type: 'item',
+}>({
+  enabled: true,
+  title: null,
+  type: null,
+  color: null,
+  zone_id: null,
+  icon: null,
+  status: 'off',
+  target_type: 'item',
+});
+
+const control_object = ref();
+
 const {
   isUpdateForm,
 } = useQuickSelectRoom();
 
 const {
-  form,
   resolver,
-  control_object,
   statusCreateItem,
   createItem,
 } = await useCreateItem();
@@ -70,28 +91,6 @@ async function useCreateItem() {
     immediate: false,
     watch: false,
   });
-
-  const control_object = ref();
-
-  const form = ref<{
-  enabled: boolean,
-  title: string | null,
-  type: string | null,
-  color: string | null,
-  zone_id: number | null,
-  icon: string | null,
-  status: 'off',
-  target_type: 'item',
-}>({
-  enabled: true,
-  title: null,
-  type: null,
-  color: null,
-  zone_id: null,
-  icon: null,
-  status: 'off',
-  target_type: 'item',
-});
 
   const resolver = ref(zodResolver(
     z.object({
@@ -146,7 +145,7 @@ function useQuickSelectRoom() {
     const room = quickSelectRoom(newValue)?.code;
     if (room) form.value.zone_id = room;
     setTimeout(() => isUpdateForm.value = false, 0);
-  });
+  }, { immediate: true });
 
   return {
     isUpdateForm,
