@@ -71,19 +71,19 @@ const typeOptions = computed(() => {
   return Object.keys(storeDevices.tags?.data?.response) ?? [];
 });
 
-const props = computed(() => {
-  if (selectedObject.value?.props) {
-    return selectedObject.value.props.map((item) => item.value);
-  }
-  return [];
-});
+// const props = computed(() => {
+//   if (selectedObject.value?.props) {
+//     return selectedObject.value.props.map((item) => item.value);
+//   }
+//   return [];
+// });
 
-const childrenProps = computed(() => {
-  if (selectedObject.value?.children) {
-    return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];
-  }
-  return [];
-});
+// const childrenProps = computed(() => {
+//   if (selectedObject.value?.children) {
+//     return selectedObject.value?.children.map((item) => item?.props?.map((item) => item.value))[0];
+//   }
+//   return [];
+// });
 
 const tags = computed<(Options | string)[]>(() => {
   if (storeDevices.tags?.data?.response) return Object.keys(storeDevices.tags?.data?.response).map((item) => item);
@@ -112,7 +112,7 @@ const filters = ref<Filter[]>([
   },
 ]);
 
-const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
+// const getCategoriesOption: any = computed(() => filters.value.find((item) => item.key === 'filter_by_category')?.value ?? []);
 
 // Methods
 const checkRoom = (item: RoomItem | undefined) => {
@@ -152,28 +152,28 @@ const created = async () => {
   isUpdate.value = false;
 };
 
-const propsModel = (props: any[] | undefined) => {
-  if (!props) return [];
-  const result = props.map((item) => ({
-    ...item,
-    required: {
-      func: item.required.func,
-      funcText: String(item.required.func),
-      value: item.required.func(storeDevices.userAccessLevel, props),
-    },
-    editable: {
-      func: item.editable.func,
-      funcText: String(item.editable.func),
-      value: item.editable.func(storeDevices.userAccessLevel, props),
-    },
-    visible: {
-      func: item.visible.func,
-      funcText: String(item.visible.func),
-      value: item.visible.func(storeDevices.userAccessLevel, props),
-    },
-  }));
-  return result;
-};
+// const propsModel = (props: any[] | undefined) => {
+//   if (!props) return [];
+//   const result = props.map((item) => ({
+//     ...item,
+//     required: {
+//       func: item.required.func,
+//       funcText: String(item.required.func),
+//       value: item.required.func(storeDevices.userAccessLevel, props),
+//     },
+//     editable: {
+//       func: item.editable.func,
+//       funcText: String(item.editable.func),
+//       value: item.editable.func(storeDevices.userAccessLevel, props),
+//     },
+//     visible: {
+//       func: item.visible.func,
+//       funcText: String(item.visible.func),
+//       value: item.visible.func(storeDevices.userAccessLevel, props),
+//     },
+//   }));
+//   return result;
+// };
 
 const findRoom = (list: RoomItem[] | undefined, id: number) => {
   if (!list) return;
@@ -190,25 +190,25 @@ const findRoom = (list: RoomItem[] | undefined, id: number) => {
   if (result) return result;
 };
 
-const updateFields = () => {
-  if (selectedObject.value) {
-    selectedObject.value = {
-      ...selectedObject.value,
-      props: propsModel(selectedObject.value.props),
-      children: selectedObject.value.children?.map((item) => ({
-        ...item,
-        props: propsModel(item.props) ?? [],
-      })),
-    };
-  }
-};
+// const updateFields = () => {
+//   if (selectedObject.value) {
+//     selectedObject.value = {
+//       ...selectedObject.value,
+//       props: propsModel(selectedObject.value.props),
+//       children: selectedObject.value.children?.map((item) => ({
+//         ...item,
+//         props: propsModel(item.props) ?? [],
+//       })),
+//     };
+//   }
+// };
 
 // Watchers
-watch([props, childrenProps], (newValue, oldValue) => {
-  if (!_.isEqual(newValue, oldValue)) {
-    updateFields();
-  }
-});
+// watch([props, childrenProps], (newValue, oldValue) => {
+//   if (!_.isEqual(newValue, oldValue)) {
+//     updateFields();
+//   }
+// });
 
 function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] {
   return arr.flatMap((obj) => {
@@ -291,31 +291,7 @@ const dropdownClasses = computed(() => ({
       <Column
         expander
         style="width: 15px;"
-      >
-        <!-- <template #header>
-          <DeviceTableHeader title="devices.id">
-            <InputText
-              v-model.number="filters[0].value"
-              :placeholder="filters[0].label"
-              hide-details
-              class="tw-mb-1 tw-min-w-80"
-              prepend-inner-icon="mdi-magnify"
-              clearable
-              compact
-              type="number"
-            />
-            <InputText
-              v-model.number="filters[1].value"
-              :placeholder="filters[1].label"
-              hide-details
-              class="tw-min-w-80"
-              prepend-inner-icon="mdi-magnify"
-              clearable
-              type="number"
-            />
-          </DeviceTableHeader>
-        </template> -->
-      </Column>
+      />
       <Column field="name">
         <template #header>
           <DeviceTableHeader
@@ -519,9 +495,5 @@ tr[aria-level="1"] .p-treetable-node-toggle-button {
   transform: rotate(180deg);
   transition: transform 0.2s ease-in-out;
 }
-
-// tr[aria-level="1"]:not([aria-expanded]) td:nth-child(2) .p-treetable-body-cell-content {
-//   margin-left: -33px;
-// }
 
 </style>
