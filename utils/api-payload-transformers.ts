@@ -154,11 +154,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
 
   const parseNumericValueWithUnit = (value: unknown): { numericValue: number; selectedUnit: string } => {
     const stringValue = String(value ?? '').trim();
-    console.log('Raw value:', value);
-    console.log('Processed stringValue:', stringValue);
-
     const match = stringValue.match(/^(\d+)(ms|s|m|h)$/i);
-    console.log('Regex match:', match);
 
     return {
       numericValue: match ? Number(match[1]) : 0,
@@ -170,7 +166,6 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
   const updatedPeriod = data.props.find((prop) => prop.code === 'period')?.value;
   const updatedUpdateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
-  console.log('Raw period value:', updatedPeriod);
 
   const { numericValue: ttlNumericValue, selectedUnit: ttlUnit } = parseNumericValueWithUnit(updatedSensorValueTTL);
   const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);

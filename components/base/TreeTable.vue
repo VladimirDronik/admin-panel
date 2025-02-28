@@ -130,8 +130,11 @@ defineExpose({
     <SharedUILoader :is-update="isUpdate">
       <TreeTable
         v-model:expanded-keys="expandedKeys"
-        v-model:selection-keys="selectedKey"
+        v-model:filters="filters"
+        v-model:page="page"
         class="tree-table"
+        data-key="id"
+        selection-keys="selectedKey"
         selection-mode="single"
         :value="items"
         @node-select="(item: any) => emit('click-row', item)"
