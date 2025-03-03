@@ -32,7 +32,7 @@ export const roomsItem = z.object({
   sort: z.number(),
   name: z.string(),
   style: z.string(),
-  items: z.array(roomBtns),
+  items: z.array(roomBtns).optional(),
   sensors: z.array(roomSensors).optional(),
 });
 export const scenarioItem = z.object({
