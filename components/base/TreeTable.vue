@@ -46,7 +46,7 @@ const filters = defineModel<Filter[]>('filters', {
 // Variables
 const isUpdate = ref(false);
 
-const expandedKeys = ref<TreeTableSelectionKeys | undefined>({});
+// const expandedKeys = ref<TreeTableSelectionKeys | undefined>({});
 
 // Computed Properties
 const filterValueList = computed(() => filters.value.map((item) => (item.value)));
@@ -88,13 +88,13 @@ watch(filterValueList, (newValue, oldValue) => {
   if (!_.isEqual(newValue, oldValue)) filter();
 });
 
-watch(() => props.total, () => {
-  Array.from(Array(props.total).keys()).forEach((key) => {
-    if (expandedKeys.value) expandedKeys.value[key] = true;
-  });
-}, {
-  immediate: true,
-});
+// watch(() => props.total, () => {
+//   Array.from(Array(props.total).keys()).forEach((key) => {
+//     if (expandedKeys.value) expandedKeys.value[key] = true;
+//   });
+// }, {
+//   immediate: true,
+// });
 
 // Created
 const paramsKeys = Object.keys(route.query);
@@ -115,6 +115,14 @@ defineExpose({
   filter,
 });
 
+const onExpand = (event: any) => {
+  console.log('Раскрыт узел:', event.node);
+};
+
+const onCollapse = (event: any) => {
+  console.log('Закрыт узел:', event.node);
+};
+
 </script>
 
 <template>
@@ -129,11 +137,10 @@ defineExpose({
 
     <SharedUILoader :is-update="isUpdate">
       <TreeTable
-        v-model:expanded-keys="expandedKeys"
         v-model:filters="filters"
         v-model:page="page"
         class="tree-table"
-        data-key="id"
+        data-key="key"
         selection-keys="selectedKey"
         selection-mode="single"
         :value="items"
