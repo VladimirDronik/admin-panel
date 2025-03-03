@@ -5,7 +5,7 @@ export enum ObjectsCategory {
   Regulator = 'regulator',
   Sensor = 'sensor',
   Conditioner = 'conditioner',
-  Modbus = 'modbus'
+  RS485 = 'rs485',
 }
 
 export enum DevicePropertyKey {
@@ -67,8 +67,8 @@ export enum Conditioner {
   OnokomTCL1MBB = 'onokom/tcl_1_mb_b',
 }
 
-export enum Modbus {
-  Modbus = 'modbus',
+export enum RS485 {
+  Bus = 'bus',
 }
 
 export enum Connection {
