@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Types and Schemes modules
+import { filterInListRoom } from '~/helpers/rooms';
 import type { Request } from '~/types/StoreTypes';
 import type { roomSensorTypes } from '~/types/DisplayTypes';
 
@@ -16,8 +17,9 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const { sensors } = defineProps<{
+const { sensors, rooms } = defineProps<{
   sensors: roomSensorTypes[] | undefined,
+  rooms: RoomItem[] | undefined,
 }>();
 
 const dialog = defineModel<boolean>({
@@ -30,6 +32,8 @@ const selectSensor = (sensor: roomSensorTypes) => {
   selectedSensor.value = sensor;
   dialog.value = true;
 };
+
+const options = computed(() => filterInListRoom(rooms ?? []));
 
 const {
   form,
@@ -94,8 +98,11 @@ async function useChangeItem() {
   });
 
   const form = ref({
-    min: '',
-    max: '',
+    max_threshold: '',
+    min_threshold: '',
+    zone_id: 0,
+    title: '',
+    icon: '',
   });
 
   const changeSensor = async () => {
@@ -151,7 +158,7 @@ async function useChangeItem() {
       >
         <div>
           <p class="tw-mb-4 tw-text-xl">
-            Текущее значение:
+            Текущее значение: {{ selectedSensor.current }}
             <span v-if="selectedSensor.type === 'temperature'">
               °
             </span>
@@ -162,12 +169,36 @@ async function useChangeItem() {
           <div class="tw-mb-5">
             <SharedUILabel
               class="tw-mb-2"
+              name="name"
+              required
+              :title="'Название'"
+              :value="selectedSensor.title"
+            >
+              <InputText
+                v-model="selectedSensor.title"
+                class="tw-w-full"
+              />
+            </SharedUILabel>
+            <SharedUILabel
+              class="tw-mb-2"
+              name="zone_id"
+              required
+              :title="'Помещение'"
+              :value="selectedSensor.zone_id"
+            >
+              <SharedUIRoomSelect
+                v-model="selectedSensor.zone_id"
+                :options
+              />
+            </SharedUILabel>
+            <SharedUILabel
+              class="tw-mb-2"
               colomn
               required
               :title="'Минимальное значение'"
             >
               <InputText
-                v-model="form.min"
+                v-model="form.min_threshold"
                 class="tw-w-full"
               />
             </SharedUILabel>
@@ -177,8 +208,19 @@ async function useChangeItem() {
               :title="'Максимальное значение'"
             >
               <InputText
-                v-model="form.max"
+                v-model="form.max_threshold"
                 class="tw-w-full"
+              />
+            </SharedUILabel>
+
+            <SharedUILabel
+              class="tw-mb-2"
+              colomn
+              :title="'Иконка'"
+            >
+              <SharedUIIconSelect
+                v-model:icon="selectedSensor.icon"
+                type="sensors"
               />
             </SharedUILabel>
           </div>
@@ -198,8 +240,8 @@ async function useChangeItem() {
           v-model="dialogDelete"
           class="tw-mr-2"
           :loading="statusDeleteSensor === 'pending'"
-          :subtitle="`Вы уверены, что хотите удалить «${selectedSensor}»?`"
-          title="Удалить устройство"
+          :subtitle="`Вы уверены, что хотите удалить «${selectedSensor.title}»?`"
+          title="Удалить Сенсор"
           @delete="confirmDelete"
         />
       </div>
