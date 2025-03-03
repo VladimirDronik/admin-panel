@@ -27,14 +27,14 @@ const filterEvents = async (type: string) => {
   const objectEvents = props.eventTypes[type];
   if (objectEvents) {
     if (props.id) {
-      const requests: Request<{
-        [key: string]: Action[]
-      }> = await $fetch(paths.eventsActions, {
-        params: {
+      const requests = await api(paths.eventsActions, {
+        query: {
           target_id: props.id,
           target_type: props.targetType,
         },
-      });
+      }) as Request<{
+        [key: string]: Action[]
+      }>;
 
       events.value = objectEvents.map((item) => {
         if (requests.response[item.code]) {
