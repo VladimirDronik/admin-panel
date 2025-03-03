@@ -198,6 +198,13 @@ onBeforeMount(async () => {
   //
 });
 
+const isDeleteDisabled = computed(() => {
+  const type = selectedObject.value?.type;
+  const isChild = selectedObject.value?.isChild ?? false;
+
+  return type === 'server' || (type === 'bus' && isChild);
+});
+
 </script>
 
 <template>
@@ -306,6 +313,7 @@ onBeforeMount(async () => {
                     :id="asideEditingForm?.id ?? -1"
                     v-model="dialogDelete"
                     class="tw-mr-2"
+                    :disabled="isDeleteDisabled"
                     :loading="apiDeleteDevice?.pending"
                     :subtitle="`Вы уверены, что хотите удалить «${asideEditingForm?.name}»?`"
                     title="Удалить устройство"

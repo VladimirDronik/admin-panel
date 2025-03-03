@@ -24,6 +24,7 @@ export const deviceSchema = z.object({
   zone_id: z.string().optional(),
   events: z.record(deviceEvents),
   props: z.array(deviceProps).optional(),
+  isChild: z.boolean().optional(),
 });
 
 type Device = z.infer<typeof deviceSchema> & {

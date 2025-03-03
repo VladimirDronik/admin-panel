@@ -223,6 +223,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
           data: {
             ...child.data,
             name: `${child.data.name} (${obj.data.name})`,
+            isChild: true,
             paddingLeft: `${depth * 20}px`,
           },
         }));
@@ -239,6 +240,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
           data: {
             ...child.data,
             name: `${child.data.name} (${obj.data.name})`,
+            isChild: true,
             paddingLeft: `${depth * 20}px`,
           },
         }));
@@ -248,7 +250,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
 
     newObj.data = {
       ...newObj.data,
-      ...(depth > 1 && { paddingLeft: `${depth * 20}px` }),
+      ...(depth > 1 && { isChild: true, paddingLeft: `${depth * 20}px` }),
     };
 
     return newObj;
