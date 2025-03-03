@@ -18,11 +18,11 @@ const { updateData } = useUtils();
 
 // Declare Options
 const {
-  id,
+  zoneId,
   devices,
   options,
 } = defineProps<{
-  id: number | undefined
+  zoneId: number | undefined
   devices: { value: string, label: string }[],
   options: any[]
 }>();
@@ -38,10 +38,6 @@ const isOpen = defineModel<boolean>('isOpen', {
 // Variables
 const step = ref('1');
 const events = ref<Event[]>();
-
-const {
-  isUpdateForm,
-} = useQuickSelectRoom();
 
 const {
   form,
@@ -79,7 +75,6 @@ async function useCreateItem() {
   title: string | null,
   type: string | null,
   color: string | null,
-  zone_id: 0,
   icon: string | null,
   status: 'off',
   target_type: 'item',
@@ -88,7 +83,6 @@ async function useCreateItem() {
   title: null,
   type: null,
   color: null,
-  zone_id: 0,
   icon: null,
   status: 'off',
   target_type: 'item',
@@ -114,7 +108,6 @@ async function useCreateItem() {
           title: null,
           type: null,
           color: null,
-          zone_id: 0,
           icon: null,
           status: 'off',
           target_type: 'item',
@@ -134,23 +127,6 @@ async function useCreateItem() {
     control_object,
     statusCreateItem,
     createItem,
-  };
-}
-
-function useQuickSelectRoom() {
-  const isUpdateForm = ref(false);
-  const quickSelectRoom = (id: number | undefined) => options?.find((item) => item.code === id || item.inGroup?.code === id);
-
-  // Watchers
-  watch(() => id, (newValue) => {
-    isUpdateForm.value = true;
-    const room = quickSelectRoom(newValue)?.code;
-    if (room) form.value.zone_id = room;
-    setTimeout(() => isUpdateForm.value = false, 0);
-  });
-
-  return {
-    isUpdateForm,
   };
 }
 
@@ -178,7 +154,6 @@ function useQuickSelectRoom() {
       >
         <!-- Features Form -->
         <Form
-          v-if="!isUpdateForm"
           :resolver
           @submit="({ valid }) => { if (valid) activateCallback('2') }"
         >

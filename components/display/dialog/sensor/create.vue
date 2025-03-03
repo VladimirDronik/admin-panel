@@ -13,7 +13,8 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const { rooms } = defineProps<{
+const { zoneId, rooms } = defineProps<{
+  zoneId: number | undefined
   rooms: RoomItem[] | undefined,
 }>();
 
@@ -82,14 +83,14 @@ function useFilter() {
 
 async function useCreateSensor() {
   const form = ref<{
-    name: string | null,
+    title: string | null,
     zone_id: number | null,
     icon: string | null,
     object_id: number | null,
     type: string | null,
     adjustment: boolean,
   }>({
-    name: null,
+    title: null,
     zone_id: null,
     icon: null,
     object_id: null,
@@ -153,7 +154,7 @@ async function useCreateSensor() {
       },
       success: () => {
         form.value = {
-          name: null,
+          title: null,
           zone_id: null,
           icon: null,
           object_id: null,
@@ -171,6 +172,14 @@ async function useCreateSensor() {
       errorMessage: 'Датчик не был создан',
     });
   };
+
+  const quickSelectRoom = (id: number | undefined) => options?.value.find((item) => item.code === id || item.inGroup?.code === id);
+
+  // Watchers
+  watch(() => zoneId, (newValue) => {
+    const room = quickSelectRoom(newValue)?.code;
+    if (room) form.value.zone_id = room;
+  }, { immediate: true });
 
   return {
     form,
@@ -329,10 +338,10 @@ async function useCreatedApi() {
                 name="name"
                 required
                 :title="'Название'"
-                :value="form.name"
+                :value="form.title"
               >
                 <InputText
-                  v-model="form.name"
+                  v-model="form.title"
                   class="tw-w-full"
                 />
               </SharedUILabel>

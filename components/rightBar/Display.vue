@@ -126,18 +126,18 @@ async function useCreatedApi() {
     </SharedUILoader>
     <DisplayFormItemCreate
       v-if="variant === 'Create Item'"
-      :id="zoneId"
       v-model:is-open="isOpen"
       :devices="deviceOptions"
       :options
+      :zone-id="zoneId"
       @update="emit('update')"
     />
     <DisplayFormScenarioCreate
       v-else-if="variant === 'Create Scenario'"
-      :id="zoneId"
       v-model:is-open="isOpen"
       :devices="deviceScenarioOptions"
       :options
+      :zone-id="zoneId"
       @update="emit('update')"
     />
   </LayoutRightbar>
