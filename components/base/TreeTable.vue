@@ -115,14 +115,6 @@ defineExpose({
   filter,
 });
 
-const onExpand = (event: any) => {
-  console.log('Раскрыт узел:', event.node);
-};
-
-const onCollapse = (event: any) => {
-  console.log('Закрыт узел:', event.node);
-};
-
 </script>
 
 <template>
