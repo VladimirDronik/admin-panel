@@ -1,3 +1,5 @@
+import { Connection } from '~/types/DevicesEnums';
+
 export default {
   devices: {
     preloadTitle: 'Select a Category and Type',

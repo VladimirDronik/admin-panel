@@ -7,7 +7,7 @@ import {
   Controller, GenericInput, Sensor, ObjectsCategory, Connection, DeviceInterface,
   DevicePropertyKey, Relay, Regulator, RegulatorType,
   Conditioner,
-  Modbus,
+  RS485,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -427,8 +427,8 @@ const createFormByTypesMap = {
   [Conditioner.OnokomTCL1MBB]: {
     ...basicCreateConditionerForm,
   },
-  [Modbus.Modbus]: {
-    category: Modbus.Modbus,
+  [RS485.Bus]: {
+    category: ObjectsCategory.RS485,
     props: {
       ip: '',
       port: 502,
@@ -844,17 +844,17 @@ const editFormByTypesMap = {
     },
     status: '',
   },
-  [Modbus.Modbus]: {
+  [RS485.Bus]: {
     id: 0,
     status: '',
-    category: Modbus.Modbus,
+    category: ObjectsCategory.RS485,
     props: {
       ip: '',
       port: 502,
-      // speed: '19200',
-      // data_bits: 8,
-      // parity: '0',
-      // stop_bits: '2',
+      speed: '19200',
+      data_bits: 8,
+      parity: '0',
+      stop_bits: '2',
       numericValue: 500,
       selectedUnit: 'ms',
       tries: 3,

@@ -1,7 +1,8 @@
 // Types modules
 import { type Component } from 'vue';
 import {
-  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner, Modbus,
+  Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner,
+  RS485,
 } from '@/types/DevicesEnums';
 
 // Components
@@ -19,15 +20,15 @@ import ConditionerForm from '~/components/forms/byTypes/ConditionerForm.vue';
 
 import MegaDForm from '~/components/forms/byTypes/MegaDForm.vue';
 import WBMRM2miniForm from '~/components/forms/byTypes/WBMRM2miniForm.vue';
-import ModbusForm from '~/components/forms/byTypes/ModbusForm.vue';
 import DefaultForm from '~/components/forms/byTypes/DefaultForm.vue';
 
 import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
 import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
 import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
+import RS485BusForm from '~/components/forms/byTypes/RS485BusForm.vue';
 
 // Types
-type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner | Modbus;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner | RS485;
 
 export const ConditionerTypes = [
   Conditioner.OnokomAUX1MBB,
@@ -123,8 +124,8 @@ export const deviceFormMapping: DeviceFormMapping[] = [
     component: ConditionerForm,
   })),
   {
-    type: Modbus.Modbus,
-    component: ModbusForm,
+    type: RS485.Bus,
+    component: RS485BusForm,
   },
   {
     type: Sensor.HTU31D,

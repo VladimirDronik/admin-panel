@@ -1,7 +1,7 @@
 import {
   DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, Relay,
   Regulator, RegulatorType,
-  Conditioner, Modbus,
+  Conditioner, RS485,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
 
@@ -122,4 +122,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner | Modbus;
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner | RS485;

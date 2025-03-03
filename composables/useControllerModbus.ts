@@ -37,8 +37,8 @@ export function useModbus() {
     const storeDevices = useDevicesStore();
 
     const { response } = await storeDevices.getDevicesApi({
-      filter_by_category: 'modbus',
-      filter_by_type: 'modbus',
+      filter_by_category: 'rs485',
+      filter_by_type: 'bus',
       type_struct: 'easy',
       with_methods: false,
     }, false);

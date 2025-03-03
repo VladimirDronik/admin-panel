@@ -19,16 +19,16 @@ const storeRooms = useRoomsStore();
 const emit = defineEmits(['update:valid']);
 
 const flatForm = computed(() => ({
-  ip: dynamicForm.value.props.ip,
-  port: dynamicForm.value.props.port,
-  // data_bits: dynamicForm.value.props.data_bits,
+  ip: showIpPortFields.value ? dynamicForm.value.props.ip : null,
+  port: showIpPortFields.value ? dynamicForm.value.props.port : null,
+  data_bits: dynamicForm.value.props.data_bits,
   tries: dynamicForm.value.props.tries,
 }));
 
 const schema = z.object({
-  ip: z.string().min(1),
-  port: z.number().min(1),
-  // data_bits: z.number().min(1),
+  ip: z.string().min(1).nullable(),
+  port: z.number().min(1).nullable(),
+  data_bits: z.number().min(1),
   tries: z.number().min(1).max(10),
 });
 
@@ -44,30 +44,36 @@ watch(
   { deep: true },
 );
 
-// const speedOptions = [
-//   { value: '115200', name: '115200' },
-//   { value: '1200', name: '1200' },
-//   { value: '128000', name: '128000' },
-//   { value: '19200', name: '19200' },
-//   { value: '2400', name: '2400' },
-//   { value: '256000', name: '256000' },
-//   { value: '38400', name: '38400' },
-//   { value: '4800', name: '4800' },
-//   { value: '57600', name: '57600' },
-//   { value: '9600', name: '9600' },
-// ];
+const shouldShowFields = computed(() => props.isEditing && dynamicForm.value.parent_id !== 0 && dynamicForm.value.parent_id !== null && dynamicForm.value.parent_id !== undefined);
 
-// const parityOptions = [
-//   { value: '0', name: 'none' },
-//   { value: '1', name: 'even' },
-//   { value: '2', name: 'odd' },
-// ];
+const showIpPortFields = computed(() => dynamicForm.value.parent_id === 0
+  || dynamicForm.value.parent_id === null
+  || dynamicForm.value.parent_id === undefined);
 
-// const stopBitsOptions = [
-//   { value: '0', name: '0' },
-//   { value: '1', name: '1' },
-//   { value: '2', name: '2' },
-// ];
+const speedOptions = [
+  { value: '115200', name: '115200' },
+  { value: '1200', name: '1200' },
+  { value: '128000', name: '128000' },
+  { value: '19200', name: '19200' },
+  { value: '2400', name: '2400' },
+  { value: '256000', name: '256000' },
+  { value: '38400', name: '38400' },
+  { value: '4800', name: '4800' },
+  { value: '57600', name: '57600' },
+  { value: '9600', name: '9600' },
+];
+
+const parityOptions = [
+  { value: '0', name: 'none' },
+  { value: '1', name: 'even' },
+  { value: '2', name: 'odd' },
+];
+
+const stopBitsOptions = [
+  { value: '0', name: '0' },
+  { value: '1', name: '1' },
+  { value: '2', name: '2' },
+];
 </script>
 
 <template>
@@ -113,6 +119,7 @@ watch(
     />
 
     <SharedUILabel
+      v-if="showIpPortFields"
       class="tw-mb-2"
       name="ip"
       required
@@ -127,6 +134,7 @@ watch(
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="showIpPortFields"
       class="tw-mb-2"
       name="port"
       required
@@ -140,7 +148,23 @@ watch(
       />
     </SharedUILabel>
 
-    <!-- <SharedUILabel
+    <SharedUILabel
+      v-if="!showIpPortFields && props.isEditing"
+      class="tw-mb-2"
+      required
+      :title="t('devices.connectionString')"
+      :value="dynamicForm.props.ip"
+      :width="300"
+    >
+      <InputText
+        v-model="dynamicForm.props.ip"
+        class="tw-w-2/4"
+        disabled
+      />
+    </SharedUILabel>
+
+    <SharedUILabel
+      v-if="shouldShowFields"
       class="tw-mb-2"
       required
       :title="t('devices.speed')"
@@ -157,6 +181,7 @@ watch(
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="shouldShowFields"
       class="tw-mb-2"
       name="data_bits"
       required
@@ -171,6 +196,7 @@ watch(
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="shouldShowFields"
       class="tw-mb-2"
       required
       :title="t('devices.parity')"
@@ -187,6 +213,7 @@ watch(
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="shouldShowFields"
       class="tw-mb-2"
       required
       :title="t('devices.stopBits')"
@@ -200,7 +227,7 @@ watch(
         option-value="value"
         :options="stopBitsOptions"
       />
-    </SharedUILabel> -->
+    </SharedUILabel>
 
     <SharedUILabel
       class="tw-mb-4"
