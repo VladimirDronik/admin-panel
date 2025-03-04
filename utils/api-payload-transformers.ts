@@ -11,6 +11,7 @@ import {
   DeviceInterface,
   Regulator,
   RS485,
+  Server,
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
@@ -96,7 +97,7 @@ export const transformToDeviceEditFormPayload = (
 ): DeviceEditFormPayload => {
   const children = formatChildren(formData.children);
   const result = { ...formData, children, events: [] };
-  if (formData.type !== Regulator.Regulator && formData.type !== RS485.Bus) {
+  if (formData.type !== Regulator.Regulator && formData.type !== RS485.Bus && formData.type !== Server.Server) {
     result.props.address = createAddress(formData);
   }
   if (formData.type === RS485.Bus) {
@@ -201,6 +202,16 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedParity = data.props.find((prop) => prop.code === 'parity');
   const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
   const updatedTries = data.props.find((prop) => prop.code === 'tries');
+  const updatedServerID = data.props.find((prop) => prop.code === 'server_id');
+  const updatedEcoMode = data.props.find((prop) => prop.code === 'eco_mode');
+  const updatedGuardMode = data.props.find((prop) => prop.code === 'guard_mode');
+  const updatedNightMode = data.props.find((prop) => prop.code === 'night_mode');
+  const updatedHeatingMode = data.props.find((prop) => prop.code === 'heating_mode');
+  const updatedLightMode = data.props.find((prop) => prop.code === 'light_mode');
+  const updatedLogging = data.props.find((prop) => prop.code === 'logging');
+  const updatedStorageLogs = data.props.find((prop) => prop.code === 'storage_logs');
+  const updatedGraphDate = data.props.find((prop) => prop.code === 'graph_date');
+  const updatedTimeZone = data.props.find((prop) => prop.code === 'time_zone');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -279,9 +290,38 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('stop_bits' in initialForm.props && updatedStopBits) {
     initialForm.props.stop_bits = String(updatedStopBits.value);
   }
-
   if ('tries' in initialForm.props && updatedTries) {
     initialForm.props.tries = Number(updatedTries.value);
+  }
+  if ('server_id' in initialForm.props && updatedServerID) {
+    initialForm.props.server_id = String(updatedServerID.value);
+  }
+  if ('eco_mode' in initialForm.props && updatedEcoMode) {
+    initialForm.props.eco_mode = Boolean(updatedEcoMode.value);
+  }
+  if ('guard_mode' in initialForm.props && updatedGuardMode) {
+    initialForm.props.guard_mode = Boolean(updatedGuardMode.value);
+  }
+  if ('night_mode' in initialForm.props && updatedNightMode) {
+    initialForm.props.night_mode = Boolean(updatedNightMode.value);
+  }
+  if ('heating_mode' in initialForm.props && updatedHeatingMode) {
+    initialForm.props.heating_mode = String(updatedHeatingMode.value);
+  }
+  if ('light_mode' in initialForm.props && updatedLightMode) {
+    initialForm.props.light_mode = String(updatedLightMode.value);
+  }
+  if ('logging' in initialForm.props && updatedLogging) {
+    initialForm.props.logging = String(updatedLogging.value);
+  }
+  if ('storage_logs' in initialForm.props && updatedStorageLogs) {
+    initialForm.props.storage_logs = Number(updatedStorageLogs.value);
+  }
+  if ('graph_date' in initialForm.props && updatedGraphDate) {
+    initialForm.props.graph_date = Number(updatedGraphDate.value);
+  }
+  if ('time_zone' in initialForm.props && updatedTimeZone) {
+    initialForm.props.time_zone = String(updatedTimeZone.value);
   }
   if (Object.keys(children).length > 0 && initialForm.children) {
     initialForm.children = children;

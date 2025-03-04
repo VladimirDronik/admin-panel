@@ -8,6 +8,7 @@ import {
   DevicePropertyKey, Relay, Regulator, RegulatorType,
   Conditioner,
   RS485,
+  Server,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -441,6 +442,22 @@ const createFormByTypesMap = {
       tries: 3,
     },
   },
+  [Server.Server]: {
+    id: 0,
+    category: ObjectsCategory.Server,
+    props: {
+      server_id: '',
+      eco_mode: false,
+      guard_mode: false,
+      night_mode: false,
+      heating_mode: '',
+      light_mode: '',
+      logging: '',
+      storage_logs: 30,
+      graph_date: 365,
+      time_zone: 'Europe/Moscow',
+    },
+  },
 };
 
 export const getInitialCreateDeviceFormDataByTypes = (initialForm: CreateDeviceInitialForm) => ({ ...createFormByTypesMap[initialForm.type], name: initialForm.name, zone_id: initialForm.zone_id });
@@ -858,6 +875,23 @@ const editFormByTypesMap = {
       numericValue: 500,
       selectedUnit: 'ms',
       tries: 3,
+    },
+  },
+  [Server.Server]: {
+    id: 0,
+    status: '',
+    category: ObjectsCategory.Server,
+    props: {
+      server_id: '',
+      eco_mode: false,
+      guard_mode: false,
+      night_mode: false,
+      heating_mode: '',
+      light_mode: '',
+      logging: '',
+      storage_logs: 0,
+      graph_date: 0,
+      time_zone: 'Europe/Moscow',
     },
   },
 };
