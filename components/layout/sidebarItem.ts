@@ -11,6 +11,7 @@ import {
   IconLogs,
   IconDevices,
   IconUsers,
+  IconCalendarWeek,
 } from '@tabler/icons-vue';
 
 export interface Menu {
@@ -62,6 +63,11 @@ const sidebarItem: Menu[] = [
     title: 'pages.parameters',
     icon: IconSettings,
     to: '/parameters',
+  },
+  {
+    title: 'pages.scheduler',
+    icon: IconCalendarWeek,
+    to: '/scheduler',
   },
   {
     title: 'pages.scenario',

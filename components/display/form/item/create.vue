@@ -156,7 +156,6 @@ function useQuickSelectRoom() {
 
 <template>
   <Stepper
-    v-if="resolver"
     v-model:value="step"
     linear
   >

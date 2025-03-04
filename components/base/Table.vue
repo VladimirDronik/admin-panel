@@ -20,11 +20,13 @@ const props = withDefaults(defineProps<{
   total?: number,
   items?: any[],
   perPage?: number,
+  isClickable?: boolean,
   headers?: Header[],
 }>(), {
   total: 0,
   perPage: 0,
   items: undefined,
+  isClickable: false,
   headers: undefined,
 });
 
@@ -115,9 +117,10 @@ defineExpose({
     />
     <SharedUILoader :is-update="isUpdate">
       <DataTable
+        :class="{ clickable: isClickable }"
         :headers="headers"
         :value="items"
-        @node-select="(item: any) => emit('click-row', item)"
+        @row-click="(item: any) => emit('click-row', item)"
       >
         <Column
           v-for="item in headers"
@@ -135,3 +138,19 @@ defineExpose({
     </SharedUILoader>
   </div>
 </template>
+
+<style>
+.clickable tr {
+  transition: background-color .2s linear;
+  cursor: pointer;
+}
+
+.clickable tr:hover {
+  background-color: var(--p-primary-100);
+}
+
+.p-dark .clickable tr:hover {
+  background-color: #1b362f;
+}
+
+</style>
