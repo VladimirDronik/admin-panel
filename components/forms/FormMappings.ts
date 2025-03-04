@@ -2,7 +2,7 @@
 import { type Component } from 'vue';
 import {
   Controller, Sensor, Default, Relay, Regulator, GenericInput, Conditioner,
-  RS485,
+  RS485, Server,
 } from '@/types/DevicesEnums';
 
 // Components
@@ -26,9 +26,10 @@ import RelayForm from '~/components/forms/byTypes/RelayForm.vue';
 import GenericInputForm from '~/components/forms/byTypes/GenericInputForm.vue';
 import RegulatorForm from '~/components/forms/byTypes/RegulatorForm.vue';
 import RS485BusForm from '~/components/forms/byTypes/RS485BusForm.vue';
+import ServerForm from '~/components/forms/byTypes/ServerForm.vue';
 
 // Types
-type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner | RS485;
+type DeviceType = Controller | GenericInput | Relay | Sensor | Default | Regulator | Conditioner | RS485 | Server;
 
 export const ConditionerTypes = [
   Conditioner.OnokomAUX1MBB,
@@ -130,5 +131,9 @@ export const deviceFormMapping: DeviceFormMapping[] = [
   {
     type: Sensor.HTU31D,
     component: SensorHTU21DForm,
+  },
+  {
+    type: Server.Server,
+    component: ServerForm,
   },
 ];
