@@ -33,6 +33,13 @@ const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
 
+const checked = ref(false);
+
+// watch(checked, (newValue) => {
+//   console.log(1);
+//   form.value.status = newValue ? 'on' : 'off';
+// });
+
 const {
   control_object,
   statusChange,
@@ -44,6 +51,16 @@ const {
   statusDelete,
   confirmDelete,
 } = await useDeleteItem();
+
+watch(() => form.value.item_id, () => {
+  console.log(2);
+  checked.value = form.value.status === 'on';
+}, { immediate: true });
+
+const changeStatus = () => {
+  form.value.status = !(form.value.status === 'on') ? 'on' : 'off';
+  changeItem();
+};
 
 async function useChangeItem() {
   const control_object = ref();
@@ -126,13 +143,19 @@ async function useDeleteItem() {
 
 <template>
   <Tabs value="features">
-    <span
-      class="tw-text-base"
-      style="color: var(--p-tabs-tab-color);"
-    >
-      {{ t('display.type') }}:
-      {{ devices.find(d => d.value === form.type)?.label || form.type }}
-    </span>
+    <div class="tw-flex tw-items-center tw-justify-between">
+      <p
+        class="tw-text-base"
+        style="color: var(--p-tabs-tab-color);"
+      >
+        {{ t('display.type') }}:
+        {{ devices.find(d => d.value === form.type)?.label || form.type }}
+      </p>
+      <ToggleSwitch
+        v-model="checked"
+        @change="changeStatus()"
+      />
+    </div>
     <!-- Header -->
     <TabList>
       <Tab value="features">
