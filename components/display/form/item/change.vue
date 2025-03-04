@@ -33,13 +33,6 @@ const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
 
-const checked = ref(false);
-
-// watch(checked, (newValue) => {
-//   console.log(1);
-//   form.value.status = newValue ? 'on' : 'off';
-// });
-
 const {
   control_object,
   statusChange,
@@ -52,8 +45,9 @@ const {
   confirmDelete,
 } = await useDeleteItem();
 
+const checked = ref(false);
+
 watch(() => form.value.item_id, () => {
-  console.log(2);
   checked.value = form.value.status === 'on';
 }, { immediate: true });
 
