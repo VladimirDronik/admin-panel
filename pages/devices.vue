@@ -260,7 +260,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
 
 const processedDevices = computed(() => {
   const result = processDevices(storeDevices.getDevices ?? []);
-  return result;
+  return _.sortBy(result, (device) => (device.data.category === 'server' ? 0 : 1));
 });
 
 const isDropdownOpen = ref(false);
