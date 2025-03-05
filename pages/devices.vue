@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 import {
-  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning,
+  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning, IconSubtask,
 } from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusSymbol } from '~/helpers/main';
@@ -43,7 +43,8 @@ const iconMap = {
   htu21d: IconCloudPlus,
   htu31d: IconCloudPlus,
   regulator: IconToggleRightFilled,
-  modbus: IconCpu,
+  server: IconCpu,
+  bus: IconSubtask,
   wb_mrm2_mini: IconCurrency,
   ...Object.fromEntries(
     Object.values(Conditioner)
@@ -223,6 +224,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
           data: {
             ...child.data,
             name: `${child.data.name} (${obj.data.name})`,
+            isChild: true,
             paddingLeft: `${depth * 20}px`,
           },
         }));
@@ -239,6 +241,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
           data: {
             ...child.data,
             name: `${child.data.name} (${obj.data.name})`,
+            isChild: true,
             paddingLeft: `${depth * 20}px`,
           },
         }));
@@ -248,7 +251,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
 
     newObj.data = {
       ...newObj.data,
-      ...(depth > 1 && { paddingLeft: `${depth * 20}px` }),
+      ...(depth > 1 && { isChild: true, paddingLeft: `${depth * 20}px` }),
     };
 
     return newObj;
@@ -257,7 +260,7 @@ function processDevices(arr: TreeTableDevices[], depth = 1): TreeTableDevices[] 
 
 const processedDevices = computed(() => {
   const result = processDevices(storeDevices.getDevices ?? []);
-  return result;
+  return _.sortBy(result, (device) => (device.data.category === 'server' ? 0 : 1));
 });
 
 const isDropdownOpen = ref(false);

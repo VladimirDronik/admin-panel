@@ -10,7 +10,8 @@ import {
   Sensor, Controller, Relay, GenericInput,
   DeviceInterface,
   Regulator,
-  Modbus,
+  RS485,
+  Server,
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
@@ -39,7 +40,8 @@ const formatChildren = (children: DeviceChildren | undefined) => {
 };
 
 const createConnectionString = (formData: FormDataToTransform | EditDeviceForm): string => {
-  if (!formData.props.ip || !formData.props.port) return '';
+  if (!formData.props.ip) return '';
+  if (!formData.props.port) return formData.props.ip;
   return `tcp://${formData.props.ip}:${formData.props.port}`;
 };
 
@@ -51,10 +53,10 @@ export const transformToDeviceCreateFormPayload = (
   const children = formatChildren(formData.children);
 
   const result = { object: { ...formData, children } };
-  if (formData.type !== Modbus.Modbus && formData.type !== Regulator.Regulator) {
+  if (formData.type !== RS485.Bus && formData.type !== Regulator.Regulator) {
     result.object.props.address = createAddress(formData);
   }
-  if (formData.type === Modbus.Modbus) {
+  if (formData.type === RS485.Bus) {
     result.object.props.connection_string = createConnectionString(formData);
     result.object.props.timeout = createNumericValueWithUnit(formData);
   }
@@ -95,10 +97,10 @@ export const transformToDeviceEditFormPayload = (
 ): DeviceEditFormPayload => {
   const children = formatChildren(formData.children);
   const result = { ...formData, children, events: [] };
-  if (formData.type !== Regulator.Regulator && formData.type !== Modbus.Modbus) {
+  if (formData.type !== Regulator.Regulator && formData.type !== RS485.Bus && formData.type !== Server.Server) {
     result.props.address = createAddress(formData);
   }
-  if (formData.type === Modbus.Modbus) {
+  if (formData.type === RS485.Bus) {
     result.props.connection_string = createConnectionString(formData);
     result.props.timeout = createNumericValueWithUnit(formData);
   }
@@ -150,7 +152,13 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedID = data.props.find((prop) => prop.code === 'id');
   const updatedMode = data.props.find((prop) => prop.code === 'mode');
   const updatedConnectionString = data.props.find((prop) => prop.code === 'connection_string');
-  const [ip, port] = String(updatedConnectionString?.value).match(/^tcp:\/\/([\d.]+):(\d+)$/)?.slice(1) ?? [null, null];
+
+  const connectionStringValue = updatedConnectionString?.value ? String(updatedConnectionString.value) : '';
+
+  const parsedConnection = connectionStringValue.match(/^tcp:\/\/([\d.]+):(\d+)$/);
+  const [ip, port] = parsedConnection?.slice(1) ?? [null, null];
+
+  const rawConnectionString = parsedConnection ? null : connectionStringValue;
 
   const parseNumericValueWithUnit = (value: unknown): { numericValue: number; selectedUnit: string } => {
     const stringValue = String(value ?? '').trim();
@@ -189,11 +197,21 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     selectedUnit = updateIntervalUnit;
   }
 
-  // const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
-  // const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
-  // const updatedParity = data.props.find((prop) => prop.code === 'parity');
-  // const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
+  const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
+  const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
+  const updatedParity = data.props.find((prop) => prop.code === 'parity');
+  const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
   const updatedTries = data.props.find((prop) => prop.code === 'tries');
+  const updatedServerID = data.props.find((prop) => prop.code === 'server_id');
+  const updatedEcoMode = data.props.find((prop) => prop.code === 'eco_mode');
+  const updatedGuardMode = data.props.find((prop) => prop.code === 'guard_mode');
+  const updatedNightMode = data.props.find((prop) => prop.code === 'night_mode');
+  const updatedHeatingMode = data.props.find((prop) => prop.code === 'heating_mode');
+  const updatedLightMode = data.props.find((prop) => prop.code === 'light_mode');
+  const updatedLogging = data.props.find((prop) => prop.code === 'logging');
+  const updatedStorageLogs = data.props.find((prop) => prop.code === 'storage_logs');
+  const updatedGraphDate = data.props.find((prop) => prop.code === 'graph_date');
+  const updatedTimeZone = data.props.find((prop) => prop.code === 'time_zone');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -249,7 +267,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     initialForm.props.mode = String(updatedMode.value);
   }
   if ('ip' in initialForm.props) {
-    initialForm.props.ip = ip;
+    initialForm.props.ip = ip ?? rawConnectionString;
   }
   if ('port' in initialForm.props) {
     initialForm.props.port = port ? Number(port) : null;
@@ -260,21 +278,50 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('selectedUnit' in initialForm.props) {
     initialForm.props.selectedUnit = selectedUnit;
   }
-  // if ('speed' in initialForm.props && updatedSpeed) {
-  //   initialForm.props.speed = String(updatedSpeed.value);
-  // }
-  // if ('data_bits' in initialForm.props && updatedDataBits) {
-  //   initialForm.props.data_bits = Number(updatedDataBits.value);
-  // }
-  // if ('parity' in initialForm.props && updatedParity) {
-  //   initialForm.props.parity = String(updatedParity.value);
-  // }
-  // if ('stop_bits' in initialForm.props && updatedStopBits) {
-  //   initialForm.props.stop_bits = String(updatedStopBits.value);
-  // }
-
+  if ('speed' in initialForm.props && updatedSpeed) {
+    initialForm.props.speed = String(updatedSpeed.value);
+  }
+  if ('data_bits' in initialForm.props && updatedDataBits) {
+    initialForm.props.data_bits = Number(updatedDataBits.value);
+  }
+  if ('parity' in initialForm.props && updatedParity) {
+    initialForm.props.parity = String(updatedParity.value);
+  }
+  if ('stop_bits' in initialForm.props && updatedStopBits) {
+    initialForm.props.stop_bits = String(updatedStopBits.value);
+  }
   if ('tries' in initialForm.props && updatedTries) {
     initialForm.props.tries = Number(updatedTries.value);
+  }
+  if ('server_id' in initialForm.props && updatedServerID) {
+    initialForm.props.server_id = String(updatedServerID.value);
+  }
+  if ('eco_mode' in initialForm.props && updatedEcoMode) {
+    initialForm.props.eco_mode = Boolean(updatedEcoMode.value);
+  }
+  if ('guard_mode' in initialForm.props && updatedGuardMode) {
+    initialForm.props.guard_mode = Boolean(updatedGuardMode.value);
+  }
+  if ('night_mode' in initialForm.props && updatedNightMode) {
+    initialForm.props.night_mode = Boolean(updatedNightMode.value);
+  }
+  if ('heating_mode' in initialForm.props && updatedHeatingMode) {
+    initialForm.props.heating_mode = String(updatedHeatingMode.value);
+  }
+  if ('light_mode' in initialForm.props && updatedLightMode) {
+    initialForm.props.light_mode = String(updatedLightMode.value);
+  }
+  if ('logging' in initialForm.props && updatedLogging) {
+    initialForm.props.logging = String(updatedLogging.value);
+  }
+  if ('storage_logs' in initialForm.props && updatedStorageLogs) {
+    initialForm.props.storage_logs = Number(updatedStorageLogs.value);
+  }
+  if ('graph_date' in initialForm.props && updatedGraphDate) {
+    initialForm.props.graph_date = Number(updatedGraphDate.value);
+  }
+  if ('time_zone' in initialForm.props && updatedTimeZone) {
+    initialForm.props.time_zone = String(updatedTimeZone.value);
   }
   if (Object.keys(children).length > 0 && initialForm.children) {
     initialForm.children = children;

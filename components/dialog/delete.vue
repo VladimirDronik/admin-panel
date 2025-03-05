@@ -24,6 +24,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits<{
@@ -48,6 +52,8 @@ const deleteItem = () => {
   <div>
     <Button
       v-if="showBtn"
+      :class="{ 'tw-cursor-not-allowed': disabled }"
+      :disabled="disabled"
       :label="t('delete')"
       outlined
       @click="dialog = true"

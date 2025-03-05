@@ -7,7 +7,8 @@ import {
   Controller, GenericInput, Sensor, ObjectsCategory, Connection, DeviceInterface,
   DevicePropertyKey, Relay, Regulator, RegulatorType,
   Conditioner,
-  Modbus,
+  RS485,
+  Server,
 } from '~/types/DevicesEnums';
 
 const basicCreateDeviceForm = {
@@ -427,8 +428,8 @@ const createFormByTypesMap = {
   [Conditioner.OnokomTCL1MBB]: {
     ...basicCreateConditionerForm,
   },
-  [Modbus.Modbus]: {
-    category: Modbus.Modbus,
+  [RS485.Bus]: {
+    category: ObjectsCategory.RS485,
     props: {
       ip: '',
       port: 502,
@@ -439,6 +440,22 @@ const createFormByTypesMap = {
       numericValue: 500,
       selectedUnit: 'ms',
       tries: 3,
+    },
+  },
+  [Server.Server]: {
+    id: 0,
+    category: ObjectsCategory.Server,
+    props: {
+      server_id: '',
+      eco_mode: false,
+      guard_mode: false,
+      night_mode: false,
+      heating_mode: '',
+      light_mode: '',
+      logging: '',
+      storage_logs: 30,
+      graph_date: 365,
+      time_zone: 'Europe/Moscow',
     },
   },
 };
@@ -844,20 +861,37 @@ const editFormByTypesMap = {
     },
     status: '',
   },
-  [Modbus.Modbus]: {
+  [RS485.Bus]: {
     id: 0,
     status: '',
-    category: Modbus.Modbus,
+    category: ObjectsCategory.RS485,
     props: {
       ip: '',
       port: 502,
-      // speed: '19200',
-      // data_bits: 8,
-      // parity: '0',
-      // stop_bits: '2',
+      speed: '19200',
+      data_bits: 8,
+      parity: '0',
+      stop_bits: '2',
       numericValue: 500,
       selectedUnit: 'ms',
       tries: 3,
+    },
+  },
+  [Server.Server]: {
+    id: 0,
+    status: '',
+    category: ObjectsCategory.Server,
+    props: {
+      server_id: '',
+      eco_mode: false,
+      guard_mode: false,
+      night_mode: false,
+      heating_mode: '',
+      light_mode: '',
+      logging: '',
+      storage_logs: 0,
+      graph_date: 0,
+      time_zone: 'Europe/Moscow',
     },
   },
 };

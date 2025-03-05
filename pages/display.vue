@@ -28,7 +28,6 @@ const {
   dataItems,
   statusItems,
   statusRooms,
-  filteredRooms,
   update,
 } = await useGetData();
 
@@ -57,7 +56,13 @@ async function useGetData() {
   const createdData = await Promise.all([
     useAPI<Request<DisplayData>>(
       paths.privateCp,
-      { watch: false },
+      {
+        watch: false,
+        query: {
+          with_empty_rooms: true,
+          with_disabled_items: true,
+        },
+      },
       displayRequestSchema,
     ),
     useAPI<Request<RoomItem[]>>(
@@ -80,8 +85,6 @@ async function useGetData() {
     },
   ] = createdData;
 
-  const itemIds = computed(() => dataItems.value?.response.room_items?.map((item) => item.id) ?? []);
-
   const update = async () => {
     await Promise.all([
       refrechItems(),
@@ -90,21 +93,11 @@ async function useGetData() {
     ]);
   };
 
-  const filteredRooms = computed(() => {
-    let result: any[] = [];
-    const items = dataItems.value?.response.room_items ?? [];
-    const filteredRooms = dataRooms.value?.response?.filter((item) => !itemIds.value.includes(item.id));
-    if (items) result = [...result, ...items];
-    if (filteredRooms) result = [...result, ...filteredRooms];
-    return result;
-  });
-
   return {
     dataItems,
     dataRooms,
     statusItems,
     statusRooms,
-    filteredRooms,
     update,
   };
 }
@@ -176,7 +169,7 @@ function useRightBar() {
         </PerfectScrollbar>
       </div>
       <div
-        v-for="rooms in filteredRooms"
+        v-for="rooms in dataItems?.response.room_items"
         :key="rooms.id"
         class="border-base tw-rounded-md tw-border tw-p-3"
       >
