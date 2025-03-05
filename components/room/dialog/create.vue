@@ -4,7 +4,8 @@ import { z } from 'zod';
 import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import type { APIData } from '~/types/StoreTypes';
+// Types and Schemes modules
+import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -25,6 +26,7 @@ const form = ref({
   name: null,
   style: null,
   sort: 0,
+  is_group: false,
 });
 
 const parentId = ref();
@@ -42,16 +44,30 @@ const {
   execute: executeCreateRoom,
 } = await useAPI(paths.privateRoom, {
   body: computed(() => {
-    if (parentId.value) {
+    if (parentId.value && !form.value.is_group) {
       return {
         ...form.value,
         parent_id: parentId.value,
       };
     }
-    return form.value;
+    return {
+      ...form.value,
+      parent_id: 0,
+    };
   }),
   method: 'POST',
   immediate: false,
+  watch: false,
+});
+
+const {
+  data: dataGetGroupRooms,
+  refresh: refreshGetGroupRooms,
+} = await useAPI<Request<any>>(paths.privateRoomsList, {
+  query: {
+    type_zones: 'groups_only',
+  },
+  method: 'GET',
   watch: false,
 });
 
@@ -66,6 +82,7 @@ const createRoom = async () => {
         name: null,
         style: null,
         sort: 0,
+        is_group: false,
       };
       parentId.value = null;
       dialog.value = false;
@@ -121,16 +138,32 @@ const createRoom = async () => {
           >
             <SharedUIColorSelect v-model="form.style" />
           </SharedUILabel>
+          <div class="tw-mb-2 tw-flex tw-items-center">
+            <Checkbox
+              v-model="form.is_group"
+              binary
+              class="tw-mr-1"
+              input-id="regulator"
+              name="Регулировка"
+            />
+            <label
+              class="tw-cursor-pointer tw-text-lg"
+              for="regulator"
+            >
+              Является группой
+            </label>
+          </div>
           <SharedUILabel
+            v-if="!form.is_group"
             class="tw-mb-2"
-            :title="'Группа'"
+            :title="'Выбор Группы'"
           >
             <Select
               v-model="parentId"
               class="tw-w-full"
               option-label="name"
               option-value="id"
-              :options="storeRooms.getRooms"
+              :options="dataGetGroupRooms?.response"
             />
           </SharedUILabel>
         </div>
