@@ -5,6 +5,7 @@ export default {
     login: 'Логин',
     rooms: 'Помещения',
     scenario: 'Сценарии',
+    scheduler: 'Планировщик',
     settings: 'Настройки',
     networkSettings: 'Настройки Сети',
     parameters: 'Параметры',

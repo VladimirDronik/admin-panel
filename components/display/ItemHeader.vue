@@ -29,6 +29,7 @@ const emit = defineEmits<{
         {{ name }}
       </h4>
       <DisplayDialogSensorChange
+        :rooms
         :sensors
         @update="emit('update')"
       />

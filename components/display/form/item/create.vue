@@ -17,11 +17,11 @@ const { updateData } = useUtils();
 
 // Declare Options
 const {
-  id,
+  zoneId,
   devices,
   options,
 } = defineProps<{
-  id: number | undefined
+  zoneId: number | undefined
   devices: { value: string, label: string }[],
   options: any[]
 }>();
@@ -140,7 +140,7 @@ function useQuickSelectRoom() {
   const quickSelectRoom = (id: number | undefined) => options?.find((item) => item.code === id || item.inGroup?.code === id);
 
   // Watchers
-  watch(() => id, (newValue) => {
+  watch(() => zoneId, (newValue) => {
     isUpdateForm.value = true;
     const room = quickSelectRoom(newValue)?.code;
     if (room) form.value.zone_id = room;
@@ -156,7 +156,6 @@ function useQuickSelectRoom() {
 
 <template>
   <Stepper
-    v-if="resolver"
     v-model:value="step"
     linear
   >

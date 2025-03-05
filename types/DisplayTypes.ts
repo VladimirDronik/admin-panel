@@ -22,6 +22,7 @@ export const roomSensors = z.object({
   icon: z.string().optional(),
   item_id: z.number(),
   type: z.string(),
+  title: z.string(),
   zone_id: z.number(),
   current: number(),
 });
