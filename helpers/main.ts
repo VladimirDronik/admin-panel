@@ -34,10 +34,10 @@ export const checkStatusColor = (item: string | undefined) => {
 
 export const checkStatusSymbol = (item: string | undefined) => {
   if (item === 'available') {
-    return { symbol: '', class: 'tw-h-2.5 tw-w-2.5 tw-rounded-full tw-bg-success tw-inline-block' };
+    return { symbol: '', class: 'tw-bg-success' };
   }
   if (item === 'unavailable') {
-    return { symbol: '', class: 'tw-h-2.5 tw-w-2.5 tw-rounded-full tw-bg-warn tw-inline-block' };
+    return { symbol: '', class: 'tw-bg-warn' };
   }
   if (item === 'disabled') {
     return { symbol: '×', class: 'tw-text-danger tw-font-bold tw-text-xl' };

@@ -392,10 +392,20 @@ const dropdownClasses = computed(() => ({
           </DeviceTableHeader>
         </template>
         <template #body="{ node }">
-          <div :class="checkStatusSymbol(node.data.status).class">
-            {{ checkStatusSymbol(node.data.status).symbol }}
+          <div class="tw-flex tw-items-center tw-gap-2">
+            <span
+              v-if="checkStatusSymbol(node.data.status).symbol === ''"
+              class="tw-inline-block tw-size-2.5 tw-rounded-full"
+              :class="checkStatusSymbol(node.data.status).class"
+            />
+            <span
+              v-else
+              :class="checkStatusSymbol(node.data.status).class"
+            >
+              {{ checkStatusSymbol(node.data.status).symbol }}
+            </span>
+            <span>{{ checkStatusText(node.data.status) }}</span>
           </div>
-          {{ checkStatusText(node.data.status) }}
         </template>
       </Column>
       <Column

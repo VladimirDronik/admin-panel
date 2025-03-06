@@ -72,6 +72,35 @@ const protocolOptions = schema.shape.protocol.options;
     </SharedUILabel>
 
     <SharedUILabel
+      v-if="props.isEditing"
+      class="tw-mb-2"
+      name="zone_id"
+      :title="t('devices.room')"
+    >
+      <Select
+        v-model="dynamicForm.zone_id"
+        class="tw-w-2/4"
+        option-label="name"
+        option-value="code"
+        :options="storeRooms.getRoomsSelect"
+        :show-clear="true"
+      />
+    </SharedUILabel>
+
+    <Divider
+      v-if="props.isEditing"
+      class="tw-mt-0 tw-pb-3"
+    />
+
+    <SharedUILabel
+      class="text-primary-custom tw-mb-2"
+      :title="t('devices.fastConfig')"
+      :width="260"
+    >
+      <ToggleSwitch v-model="dynamicForm.props.fast_config" />
+    </SharedUILabel>
+
+    <SharedUILabel
       class="tw-mb-2"
       name="ptotocol"
       required
@@ -99,7 +128,6 @@ const protocolOptions = schema.shape.protocol.options;
       />
     </SharedUILabel>
 
-    <!-- v-if="!props.isEditing" -->
     <SharedUILabel
       class="tw-mb-2"
       name="address"
@@ -125,22 +153,6 @@ const protocolOptions = schema.shape.protocol.options;
         id="password"
         v-model="dynamicForm.props.password"
         class="tw-w-2/4"
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      name="zone_id"
-      :title="t('devices.room')"
-    >
-      <Select
-        v-model="dynamicForm.zone_id"
-        class="tw-w-2/4"
-        option-label="name"
-        option-value="code"
-        :options="storeRooms.getRoomsSelect"
-        :show-clear="true"
       />
     </SharedUILabel>
   </Form>
