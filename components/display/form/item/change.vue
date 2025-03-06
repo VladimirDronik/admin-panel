@@ -45,11 +45,11 @@ const {
   confirmDelete,
 } = await useDeleteItem();
 
-const checked = ref(false);
+// const checked = ref(false);
 
-watch(() => form.value.item_id, () => {
-  checked.value = form.value.status === 'on';
-}, { immediate: true });
+// watch(() => form.value.item_id, () => {
+//   checked.value = form.value.status === 'on';
+// }, { immediate: true });
 
 const changeStatus = () => {
   form.value.status = !(form.value.status === 'on') ? 'on' : 'off';
@@ -146,7 +146,7 @@ async function useDeleteItem() {
         {{ devices.find(d => d.value === form.type)?.label || form.type }}
       </p>
       <ToggleSwitch
-        v-model="checked"
+        v-model="form.enabled"
         @change="changeStatus()"
       />
     </div>
