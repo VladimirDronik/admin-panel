@@ -12,19 +12,20 @@ import {
   Regulator,
   RS485,
   Server,
+  Counter,
 } from '~/types/DevicesEnums';
 
 const createAddress = (formData: FormDataToTransform | EditDeviceForm): string => {
   const isConditioner = formData.category === ObjectsCategory.Conditioner;
   const isDS1820 = formData.type === Sensor.DS18B20;
   const isMegaD = formData.type === Controller.MegaD;
-  const isRelayOrGenericInputOrMotionOrCS = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput || formData.type === Sensor.MOTION || formData.type === Sensor.CS;
+  const isSinglePortDevice = formData.type === Relay.Relay || formData.type === GenericInput.GenericInput || formData.type === Sensor.MOTION || formData.type === Sensor.CS || formData.type === Counter.ImpulseCounter;
   const isRegulator = formData.type === Regulator.Regulator;
   let address = `${formData.sdaPort};${formData.sclPort}`;
   if (isDS1820 && formData.props.interface === '1W') address = String(formData.sdaPort);
   if (isDS1820 && formData.props.interface === '1WBUS') address = `${formData.sdaPort};${formData.busAddress}`;
   if (isMegaD) address = String(formData.props.address);
-  if (isRelayOrGenericInputOrMotionOrCS) address = `${formData.sdaPort}`;
+  if (isSinglePortDevice) address = `${formData.sdaPort}`;
   if (isRegulator) address = '';
   if (isConditioner) address = Number(formData.props.address) as unknown as string;
   return address;
@@ -70,9 +71,10 @@ export const transformToDeviceCreateFormPayload = (
   }
 
   if (
-    formData.category === 'sensor'
-    && formData.type !== Sensor.MOTION
-    && formData.type !== Sensor.PRESENCE
+    (formData.category === 'sensor'
+      && formData.type !== Sensor.MOTION
+      && formData.type !== Sensor.PRESENCE)
+    || formData.type === Counter.ImpulseCounter
   ) {
     result.object.props.update_interval = createNumericValueWithUnit(formData);
   }
@@ -111,9 +113,10 @@ export const transformToDeviceEditFormPayload = (
     result.props.period = createNumericValueWithUnit(formData);
   }
   if (
-    formData.category === 'sensor'
-    && formData.type !== Sensor.MOTION
-    && formData.type !== Sensor.PRESENCE
+    (formData.category === 'sensor'
+      && formData.type !== Sensor.MOTION
+      && formData.type !== Sensor.PRESENCE)
+    || formData.type === Counter.ImpulseCounter
   ) {
     result.props.update_interval = createNumericValueWithUnit(formData);
   }
@@ -212,6 +215,13 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedStorageLogs = data.props.find((prop) => prop.code === 'storage_logs');
   const updatedGraphDate = data.props.find((prop) => prop.code === 'graph_date');
   const updatedTimeZone = data.props.find((prop) => prop.code === 'time_zone');
+  const updatedTotal = data.props.find((prop) => prop.code === 'total');
+  const updatedUnit = data.props.find((prop) => prop.code === 'unit');
+  const updatedMultiplier = data.props.find((prop) => prop.code === 'multiplier');
+  const updatedTypeParam = data.props.find((prop) => prop.code === 'type_param');
+  const updatedLastUpdate = data.props.find((prop) => prop.code === 'last_update');
+  const updatedPrice = data.props.find((prop) => prop.code === 'price');
+  const updatedFastConfig = data.props.find((prop) => prop.code === 'fast_config');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -325,6 +335,27 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   }
   if (Object.keys(children).length > 0 && initialForm.children) {
     initialForm.children = children;
+  }
+  if ('total' in initialForm.props && updatedTotal) {
+    initialForm.props.total = Number(updatedTotal.value);
+  }
+  if ('unit' in initialForm.props && updatedUnit) {
+    initialForm.props.unit = String(updatedUnit.value);
+  }
+  if ('multiplier' in initialForm.props && updatedMultiplier) {
+    initialForm.props.multiplier = Number(updatedMultiplier.value);
+  }
+  if ('type_param' in initialForm.props && updatedTypeParam) {
+    initialForm.props.type_param = String(updatedTypeParam.value);
+  }
+  if ('last_update' in initialForm.props && updatedLastUpdate) {
+    initialForm.props.last_update = String(updatedLastUpdate.value);
+  }
+  if ('price' in initialForm.props && updatedPrice) {
+    initialForm.props.price = Number(updatedPrice.value);
+  }
+  if ('fast_config' in initialForm.props && updatedFastConfig) {
+    initialForm.props.fast_config = Number(updatedFastConfig.value);
   }
   return initialForm;
 };

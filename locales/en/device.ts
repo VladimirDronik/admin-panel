@@ -105,5 +105,12 @@ export default {
     storageLogs: 'Log storage duration',
     graphDate: 'Graph data retention',
     timeZone: 'Time zone',
+    typeParam: 'Measured parameter',
+    unit: 'Measurement units',
+    writeGraph: 'Graph recording',
+    multiplier: 'Pulse conversion factor',
+    startValue: 'Initial counter values',
+    price: 'Cost per unit',
+    fastConfig: 'Port configuration when assigning devices',
   },
 };

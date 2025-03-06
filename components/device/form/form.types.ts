@@ -1,7 +1,7 @@
 import {
   DevicePropertyKey, ObjectsCategory, DeviceInterface, Sensor, Controller, Connection, GenericInput, Relay,
   Regulator, RegulatorType,
-  Conditioner, RS485, Server,
+  Conditioner, RS485, Server, Counter,
 } from '~/types/DevicesEnums';
 import { type DeviceZoneId, type DevicePort } from '~/types/DevicesTypes';
 
@@ -105,7 +105,15 @@ export interface DeviceProps {
     storage_logs?: number;
     graph_date?: number;
     time_zone?: string;
-
+    total?: number;
+    unit?: string;
+    multiplier?: number;
+    start_value?: number;
+    type_param?: string;
+    price?: number;
+    last_update?: string;
+    write_graph?: boolean;
+    fast_config?: boolean;
   }
 
 export interface DeviceChild {
@@ -132,4 +140,4 @@ export type PropsFormDeviceData = Omit<DynamicFormDataBasic, 'category'>;
 
 export type EditDeviceForm = DynamicFormData & { type: FormTypes, id: number, status: string }
 
-export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner | RS485 | Server;
+export type FormTypes = Controller | Sensor | GenericInput | Relay | Regulator | Conditioner | RS485 | Server | Counter;

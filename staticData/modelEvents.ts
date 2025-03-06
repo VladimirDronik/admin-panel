@@ -203,6 +203,20 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
+  impulse_counter: [
+    {
+      code: 'object.impulse_counter.on_threshold',
+      name: 'on_threshold',
+      description: 'Достигнуто пороговое значение счетчика',
+      actions: [],
+    },
+    {
+      code: 'object.impulse_counter.on_check',
+      name: 'on_check',
+      description: 'Произведено снятие количества импульсов со счетчика',
+      actions: [],
+    },
+  ],
   motion: [
     {
       code: 'object.sensor.on_motion_on',

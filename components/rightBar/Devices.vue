@@ -265,9 +265,16 @@ const isDeleteDisabled = computed(() => {
         :severity="checkStatusColor(asideEditingForm.status)"
       >
         <div class="tw-flex tw-items-center tw-font-normal">
-          <div :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`">
+          <span
+            v-if="checkStatusSymbol(asideEditingForm.status).symbol === ''"
+            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2 tw-inline-block tw-h-2.5 tw-w-2.5 tw-rounded-full`"
+          />
+          <span
+            v-else
+            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`"
+          >
             {{ checkStatusSymbol(asideEditingForm.status).symbol }}
-          </div>
+          </span>
           {{ checkStatusTextSmall(asideEditingForm.status) }}
         </div>
       </Tag>

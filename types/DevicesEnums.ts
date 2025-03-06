@@ -7,6 +7,7 @@ export enum ObjectsCategory {
   Conditioner = 'conditioner',
   RS485 = 'rs485',
   Server = 'server',
+  Counter = 'counter'
 }
 
 export enum DevicePropertyKey {
@@ -57,6 +58,10 @@ export enum Regulator {
 
 export enum Server {
   Server = 'server',
+}
+
+export enum Counter {
+  ImpulseCounter = 'impulse_counter',
 }
 
 export enum Conditioner {
