@@ -209,7 +209,7 @@ async function useDeleteRoom() {
 <template>
   <LayoutRightbar
     v-if="form"
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :title="variant === 'edit' ? t('Изменить задачу') : t('Добавить задачу')"
   >
     <Stepper

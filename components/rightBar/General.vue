@@ -57,7 +57,7 @@ const widgets = [
 
 <template>
   <LayoutRightbar
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :is-update="isUpdate"
     :title="edit ? 'Изменить Виджет' : 'Добавить Виджет'"
   >

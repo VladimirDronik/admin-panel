@@ -28,7 +28,7 @@ const selectType = 'Камера';
 
 <template>
   <LayoutRightbar
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :is-update="isUpdate"
     :title="edit ? t('video.changeWidget') : t('video.changeWidget')"
   >

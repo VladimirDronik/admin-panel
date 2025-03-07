@@ -18,7 +18,7 @@ const selectedParameter = defineModel<any>('selectedParameter', {
 
 <template>
   <LayoutRightbar
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :title="t('parameters.addRoom')"
   >
     <div>

@@ -135,7 +135,7 @@ async function useDeleteRoom() {
 <template>
   <LayoutRightbar
     v-if="form"
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :title="form.is_group ? t('room.addCategory') : t('room.addRoom')"
   >
     <Form

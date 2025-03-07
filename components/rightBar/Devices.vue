@@ -209,7 +209,7 @@ const isDeleteDisabled = computed(() => {
 
 <template>
   <LayoutRightbar
-    :is-open="isOpen"
+    v-model:is-open="isOpen"
     :is-update="isUpdate"
   >
     <div>
