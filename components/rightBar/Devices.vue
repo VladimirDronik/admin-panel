@@ -205,6 +205,11 @@ const isDeleteDisabled = computed(() => {
   return type === 'server' || (type === 'bus' && isChild);
 });
 
+const parentParam = computed(() => {
+  if (asideEditingForm.type !== 'regulator' || !asideEditingForm.parent_id) return null;
+  return storeDevices.list.find((device) => device.id === asideEditingForm.parent_id) || null;
+});
+
 </script>
 
 <template>
@@ -224,7 +229,9 @@ const isDeleteDisabled = computed(() => {
         >
           <template #display>
             <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
-              {{ asideEditingForm?.name }} ({{ asideEditingForm.type }})
+              {{ asideEditingForm?.name }} ({{ asideEditingForm.type }}<template v-if="asideEditingForm.type === 'regulator' && parentParam">
+                - {{ parentParam.name }}
+              </template>)
             </h3>
           </template>
           <template #content="{ closeCallback }">
