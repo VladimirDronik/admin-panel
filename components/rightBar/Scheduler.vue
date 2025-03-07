@@ -3,12 +3,9 @@
 import { z } from 'zod';
 import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
-import DatePicker from 'primevue/datepicker';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
-// Static modules
-import { itemEventTypes } from '~/staticData/modelEvents';
 
 // Composables
 const { t } = useI18n();
