@@ -40,4 +40,5 @@ export const Components = [
   'Checkbox',
   'InputGroup',
   'FloatLabel',
+  'DatePicker',
 ];

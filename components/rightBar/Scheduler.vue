@@ -3,11 +3,10 @@
 import { z } from 'zod';
 import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
+import DatePicker from 'primevue/datepicker';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
-import type { RoomItem } from '~/stores/rooms/roomsTypes';
-import type { Request } from '~/types/StoreTypes';
 // Static modules
 import { itemEventTypes } from '~/staticData/modelEvents';
 
@@ -34,6 +33,25 @@ const isOpen = defineModel<boolean>('isShow', {
 
 // Variables
 const form = ref<any | null | undefined>();
+const dialog = ref(false);
+const visible = ref(false);
+
+const event = ref<Event>({
+  code: '',
+  name: '',
+  description: '',
+  actions: [],
+  actionTypes: {
+    method: 0,
+    delay: 0,
+    script: 0,
+    notification: 0,
+  },
+});
+const edit = ref(false);
+
+const modelType = ref('scheduler');
+const targetType = ref('scheduler');
 
 const resolver = ref(zodResolver(
   z.object({}),
@@ -41,6 +59,53 @@ const resolver = ref(zodResolver(
 
 const step = ref('1');
 const events = ref<Event[]>();
+
+const filterEvents = async (type: string) => {
+
+};
+
+const dates = [...Array(31)].map((_, i) => i + 1);
+
+const minuteOptions = [
+  '1 минута',
+  '5 минут',
+  '10 минут',
+  '15 минут',
+  '30 минут',
+  '60 минут',
+];
+
+const selectedType = ref('minute');
+const types = ref([
+  { name: 'Ежеминутно', key: 'minute' },
+  { name: 'Ежедневно', key: 'day' },
+  { name: 'Ежемесячно', key: 'month' },
+  { name: 'Ежегодно', key: 'year' },
+]);
+
+const selectedDay = ref([]);
+const days = ref([
+  { name: 'Пн', key: 'minute' },
+  { name: 'Вт', key: 'day' },
+  { name: 'Ср', key: 'month' },
+  { name: 'Чт', key: 'year' },
+  { name: 'Пт', key: 'year' },
+  { name: 'Сб', key: 'year' },
+  { name: 'Вс', key: 'year' },
+]);
+
+const templatedisplay = ref();
+
+const updateEvents = () => {
+  filterEvents(modelType.value);
+};
+
+const plans = ref([
+  {
+    title: 'Ежеминутно',
+    description: 'Каждые 1 мин',
+  },
+]);
 
 // Watchers
 watch(schedule, () => {
@@ -160,7 +225,7 @@ async function useDeleteRoom() {
           {{ t('devices.features') }}
         </Step>
         <Step value="2">
-          {{ t('devices.events') }}
+          {{ t('Расписание') }}
         </Step>
       </StepList>
 
@@ -183,18 +248,6 @@ async function useDeleteRoom() {
               >
                 <InputText
                   v-model="form.title"
-                  class="tw-w-full"
-                />
-              </SharedUILabel>
-              <SharedUILabel
-                class="tw-mb-4"
-                name="name"
-                required
-                :title="t('Переодичность')"
-                :value="form.timer"
-              >
-                <Select
-                  v-model="form.timer"
                   class="tw-w-full"
                 />
               </SharedUILabel>
@@ -262,7 +315,7 @@ async function useDeleteRoom() {
                   style="font-size: 1.2rem"
                 />
               </div>
-              <div class="tw-flex tw-items-center">
+              <div class="tw-mb-2 tw-flex tw-items-center">
                 <div class="tw-flex tw-min-w-32 tw-items-center">
                   <Checkbox
                     v-model="form.isHide"
@@ -294,6 +347,19 @@ async function useDeleteRoom() {
                   style="font-size: 1.2rem"
                 />
               </div>
+              <Button
+                label="Действия"
+                @click="dialog = true"
+              />
+              <FormsEventActions
+                :id="0"
+                v-model="dialog"
+                v-model:event="event"
+                :edit="edit"
+                :model-type="modelType"
+                :target-type="targetType"
+                @update-actions="updateEvents"
+              />
             </div>
             <div class="tw-flex tw-justify-end tw-pt-2">
               <div class="tw-flex tw-justify-end">
@@ -308,13 +374,146 @@ async function useDeleteRoom() {
           v-slot="{ activateCallback }"
           value="2"
         >
-          <FormsEventForm
-            v-if="form.type"
-            v-model="events"
-            :event-types="itemEventTypes"
-            :model-type="form.type"
-            target-type="item"
+          <DataTable
+            class="tw-mb-3"
+            :value="plans"
+          >
+            <Column
+              field="title"
+              header="Тип периода"
+            />
+            <Column
+              field="description"
+              header="Описание"
+            /><Column
+              field="actions"
+              header="Действия"
+              style="width: 150px;"
+            >
+              <template #body="{ data }">
+                <Button
+                  aria-label="Cancel"
+                  class="tw-mr-2"
+                  icon="pi pi-pencil"
+                  rounded
+                  severity="info"
+                  @click="visible = true"
+                />
+                <Button
+                  aria-label="Cancel"
+                  icon="pi pi-trash"
+                  rounded
+                  severity="danger"
+                />
+              </template>
+            </Column>
+          </DataTable>
+          <Button
+            class="text-capitalize"
+            icon="pi pi-plus"
+            :label="t('Добавить период')"
+            @click="visible = true"
           />
+          <Dialog
+            v-model:visible="visible"
+            dismissable-mask
+            :header="t('devices.addTitleDevice')"
+            modal
+            :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
+          >
+            <SharedUILabel
+              colomn
+              :title="'Тип'"
+            >
+              <div class="tw-flex tw-gap-2 tw-pt-2">
+                <div
+                  v-for="type in types"
+                  :key="type.key"
+                  class="tw-flex tw-items-center tw-gap-2"
+                >
+                  <RadioButton
+                    v-model="selectedType"
+                    :input-id="type.key"
+                    name="dynamic"
+                    :value="type.key"
+                  />
+                  <label :for="type.key">{{ type.name }}</label>
+                </div>
+              </div>
+            </SharedUILabel>
+            <div class="tw-pt-4">
+              <SharedUILabel v-if="selectedType === 'minute'">
+                <!-- <Select
+                  class="tw-w-full"
+                  :options="minuteOptions"
+                  placeholder="Длительность"
+                /> -->
+                <FloatLabel
+                  class="w-full md:w-56"
+                  variant="in"
+                >
+                  <Select
+                    class="tw-w-full"
+                    :options="minuteOptions"
+                  />
+                  <label for="in_label">Длительность</label>
+                </FloatLabel>
+              </SharedUILabel>
+              <div v-if="selectedType === 'day'">
+                <p>
+                  Время
+                </p>
+                <DatePicker
+                  id="datepicker-timeonly"
+                  fluid
+                  time-only
+                />
+                <p class="tw-pt-4">
+                  Дни Недели
+                </p>
+                <div class="tw-flex tw-gap-3">
+                  <div
+                    v-for="day of days"
+                    :key="day.key"
+                    class="tw-flex tw-items-center tw-gap-2"
+                  >
+                    <Checkbox
+                      v-model="selectedDay"
+                      :input-id="day.key"
+                      name="day"
+                      :value="day.key"
+                    />
+                    <label :for="day.key">{{ day.name }}</label>
+                  </div>
+                </div>
+              </div>
+              <div v-if="selectedType === 'month'">
+                <p>
+                  Даты Месяца
+                </p>
+                <MultiSelect
+                  class="w-full md:w-80"
+                  fluid
+                  :max-selected-labels="3"
+                  :options="dates"
+                  placeholder="Даты"
+                />
+              </div>
+              <div v-if="selectedType === 'year'">
+                <p>
+                  Даты
+                </p>
+                <DatePicker
+                  class="tw-w-96"
+                  :manual-input="false"
+                  selection-mode="multiple"
+                />
+              </div>
+            </div>
+            <div class="tw-flex tw-justify-end tw-pt-3">
+              <Button :label="'Добавить Период'" />
+            </div>
+          </Dialog>
           <div class="tw-flex tw-justify-between tw-pt-2">
             <Button
               :label="t('goBack')"
@@ -344,7 +543,7 @@ async function useDeleteRoom() {
         </Tab>
         <Tab value="events">
           <p class="tw-font-normal">
-            {{ t('devices.events') }}
+            {{ t('Расписание') }}
           </p>
         </Tab>
       </TabList>
@@ -367,18 +566,6 @@ async function useDeleteRoom() {
               >
                 <InputText
                   v-model="form.title"
-                  class="tw-w-full"
-                />
-              </SharedUILabel>
-              <SharedUILabel
-                class="tw-mb-4"
-                name="name"
-                required
-                :title="t('Переодичность')"
-                :value="form.timer"
-              >
-                <Select
-                  v-model="form.timer"
                   class="tw-w-full"
                 />
               </SharedUILabel>
@@ -446,7 +633,7 @@ async function useDeleteRoom() {
                   style="font-size: 1.2rem"
                 />
               </div>
-              <div class="tw-flex tw-items-center">
+              <div class="tw-mb-2 tw-flex tw-items-center">
                 <div class="tw-flex tw-min-w-32 tw-items-center">
                   <Checkbox
                     v-model="form.isHide"
@@ -478,6 +665,19 @@ async function useDeleteRoom() {
                   style="font-size: 1.2rem"
                 />
               </div>
+              <Button
+                label="Действия"
+                @click="dialog = true"
+              />
+              <FormsEventActions
+                :id="0"
+                v-model="dialog"
+                v-model:event="event"
+                :edit="edit"
+                :model-type="modelType"
+                :target-type="targetType"
+                @update-actions="updateEvents"
+              />
             </div>
             <div class="tw-flex tw-justify-end tw-pt-2">
               <DialogDelete
@@ -497,13 +697,146 @@ async function useDeleteRoom() {
           </Form>
         </TabPanel>
         <TabPanel value="events">
-          <FormsEventForm
-            :id="form.item_id"
-            :event-types="itemEventTypes"
-            :model-type="form.type"
-            :object="form"
-            target-type="item"
+          <DataTable
+            class="tw-mb-3"
+            :value="plans"
+          >
+            <Column
+              field="title"
+              header="Тип периода"
+            />
+            <Column
+              field="description"
+              header="Описание"
+            /><Column
+              field="actions"
+              header="Действия"
+              style="width: 150px;"
+            >
+              <template #body="{ data }">
+                <Button
+                  aria-label="Cancel"
+                  class="tw-mr-2"
+                  icon="pi pi-pencil"
+                  rounded
+                  severity="info"
+                  @click="visible = true"
+                />
+                <Button
+                  aria-label="Cancel"
+                  icon="pi pi-trash"
+                  rounded
+                  severity="danger"
+                />
+              </template>
+            </Column>
+          </DataTable>
+          <Button
+            class="text-capitalize"
+            icon="pi pi-plus"
+            :label="t('Добавить период')"
+            @click="visible = true"
           />
+          <Dialog
+            v-model:visible="visible"
+            dismissable-mask
+            :header="t('devices.addTitleDevice')"
+            modal
+            :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
+          >
+            <SharedUILabel
+              colomn
+              :title="'Тип'"
+            >
+              <div class="tw-flex tw-gap-2 tw-pt-2">
+                <div
+                  v-for="type in types"
+                  :key="type.key"
+                  class="tw-flex tw-items-center tw-gap-2"
+                >
+                  <RadioButton
+                    v-model="selectedType"
+                    :input-id="type.key"
+                    name="dynamic"
+                    :value="type.key"
+                  />
+                  <label :for="type.key">{{ type.name }}</label>
+                </div>
+              </div>
+            </SharedUILabel>
+            <div class="tw-pt-4">
+              <SharedUILabel v-if="selectedType === 'minute'">
+                <!-- <Select
+                  class="tw-w-full"
+                  :options="minuteOptions"
+                  placeholder="Длительность"
+                /> -->
+                <FloatLabel
+                  class="w-full md:w-56"
+                  variant="in"
+                >
+                  <Select
+                    class="tw-w-full"
+                    :options="minuteOptions"
+                  />
+                  <label for="in_label">Длительность</label>
+                </FloatLabel>
+              </SharedUILabel>
+              <div v-if="selectedType === 'day'">
+                <p>
+                  Время
+                </p>
+                <DatePicker
+                  id="datepicker-timeonly"
+                  fluid
+                  time-only
+                />
+                <p class="tw-pt-4">
+                  Дни Недели
+                </p>
+                <div class="tw-flex tw-gap-3">
+                  <div
+                    v-for="day of days"
+                    :key="day.key"
+                    class="tw-flex tw-items-center tw-gap-2"
+                  >
+                    <Checkbox
+                      v-model="selectedDay"
+                      :input-id="day.key"
+                      name="day"
+                      :value="day.key"
+                    />
+                    <label :for="day.key">{{ day.name }}</label>
+                  </div>
+                </div>
+              </div>
+              <div v-if="selectedType === 'month'">
+                <p>
+                  Даты Месяца
+                </p>
+                <MultiSelect
+                  class="w-full md:w-80"
+                  fluid
+                  :max-selected-labels="3"
+                  :options="dates"
+                  placeholder="Даты"
+                />
+              </div>
+              <div v-if="selectedType === 'year'">
+                <p>
+                  Даты
+                </p>
+                <DatePicker
+                  class="tw-w-96"
+                  :manual-input="false"
+                  selection-mode="multiple"
+                />
+              </div>
+            </div>
+            <div class="tw-flex tw-justify-end tw-pt-3">
+              <Button :label="'Добавить Период'" />
+            </div>
+          </Dialog>
         </TabPanel>
       </TabPanels>
     </Tabs>
