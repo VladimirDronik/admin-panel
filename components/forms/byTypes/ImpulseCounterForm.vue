@@ -33,8 +33,8 @@ const flatForm = computed(() => ({
 const schema = z.object({
   parent_id: z.number().min(1),
   sdaPort: z.number().min(1),
-  multiplier: z.number().min(0.1),
-  start_value: z.number().min(0.1),
+  multiplier: z.number().min(0),
+  start_value: z.number().min(0),
   price: z.number().min(0.1),
 });
 
