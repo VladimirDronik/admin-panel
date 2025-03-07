@@ -418,95 +418,98 @@ async function useDeleteRoom() {
             modal
             :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
           >
-            <SharedUILabel
-              colomn
-              :title="'Тип'"
-            >
-              <div class="tw-flex tw-gap-2 tw-pt-2">
-                <div
-                  v-for="type in types"
-                  :key="type.key"
-                  class="tw-flex tw-items-center tw-gap-2"
-                >
-                  <RadioButton
-                    v-model="selectedType"
-                    :input-id="type.key"
-                    name="dynamic"
-                    :value="type.key"
-                  />
-                  <label :for="type.key">{{ type.name }}</label>
+            <Form>
+              <SharedUILabel
+                colomn
+                :title="'Тип'"
+              >
+                <div class="tw-flex tw-gap-2 tw-pt-2">
+                  <div
+                    v-for="type in types"
+                    :key="type.key"
+                    class="tw-flex tw-items-center tw-gap-2"
+                  >
+                    <RadioButton
+                      v-model="selectedType"
+                      :input-id="type.key"
+                      name="dynamic"
+                      :value="type.key"
+                    />
+                    <label :for="type.key">{{ type.name }}</label>
+                  </div>
                 </div>
-              </div>
-            </SharedUILabel>
-            <div class="tw-pt-4">
-              <SharedUILabel v-if="selectedType === 'minute'">
-                <!-- <Select
+              </SharedUILabel>
+
+              <div class="tw-pt-4">
+                <SharedUILabel v-if="selectedType === 'minute'">
+                  <!-- <Select
                   class="tw-w-full"
                   :options="minuteOptions"
                   placeholder="Длительность"
                 /> -->
-                <FloatLabel
-                  class="w-full md:w-56"
-                  variant="in"
-                >
-                  <Select
-                    class="tw-w-full"
-                    :options="minuteOptions"
-                  />
-                  <label for="in_label">Длительность</label>
-                </FloatLabel>
-              </SharedUILabel>
-              <div v-if="selectedType === 'day'">
-                <p>
-                  Время
-                </p>
-                <DatePicker
-                  id="datepicker-timeonly"
-                  fluid
-                  time-only
-                />
-                <p class="tw-pt-4">
-                  Дни Недели
-                </p>
-                <div class="tw-flex tw-gap-3">
-                  <div
-                    v-for="day of days"
-                    :key="day.key"
-                    class="tw-flex tw-items-center tw-gap-2"
+                  <FloatLabel
+                    class="w-full md:w-56"
+                    variant="in"
                   >
-                    <Checkbox
-                      v-model="selectedDay"
-                      :input-id="day.key"
-                      name="day"
-                      :value="day.key"
+                    <Select
+                      class="tw-w-full"
+                      :options="minuteOptions"
                     />
-                    <label :for="day.key">{{ day.name }}</label>
+                    <label for="in_label">Длительность</label>
+                  </FloatLabel>
+                </SharedUILabel>
+                <div v-if="selectedType === 'day'">
+                  <p>
+                    Время
+                  </p>
+                  <DatePicker
+                    id="datepicker-timeonly"
+                    fluid
+                    time-only
+                  />
+                  <p class="tw-pt-4">
+                    Дни Недели
+                  </p>
+                  <div class="tw-flex tw-gap-3">
+                    <div
+                      v-for="day of days"
+                      :key="day.key"
+                      class="tw-flex tw-items-center tw-gap-2"
+                    >
+                      <Checkbox
+                        v-model="selectedDay"
+                        :input-id="day.key"
+                        name="day"
+                        :value="day.key"
+                      />
+                      <label :for="day.key">{{ day.name }}</label>
+                    </div>
                   </div>
                 </div>
+                <div v-if="selectedType === 'month'">
+                  <p>
+                    Даты Месяца
+                  </p>
+                  <MultiSelect
+                    class="w-full md:w-80"
+                    fluid
+                    :max-selected-labels="3"
+                    :options="dates"
+                    placeholder="Даты"
+                  />
+                </div>
+                <div v-if="selectedType === 'year'">
+                  <p>
+                    Даты
+                  </p>
+                  <DatePicker
+                    class="tw-w-96"
+                    :manual-input="false"
+                    selection-mode="multiple"
+                  />
+                </div>
               </div>
-              <div v-if="selectedType === 'month'">
-                <p>
-                  Даты Месяца
-                </p>
-                <MultiSelect
-                  class="w-full md:w-80"
-                  fluid
-                  :max-selected-labels="3"
-                  :options="dates"
-                  placeholder="Даты"
-                />
-              </div>
-              <div v-if="selectedType === 'year'">
-                <p>
-                  Даты
-                </p>
-                <DatePicker
-                  class="tw-w-96"
-                  :manual-input="false"
-                  selection-mode="multiple"
-                />
-              </div>
-            </div>
+            </Form>
             <div class="tw-flex tw-justify-end tw-pt-3">
               <Button :label="'Добавить Период'" />
             </div>
@@ -741,98 +744,100 @@ async function useDeleteRoom() {
             modal
             :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
           >
-            <SharedUILabel
-              colomn
-              :title="'Тип'"
-            >
-              <div class="tw-flex tw-gap-2 tw-pt-2">
-                <div
-                  v-for="type in types"
-                  :key="type.key"
-                  class="tw-flex tw-items-center tw-gap-2"
-                >
-                  <RadioButton
-                    v-model="selectedType"
-                    :input-id="type.key"
-                    name="dynamic"
-                    :value="type.key"
-                  />
-                  <label :for="type.key">{{ type.name }}</label>
+            <Form>
+              <SharedUILabel
+                colomn
+                :title="'Тип'"
+              >
+                <div class="tw-flex tw-gap-2 tw-pt-2">
+                  <div
+                    v-for="type in types"
+                    :key="type.key"
+                    class="tw-flex tw-items-center tw-gap-2"
+                  >
+                    <RadioButton
+                      v-model="selectedType"
+                      :input-id="type.key"
+                      name="dynamic"
+                      :value="type.key"
+                    />
+                    <label :for="type.key">{{ type.name }}</label>
+                  </div>
                 </div>
-              </div>
-            </SharedUILabel>
-            <div class="tw-pt-4">
-              <SharedUILabel v-if="selectedType === 'minute'">
-                <!-- <Select
+              </SharedUILabel>
+              <div class="tw-pt-4">
+                <SharedUILabel v-if="selectedType === 'minute'">
+                  <!-- <Select
                   class="tw-w-full"
                   :options="minuteOptions"
                   placeholder="Длительность"
                 /> -->
-                <FloatLabel
-                  class="w-full md:w-56"
-                  variant="in"
-                >
-                  <Select
-                    class="tw-w-full"
-                    :options="minuteOptions"
-                  />
-                  <label for="in_label">Длительность</label>
-                </FloatLabel>
-              </SharedUILabel>
-              <div v-if="selectedType === 'day'">
-                <p>
-                  Время
-                </p>
-                <DatePicker
-                  id="datepicker-timeonly"
-                  fluid
-                  time-only
-                />
-                <p class="tw-pt-4">
-                  Дни Недели
-                </p>
-                <div class="tw-flex tw-gap-3">
-                  <div
-                    v-for="day of days"
-                    :key="day.key"
-                    class="tw-flex tw-items-center tw-gap-2"
+                  <FloatLabel
+                    class="w-full md:w-56"
+                    variant="in"
                   >
-                    <Checkbox
-                      v-model="selectedDay"
-                      :input-id="day.key"
-                      name="day"
-                      :value="day.key"
+                    <Select
+                      class="tw-w-full"
+                      :options="minuteOptions"
                     />
-                    <label :for="day.key">{{ day.name }}</label>
+                    <label for="in_label">Длительность</label>
+                  </FloatLabel>
+                </SharedUILabel>
+                <div v-if="selectedType === 'day'">
+                  <p>
+                    Время
+                  </p>
+                  <DatePicker
+                    id="datepicker-timeonly"
+                    fluid
+                    time-only
+                  />
+                  <p class="tw-pt-4">
+                    Дни Недели
+                  </p>
+                  <div class="tw-flex tw-gap-3">
+                    <div
+                      v-for="day of days"
+                      :key="day.key"
+                      class="tw-flex tw-items-center tw-gap-2"
+                    >
+                      <Checkbox
+                        v-model="selectedDay"
+                        :input-id="day.key"
+                        name="day"
+                        :value="day.key"
+                      />
+                      <label :for="day.key">{{ day.name }}</label>
+                    </div>
                   </div>
                 </div>
+                <div v-if="selectedType === 'month'">
+                  <p>
+                    Даты Месяца
+                  </p>
+                  <MultiSelect
+                    class="w-full md:w-80"
+                    fluid
+                    :max-selected-labels="3"
+                    :options="dates"
+                    placeholder="Даты"
+                  />
+                </div>
+                <div v-if="selectedType === 'year'">
+                  <p>
+                    Даты
+                  </p>
+                  <DatePicker
+                    class="tw-w-96"
+                    :manual-input="false"
+                    selection-mode="multiple"
+                  />
+                </div>
               </div>
-              <div v-if="selectedType === 'month'">
-                <p>
-                  Даты Месяца
-                </p>
-                <MultiSelect
-                  class="w-full md:w-80"
-                  fluid
-                  :max-selected-labels="3"
-                  :options="dates"
-                  placeholder="Даты"
-                />
+              <div class="tw-flex tw-justify-end tw-pt-3">
+                <Button :label="'Добавить Период'" />
               </div>
-              <div v-if="selectedType === 'year'">
-                <p>
-                  Даты
-                </p>
-                <DatePicker
-                  class="tw-w-96"
-                  :manual-input="false"
-                  selection-mode="multiple"
-                />
-              </div>
-            </div>
-            <div class="tw-flex tw-justify-end tw-pt-3">
-              <Button :label="'Добавить Период'" />
-            </div>
+            </Form>
           </Dialog>
         </TabPanel>
       </TabPanels>
