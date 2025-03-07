@@ -363,11 +363,11 @@ async function useCreatedApi() {
                   name="max_threshold"
                   required
                   :title="'Минимальное значение'"
-                  :value="params.max_threshold"
+                  :value="params.min_threshold"
                   :width="300"
                 >
                   <InputText
-                    v-model="params.max_threshold"
+                    v-model="params.min_threshold"
                     class="tw-w-full"
                     type="number"
                   />
@@ -377,11 +377,11 @@ async function useCreatedApi() {
                   name="min_threshold"
                   required
                   :title="'Максимальное значение'"
-                  :value="params.min_threshold"
+                  :value="params.max_threshold"
                   :width="300"
                 >
                   <InputText
-                    v-model="params.min_threshold"
+                    v-model="params.max_threshold"
                     class="tw-w-full"
                     type="number"
                   />
