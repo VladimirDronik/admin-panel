@@ -24,7 +24,6 @@ const emit = defineEmits(['update:valid']);
 
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
-  sdaPort: dynamicForm.value.sdaPort,
   multiplier: dynamicForm.value.props.multiplier,
   start_value: dynamicForm.value.props.start_value,
   price: dynamicForm.value.props.price,
@@ -32,7 +31,6 @@ const flatForm = computed(() => ({
 
 const schema = z.object({
   parent_id: z.number().min(1),
-  sdaPort: z.number().min(1),
   multiplier: z.number().min(0),
   start_value: z.number().min(0),
   price: z.number().min(0.1),
@@ -122,7 +120,6 @@ const unitOptions = {
 
       <SharedUILabel
         class="half-width-field tw-w-1/2"
-        name="sdaPort"
         required
         :title="t('devices.port')"
       >

@@ -16,6 +16,7 @@ import {
   Controller, GenericInput, Relay, ObjectsCategory, Conditioner,
   RS485,
   Counter,
+  Regulator,
 } from '~/types/DevicesEnums';
 import { transformToDeviceCreateFormPayload } from '~/utils/api-payload-transformers';
 import { getInitialCreateDeviceFormDataByTypes } from '~/components/forms/byTypes/initial-dynamic-form-data';
@@ -173,6 +174,9 @@ const changeTypeHandler = () => {
       break;
     case GenericInput.GenericInput:
       dynamicForm.category = ObjectsCategory.GenericInput;
+      break;
+    case Regulator.Regulator:
+      dynamicForm.category = ObjectsCategory.Regulator;
       break;
     case RS485.Bus:
       dynamicForm.category = ObjectsCategory.RS485;
