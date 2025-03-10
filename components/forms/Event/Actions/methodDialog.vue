@@ -244,7 +244,7 @@ onBeforeMount(async () => {
                     'tw-text-black': selectedMethod?.name !== method.name && !isDark,
                   }"
                 >
-                  {{ method.name }}
+                  {{ method.description }}
                 </p>
               </Button>
             </div>
