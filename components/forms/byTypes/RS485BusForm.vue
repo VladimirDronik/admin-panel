@@ -21,15 +21,15 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   ip: showIpPortFields.value ? dynamicForm.value.props.ip : null,
   port: showIpPortFields.value ? dynamicForm.value.props.port : null,
-  data_bits: dynamicForm.value.props.data_bits,
-  tries: dynamicForm.value.props.tries,
+  data_bits: dynamicForm.value.props.data_bits ?? null,
+  tries: dynamicForm.value.props.tries ?? null,
 }));
 
 const schema = z.object({
   ip: z.string().min(1).nullable(),
   port: z.number().min(1).nullable(),
-  data_bits: z.number().min(1),
-  tries: z.number().min(1).max(10),
+  data_bits: z.number().min(1).nullable(),
+  tries: z.number().min(1).max(10).nullable(),
 });
 
 const resolver = ref(zodResolver(schema));
