@@ -90,13 +90,13 @@ export const icons = {
   ],
 
   sensors: [
-    'CO2@3x',
-    'Drop@3x',
-    'Wind@3x',
-    'motion3x',
-    'lux@3x',
-    'amphere@3x',
-    'pascal@3x',
+    'co2',
+    'drop',
+    'wind',
+    'motion',
+    'lux',
+    'amphere',
+    'pascal',
     'floor',
   ],
 
