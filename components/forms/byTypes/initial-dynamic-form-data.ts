@@ -929,6 +929,9 @@ const editFormByTypesMap = {
       type_param: '',
       price: 12.3,
       remove_jitter: false,
+      total: 0,
+      last_update: '',
+
     },
   },
 };

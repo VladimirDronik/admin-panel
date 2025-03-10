@@ -87,6 +87,8 @@ const unitOptions = {
   <Form
     :form="dynamicForm"
     :resolver="resolver"
+    :validate-on-blur="true"
+    :validate-on-value-update="false"
   >
     <FormsSensorHeader
       v-if="props.isEditing"
@@ -204,6 +206,10 @@ const unitOptions = {
       <InputNumber
         v-model="dynamicForm.props.multiplier"
         class="tw-w-full"
+        :max-fraction-digits="6"
+        :min-fraction-digits="1"
+
+        :use-grouping="false"
       />
     </SharedUILabel>
     <SharedUILabel
@@ -216,6 +222,9 @@ const unitOptions = {
       <InputNumber
         v-model="dynamicForm.props.start_value"
         class="tw-w-full"
+        :max-fraction-digits="6"
+        :min-fraction-digits="1"
+        :use-grouping="false"
       />
     </SharedUILabel>
 
@@ -228,6 +237,10 @@ const unitOptions = {
       <InputNumber
         v-model="dynamicForm.props.price"
         class="tw-w-full"
+        :max-fraction-digits="6"
+        :min-fraction-digits="1"
+
+        :use-grouping="false"
       />
     </SharedUILabel>
   </Form>
