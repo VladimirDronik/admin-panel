@@ -59,7 +59,6 @@ export const icons = {
     'prihog',
     'radiator',
     'radiator-bathroom',
-    'radiator-bathroom1_ad',
     'refregerator',
     'shower',
     'shtor',
