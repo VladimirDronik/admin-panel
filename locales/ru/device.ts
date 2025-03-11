@@ -60,7 +60,7 @@ export default {
     detecting: 'Включение обнаружения',
     period: 'Период генерации события',
     motion: 'Движение',
-    presence: 'Присутсвие',
+    presence: 'Присутствие',
     graphingMotion: 'Ведение графика движения',
     graphingPresence: 'Ведение графика присутствия',
     current: 'Ток',

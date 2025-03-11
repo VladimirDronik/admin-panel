@@ -21,14 +21,12 @@ const emit = defineEmits(['update:valid']);
 const flatForm = computed(() => ({
   id: dynamicForm.value.props.id,
   address: dynamicForm.value.props.address,
-  password: dynamicForm.value.props.password,
   protocol: dynamicForm.value.props.protocol,
 }));
 
 const schema = z.object({
   id: z.string().min(1).max(15),
-  address: z.string().min(1).max(15),
-  password: z.string().min(1).max(6),
+  address: z.string().min(1),
   protocol: z.enum(['http']),
 });
 
@@ -132,7 +130,7 @@ const protocolOptions = schema.shape.protocol.options;
       class="tw-mb-2"
       name="address"
       required
-      :title="t('devices.address')"
+      :title="t('devices.address16')"
       :value="dynamicForm.props.address"
     >
       <InputText
@@ -144,8 +142,6 @@ const protocolOptions = schema.shape.protocol.options;
 
     <SharedUILabel
       class="tw-mb-2"
-      name="password"
-      required
       :title="t('devices.password')"
       :value="dynamicForm.props.password"
     >

@@ -24,16 +24,10 @@ const emit = defineEmits(['update:valid']);
 
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
-  multiplier: dynamicForm.value.props.multiplier,
-  start_value: dynamicForm.value.props.start_value,
-  price: dynamicForm.value.props.price,
 }));
 
 const schema = z.object({
   parent_id: z.number().min(1),
-  multiplier: z.number().min(0),
-  start_value: z.number().min(0),
-  price: z.number().min(0.1),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -196,7 +190,6 @@ const unitOptions = {
 
     <SharedUILabel
       class="full-width-field tw-mb-2"
-      name="multiplier"
       required
       :title="t('devices.multiplier')"
     >
@@ -204,6 +197,7 @@ const unitOptions = {
         v-model="dynamicForm.props.multiplier"
         class="tw-w-full"
         :max-fraction-digits="6"
+        :min="0"
         :min-fraction-digits="1"
 
         :use-grouping="false"
@@ -212,7 +206,6 @@ const unitOptions = {
     <SharedUILabel
       v-if="!props.isEditing"
       class="full-width-field tw-mb-2"
-      name="start_value"
       required
       :title="t('devices.startValue')"
     >
@@ -220,6 +213,7 @@ const unitOptions = {
         v-model="dynamicForm.props.start_value"
         class="tw-w-full"
         :max-fraction-digits="6"
+        :min="0"
         :min-fraction-digits="1"
         :use-grouping="false"
       />
@@ -227,7 +221,6 @@ const unitOptions = {
 
     <SharedUILabel
       class="full-width-field tw-mb-2"
-      name="price"
       required
       :title="t('devices.price')"
     >
