@@ -99,34 +99,31 @@ watch(idList, async (newValue, oldValue) => {
   }
 });
 
-// Hooks
-onBeforeMount(async () => {
-  // Create Action
-  const dataCreateDevice: unknown = await useAPI(
-    () => paths.eventsActionsOrder,
-    {
-      body: idList,
-      method: 'PUT',
-      immediate: false,
-      watch: false,
-    },
-  );
-  apiOrderMethods.value = dataCreateDevice as APIData<any>;
-  //
+// Create Action
+const dataCreateDevice: unknown = await useAPI(
+  () => paths.eventsActionsOrder,
+  {
+    body: idList,
+    method: 'PUT',
+    immediate: false,
+    watch: false,
+  },
+);
+apiOrderMethods.value = dataCreateDevice as APIData<any>;
+//
 
-  // Delete Action
-  const dataDeleteDevice: unknown = await useAPI(
-    () => `${paths.eventsActions}/${selectedId.value}`,
-    {
-      body: idList,
-      method: 'DELETE',
-      immediate: false,
-      watch: false,
-    },
-  );
-  apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
-  //
-});
+// Delete Action
+const dataDeleteDevice: unknown = await useAPI(
+  () => `${paths.eventsActions}/${selectedId.value}`,
+  {
+    body: idList,
+    method: 'DELETE',
+    immediate: false,
+    watch: false,
+  },
+);
+apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
+//
 </script>
 
 <template>
@@ -189,7 +186,7 @@ onBeforeMount(async () => {
           />
         </div>
 
-        <FormsEventActionsMethodDialog
+        <FormsEventActionsDialogMethod
           :id="id"
           v-model="dialogMethod"
           v-model:event="event"
@@ -197,7 +194,7 @@ onBeforeMount(async () => {
           :target-type="targetType"
           @update-actions="updateActions"
         />
-        <FormsEventActionsPauseDialog
+        <FormsEventActionsDialogPause
           :id="id"
           v-model="dialogPause"
           v-model:event="event"
@@ -205,7 +202,7 @@ onBeforeMount(async () => {
           :target-type="targetType"
           @update-actions="updateActions"
         />
-        <FormsEventActionsScriptDialog
+        <FormsEventActionsDialogScript
           :id="id"
           v-model="dialogScript"
           v-model:event="event"
@@ -213,8 +210,8 @@ onBeforeMount(async () => {
           :target-type="targetType"
           @update-actions="updateActions"
         />
-        <FormsEventActionsNotificationDialog v-model="dialogNotification" />
-        <FormsEventActionsConditionDialog
+        <FormsEventActionsDialogNotification v-model="dialogNotification" />
+        <FormsEventActionsDialogCondition
           :id="id"
           v-model="dialogCondition"
           v-model:event="event"
