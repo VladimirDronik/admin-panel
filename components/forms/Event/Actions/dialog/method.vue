@@ -2,8 +2,9 @@
 // Builtin modules
 import { useI18n } from 'vue-i18n';
 // Types Modules
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
+import { EventObjectsSchema, type ActionObject } from '@/stores/devices/devicesTypes';
 
 // Types
 interface Method {
@@ -41,73 +42,26 @@ const selectedMethod = ref<Method | null>();
 
 const search = ref('');
 
-// Apis
-const apiDevicesList = ref<APIData<any>>();
-const apiCreateMethod = ref<APIData<any>>();
+interface data {
+  list: ActionObject[];
+  total: number;
+}
 
-// Computed Properties
-const filteredObjects = computed(() => apiDevicesList.value?.data?.response.list
-  .filter((item: any) => item.name.toLowerCase().includes(search.value.toLowerCase())
-      && item.type !== 'regulator'
-      && item.methods));
+const {
+  createAction,
+  selectObject,
+  selectMethod,
+  statusAction,
+} = await useCreateAction();
 
-// Methods
-const selectObject = (object: any) => {
-  selectedObject.value = object;
-  selectedMethod.value = null;
-};
-const selectMethod = (method: Method) => {
-  selectedMethod.value = method;
-};
+const {
+  filteredObjects,
+} = await useDevice();
 
-const createAction = async () => {
-  if (props.id) {
-    await updateData({
-      update: async () => {
-        await apiCreateMethod.value?.execute();
-        emit('updateActions');
-      },
-      success: () => {
-        dialog.value = false;
-      },
-      successMessage: 'Метод успешно сохранен',
-      errorMessage: 'Ошибка добавления Метода',
-    });
-  } else {
-    event.value.actions.push({
-      args: {
-        ...selectedMethod.value,
-        object: selectedObject.value.name,
-      },
-      enabled: true,
-      name: selectedMethod.value?.name,
-      target_id: selectedObject.value?.id,
-      target_type: 'object',
-      type: 'method',
-      sort: 0,
-      qos: 0,
-    });
-    emit('updateActions');
-    dialog.value = false;
-  }
-};
-
-// Watchers
-watch(search, () => {
-  selectedObject.value = null;
-});
-
-watch(dialog, () => {
-  if (dialog.value) {
-    selectedObject.value = null;
-    selectedMethod.value = null;
-  }
-});
-
-// Hooks
-onBeforeMount(async () => {
-  // Get Device List
-  const data: unknown = await useAPI(
+async function useDevice() {
+  const {
+    data: dataDevices,
+  } = await useAPI<Request<data>>(
     paths.objects,
     {
       params: {
@@ -116,13 +70,24 @@ onBeforeMount(async () => {
         limit: 9999,
       },
     },
+    EventObjectsSchema,
   );
 
-  apiDevicesList.value = data as APIData<any>;
-  //
+  const filteredObjects = computed(() => dataDevices.value?.response.list
+    .filter((item) => item.name.toLowerCase().includes(search.value.toLowerCase())
+      && item.type !== 'regulator'
+      && item.methods));
 
-  // Create Action
-  const dataDevice: unknown = await useAPI(
+  return {
+    filteredObjects,
+  };
+}
+
+async function useCreateAction() {
+  const {
+    execute: executeAction,
+    status: statusAction,
+  } = await useAPI<Request<any>>(
     () => paths.eventsActions,
     {
       params: computed(() => ({
@@ -148,9 +113,68 @@ onBeforeMount(async () => {
       immediate: false,
     },
   );
-  apiCreateMethod.value = dataDevice as APIData<any>;
-  //
+
+  // Methods
+  const createAction = async () => {
+    if (props.id) {
+      await updateData({
+        update: async () => {
+          await executeAction();
+          emit('updateActions');
+        },
+        success: () => {
+          dialog.value = false;
+        },
+        successMessage: 'Метод успешно сохранен',
+        errorMessage: 'Ошибка добавления Метода',
+      });
+    } else {
+      event.value.actions.push({
+        args: {
+          ...selectedMethod.value,
+          object: selectedObject.value.name,
+        },
+        enabled: true,
+        name: selectedMethod.value?.name,
+        target_id: selectedObject.value?.id,
+        target_type: 'object',
+        type: 'method',
+        sort: 0,
+        qos: 0,
+      });
+      emit('updateActions');
+      dialog.value = false;
+    }
+  };
+
+  const selectObject = (object: any) => {
+    selectedObject.value = object;
+    selectedMethod.value = null;
+  };
+  const selectMethod = (method: Method) => {
+    selectedMethod.value = method;
+  };
+
+  // Watchers
+  watch(search, () => {
+    selectedObject.value = null;
+  });
+
+  return {
+    createAction,
+    selectObject,
+    selectMethod,
+    statusAction,
+  };
+}
+
+watch(dialog, () => {
+  if (dialog.value) {
+    selectedObject.value = null;
+    selectedMethod.value = null;
+  }
 });
+
 </script>
 
 <template>
@@ -210,7 +234,7 @@ onBeforeMount(async () => {
                       {{ object.name }}
                     </p>
                     <span class="tw-text-xs">
-                      {{ object.methods.length }}
+                      {{ object.methods?.length }}
                     </span>
                   </div>
                 </div>
@@ -259,7 +283,7 @@ onBeforeMount(async () => {
         <Button
           class="tw-mr-2"
           :disabled="!selectedMethod"
-          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
+          :loading="statusAction === 'pending'"
           @click="createAction"
         >
           {{ t('save') }}

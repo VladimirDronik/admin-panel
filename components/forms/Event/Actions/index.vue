@@ -3,12 +3,10 @@
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
 // Types and Schemes
-import type { APIData } from '~/types/StoreTypes';
 import type { Event } from '@/types/ModelEventTypes';
 
 // Composables
 const { t } = useI18n();
-const router = useRouter();
 
 // Declare Options
 const props = defineProps<{
@@ -33,39 +31,87 @@ const event = defineModel<Event>('event', {
 // Variables
 const loading = ref(false);
 
-const dialogMethod = ref(false);
-const dialogPause = ref(false);
-const dialogScript = ref(false);
-const dialogNotification = ref(false);
-const dialogCondition = ref(false);
-
-const dialogDelete = ref(false);
-
 const selectedId = ref(0);
 
-const editAction = ref(false);
+const dialogs = ref({
+  method: false,
+  pause: false,
+  script: false,
+  notification: false,
+  condition: false,
+  delete: false,
+});
 
-// Apis
-const apiOrderMethods = ref<APIData<any>>();
-const apiDeleteMethods = ref<APIData<any>>();
+// const editAction = ref(false);
 
-// Computed Properties
-const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
+await useChangeOrder();
+const {
+  deleteItem,
+  statusDelete,
+  confirmDelete,
+} = await useDelete();
+
+async function useDelete() {
+  const {
+    status: statusDelete,
+    execute: executeDelete,
+  } = await useAPI<any>(
+    () => `${paths.eventsActions}/${selectedId.value}`,
+    {
+      method: 'DELETE',
+      immediate: false,
+      watch: false,
+    },
+  );
+
+  const deleteItem = (id: number) => {
+    selectedId.value = id;
+    dialogs.value.delete = true;
+  };
+
+  const confirmDelete = async () => {
+    await executeDelete();
+    await updateActions();
+  };
+
+  return {
+    deleteItem,
+    statusDelete,
+    confirmDelete,
+  };
+}
+
+async function useChangeOrder() {
+  const idList = computed(() => event.value?.actions?.map((item: any) => item.id));
+
+  const {
+    execute: executeChangeOrder,
+  } = await useAPI<any>(
+    () => paths.eventsActionsOrder,
+    {
+      body: idList,
+      method: 'PUT',
+      immediate: false,
+      watch: false,
+    },
+  );
+
+  // Watchers
+  watch(idList, async (newValue, oldValue) => {
+    if (!_.isEqual(oldValue, newValue) && props.id) {
+      if (newValue?.length === oldValue?.length) {
+        await executeChangeOrder();
+        await updateActions();
+      }
+    }
+  });
+}
 
 // Methods
 const updateActions = () => {
   emit('updateActions');
 };
 
-const deleteItem = (id: number) => {
-  selectedId.value = id;
-  dialogDelete.value = true;
-};
-
-const confirmDelete = async () => {
-  await apiDeleteMethods.value?.execute();
-  await updateActions();
-};
 const addCondition = () => {
   event.value.actions.push({
     enabled: true,
@@ -81,49 +127,14 @@ const addCondition = () => {
   });
 };
 
-const openEdit = (event: any) => {
-  if (event.type === 'method') dialogMethod.value = true;
-  if (event.type === 'pause') dialogPause.value = true;
-  if (event.type === 'script') dialogScript.value = true;
-  if (event.type === 'notification') dialogNotification.value = true;
-  editAction.value = true;
-};
+// const openEdit = (event: any) => {
+//   if (event.type === 'method') dialogMethod.value = true;
+//   if (event.type === 'pause') dialogPause.value = true;
+//   if (event.type === 'script') dialogScript.value = true;
+//   if (event.type === 'notification') dialogNotification.value = true;
+//   editAction.value = true;
+// };
 
-// Watchers
-watch(idList, async (newValue, oldValue) => {
-  if (!_.isEqual(oldValue, newValue) && props.id) {
-    if (newValue?.length === oldValue?.length) {
-      await apiOrderMethods.value?.execute();
-      await updateActions();
-    }
-  }
-});
-
-// Create Action
-const dataCreateDevice: unknown = await useAPI(
-  () => paths.eventsActionsOrder,
-  {
-    body: idList,
-    method: 'PUT',
-    immediate: false,
-    watch: false,
-  },
-);
-apiOrderMethods.value = dataCreateDevice as APIData<any>;
-//
-
-// Delete Action
-const dataDeleteDevice: unknown = await useAPI(
-  () => `${paths.eventsActions}/${selectedId.value}`,
-  {
-    body: idList,
-    method: 'DELETE',
-    immediate: false,
-    watch: false,
-  },
-);
-apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
-//
 </script>
 
 <template>
@@ -151,7 +162,7 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
             icon="pi pi-plus"
             label="Метод"
             outlined
-            @click="dialogMethod = true"
+            @click="dialogs.method = true"
           />
           <Button
             class="tw-mr-4"
@@ -159,7 +170,7 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
             label="Пауза"
             outlined
             severity="warn"
-            @click="dialogPause = true"
+            @click="dialogs.pause = true"
           />
           <Button
             class="tw-mr-4"
@@ -167,7 +178,7 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
             label="Скрипт"
             outlined
             severity="info"
-            @click="dialogScript = true"
+            @click="dialogs.script = true"
           />
           <Button
             class="tw-mr-4"
@@ -175,20 +186,20 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
             label="Уведомление"
             outlined
             severity="danger"
-            @click="dialogNotification = true"
+            @click="dialogs.notification = true"
           />
           <Button
             icon="pi pi-plus"
             label="Сценарии"
             outlined
             severity="secondary"
-            @click="dialogCondition = true"
+            @click="dialogs.condition = true"
           />
         </div>
 
         <FormsEventActionsDialogMethod
           :id="id"
-          v-model="dialogMethod"
+          v-model="dialogs.method"
           v-model:event="event"
           :edit="edit"
           :target-type="targetType"
@@ -196,7 +207,7 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
         />
         <FormsEventActionsDialogPause
           :id="id"
-          v-model="dialogPause"
+          v-model="dialogs.pause"
           v-model:event="event"
           :edit="edit"
           :target-type="targetType"
@@ -204,16 +215,16 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
         />
         <FormsEventActionsDialogScript
           :id="id"
-          v-model="dialogScript"
+          v-model="dialogs.script"
           v-model:event="event"
           :edit="edit"
           :target-type="targetType"
           @update-actions="updateActions"
         />
-        <FormsEventActionsDialogNotification v-model="dialogNotification" />
+        <FormsEventActionsDialogNotification v-model="dialogs.notification" />
         <FormsEventActionsDialogCondition
           :id="id"
-          v-model="dialogCondition"
+          v-model="dialogs.condition"
           v-model:event="event"
           :edit="edit"
           :target-type="targetType"
@@ -239,8 +250,8 @@ apiDeleteMethods.value = dataDeleteDevice as APIData<any>;
 
         <DialogDelete
           :id="selectedId"
-          v-model="dialogDelete"
-          :loading="apiDeleteMethods?.pending && apiDeleteMethods.status !== 'idle'"
+          v-model="dialogs.delete"
+          :loading="statusDelete === 'pending'"
           :show-btn="false"
           @delete="confirmDelete"
         />

@@ -75,3 +75,23 @@ export const TablePortListSchema = z.array(tablePortSchema);
 
 export type TablePortData = z.infer<typeof tablePortSchema>;
 //
+
+// Events Objects
+export const EventObjectSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  tags: z.array(z.string()),
+  methods: z.array(z.object({
+    description: z.string(),
+    name: z.string(),
+  })).optional(),
+  type: z.string(),
+});
+
+export const EventObjectsSchema = z.object({
+  list: z.array(EventObjectSchema),
+  total: z.number(),
+});
+
+export type ActionObject = z.infer<typeof EventObjectSchema>;
+//

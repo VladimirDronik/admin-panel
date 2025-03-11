@@ -3,7 +3,6 @@
 import { useI18n } from 'vue-i18n';
 // Types Modules
 import type { Event } from '@/types/ModelEventTypes';
-import type { APIData } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -31,15 +30,40 @@ const event = defineModel<Event>('event', {
 // Variables
 const duration = ref('0');
 
-// Apis
-const apiCreateMethod = ref<APIData<any>>();
+const {
+  status: statusAction,
+  execute: executeAction,
+} = await useAPI<any>(
+  () => paths.eventsActions,
+  {
+    params: computed(() => ({
+      target_type: props.targetType,
+      target_id: props.id,
+      event_name: event.value.code,
+    })),
+    body: computed(() => ({
+      args: {
+        duration: `${Number(duration.value)}s`,
+      },
+      enabled: true,
+      name: `${Number(duration.value)} секунд`,
+      target_id: props.id,
+      target_type: 'delay',
+      type: 'delay',
+      sort: 0,
+      qos: 0,
+    })),
+    method: 'POST',
+    watch: false,
+    immediate: false,
+  },
+);
 
-// Watchers
 const createAction = async () => {
   if (props.id) {
     await updateData({
       update: async () => {
-        await apiCreateMethod.value?.execute();
+        await executeAction();
         emit('updateActions');
       },
       success: () => {
@@ -66,37 +90,6 @@ const createAction = async () => {
   }
 };
 
-// Hooks
-onBeforeMount(async () => {
-  // Create Action
-  const dataDevice: unknown = await useAPI(
-    () => paths.eventsActions,
-    {
-      params: computed(() => ({
-        target_type: props.targetType,
-        target_id: props.id,
-        event_name: event.value.code,
-      })),
-      body: computed(() => ({
-        args: {
-          duration: `${Number(duration.value)}s`,
-        },
-        enabled: true,
-        name: `${Number(duration.value)} секунд`,
-        target_id: props.id,
-        target_type: 'delay',
-        type: 'delay',
-        sort: 0,
-        qos: 0,
-      })),
-      method: 'POST',
-      watch: false,
-      immediate: false,
-    },
-  );
-  apiCreateMethod.value = dataDevice as APIData<any>;
-  //
-});
 </script>
 
 <template>
@@ -130,7 +123,7 @@ onBeforeMount(async () => {
       <div class="tw-pt-3">
         <Button
           class="tw-mr-2"
-          :loading="apiCreateMethod?.pending && apiCreateMethod.status !== 'idle'"
+          :loading="statusAction === 'pending'"
           @click="createAction"
         >
           {{ t('save') }}
