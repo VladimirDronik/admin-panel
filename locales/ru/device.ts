@@ -17,7 +17,7 @@ export default {
     address: 'IP адрес',
     password: 'Пароль',
     protocol: 'Протокол',
-    formNotFound: 'Форма для выбранного типа не найдена',
+    formNotFound: 'Тип не выбран или форма не найдена',
     placement: 'Размещение',
     controller: 'Контроллер',
     mode: 'Режим',
@@ -110,5 +110,8 @@ export default {
     startValue: 'Начальные значения счетчика',
     price: 'Стоимость одного юнита',
     fastConfig: 'Настройка портов при назначении устройств',
+    noTypesFound: 'Нет доступных типов для выбранных тегов',
+    conditionersOnokom: 'Кондиционеры Onokom',
+    gatewayTypeOnokom: 'Тип шлюза семейства Onokom',
   },
 };

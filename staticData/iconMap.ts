@@ -15,6 +15,8 @@ import {
   IconSubtask,
   IconCurrency,
   IconAirConditioning,
+  IconMan,
+  IconGauge,
 } from '@tabler/icons-vue';
 import { Conditioner } from '~/types/DevicesEnums';
 
@@ -29,11 +31,13 @@ export const iconMap = {
   ds18b20: IconTemperatureSun,
   scd4x: IconAlertSquareRounded,
   motion: IconRun,
+  presence: IconMan,
   htu21d: IconCloudPlus,
   htu31d: IconCloudPlus,
   regulator: IconToggleRightFilled,
   server: IconCpu,
   bus: IconSubtask,
+  impulse_counter: IconGauge,
   wb_mrm2_mini: IconCurrency,
   ...Object.fromEntries(
     Object.values(Conditioner)

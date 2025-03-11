@@ -41,4 +41,5 @@ export const Components = [
   'InputGroup',
   'FloatLabel',
   'DatePicker',
+  'Chip',
 ];

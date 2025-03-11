@@ -1,4 +1,4 @@
-import { Connection } from '~/types/DevicesEnums';
+import { Conditioner, Connection } from '~/types/DevicesEnums';
 
 export default {
   devices: {
@@ -19,7 +19,7 @@ export default {
     address: 'IP address',
     password: 'Password',
     protocol: 'Protocol',
-    formNotFound: 'Form for the selected type was not found',
+    formNotFound: 'Type is not selected or form is not found',
     placement: 'Placement',
     controller: 'Controller',
     mode: 'Mode',
@@ -112,5 +112,8 @@ export default {
     startValue: 'Initial counter values',
     price: 'Cost per unit',
     fastConfig: 'Port configuration when assigning devices',
+    noTypesFound: 'No available types for the selected tags',
+    conditionersOnokom: 'Conditioners Onokom',
+    gatewayTypeOnokom: 'Onokom gateway type',
   },
 };
