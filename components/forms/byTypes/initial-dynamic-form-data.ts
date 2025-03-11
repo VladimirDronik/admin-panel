@@ -16,6 +16,7 @@ const basicCreateDeviceForm = {
   sdaPort: null,
   sclPort: null,
   parent_id: 0,
+  enabled: true,
   category: ObjectsCategory.Sensor,
   props: {
     numericValue: 5,
@@ -28,6 +29,7 @@ const basicCreateDeviceForm = {
 const basicCreateConditionerForm = {
   parent_id: 0,
   category: ObjectsCategory.Conditioner,
+  enabled: true,
   props: {
     address: 1,
   },
@@ -245,6 +247,7 @@ const createFormByTypesMap = {
     sdaPort: 0,
     busAddress: 0,
     parent_id: 0,
+    enabled: true,
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['1W'],
@@ -326,6 +329,7 @@ const createFormByTypesMap = {
   },
   [Controller.MegaD]: {
     category: ObjectsCategory.Controller,
+    enabled: true,
     props: {
       id: '',
       password: '',
@@ -338,6 +342,7 @@ const createFormByTypesMap = {
   [GenericInput.GenericInput]: {
     sdaPort: null,
     parent_id: 0,
+    enabled: true,
     category: ObjectsCategory.GenericInput,
     props: {
       interface: DeviceInterface['MEGAIN'],
@@ -347,6 +352,7 @@ const createFormByTypesMap = {
   [Relay.Relay]: {
     sdaPort: null,
     parent_id: 0,
+    enabled: true,
     category: ObjectsCategory.Relay,
     props: {
       interface: DeviceInterface['MEGAOUT'],
@@ -372,6 +378,7 @@ const createFormByTypesMap = {
   [Sensor.CS]: {
     sdaPort: 0,
     parent_id: 0,
+    enabled: true,
     category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['ADC'],
@@ -393,6 +400,7 @@ const createFormByTypesMap = {
   },
   [Controller.WBMRM2mini]: {
     category: ObjectsCategory.Controller,
+    enabled: true,
     props: {
       id: '',
       password: '',
@@ -433,6 +441,7 @@ const createFormByTypesMap = {
   },
   [RS485.Bus]: {
     category: ObjectsCategory.RS485,
+    enabled: true,
     props: {
       ip: '',
       port: 502,
@@ -444,6 +453,7 @@ const createFormByTypesMap = {
   [Server.Server]: {
     id: 0,
     category: ObjectsCategory.Server,
+    enabled: true,
     props: {
       server_id: '',
       eco_mode: false,
@@ -458,6 +468,7 @@ const createFormByTypesMap = {
     },
   },
   [Counter.ImpulseCounter]: {
+    enabled: true,
     parent_id: 0,
     sdaPort: null,
     category: ObjectsCategory.Counter,
@@ -485,6 +496,7 @@ export const initialEditFormData = {
   sdaPort: 0,
   sclPort: 0,
   parent_id: 0,
+  enabled: true,
   category: ObjectsCategory.Sensor,
   name: '',
   zone_id: 0,
@@ -508,6 +520,7 @@ const editFormBasicsData = {
   sdaPort: null,
   sclPort: null,
   parent_id: 0,
+  enabled: true,
   props: {
     numericValue: 5,
     selectedUnit: 's',
@@ -529,6 +542,7 @@ const editFormByTypesMap = {
     id: 0,
     sdaPort: 0,
     busAddress: 0,
+    enabled: true,
     parent_id: 0,
     props: {
       interface: DeviceInterface['1W'],
@@ -542,6 +556,7 @@ const editFormByTypesMap = {
     id: 0,
     sdaPort: 0,
     parent_id: 0,
+    enabled: true,
     props: {
       interface: DeviceInterface['ADC'],
       numericValue: 5,
@@ -581,6 +596,7 @@ const editFormByTypesMap = {
   },
   [Controller.MegaD]: {
     id: 0,
+    enabled: true,
     props: {
       address: '',
       id: '',
@@ -594,6 +610,7 @@ const editFormByTypesMap = {
     id: 0,
     sdaPort: null,
     parent_id: 0,
+    enabled: true,
     props: {
       interface: DeviceInterface['MEGAIN'],
       mode: '',
@@ -604,6 +621,7 @@ const editFormByTypesMap = {
     id: 0,
     sdaPort: null,
     parent_id: 0,
+    enabled: true,
     props: {
       interface: DeviceInterface['MEGAOUT'],
     },
@@ -628,6 +646,7 @@ const editFormByTypesMap = {
   },
   [Controller.WBMRM2mini]: {
     category: ObjectsCategory.Controller,
+    enabled: true,
     props: {
       id: '',
       password: '',
@@ -882,6 +901,7 @@ const editFormByTypesMap = {
   },
   [RS485.Bus]: {
     id: 0,
+    enabled: true,
     status: '',
     category: ObjectsCategory.RS485,
     props: {
@@ -898,6 +918,7 @@ const editFormByTypesMap = {
   },
   [Server.Server]: {
     id: 0,
+    enabled: true,
     status: '',
     category: ObjectsCategory.Server,
     props: {
@@ -915,6 +936,7 @@ const editFormByTypesMap = {
   },
   [Counter.ImpulseCounter]: {
     id: 0,
+    enabled: true,
     parent_id: 0,
     sdaPort: null,
     status: '',
