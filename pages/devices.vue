@@ -2,9 +2,6 @@
 // Builtin modules
 import _ from 'lodash';
 import { useI18n } from 'vue-i18n';
-import {
-  IconCpu2, IconCpu, IconSun, IconHome, IconPlugConnected, IconPlug, IconBolt, IconCloudRain, IconTemperatureSun, IconAlertSquareRounded, IconRun, IconCloudPlus, IconToggleRightFilled, IconCurrency, IconAirConditioning, IconSubtask,
-} from '@tabler/icons-vue';
 // Helpers modules
 import { checkStatusText, checkStatusSymbol } from '~/helpers/main';
 // Types modules
@@ -12,7 +9,7 @@ import type { RoomItem } from '~/stores/rooms/roomsTypes';
 import type { FullDevice } from '~/stores/devices/devicesTypes';
 import type { Filter, Options } from '~/types/MainTypes';
 import type { TreeTableDevices } from '~/types/DevicesTypes';
-import { Conditioner } from '~/types/DevicesEnums';
+import { iconMap, type IconMapKey } from '~/staticData/iconMap';
 
 // Composables
 const { t } = useI18n();
@@ -27,33 +24,6 @@ useHead({
 definePageMeta({
   middleware: ['auth'],
 });
-
-// Variables
-const iconMap = {
-  mega_d: IconCpu2,
-  bh1750: IconSun,
-  outdoor: IconHome,
-  generic_input: IconPlugConnected,
-  relay: IconPlug,
-  cs: IconBolt,
-  bme280: IconCloudRain,
-  ds18b20: IconTemperatureSun,
-  scd4x: IconAlertSquareRounded,
-  motion: IconRun,
-  htu21d: IconCloudPlus,
-  htu31d: IconCloudPlus,
-  regulator: IconToggleRightFilled,
-  server: IconCpu,
-  bus: IconSubtask,
-  wb_mrm2_mini: IconCurrency,
-  ...Object.fromEntries(
-    Object.values(Conditioner)
-      .filter((value) => typeof value === 'string')
-      .map((type) => [type, IconAirConditioning]),
-  ),
-} as const;
-
-type IconMapKey = keyof typeof iconMap;
 
 const perPage = 10000;
 
