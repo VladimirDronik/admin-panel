@@ -355,7 +355,7 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     initialForm.props.price = Number(updatedPrice.value);
   }
   if ('fast_config' in initialForm.props && updatedFastConfig) {
-    initialForm.props.fast_config = Number(updatedFastConfig.value);
+    initialForm.props.fast_config = Boolean(updatedFastConfig.value);
   }
   return initialForm;
 };

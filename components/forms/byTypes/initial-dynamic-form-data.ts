@@ -586,6 +586,7 @@ const editFormByTypesMap = {
       id: '',
       password: '',
       protocol: Connection.HTTP,
+      fast_config: false,
     },
     status: '',
   },
