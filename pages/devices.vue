@@ -246,8 +246,11 @@ const dropdownClasses = computed(() => ({
 <template>
   <SharedUIPanel :is-update="isUpdate">
     <SharedUIBreadcrumb
+      is-updated
+      :is-updating="isUpdate"
       title="pages.devices"
       :total="storeDevices.total"
+      @update="update()"
     >
       <DeviceDialogCreate />
     </SharedUIBreadcrumb>

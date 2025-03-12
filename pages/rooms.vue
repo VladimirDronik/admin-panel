@@ -92,7 +92,9 @@ async function useWorkWithRoomApi() {
   <SharedUIPanel :is-update="statusRooms === 'pending'">
     <SharedUIBreadcrumb
       :is-loading="statusOrder === 'pending'"
+      is-updated
       title="pages.rooms"
+      @click="refreshRooms()"
     >
       <RoomDialogCreate @update="refreshRooms" />
     </SharedUIBreadcrumb>

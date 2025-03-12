@@ -147,7 +147,9 @@ function useRightBar() {
   <SharedUIPanel :is-update="statusItems === 'pending' || statusRooms === 'pending'">
     <SharedUIBreadcrumb
       :is-loading="isLoadingOrder"
+      is-updated
       title="pages.display"
+      @click="update()"
     >
       <RoomDialogCreate @update="update" />
     </SharedUIBreadcrumb>

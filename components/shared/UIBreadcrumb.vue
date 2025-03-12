@@ -5,6 +5,10 @@ import { useI18n } from 'vue-i18n';
 // Composables
 const { t } = useI18n();
 
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
 // Declare Options
 defineProps({
   title: {
@@ -16,6 +20,14 @@ defineProps({
     default: -1,
   },
   isLoading: {
+    type: Boolean,
+    default: false,
+  },
+  isUpdating: {
+    type: Boolean,
+    default: false,
+  },
+  isUpdated: {
     type: Boolean,
     default: false,
   },
@@ -50,6 +62,17 @@ defineProps({
       />
     </div>
     <!--  -->
-    <slot />
+    <div class="tw-flex tw-items-center">
+      <Button
+        v-if="isUpdated"
+        aria-label="Save"
+        class="tw-mr-3"
+        icon="pi pi-refresh"
+        rounded
+        text
+        @click="emit('update')"
+      />
+      <slot />
+    </div>
   </div>
 </template>
