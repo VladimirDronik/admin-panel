@@ -521,6 +521,7 @@ const editFormBasicsData = {
   sclPort: null,
   parent_id: 0,
   enabled: true,
+  category: ObjectsCategory.Sensor,
   props: {
     numericValue: 5,
     selectedUnit: 's',
@@ -544,6 +545,7 @@ const editFormByTypesMap = {
     busAddress: 0,
     enabled: true,
     parent_id: 0,
+    category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['1W'],
       numericValue: 5,
@@ -557,6 +559,7 @@ const editFormByTypesMap = {
     sdaPort: 0,
     parent_id: 0,
     enabled: true,
+    category: ObjectsCategory.Sensor,
     props: {
       interface: DeviceInterface['ADC'],
       numericValue: 5,
