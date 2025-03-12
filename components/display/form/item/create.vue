@@ -13,7 +13,7 @@ import { itemEventTypes } from '~/staticData/modelEvents';
 // Composables
 const { t } = useI18n();
 const storeDevices = useDevicesStore();
-const { updateData } = useUtils();
+const toast = useToast();
 
 // Declare Options
 const {
@@ -68,7 +68,7 @@ const {
 const {
   resolver,
   statusCreateItem,
-  createItem,
+  executeCreateItem,
 } = await useCreateItem();
 
 async function useCreateItem() {
@@ -87,6 +87,35 @@ async function useCreateItem() {
       }))
         .filter((item) => item.actions.length > 0),
     })),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Кнопка была успешно создана'),
+        life: 3000,
+      });
+      form.value = {
+        enabled: true,
+        title: null,
+        type: null,
+        color: null,
+        zone_id: null,
+        icon: null,
+        status: 'off',
+        target_type: 'item',
+      };
+      control_object.value = undefined;
+      isOpen.value = false;
+      step.value = '1';
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Кнопка не была создана'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'POST',
     immediate: false,
     watch: false,
@@ -100,38 +129,12 @@ async function useCreateItem() {
     }),
   ));
 
-  const createItem = async () => {
-    await updateData({
-      update: async () => {
-        await executeCreateItem();
-        await emit('update');
-      },
-      success: () => {
-        form.value = {
-          enabled: true,
-          title: null,
-          type: null,
-          color: null,
-          zone_id: null,
-          icon: null,
-          status: 'off',
-          target_type: 'item',
-        };
-        control_object.value = undefined;
-        isOpen.value = false;
-        step.value = '1';
-      },
-      successMessage: 'Кнопка была успешно создана',
-      errorMessage: 'Кнопка не была создана',
-    });
-  };
-
   return {
     form,
     resolver,
     control_object,
     statusCreateItem,
-    createItem,
+    executeCreateItem,
   };
 }
 
@@ -278,7 +281,7 @@ function useQuickSelectRoom() {
           <Button
             :label="t('save')"
             :loading="statusCreateItem === 'pending'"
-            @click="createItem"
+            @click="executeCreateItem()"
           />
         </div>
         <!--  -->

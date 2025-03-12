@@ -9,12 +9,12 @@ import { scenarioColors } from '~/staticData/rooms';
 import { itemEventTypes } from '~/staticData/modelEvents';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
-import type { APIData } from '~/types/StoreTypes';
+import type { Request } from '~/types/StoreTypes';
 import type { itemType } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
+const toast = useToast();
 
 // Declare Options
 defineProps<{
@@ -34,8 +34,6 @@ const isOpen = defineModel<boolean>('isOpen', {
 });
 
 // Variables
-const loadingDelete = ref(false);
-
 const events = ref<Event[]>();
 
 const resolver = ref(zodResolver(
@@ -45,61 +43,60 @@ const resolver = ref(zodResolver(
   }),
 ));
 
-// Apis
-const apiChangeItem = ref<APIData<any>>();
-const apiDeleteItem = ref<APIData<any>>();
+const {
+  status: statusChangeItem,
+  execute: executeChangeItem,
+} = await useAPI<Request<any>>(paths.privateItem, {
+  body: computed(() => form.value),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Сценарий был успешно изменен'),
+      life: 3000,
+    });
+    emit('update');
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Сценарий не был изменен'),
+      life: 3000,
+    });
+  },
+  disabledSchema: true,
+  method: 'PATCH',
+  immediate: false,
+  watch: false,
+});
 
-// Methods
-const changeItem = async () => {
-  await updateData({
-    update: async () => {
-      await apiChangeItem.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-    },
-    successMessage: 'Сценарий был успешно изменен',
-    errorMessage: 'Сценарий не был изменен',
-  });
-};
-
-const confirmDelete = async () => {
-  await updateData({
-    update: async () => {
-      await apiDeleteItem.value?.execute();
-      await emit('update');
-    },
-    success: () => {
-      isOpen.value = false;
-    },
-    successMessage: 'Сценарий удален',
-    errorMessage: 'Ошибка удаления сценария',
-  });
-};
-
-// Hooks
-onBeforeMount(async () => {
-  // Create Device
-  const dataCreate: unknown = await useAPI(paths.privateItem, {
-    body: computed(() => form.value),
-    method: 'PATCH',
-    immediate: false,
-    watch: false,
-  });
-
-  apiChangeItem.value = dataCreate as APIData<any>;
-
-  // Delete Device
-  const dataDelete: unknown = await useAPI(paths.privateItem, {
-    query: computed(() => ({
-      id: form.value.item_id,
-    })),
-    method: 'DELETE',
-    immediate: false,
-    watch: false,
-  });
-
-  apiDeleteItem.value = dataDelete as APIData<any>;
+// Delete Device
+const {
+  status: statusDeleteItem,
+  execute: executeDeleteItem,
+} = await useAPI<Request<any>>(paths.privateItem, {
+  query: computed(() => ({
+    id: form.value.item_id,
+  })),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Сценарий удален'),
+      life: 3000,
+    });
+    emit('update');
+    isOpen.value = false;
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Ошибка удаления сценария'),
+      life: 3000,
+    });
+  },
+  disabledSchema: true,
+  method: 'DELETE',
+  immediate: false,
+  watch: false,
 });
 
 </script>
@@ -126,7 +123,7 @@ onBeforeMount(async () => {
       <TabPanel value="features">
         <Form
           :resolver
-          @submit="({ valid }) => { if (valid) changeItem() }"
+          @submit="({ valid }) => { if (valid) executeChangeItem() }"
         >
           <SharedUILabel
             class="tw-mb-2"
@@ -157,21 +154,21 @@ onBeforeMount(async () => {
             <SharedUIIconSelect
               v-model:icon="form.icon"
               type="scenario"
-              @change="changeItem"
+              @change="executeChangeItem()"
             />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <DialogDelete
               :id="form.item_id ?? -1"
               class="tw-mr-2"
-              :loading="loadingDelete"
+              :loading="statusDeleteItem === 'pending'"
               :title="`Вы уверены, что хотите удалить «${form.title}»?`"
-              @delete="confirmDelete"
+              @delete="executeDeleteItem()"
             />
 
             <Button
               :label="t('save')"
-              :loading="apiChangeItem?.pending && apiChangeItem.status !== 'idle'"
+              :loading="statusChangeItem === 'pending'"
               type="submit"
             />
           </div>

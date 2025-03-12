@@ -38,6 +38,7 @@ const {
 } = await useAPI(
   paths.privateZonesOrder,
   {
+    disabledSchema: true,
     body: roomIds,
     method: 'PATCH',
     immediate: false,

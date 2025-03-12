@@ -9,8 +9,8 @@ import type { roomSensorTypes } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
 const storeUser = useUserStore();
+const toast = useToast();
 
 // Declare Options
 const emit = defineEmits<{
@@ -55,6 +55,23 @@ async function useDeleteItem() {
     query: computed(() => ({
       id: selectedSensor.value?.item_id,
     })),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Устройство удалено'),
+        life: 3000,
+      });
+      dialogDelete.value = false;
+      dialog.value = false;
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Ошибка удаления устройства'),
+        life: 3000,
+      });
+    },
     method: 'DELETE',
     immediate: false,
     watch: false,
@@ -63,19 +80,7 @@ async function useDeleteItem() {
   const dialogDelete = ref(false);
 
   const confirmDelete = async () => {
-    await updateData({
-      update: async () => {
-        await executeDeleteSensor();
-        await emit('update');
-      },
-      success: () => {
-        dialogDelete.value = false;
-        dialog.value = false;
-        emit('update');
-      },
-      successMessage: 'Устройство удалено',
-      errorMessage: 'Ошибка удаления устройства',
-    });
+    await executeDeleteSensor();
   };
 
   return {

@@ -12,7 +12,7 @@ import { type itemType } from '~/types/DisplayTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
+const toast = useToast();
 const storeDevices = useDevicesStore();
 
 // Declare Options
@@ -37,7 +37,7 @@ const {
   control_object,
   statusChange,
   resolver,
-  changeItem,
+  executeChangeItem,
 } = await useChangeItem();
 
 const {
@@ -53,7 +53,7 @@ const {
 
 const changeStatus = () => {
   form.value.status = !(form.value.status === 'on') ? 'on' : 'off';
-  changeItem();
+  executeChangeItem();
 };
 
 async function useChangeItem() {
@@ -74,29 +74,33 @@ async function useChangeItem() {
       ...form.value,
       control_object: control_object.value,
     })),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Кнопка была успешно изменена'),
+        life: 3000,
+      });
+      isOpen.value = false;
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Кнопка не была изменена'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'PATCH',
     immediate: false,
     watch: false,
   });
 
-  const changeItem = async () => {
-    await updateData({
-      update: async () => {
-        await executeChangeItem();
-        await emit('update');
-      },
-      success: () => {
-      },
-      successMessage: 'Кнопка была успешно изменена',
-      errorMessage: 'Кнопка не была изменена',
-    });
-  };
-
   return {
     control_object,
     statusChange,
     resolver,
-    changeItem,
+    executeChangeItem,
   };
 }
 
@@ -108,23 +112,30 @@ async function useDeleteItem() {
     query: computed(() => ({
       id: form.value.item_id,
     })),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Устройство удалено'),
+        life: 3000,
+      });
+      isOpen.value = false;
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Ошибка удаления устройства'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'DELETE',
     immediate: false,
     watch: false,
   });
 
   const confirmDelete = async () => {
-    await updateData({
-      update: async () => {
-        await executeDeleteItem();
-        await emit('update');
-      },
-      success: () => {
-        isOpen.value = false;
-      },
-      successMessage: 'Устройство удалено',
-      errorMessage: 'Ошибка удаления устройства',
-    });
+    await executeDeleteItem();
+    await emit('update');
   };
 
   return {
@@ -170,7 +181,7 @@ async function useDeleteItem() {
       <TabPanel value="features">
         <Form
           :resolver
-          @submit="({ valid }) => { if (valid) changeItem() }"
+          @submit="({ valid }) => { if (valid) executeChangeItem() }"
         >
           <SharedUILabel
             class="tw-mb-2"
@@ -224,7 +235,7 @@ async function useDeleteItem() {
           >
             <SharedUIIconSelect
               v-model:icon="form.icon"
-              @change="changeItem"
+              @change="executeChangeItem"
             />
           </SharedUILabel>
           <div class="tw-flex tw-justify-end tw-pt-2">

@@ -5,8 +5,9 @@ import type { UseFetchOptions } from 'nuxt/app';
 
 // Types
 interface MyOptions {
-  success?: (response: any) => void
-  error?: () => void
+  success?: (response: any) => void;
+  error?: () => void;
+  disabledSchema?: boolean;
 }
 
 export function useAPI<T>(
@@ -14,16 +15,11 @@ export function useAPI<T>(
   options?: UseFetchOptions<T> & MyOptions,
   Schema?: unknown | null,
 ) {
-  const storeUser = useUserStore();
   const router = useRouter();
 
   return useFetch(url, {
     ...options,
-    // $fetch: useNuxtApp().$api as typeof $fetch,
-    onRequest({ options }) {
-      if (storeUser.localState.token) options.headers.set('api-key', 'c041d36e381a835afce48c91686370c8');
-      if (storeUser.localState.token) options.headers.set('token', storeUser.localState.token);
-    },
+    $fetch: useNuxtApp().$api as typeof $fetch,
     onResponse({ response, request }) {
       // Обрабатывает данные ответа
       if (response.status < 400) {
@@ -36,7 +32,7 @@ export function useAPI<T>(
               console.error('The received data:\n', response._data.response);
             }
           }
-        } else if (import.meta.env.VITE_ENV_TYPE === 'development') console.warn('The Zod schema for data validation is not valid or missing.', request);
+        } else if (!options?.disabledSchema) console.warn('The Zod schema for data validation is not valid or missing.', request);
         options?.success?.(response._data);
       } else {
         options?.error?.();

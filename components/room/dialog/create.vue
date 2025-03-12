@@ -9,8 +9,7 @@ import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
-const storeRooms = useRoomsStore();
+const toast = useToast();
 
 // Declare Options
 const emit = defineEmits<{
@@ -52,9 +51,33 @@ const {
     }
     return {
       ...form.value,
-      parent_id: 0,
+      parent_id: null,
     };
   }),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Помещение было успешно создана'),
+      life: 3000,
+    });
+    form.value = {
+      name: null,
+      style: null,
+      sort: 0,
+      is_group: false,
+    };
+    parentId.value = null;
+    dialog.value = false;
+    emit('update');
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Помещение не было создано'),
+      life: 3000,
+    });
+  },
+  disabledSchema: true,
   method: 'POST',
   immediate: false,
   watch: false,
@@ -62,7 +85,6 @@ const {
 
 const {
   data: dataGetGroupRooms,
-  refresh: refreshGetGroupRooms,
 } = await useAPI<Request<any>>(paths.privateRoomsList, {
   query: {
     type_zones: 'groups_only',
@@ -70,27 +92,6 @@ const {
   method: 'GET',
   watch: false,
 });
-
-const createRoom = async () => {
-  await updateData({
-    update: async () => {
-      await executeCreateRoom();
-      await emit('update');
-    },
-    success: () => {
-      form.value = {
-        name: null,
-        style: null,
-        sort: 0,
-        is_group: false,
-      };
-      parentId.value = null;
-      dialog.value = false;
-    },
-    successMessage: 'Помещение было успешно создана',
-    errorMessage: 'Помещение не было создана',
-  });
-};
 
 </script>
 
@@ -114,7 +115,7 @@ const createRoom = async () => {
     >
       <Form
         :resolver
-        @submit="({ valid }) => { if (valid) createRoom() }"
+        @submit="({ valid }) => { if (valid) executeCreateRoom() }"
       >
         <div class="tw-mb-5">
           <SharedUILabel

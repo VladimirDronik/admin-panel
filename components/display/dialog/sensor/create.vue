@@ -46,7 +46,7 @@ interface Sensor {
 // Composables
 const { t } = useI18n();
 const storeUser = useUserStore();
-const { updateData } = useUtils();
+const toast = useToast();
 
 // Variables
 const selectedSensor = ref<Sensor>();
@@ -129,6 +129,36 @@ async function useCreateSensor() {
         min_threshold: Number(params.value.min_threshold),
       };
     }),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Датчик был успешно создана'),
+        life: 3000,
+      });
+      form.value = {
+        title: null,
+        zone_id: null,
+        icon: null,
+        object_id: null,
+        type: null,
+        adjustment: false,
+      };
+      params.value = {
+        max_threshold: null,
+        min_threshold: null,
+      };
+      dialog.value = false;
+      selectedSensor.value = undefined;
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Датчик не был создан'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'POST',
     immediate: false,
     watch: false,
@@ -147,30 +177,7 @@ async function useCreateSensor() {
   };
 
   const createSensor = async () => {
-    await updateData({
-      update: async () => {
-        await executeCreateSensor();
-        await emit('update');
-      },
-      success: () => {
-        form.value = {
-          title: null,
-          zone_id: null,
-          icon: null,
-          object_id: null,
-          type: null,
-          adjustment: false,
-        };
-        params.value = {
-          max_threshold: null,
-          min_threshold: null,
-        };
-        dialog.value = false;
-        selectedSensor.value = undefined;
-      },
-      successMessage: 'Датчик был успешно создана',
-      errorMessage: 'Датчик не был создан',
-    });
+    await executeCreateSensor();
   };
 
   const quickSelectRoom = (id: number | undefined) => options?.value.find((item) => item.code === id || item.inGroup?.code === id);

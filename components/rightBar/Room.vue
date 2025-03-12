@@ -10,7 +10,7 @@ import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
+const toast = useToast();
 
 // Declare Options
 const emit = defineEmits<{
@@ -46,7 +46,7 @@ watch(room, () => {
 });
 
 const {
-  changeRoom,
+  executeChangeRoom,
   statusChangeRoom,
 } = await useChangeRoom();
 
@@ -65,34 +65,37 @@ async function useChangeRoom() {
       if (form.value?.parent_id === null) {
         return [{
           ...form.value,
-          parent_id: 0,
+          parent_id: null,
         }];
       }
       return [form.value];
     }),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Помещение было успешно изменено'),
+        life: 3000,
+      });
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Помещение не было изменено'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'PATCH',
     immediate: false,
     watch: false,
   });
 
   // Methods
-  const changeRoom = async () => {
-    await updateData({
-      update: async () => {
-        await executeChangeRoom();
-        await emit('update');
-      },
-      success: () => {
-        isOpen.value = false;
-      },
-      successMessage: 'Помещение было успешно изменено',
-      errorMessage: 'Помещение не было изменено',
-    });
-  };
 
   return {
     statusChangeRoom,
-    changeRoom,
+    executeChangeRoom,
   };
 }
 
@@ -105,6 +108,22 @@ async function useDeleteRoom() {
     query: computed(() => ({
       id: form.value?.id,
     })),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Помещение удалено'),
+        life: 3000,
+      });
+      isOpen.value = false;
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Ошибка удаления помещения'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
     method: 'DELETE',
     immediate: false,
     watch: false,
@@ -112,17 +131,8 @@ async function useDeleteRoom() {
 
   // Methods
   const confirmDelete = async () => {
-    await updateData({
-      update: async () => {
-        await executeDeleteRoom();
-        await emit('update');
-      },
-      success: () => {
-        isOpen.value = false;
-      },
-      successMessage: 'Помещение удалено',
-      errorMessage: 'Ошибка удаления помещения',
-    });
+    await executeDeleteRoom();
+    await emit('update');
   };
 
   return {
@@ -140,7 +150,7 @@ async function useDeleteRoom() {
   >
     <Form
       :resolver
-      @submit="({ valid }) => { if (valid) changeRoom() }"
+      @submit="({ valid }) => { if (valid) executeChangeRoom() }"
     >
       <div class="!tw-px-0 !tw-pt-1">
         <SharedUILabel
