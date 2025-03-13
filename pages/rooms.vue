@@ -113,7 +113,11 @@ async function useWorkWithRoomApi() {
 </script>
 
 <template>
-  <SharedUIPanel :is-update="statusRooms === 'pending'">
+  <SharedUIPanel
+    :is-error="statusRooms === 'error'"
+    :is-update="statusRooms === 'pending'"
+    @update="update"
+  >
     <SharedUIBreadcrumb
       :is-loading="statusOrder === 'pending'"
       is-updated

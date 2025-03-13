@@ -161,7 +161,11 @@ function useRightBar() {
 </script>
 
 <template>
-  <SharedUIPanel :is-update="statusItems === 'pending' || statusRooms === 'pending'">
+  <SharedUIPanel
+    :is-error="statusItems === 'error' || statusRooms === 'error'"
+    :is-update="statusItems === 'pending' || statusRooms === 'pending'"
+    @update="update"
+  >
     <SharedUIBreadcrumb
       :is-loading="isLoadingOrder"
       is-updated

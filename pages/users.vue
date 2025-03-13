@@ -100,7 +100,11 @@ async function useDeleteUser() {
 </script>
 
 <template>
-  <SharedUIPanel :is-update="statusUsers === 'pending'">
+  <SharedUIPanel
+    :is-error="statusDeleteUser === 'error'"
+    :is-update="statusUsers === 'pending'"
+    @update="refreshUsers()"
+  >
     <SharedUIBreadcrumb
       is-updated
       title="pages.users"
