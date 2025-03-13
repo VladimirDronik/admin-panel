@@ -32,6 +32,7 @@ export interface DynamicFormDataBasic {
     category: ObjectsCategory,
     props: DeviceProps,
     enabled?: boolean,
+    sensor_id?: number,
   }
 
 export interface DynamicFormData extends DynamicFormDataBasic {

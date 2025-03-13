@@ -14,11 +14,23 @@ const { t } = useI18n();
 const sensorOptions = ref<{ label: string; value: number, zone_id: number }[]>([]);
 const mainSensorChildrenOptions = ref<{ label: string; value: number }[]>([]);
 const additionalSensorChildrenOptions = ref<{ label: string; value: number }[]>([]);
+const indicatorName = ref('');
+const mainSensorName = ref('');
+
 const props = defineProps<{
   isEditing: boolean;
 }>();
 const dynamicForm = defineModel<DynamicFormData>('dynamic-form', { required: true });
 const emit = defineEmits(['update:valid']);
+
+const fetchObjectById = async (id: number): Promise<any | null> => {
+  if (!id) return null;
+  const res: any = await api(`${backendApi}/objects/${id}`, {
+    query: { without_children: false },
+  });
+  return res?.response ?? null;
+};
+
 const fetchSensors = async () => {
   const params = {
     filter_by_category: 'sensor',
@@ -76,7 +88,88 @@ const handleAdditionalSensorSelection = async (event: { value: number }) => {
     additionalSensorChildrenOptions.value = [];
   }
 };
-onMounted(fetchSensors);
+
+const fetchMainSensorInfo = async () => {
+  const parameterId = dynamicForm.value.parent_id;
+  if (!parameterId) return;
+
+  const parameter = await fetchObjectById(parameterId);
+  if (!parameter) return;
+
+  indicatorName.value = parameter.name ?? '';
+
+  if (!mainSensorChildrenOptions.value.find((opt) => opt.value === parameter.id)) {
+    mainSensorChildrenOptions.value.push({
+      label: parameter.name,
+      value: parameter.id,
+    });
+  }
+
+  const sensor = await fetchObjectById(parameter.parent_id);
+  if (!sensor) return;
+
+  mainSensorName.value = sensor.type ?? '';
+
+  if (!sensorOptions.value.find((opt) => opt.value === sensor.id)) {
+    sensorOptions.value.push({
+      label: sensor.type,
+      value: sensor.id,
+      zone_id: sensor.zone_id,
+    });
+  }
+
+  if (props.isEditing) {
+    dynamicForm.value.sensor_id = sensor.id;
+
+    if (Array.isArray(sensor.children)) {
+      mainSensorChildrenOptions.value = sensor.children.map((child: any) => ({
+        label: child.name,
+        value: child.id,
+      }));
+    } else {
+      mainSensorChildrenOptions.value = [];
+    }
+  }
+};
+
+const fetchAdditionalSensorInfo = async () => {
+  const fallbackId = dynamicForm.value.props.fallback_sensor_value_id;
+  if (!fallbackId) return;
+
+  const parameter = await fetchObjectById(fallbackId);
+  if (!parameter) return;
+
+  if (!additionalSensorChildrenOptions.value.find((opt) => opt.value === parameter.id)) {
+    additionalSensorChildrenOptions.value.push({
+      label: parameter.name,
+      value: parameter.id,
+    });
+  }
+
+  const sensor = await fetchObjectById(parameter.parent_id);
+  if (!sensor) return;
+
+  if (!sensorOptions.value.find((opt) => opt.value === sensor.id)) {
+    sensorOptions.value.push({
+      label: sensor.type,
+      value: sensor.id,
+      zone_id: sensor.zone_id,
+    });
+  }
+
+  if (props.isEditing) {
+    dynamicForm.value.props.fallback_sensor_value_id = parameter.id;
+
+    if (Array.isArray(sensor.children)) {
+      additionalSensorChildrenOptions.value = sensor.children.map((child: any) => ({
+        label: child.name,
+        value: child.id,
+      }));
+    } else {
+      additionalSensorChildrenOptions.value = [];
+    }
+  }
+};
 
 const flatForm = computed(() => ({
   type: dynamicForm.value.props.type,
@@ -96,7 +189,9 @@ const schema = z.object({
   above_tolerance: z.number().default(0),
   complex_tolerance: z.number().default(0),
 });
+
 const resolver = ref(zodResolver(schema));
+
 watch(
   () => dynamicForm.value,
   () => {
@@ -108,6 +203,24 @@ watch(
   { deep: true },
 );
 const typeOptions = schema.shape.type.options;
+
+watch(
+  () => dynamicForm.value.parent_id,
+  () => {
+    if (props.isEditing) fetchMainSensorInfo();
+  },
+);
+
+onMounted(async () => {
+  await fetchSensors();
+  if (props.isEditing && dynamicForm.value.parent_id) {
+    await fetchMainSensorInfo();
+  }
+  if (props.isEditing && dynamicForm.value.props.fallback_sensor_value_id) {
+    await fetchAdditionalSensorInfo();
+  }
+});
+
 </script>
 <template>
   <div />
@@ -154,7 +267,6 @@ const typeOptions = schema.shape.type.options;
       {{ t('devices.placement') }}
     </p>
     <SharedUILabel
-      v-if="!props.isEditing"
       class="tw-mb-2"
       name=""
       required
@@ -162,6 +274,7 @@ const typeOptions = schema.shape.type.options;
       :width="300"
     >
       <Select
+        v-model="dynamicForm.sensor_id"
         class="tw-w-3/4"
         option-label="label"
         option-value="value"
@@ -169,8 +282,8 @@ const typeOptions = schema.shape.type.options;
         @change="handleMainSensorSelection"
       />
     </SharedUILabel>
+
     <SharedUILabel
-      v-if="!props.isEditing"
       class="tw-mb-2"
       name=""
       required
