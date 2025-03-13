@@ -28,6 +28,7 @@ const {
   dataItems,
   statusItems,
   statusRooms,
+  dataGetGroupRooms,
   update,
 } = await useGetData();
 
@@ -70,6 +71,16 @@ async function useGetData() {
       { watch: false },
       roomRequestSchema,
     ),
+    useAPI<Request<any>>(
+      paths.privateRoomsList,
+      {
+        query: {
+          type_zones: 'groups_only',
+        },
+        watch: false,
+      },
+      roomRequestSchema,
+    ),
     storeDevices.getDevicesApi(),
   ]);
 
@@ -83,12 +94,17 @@ async function useGetData() {
       status: statusRooms,
       refresh: refreshRooms,
     },
+    {
+      data: dataGetGroupRooms,
+      refresh: refreshGetGroupRooms,
+    },
   ] = createdData;
 
   const update = async () => {
     await Promise.all([
       refrechItems(),
       refreshRooms(),
+      refreshGetGroupRooms(),
       storeDevices.getDevicesApi(),
     ]);
   };
@@ -98,6 +114,7 @@ async function useGetData() {
     dataRooms,
     statusItems,
     statusRooms,
+    dataGetGroupRooms,
     update,
   };
 }
@@ -149,9 +166,12 @@ function useRightBar() {
       :is-loading="isLoadingOrder"
       is-updated
       title="pages.display"
-      @click="update()"
+      @update="update()"
     >
-      <RoomDialogCreate @update="update" />
+      <RoomDialogCreate
+        :group-rooms="dataGetGroupRooms"
+        @update="update"
+      />
     </SharedUIBreadcrumb>
     <div class="tw-flex tw-flex-col tw-gap-2">
       <div class="border-base tw-rounded-md tw-border tw-p-3">

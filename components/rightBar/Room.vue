@@ -19,6 +19,7 @@ const emit = defineEmits<{
 
 defineProps<{
   rooms: Request<RoomItem[]> | null
+  groupRooms: Request<RoomItem[]> | null
 }>();
 
 const room = defineModel<RoomItem | null | undefined>('form', {
@@ -51,8 +52,8 @@ const {
 } = await useChangeRoom();
 
 const {
-  confirmDelete,
   statusDeleteRoom,
+  executeDeleteRoom,
 } = await useDeleteRoom();
 
 async function useChangeRoom() {
@@ -91,8 +92,6 @@ async function useChangeRoom() {
     watch: false,
   });
 
-  // Methods
-
   return {
     statusChangeRoom,
     executeChangeRoom,
@@ -115,6 +114,7 @@ async function useDeleteRoom() {
         life: 3000,
       });
       isOpen.value = false;
+      emit('update');
     },
     error() {
       toast.add({
@@ -129,15 +129,9 @@ async function useDeleteRoom() {
     watch: false,
   });
 
-  // Methods
-  const confirmDelete = async () => {
-    await executeDeleteRoom();
-    await emit('update');
-  };
-
   return {
     statusDeleteRoom,
-    confirmDelete,
+    executeDeleteRoom,
   };
 }
 </script>
@@ -184,7 +178,7 @@ async function useDeleteRoom() {
             class="tw-w-full"
             option-label="name"
             option-value="id"
-            :options="rooms?.response.filter((room) => room.id !== form?.id)"
+            :options="groupRooms?.response"
             show-clear
           />
         </SharedUILabel>
@@ -195,7 +189,7 @@ async function useDeleteRoom() {
           class="tw-mr-2"
           :loading="statusDeleteRoom === 'pending'"
           :title="`Вы уверены, что хотите удалить «${form.name}»?`"
-          @delete="confirmDelete"
+          @delete="executeDeleteRoom()"
         />
 
         <Button

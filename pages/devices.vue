@@ -250,7 +250,7 @@ const dropdownClasses = computed(() => ({
       :is-updating="isUpdate"
       title="pages.devices"
       :total="storeDevices.total"
-      @update="update()"
+      @update="update"
     >
       <DeviceDialogCreate />
     </SharedUIBreadcrumb>

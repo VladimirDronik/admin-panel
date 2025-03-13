@@ -26,10 +26,11 @@ const {
 } = useRightbar();
 
 const {
+  update,
   roomIds,
   dataRooms,
   statusRooms,
-  refreshRooms,
+  dataGetGroupRooms,
 } = await useWorkWithRoomApi();
 
 const {
@@ -73,17 +74,40 @@ async function useWorkWithRoomApi() {
     roomRequestSchema,
   );
 
+  const {
+    data: dataGetGroupRooms,
+    refresh: refreshGetGroupRooms,
+  } = await useAPI<Request<any>>(
+    paths.privateRoomsList,
+    {
+      query: {
+        type_zones: 'groups_only',
+      },
+      watch: false,
+    },
+    roomRequestSchema,
+  );
+
   const roomIds = computed(() => dataRooms?.value?.response.map((item) => item.id));
+
+  const update = async () => {
+    await Promise.all([
+      refreshRooms(),
+      refreshGetGroupRooms(),
+    ]);
+  };
 
   watch(roomIds, (newValue, oldValue) => {
     if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
   });
 
   return {
+    update,
     roomIds,
     dataRooms,
     statusRooms,
     refreshRooms,
+    dataGetGroupRooms,
   };
 }
 </script>
@@ -94,9 +118,12 @@ async function useWorkWithRoomApi() {
       :is-loading="statusOrder === 'pending'"
       is-updated
       title="pages.rooms"
-      @click="refreshRooms()"
+      @update="update"
     >
-      <RoomDialogCreate @update="refreshRooms" />
+      <RoomDialogCreate
+        :group-rooms="dataGetGroupRooms"
+        @update="update"
+      />
     </SharedUIBreadcrumb>
     <div v-if="dataRooms">
       <VueDraggableNext
@@ -202,8 +229,9 @@ async function useWorkWithRoomApi() {
       <RightBarRoom
         v-model:form="form"
         v-model:is-show="isUpdateRightBar"
+        :group-rooms="dataGetGroupRooms"
         :rooms="dataRooms"
-        @update="refreshRooms"
+        @update="update"
       />
     </template>
   </SharedUIPanel>

@@ -20,78 +20,89 @@ const dialog = defineModel<boolean>({
   default: false,
 });
 
-// Variables
-const form = ref({
-  name: null,
-  style: null,
-  sort: 0,
-  is_group: false,
-});
+defineProps<{
+  groupRooms: Request<RoomItem[]> | null
+}>();
 
-const parentId = ref();
-
-const resolver = ref(zodResolver(
-  z.object({
-    name: z.string().min(1),
-    style: z.string(),
-  }),
-));
+const {
+  form,
+  parentId,
+  resolver,
+  statusCreateRoom,
+  executeCreateRoom,
+} = await useCreateRoom();
 
 // Methods
-const {
-  status: statusCreateRoom,
-  execute: executeCreateRoom,
-} = await useAPI(paths.privateRoom, {
-  body: computed(() => {
-    if (parentId.value && !form.value.is_group) {
+async function useCreateRoom() {
+  const form = ref({
+    name: null,
+    style: null,
+    sort: 0,
+    is_group: false,
+  });
+
+  const parentId = ref();
+
+  const resolver = ref(zodResolver(
+    z.object({
+      name: z.string().min(1),
+      style: z.string(),
+    }),
+  ));
+
+  const {
+    status: statusCreateRoom,
+    execute: executeCreateRoom,
+  } = await useAPI(paths.privateRoom, {
+    body: computed(() => {
+      if (parentId.value && !form.value.is_group) {
+        return {
+          ...form.value,
+          parent_id: parentId.value,
+        };
+      }
       return {
         ...form.value,
-        parent_id: parentId.value,
+        parent_id: null,
       };
-    }
-    return {
-      ...form.value,
-      parent_id: null,
-    };
-  }),
-  success() {
-    toast.add({
-      severity: 'success',
-      summary: t('Помещение было успешно создана'),
-      life: 3000,
-    });
-    form.value = {
-      name: null,
-      style: null,
-      sort: 0,
-      is_group: false,
-    };
-    parentId.value = null;
-    dialog.value = false;
-    emit('update');
-  },
-  error() {
-    toast.add({
-      severity: 'error',
-      summary: t('Помещение не было создано'),
-      life: 3000,
-    });
-  },
-  disabledSchema: true,
-  method: 'POST',
-  immediate: false,
-  watch: false,
-});
+    }),
+    success() {
+      toast.add({
+        severity: 'success',
+        summary: t('Помещение было успешно создана'),
+        life: 3000,
+      });
+      form.value = {
+        name: null,
+        style: null,
+        sort: 0,
+        is_group: false,
+      };
+      parentId.value = null;
+      dialog.value = false;
+      emit('update');
+    },
+    error() {
+      toast.add({
+        severity: 'error',
+        summary: t('Помещение не было создано'),
+        life: 3000,
+      });
+    },
+    disabledSchema: true,
+    method: 'POST',
+    immediate: false,
+    watch: false,
+  });
 
-const {
-  data: dataGetGroupRooms,
-} = await useAPI<Request<any>>(paths.privateRoomsList, {
-  query: {
-    type_zones: 'groups_only',
-  },
-  method: 'GET',
-  watch: false,
-});
+  return {
+    form,
+    parentId,
+    resolver,
+    statusCreateRoom,
+    executeCreateRoom,
+  };
+}
 
 </script>
 
@@ -164,7 +175,8 @@ const {
               class="tw-w-full"
               option-label="name"
               option-value="id"
-              :options="dataGetGroupRooms?.response"
+              :options="groupRooms?.response"
+              show-clear
             />
           </SharedUILabel>
         </div>

@@ -70,7 +70,7 @@ defineProps({
         icon="pi pi-refresh"
         rounded
         text
-        @click="emit('update')"
+        @click="emit('update');"
       />
       <slot />
     </div>
