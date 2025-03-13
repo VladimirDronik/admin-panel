@@ -27,25 +27,14 @@ const {
 
 const {
   update,
-  roomIds,
   dataRooms,
   statusRooms,
   dataGetGroupRooms,
 } = await useWorkWithRoomApi();
 
 const {
-  status: statusOrder,
-  execute: executeOrder,
-} = await useAPI(
-  paths.privateZonesOrder,
-  {
-    disabledSchema: true,
-    body: roomIds,
-    method: 'PATCH',
-    immediate: false,
-    watch: false,
-  },
-);
+  statusOrder,
+} = await useRoomsOrder();
 
 function useRightbar() {
   const form = ref<RoomItem | null>();
@@ -60,6 +49,41 @@ function useRightbar() {
     form,
     isUpdateRightBar,
     openRightBar,
+  };
+}
+
+async function useRoomsOrder() {
+  const roomIds = computed(() => dataRooms?.value?.response.map((item) => item.id));
+
+  // const roomIds = computed(() => dataRooms?.value?.response.map((item) => {
+  //   if (!item.rooms_in_group) return { id: item.id };
+  //   return {
+  //     id: item.id,
+  //     group: item.rooms_in_group.map((item) => ({ id: item.id })),
+  //   };
+  // }));
+
+  const {
+    status: statusOrder,
+    execute: executeOrder,
+  } = await useAPI(
+    paths.privateZonesOrder,
+    {
+      disabledSchema: true,
+      body: roomIds,
+      method: 'PATCH',
+      immediate: false,
+      watch: false,
+    },
+  );
+
+  watch(roomIds, (newValue, oldValue) => {
+    if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
+  });
+
+  return {
+    roomIds,
+    statusOrder,
   };
 }
 
@@ -88,8 +112,6 @@ async function useWorkWithRoomApi() {
     roomRequestSchema,
   );
 
-  const roomIds = computed(() => dataRooms?.value?.response.map((item) => item.id));
-
   const update = async () => {
     await Promise.all([
       refreshRooms(),
@@ -97,13 +119,8 @@ async function useWorkWithRoomApi() {
     ]);
   };
 
-  watch(roomIds, (newValue, oldValue) => {
-    if (oldValue && !_.isEqual(newValue, oldValue)) executeOrder();
-  });
-
   return {
     update,
-    roomIds,
     dataRooms,
     statusRooms,
     refreshRooms,
