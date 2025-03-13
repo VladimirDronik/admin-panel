@@ -631,6 +631,7 @@ const editFormByTypesMap = {
     status: '',
   },
   [Regulator.Regulator]: {
+    parent_id: 0,
     id: 0,
     enabled: false,
     props: {
