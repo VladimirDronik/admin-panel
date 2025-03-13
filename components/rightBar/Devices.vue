@@ -40,6 +40,7 @@ const tabs = ref('features');
 const active = ref(false);
 const dialogDelete = ref(false);
 const isDynamicFormValid = ref(false);
+const parameterName = ref('');
 
 const forceUpdateKey = ref(0);
 
@@ -144,6 +145,17 @@ watchEffect(() => {
   forceUpdateKey.value += 1;
 });
 
+watchEffect(async () => {
+  const response = apiDevice.value?.data?.response;
+  if (response?.type === 'regulator' && response?.parent_id) {
+    const paramResp: any = await api(`${backendApi}/objects/${response.parent_id}`, {
+      query: { without_children: false },
+    });
+    const parameter = paramResp?.response;
+    parameterName.value = parameter?.name ?? '';
+  }
+});
+
 // Hooks
 onBeforeMount(async () => {
   // Get Device Item
@@ -223,8 +235,8 @@ const isDeleteDisabled = computed(() => {
           class="tw-w-full"
         >
           <template #display>
-            <h3 class="text-capitalize tw-text-3xl tw-font-semibold">
-              {{ asideEditingForm?.name }} ({{ asideEditingForm.type }})
+            <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
+              {{ asideEditingForm?.name }} ({{ asideEditingForm.type }}) {{ parameterName }}
             </h3>
           </template>
           <template #content="{ closeCallback }">

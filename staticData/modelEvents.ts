@@ -217,6 +217,50 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
   ],
+  regulator: [
+    {
+      code: 'object.regulator.on_below',
+      name: 'on_below',
+      description: 'Текущее значение меньше заданного',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_above',
+      name: 'on_above',
+      description: 'Текущее значение больше заданного',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_stale',
+      name: 'on_stale',
+      description: 'Текущее значение не актуально',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_complex_below_1',
+      name: 'on_complex_below_1',
+      description: 'Текущее значение < (targetSP - complexTolerance - belowTolerance)',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_complex_below_2',
+      name: 'on_complex_below_2',
+      description: 'Текущее значение > (targetSP + complexTolerance - belowTolerance)',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_complex_above_1',
+      name: 'on_complex_above_1',
+      description: 'Текущее значение < (targetSP - complexTolerance + aboveTolerance)',
+      actions: [],
+    },
+    {
+      code: 'object.regulator.on_complex_above_2',
+      name: 'on_complex_above_2',
+      description: 'Текущее значение > (targetSP + complexTolerance + aboveTolerance)',
+      actions: [],
+    },
+  ],
   motion: [
     {
       code: 'object.sensor.on_motion_on',
