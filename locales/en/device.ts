@@ -115,5 +115,7 @@ export default {
     noTypesFound: 'No available types for the selected tags',
     conditionersOnokom: 'Conditioners Onokom',
     gatewayTypeOnokom: 'Onokom gateway type',
+    enabledOn: 'On',
+    enabledOff: 'Off',
   },
 };

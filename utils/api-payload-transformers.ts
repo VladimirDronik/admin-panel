@@ -357,5 +357,8 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('fast_config' in initialForm.props && updatedFastConfig) {
     initialForm.props.fast_config = Boolean(updatedFastConfig.value);
   }
+  if ('enabled' in initialForm) {
+    initialForm.enabled = data.enabled;
+  }
   return initialForm;
 };

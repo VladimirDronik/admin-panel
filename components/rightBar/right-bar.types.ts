@@ -1,9 +1,10 @@
 // Types modules
 import type { DeviceZoneId } from '~/types/DevicesTypes';
-import type { FormTypes } from '../devices/form.types';
+import type { FormTypes } from '~/components/device/form/form.types';
 
 export interface GetCurrentDeviceResponse {
   parent_id: number;
+  enabled: boolean;
   children: Child[];
   category: string;
   zone_id: DeviceZoneId;
