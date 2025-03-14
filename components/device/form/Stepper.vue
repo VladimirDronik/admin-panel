@@ -59,6 +59,7 @@ const eventTypes = ref(_.cloneDeep(deviceEventTypes));
 const showOnokomSelect = ref(false);
 
 const typesLoading = ref(false);
+const tagSearch = ref('');
 
 // Computed Properties
 // const types = computed(() => _.uniq(_.map(storeDevices.types?.data?.response, 'type')));
@@ -232,6 +233,22 @@ const removeTag = (tag: string) => {
 
 const isSelectedTag = (tagName: string): boolean => initialForm.value.tags.includes(tagName);
 
+const isTagMatched = (tag: string) => tag.toLowerCase().includes(tagSearch.value.toLowerCase()) && tagSearch.value.length > 0;
+
+const handleTagEnter = () => {
+  const match = tags.value.find(
+    (tag) => tag.toLowerCase() === tagSearch.value.toLowerCase(),
+  );
+  if (match && !initialForm.value.tags.includes(match)) {
+    initialForm.value.tags.push(match);
+  }
+  tagSearch.value = '';
+};
+
+const clearTagSearch = () => {
+  tagSearch.value = '';
+};
+
 const handleTypeSelection = (type: FormTypes) => {
   initialForm.value.type = type;
   changeTypeHandler();
@@ -315,6 +332,12 @@ watch(
                   removable
                   @remove="removeTag(tag)"
                 />
+                <InputText
+                  v-model="tagSearch"
+                  class="no-bg-focus tw-min-w-[100px] tw-max-w-[50%] tw-flex-1 tw-border-none tw-shadow-none tw-outline-none focus:tw-ring-0"
+                  @blur="clearTagSearch"
+                  @keydown.enter.prevent="handleTagEnter"
+                />
                 <span
                   v-if="initialForm.tags.length > 9"
                   class="tw-text-sm tw-font-medium tw-text-gray-500"
@@ -327,6 +350,10 @@ watch(
                   v-for="tag in tags"
                   :key="tag"
                   class="tw-cursor-pointer tw-rounded-md tw-px-3 tw-py-1 tw-text-sm"
+                  :class="{
+                    'tw-border tw-border-green-500 tw-text-green-700': isTagMatched(tag),
+                    'tw-bg-green-200': isSelectedTag(tag),
+                  }"
                   :severity="isSelectedTag(tag) ? 'success' : undefined"
                   :value="tag"
                   @click="toggleTag(tag)"
@@ -549,6 +576,10 @@ watch(
 
 .border-dark {
   border: 2px solid #484848;
+}
+
+:deep(.no-bg-focus.p-inputtext:focus) {
+  background-color: transparent !important;
 }
 
 </style>
