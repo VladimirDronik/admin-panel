@@ -41,7 +41,6 @@ const active = ref(false);
 const dialogDelete = ref(false);
 const isDynamicFormValid = ref(false);
 const parameterName = ref('');
-
 const forceUpdateKey = ref(0);
 
 let asideEditingForm = reactive<EditDeviceForm>(initialEditFormData);
@@ -66,6 +65,13 @@ const propsModel = (props: ModelProps | undefined): ModelProps[] => {
     visible: item.visible ?? false,
   }));
   return result;
+};
+
+const toggleEnabled = async (enableFlag: boolean) => {
+  asideEditingForm.enabled = enableFlag;
+  await api(`${backendApi}/objects/${asideEditingForm.id}/enable/${enableFlag}`, {
+    method: 'PUT',
+  });
 };
 
 const confirmDelete = async () => {
@@ -270,26 +276,37 @@ const isDeleteDisabled = computed(() => {
           @click="isOpen = false"
         />
       </div>
-      <Tag
-        class="tw-ml-3 !tw-rounded-lg"
-        label
-        outlined
-        :severity="checkStatusColor(asideEditingForm.status)"
-      >
-        <div class="tw-flex tw-items-center tw-font-normal">
-          <span
-            v-if="checkStatusSymbol(asideEditingForm.status).symbol === ''"
-            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2 tw-inline-block tw-h-2.5 tw-w-2.5 tw-rounded-full`"
+      <div class="tw-mb-2 tw-flex tw-items-center tw-gap-4 tw-pl-4">
+        <Tag
+          class="!tw-rounded-lg"
+          label
+          outlined
+          :severity="checkStatusColor(asideEditingForm.status)"
+        >
+          <div class="tw-flex tw-items-center tw-font-normal">
+            <span
+              v-if="checkStatusSymbol(asideEditingForm.status).symbol === ''"
+              :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2 tw-inline-block tw-h-2.5 tw-w-2.5 tw-rounded-full`"
+            />
+            <span
+              v-else
+              :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`"
+            >
+              {{ checkStatusSymbol(asideEditingForm.status).symbol }}
+            </span>
+            {{ checkStatusTextSmall(asideEditingForm.status) }}
+          </div>
+        </Tag>
+
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <ToggleSwitch
+            v-model="asideEditingForm.enabled"
+            @update:model-value="toggleEnabled"
           />
-          <span
-            v-else
-            :class="`${checkStatusSymbol(asideEditingForm.status).class} tw-mr-2`"
-          >
-            {{ checkStatusSymbol(asideEditingForm.status).symbol }}
-          </span>
-          {{ checkStatusTextSmall(asideEditingForm.status) }}
+          <span>{{ t(asideEditingForm.enabled ? 'devices.enabledOn' : 'devices.enabledOff') }}</span>
         </div>
-      </Tag>
+      </div>
+
       <Tabs v-model:value="tabs">
         <TabList>
           <Tab value="features">
@@ -327,7 +344,7 @@ const isDeleteDisabled = computed(() => {
               @update:valid="devicesDynamicFormValidityHandler"
             >
               <template #footer>
-                <div class="tw-mt-4 tw-flex tw-justify-start">
+                <div class="tw-mt-8 tw-flex tw-justify-start">
                   <DialogDelete
                     :id="asideEditingForm?.id ?? -1"
                     v-model="dialogDelete"

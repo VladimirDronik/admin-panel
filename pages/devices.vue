@@ -241,6 +241,8 @@ const dropdownClasses = computed(() => ({
   },
 }));
 
+const rowClass = (node: any) => (node?.data?.status === 'disabled' ? 'tw-opacity-60' : '');
+
 </script>
 
 <template>
@@ -287,11 +289,15 @@ const dropdownClasses = computed(() => ({
           <span :style="{ paddingLeft: node.data.paddingLeft }" />
           <component
             :is="iconMap[node.data.type as IconMapKey]"
+            :class="rowClass(node)"
             color="#555"
             size="18"
             stroke-width="1.5"
           />
-          <p class="tw-max-w-48 tw-truncate">
+          <p
+            class="tw-max-w-48 tw-truncate"
+            :class="rowClass(node)"
+          >
             {{ node.data.name }}
           </p>
         </template>
@@ -310,6 +316,11 @@ const dropdownClasses = computed(() => ({
               prepend-inner-icon="mdi-magnify"
             />
           </DeviceTableHeader>
+        </template>
+        <template #body="{ node }">
+          <p :class="rowClass(node)">
+            {{ node.data.type }}
+          </p>
         </template>
       </Column>
       <Column
@@ -337,7 +348,9 @@ const dropdownClasses = computed(() => ({
           </DeviceTableHeader>
         </template>
         <template #body="{ node }">
-          {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
+          <p :class="rowClass(node)">
+            {{ checkRoom(findRoom(storeRooms.apiRooms?.data?.response, node.data.address)) }}
+          </p>
         </template>
       </Column>
       <Column
@@ -365,7 +378,10 @@ const dropdownClasses = computed(() => ({
           </DeviceTableHeader>
         </template>
         <template #body="{ node }">
-          <div class="tw-flex tw-items-center tw-gap-2">
+          <div
+            class="tw-flex tw-items-center tw-gap-2"
+            :class="rowClass(node)"
+          >
             <span
               v-if="checkStatusSymbol(node.data.status).symbol === ''"
               class="tw-inline-block tw-size-2.5 tw-rounded-full"
@@ -407,7 +423,10 @@ const dropdownClasses = computed(() => ({
           </DeviceTableHeader>
         </template>
         <template #body="{ node }">
-          <div class="tags">
+          <div
+            class="tags"
+            :class="rowClass(node)"
+          >
             <ScrollPanel
               aria-orientation="horizontal"
               class="tw-max-w-96"

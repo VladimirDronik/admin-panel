@@ -442,7 +442,7 @@ onMounted(async () => {
 </template>
 <style scoped>
 :deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
- width: 200px;
+ width: 195.75px;
 }
 
 </style>

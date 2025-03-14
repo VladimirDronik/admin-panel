@@ -113,5 +113,7 @@ export default {
     noTypesFound: 'Нет доступных типов для выбранных тегов',
     conditionersOnokom: 'Кондиционеры Onokom',
     gatewayTypeOnokom: 'Тип шлюза семейства Onokom',
+    enabledOn: 'Включен',
+    enabledOff: 'Отключен',
   },
 };
