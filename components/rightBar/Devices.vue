@@ -276,7 +276,7 @@ const isDeleteDisabled = computed(() => {
           @click="isOpen = false"
         />
       </div>
-      <div class="tw-mb-2 tw-flex tw-items-center tw-gap-4">
+      <div class="tw-mb-2 tw-flex tw-items-center tw-gap-4 tw-pl-4">
         <Tag
           class="!tw-rounded-lg"
           label
