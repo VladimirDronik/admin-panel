@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
 import type { Devices } from '@/types/DevicesTypes';
 
@@ -163,4 +163,4 @@ defineProps({
       </div>
     </div>
   </div>
-</template>
+</template> -->
