@@ -16,6 +16,7 @@ const form = ref<any | null | undefined>({
 });
 
 const dialog = ref(false);
+const dialogPeriod = ref(false);
 
 const resolver = ref(zodResolver(
   z.object({}),
@@ -51,40 +52,6 @@ const plans = ref([
     description: 'Каждые 1 мин',
   },
 ]);
-
-const visible = ref(false);
-
-const types = ref([
-  { name: 'Ежеминутно', key: 'minute' },
-  { name: 'Ежедневно', key: 'day' },
-  { name: 'Ежемесячно', key: 'month' },
-  { name: 'Ежегодно', key: 'year' },
-]);
-
-const selectedType = ref('minute');
-
-const days = ref([
-  { name: 'Пн', key: 'minute' },
-  { name: 'Вт', key: 'day' },
-  { name: 'Ср', key: 'month' },
-  { name: 'Чт', key: 'year' },
-  { name: 'Пт', key: 'year' },
-  { name: 'Сб', key: 'year' },
-  { name: 'Вс', key: 'year' },
-]);
-
-const selectedDay = ref([]);
-
-const dates = [...Array(31)].map((_, i) => i + 1);
-
-const minuteOptions = [
-  '1 минута',
-  '5 минут',
-  '10 минут',
-  '15 минут',
-  '30 минут',
-  '60 минут',
-];
 </script>
 
 <template>
@@ -269,7 +236,7 @@ const minuteOptions = [
                 icon="pi pi-pencil"
                 rounded
                 severity="info"
-                @click="visible = true"
+                @click="dialogPeriod = true"
               />
               <Button
                 aria-label="Cancel"
@@ -280,115 +247,7 @@ const minuteOptions = [
             </template>
           </Column>
         </DataTable>
-        <Button
-          class="text-capitalize"
-          icon="pi pi-plus"
-          :label="t('Добавить период')"
-          @click="visible = true"
-        />
-        <Dialog
-          v-model:visible="visible"
-          dismissable-mask
-          :header="t('devices.addTitleDevice')"
-          modal
-          :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
-        >
-          <Form>
-            <SharedUILabel
-              colomn
-              :title="'Тип'"
-            >
-              <div class="tw-flex tw-gap-2 tw-pt-2">
-                <div
-                  v-for="type in types"
-                  :key="type.key"
-                  class="tw-flex tw-items-center tw-gap-2"
-                >
-                  <RadioButton
-                    v-model="selectedType"
-                    :input-id="type.key"
-                    name="dynamic"
-                    :value="type.key"
-                  />
-                  <label :for="type.key">{{ type.name }}</label>
-                </div>
-              </div>
-            </SharedUILabel>
-
-            <div class="tw-pt-4">
-              <SharedUILabel v-if="selectedType === 'minute'">
-                <!-- <Select
-                  class="tw-w-full"
-                  :options="minuteOptions"
-                  placeholder="Длительность"
-                /> -->
-                <FloatLabel
-                  class="w-full md:w-56"
-                  variant="in"
-                >
-                  <Select
-                    class="tw-w-full"
-                    :options="minuteOptions"
-                  />
-                  <label for="in_label">Длительность</label>
-                </FloatLabel>
-              </SharedUILabel>
-              <div v-if="selectedType === 'day'">
-                <p>
-                  Время
-                </p>
-                <DatePicker
-                  id="datepicker-timeonly"
-                  fluid
-                  time-only
-                />
-                <p class="tw-pt-4">
-                  Дни Недели
-                </p>
-                <div class="tw-flex tw-gap-3">
-                  <div
-                    v-for="day of days"
-                    :key="day.key"
-                    class="tw-flex tw-items-center tw-gap-2"
-                  >
-                    <Checkbox
-                      v-model="selectedDay"
-                      :input-id="day.key"
-                      name="day"
-                      :value="day.key"
-                    />
-                    <label :for="day.key">{{ day.name }}</label>
-                  </div>
-                </div>
-              </div>
-              <div v-if="selectedType === 'month'">
-                <p>
-                  Даты Месяца
-                </p>
-                <MultiSelect
-                  class="w-full md:w-80"
-                  fluid
-                  :max-selected-labels="3"
-                  :options="dates"
-                  placeholder="Даты"
-                />
-              </div>
-              <div v-if="selectedType === 'year'">
-                <p>
-                  Даты
-                </p>
-                <DatePicker
-                  class="tw-w-96"
-                  :manual-input="false"
-                  selection-mode="multiple"
-                />
-              </div>
-            </div>
-          </Form>
-          <div class="tw-flex tw-justify-end tw-pt-3">
-            <Button :label="'Добавить Период'" />
-          </div>
-        </Dialog>
+        <SchedulerDialogPeriod v-model:dialog="dialogPeriod" />
         <div class="tw-flex tw-justify-between tw-pt-2">
           <Button
             :label="t('goBack')"
