@@ -108,11 +108,11 @@ const sensorDataToShow = computed(() => {
 
     <SharedUILabel
       v-if="!props.isEditing"
-      class="tw-mb-4"
+      class="tw-mb-4 tw-max-w-[405.5px]"
       required
       :title="t('devices.polling')"
     >
-      <div class="p-inputgroup tw-w-2/4">
+      <div class="p-inputgroup tw-w-full">
         <InputNumber
           v-model="dynamicForm.props.numericValue"
           class="tw-w-1/2"
@@ -197,6 +197,8 @@ const sensorDataToShow = computed(() => {
       </SharedUILabel>
     </div>
 
+    <Divider class="tw-pb-3" />
+
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.humidity') }}
     </p>
@@ -262,6 +264,8 @@ const sensorDataToShow = computed(() => {
     </div>
 
     <!-- CO2 -->
+    <Divider class="tw-pb-3" />
+
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.co2') }}
     </p>
@@ -332,6 +336,6 @@ const sensorDataToShow = computed(() => {
 <style scoped>
 
 :deep(.p-inputtext.p-component.p-filled.p-inputnumber-input) {
- width: 200px;
+ width: 195.75px;
 }
 </style>
