@@ -230,80 +230,89 @@ onMounted(async () => {
     :validate-on-blur="true"
     :validate-on-value-update="false"
   >
-    <SharedUILabel
+    <div
       v-if="props.isEditing"
-      class="tw-mb-2"
-      name="title"
-      required
-      :title="t('devices.title')"
+      class="tw-mb-4 tw-mt-2 tw-flex tw-gap-4"
     >
-      <InputText
-        v-model="dynamicForm.name"
-        class="tw-w-3/4"
+      <SharedUILabel
+        class="tw-w-1/2"
+        name="title"
         required
-      />
-    </SharedUILabel>
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      name="room"
-      :title="t('devices.room')"
-    >
-      <Select
-        v-model="dynamicForm.zone_id"
-        class="tw-w-3/4"
-        :disabled="true"
-        option-label="name"
-        option-value="code"
-        :options="storeRooms.getRoomsSelect"
-        :show-clear="true"
-      />
-    </SharedUILabel>
+        :title="t('devices.title')"
+      >
+        <InputText
+          v-model="dynamicForm.name"
+          class="tw-w-full"
+          required
+        />
+      </SharedUILabel>
+
+      <SharedUILabel
+        class="tw-w-1/2"
+        name="room"
+        :title="t('devices.room')"
+      >
+        <Select
+          v-model="dynamicForm.zone_id"
+          class="tw-w-full"
+          :disabled="true"
+          option-label="name"
+          option-value="code"
+          :options="storeRooms.getRoomsSelect"
+          :show-clear="true"
+        />
+      </SharedUILabel>
+    </div>
+
     <Divider
       v-if="props.isEditing"
       class="tw-mt-0 tw-pb-3"
     />
+
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.placement') }}
     </p>
-    <SharedUILabel
-      class="tw-mb-2"
-      name=""
-      required
-      :title="t('devices.mainSensor')"
-      :width="300"
-    >
-      <Select
-        v-model="dynamicForm.sensor_id"
-        class="tw-w-3/4"
-        option-label="label"
-        option-value="value"
-        :options="sensorOptions"
-        @change="handleMainSensorSelection"
-      />
-    </SharedUILabel>
+
+    <div class="tw-mb-2 tw-flex tw-gap-4">
+      <SharedUILabel
+        class="tw-w-1/2"
+        name=""
+        required
+        :title="t('devices.mainSensor')"
+        :width="300"
+      >
+        <Select
+          v-model="dynamicForm.sensor_id"
+          class="tw-w-full"
+          option-label="label"
+          option-value="value"
+          :options="sensorOptions"
+          @change="handleMainSensorSelection"
+        />
+      </SharedUILabel>
+
+      <SharedUILabel
+        class="tw-w-1/2"
+        name=""
+        required
+        :title="t('devices.indicator')"
+        :value="dynamicForm.parent_id"
+        :width="300"
+      >
+        <Select
+          v-model="dynamicForm.parent_id"
+          class="tw-w-full"
+          option-label="label"
+          option-value="value"
+          :options="mainSensorChildrenOptions"
+        />
+      </SharedUILabel>
+    </div>
 
     <SharedUILabel
-      class="tw-mb-2"
-      name=""
+      class="tw-mb-4 tw-pr-4"
       required
-      :title="t('devices.indicator')"
-      :value="dynamicForm.parent_id"
-      :width="300"
-    >
-      <Select
-        v-model="dynamicForm.parent_id"
-        class="tw-w-3/4"
-        option-label="label"
-        option-value="value"
-        :options="mainSensorChildrenOptions"
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      class="tw-mb-4"
-      required
-      :title="t('devices.sensorTTL')"
+      :title="t('devices.polling')"
     >
       <div class="p-inputgroup tw-w-2/4">
         <InputNumber
@@ -321,35 +330,40 @@ onMounted(async () => {
     </SharedUILabel>
 
     <Divider class="tw-mt-0 tw-pb-3" />
-    <SharedUILabel
-      class="tw-mb-2"
-      name=""
-      :title="t('devices.additionalSensor')"
-      :width="300"
-    >
-      <Select
-        class="tw-w-3/4"
-        option-label="label"
-        option-value="value"
-        :options="sensorOptions"
-        @change="handleAdditionalSensorSelection"
-      />
-    </SharedUILabel>
-    <SharedUILabel
-      class="tw-mb-2"
-      name=""
-      :title="t('devices.indicator')"
-      :value="dynamicForm.props.fallback_sensor_value_id"
-      :width="300"
-    >
-      <Select
-        v-model="dynamicForm.props.fallback_sensor_value_id"
-        class="tw-w-3/4"
-        option-label="label"
-        option-value="value"
-        :options="additionalSensorChildrenOptions"
-      />
-    </SharedUILabel>
+
+    <div class="tw-mb-4 tw-flex tw-gap-4">
+      <SharedUILabel
+        class="tw-w-1/2"
+        name=""
+        :title="t('devices.additionalSensor')"
+        :width="300"
+      >
+        <Select
+          class="tw-w-full"
+          option-label="label"
+          option-value="value"
+          :options="sensorOptions"
+          @change="handleAdditionalSensorSelection"
+        />
+      </SharedUILabel>
+
+      <SharedUILabel
+        class="tw-w-1/2"
+        name=""
+        :title="t('devices.indicator')"
+        :value="dynamicForm.props.fallback_sensor_value_id"
+        :width="300"
+      >
+        <Select
+          v-model="dynamicForm.props.fallback_sensor_value_id"
+          class="tw-w-full"
+          option-label="label"
+          option-value="value"
+          :options="additionalSensorChildrenOptions"
+        />
+      </SharedUILabel>
+    </div>
+
     <Divider class="tw-mt-0 tw-pb-3" />
     <SharedUILabel
       class="text-primary-custom tw-mb-2"
@@ -360,7 +374,7 @@ onMounted(async () => {
       <ToggleSwitch v-model="dynamicForm.enabled" />
     </SharedUILabel>
     <SharedUILabel
-      class="tw-mb-2"
+      class="tw-mb-4 tw-pr-4"
       name="type"
       required
       :title="t('devices.regulatorType')"
@@ -369,7 +383,7 @@ onMounted(async () => {
     >
       <Select
         v-model="dynamicForm.props.type"
-        class="tw-w-3/4"
+        class="tw-w-1/2"
         :options="typeOptions"
       />
     </SharedUILabel>
@@ -377,12 +391,12 @@ onMounted(async () => {
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.setpoint') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_195.75px)] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.minSP')}:`"
+        :title="`${t('devices.minSP')}`"
         :value="dynamicForm.props.min_sp"
       >
         <InputNumber v-model="dynamicForm.props.min_sp" />
@@ -391,7 +405,7 @@ onMounted(async () => {
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.targetSP')}:`"
+        :title="`${t('devices.targetSP')}`"
         :value="dynamicForm.props.target_sp"
       >
         <InputNumber v-model="dynamicForm.props.target_sp" />
@@ -400,21 +414,24 @@ onMounted(async () => {
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.maxSP')}:`"
+        :title="`${t('devices.maxSP')}`"
         :value="dynamicForm.props.max_sp"
       >
         <InputNumber v-model="dynamicForm.props.max_sp" />
       </SharedUILabel>
     </div>
+
+    <Divider class="tw-pb-3" />
+
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.hysteresis') }}
     </p>
-    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_200px)] tw-gap-1">
+    <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_195.75px)] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.below')}:`"
+        :title="`${t('devices.below')}`"
         :value="dynamicForm.props.below_tolerance"
       >
         <InputNumber v-model="dynamicForm.props.below_tolerance" />
@@ -423,7 +440,7 @@ onMounted(async () => {
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.above')}:`"
+        :title="`${t('devices.above')}`"
         :value="dynamicForm.props.above_tolerance"
       >
         <InputNumber v-model="dynamicForm.props.above_tolerance" />
@@ -432,7 +449,7 @@ onMounted(async () => {
         class="tw-flex-col !tw-items-start"
         name=""
         required
-        :title="`${t('devices.complex')}:`"
+        :title="`${t('devices.complex')}`"
         :value="dynamicForm.props.complex_tolerance"
       >
         <InputNumber v-model="dynamicForm.props.complex_tolerance" />
