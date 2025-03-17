@@ -62,10 +62,6 @@ export const transformToDeviceCreateFormPayload = (
     result.object.props.timeout = createNumericValueWithUnit(formData);
   }
 
-  if (formData.type === Regulator.Regulator) {
-    result.object.props.sensor_value_ttl = createNumericValueWithUnit(formData);
-  }
-
   if (formData.type === Sensor.MOTION || formData.type === Sensor.PRESENCE) {
     result.object.props.period = createNumericValueWithUnit(formData);
   }
@@ -75,6 +71,7 @@ export const transformToDeviceCreateFormPayload = (
       && formData.type !== Sensor.MOTION
       && formData.type !== Sensor.PRESENCE)
     || formData.type === Counter.ImpulseCounter
+    || formData.type === Regulator.Regulator
   ) {
     result.object.props.update_interval = createNumericValueWithUnit(formData);
   }
@@ -106,9 +103,6 @@ export const transformToDeviceEditFormPayload = (
     result.props.connection_string = createConnectionString(formData);
     result.props.timeout = createNumericValueWithUnit(formData);
   }
-  if (formData.type === Regulator.Regulator) {
-    result.props.sensor_value_ttl = createNumericValueWithUnit(formData);
-  }
   if (formData.type === Sensor.MOTION || formData.type === Sensor.PRESENCE) {
     result.props.period = createNumericValueWithUnit(formData);
   }
@@ -117,6 +111,7 @@ export const transformToDeviceEditFormPayload = (
       && formData.type !== Sensor.MOTION
       && formData.type !== Sensor.PRESENCE)
     || formData.type === Counter.ImpulseCounter
+    || formData.type === Regulator.Regulator
   ) {
     result.props.update_interval = createNumericValueWithUnit(formData);
   }
@@ -173,12 +168,10 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     };
   };
 
-  const updatedSensorValueTTL = data.props.find((prop) => prop.code === 'sensor_value_ttl')?.value;
   const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
   const updatedPeriod = data.props.find((prop) => prop.code === 'period')?.value;
   const updatedUpdateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
 
-  const { numericValue: ttlNumericValue, selectedUnit: ttlUnit } = parseNumericValueWithUnit(updatedSensorValueTTL);
   const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);
   const { numericValue: periodNumericValue, selectedUnit: periodUnit } = parseNumericValueWithUnit(updatedPeriod);
   const { numericValue: updateIntervalNumericValue, selectedUnit: updateIntervalUnit } = parseNumericValueWithUnit(updatedUpdateInterval);
@@ -189,9 +182,6 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if (updatedPeriod !== undefined) {
     numericValue = periodNumericValue;
     selectedUnit = periodUnit;
-  } else if (updatedSensorValueTTL !== undefined) {
-    numericValue = ttlNumericValue;
-    selectedUnit = ttlUnit;
   } else if (updatedTimeout !== undefined) {
     numericValue = timeoutNumericValue;
     selectedUnit = timeoutUnit;
