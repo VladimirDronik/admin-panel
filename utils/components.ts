@@ -42,4 +42,5 @@ export const Components = [
   'FloatLabel',
   'DatePicker',
   'Chip',
+  'SelectButton',
 ];

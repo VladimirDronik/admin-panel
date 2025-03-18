@@ -3,6 +3,7 @@
 import { useI18n } from 'vue-i18n';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
+import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -26,7 +27,9 @@ const isOpen = defineModel<boolean>('isShow', {
 });
 
 // Variables
-const form = ref<any | null | undefined>();
+const form = ref<any | null | undefined>({
+  id: null,
+});
 
 // Watchers
 watch(schedule, () => {
@@ -42,6 +45,18 @@ watch(schedule, () => {
     };
   }
 });
+
+const {
+  data: dataSchedulerActions,
+  status: statusSchedulerActions,
+  refresh: refreshSchedulerActions,
+} = await useAPI<Request<any[]>>(
+  paths.cronActions,
+  {
+    query: computed(() => form.value.id),
+  },
+  { immediate: false },
+);
 </script>
 
 <template>
@@ -50,9 +65,13 @@ watch(schedule, () => {
     v-model:is-open="isOpen"
     :title="variant === 'edit' ? t('Изменить задачу') : t('Добавить задачу')"
   >
-    <SchedulerFormCreate v-if="variant === 'create'" />
+    <SchedulerFormCreate
+      v-if="variant === 'create'"
+      :form
+    />
     <SchedulerFormChange
       v-else-if="variant === 'edit'"
+      v-model:form="form"
       :is-open
     />
   </LayoutRightbar>

@@ -82,6 +82,9 @@ export default defineNuxtConfig({
           root: {
             style: {
               background: 'none',
+              padding: 0,
+              paddingTop: '10px',
+              paddingBottom: '10px',
             },
           },
         },
@@ -89,6 +92,18 @@ export default defineNuxtConfig({
           tabList: {
             style: {
               background: 'none',
+            },
+          },
+          activeBar: {
+            style: {
+              height: '1.5px',
+            },
+          },
+        },
+        tab: {
+          root: {
+            style: {
+              padding: '7px 14px',
             },
           },
         },

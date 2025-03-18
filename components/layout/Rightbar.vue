@@ -35,9 +35,9 @@ onMounted(() => {
         <div class="tw-min-h-80 tw-p-6">
           <div
             v-if="title"
-            class="tw-mb-4 tw-flex tw-items-center tw-justify-between"
+            class="tw-mb-2 tw-flex tw-items-center tw-justify-between"
           >
-            <h3 class="text-capitalize tw-text-2xl tw-font-semibold">
+            <h3 class="text-capitalize tw-pl-1 tw-text-2xl tw-font-semibold">
               {{ title }}
             </h3>
             <Button

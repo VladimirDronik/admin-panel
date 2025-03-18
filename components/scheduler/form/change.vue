@@ -12,6 +12,13 @@ const toast = useToast();
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
+const form = defineModel<{
+  id: number,
+  name: string,
+  enabled: boolean,
+}>('form', {
+  required: true,
+});
 
 // Declare Options
 const emit = defineEmits<{
@@ -22,12 +29,7 @@ const resolver = ref(zodResolver(
   z.object({}),
 ));
 
-const form = ref<any | null | undefined>({
-  title: null,
-});
-
 const dialog = ref(false);
-const dialogPeriod = ref(false);
 
 const modelType = ref('scheduler');
 const targetType = ref('scheduler');
@@ -53,12 +55,7 @@ const filterEvents = async (type: string) => {
 
 };
 
-const plans = ref([
-  {
-    title: 'Ежеминутно',
-    description: 'Каждые 1 мин',
-  },
-]);
+const plans = ref([]);
 
 const {
   statusChangeRoom,
@@ -76,15 +73,7 @@ async function useChangeRoom() {
     status: statusChangeRoom,
     execute: executeChangeRoom,
   } = await useAPI(paths.privateRoomsList, {
-    body: computed(() => {
-      if (form.value?.parent_id === null) {
-        return [{
-          ...form.value,
-          parent_id: 0,
-        }];
-      }
-      return [form.value];
-    }),
+    body: computed(() => form.value),
     success() {
       toast.add({
         severity: 'success',
@@ -153,23 +142,13 @@ async function useDeleteRoom() {
 
 <template>
   <Tabs value="features">
-    <span
-      class="tw-text-base"
-      style="color: var(--p-tabs-tab-color);"
-    >
-      {{ t('display.type') }}: -
-    </span>
     <!-- Header -->
     <TabList>
       <Tab value="features">
-        <p class="tw-font-normal">
-          {{ t('devices.features') }}
-        </p>
+        {{ t('devices.features') }}
       </Tab>
       <Tab value="events">
-        <p class="tw-font-normal">
-          {{ t('Расписание') }}
-        </p>
+        {{ t('Расписание') }}
       </Tab>
     </TabList>
     <!--  -->
@@ -187,108 +166,29 @@ async function useDeleteRoom() {
               name="name"
               required
               :title="t('room.name')"
-              :value="form.title"
+              :value="form.name"
             >
               <InputText
-                v-model="form.title"
+                v-model="form.name"
                 class="tw-w-full"
               />
             </SharedUILabel>
-            <div class="tw-mb-4 tw-flex tw-items-center">
-              <div class="tw-flex tw-min-w-32 tw-items-center">
-                <Checkbox
-                  v-model="form.isActive"
-                  binary
-                  class="tw-mr-2"
-                  input-id="regulator"
-                  name="Регулировка"
-                />
-                <label
-                  class="tw-cursor-pointer tw-text-lg"
-                  for="regulator"
-                >
-                  Активность
-                </label>
-              </div>
-              <i
-                v-tooltip.top="{
-                  value: 'Включить или выключить событие',
-                  pt: {
-                    arrow: {
-                      style: {
-                        borderBottomColor: 'var(--p-primary-color)',
-                      },
-                    },
-                    text: '!bg-primary !text-primary-contrast !font-medium',
-                  },
-                }"
-                class="pi pi-question-circle tw-cursor-pointer"
-                style="font-size: 1.2rem"
+            <div>
+              <SchedulerCheckboxLabel
+                v-model="form.enabled"
+                title="Активность"
+                tooltip="Включить или выключить событие"
               />
-            </div>
-            <div class="tw-mb-4 tw-flex tw-items-center">
-              <div class="tw-flex tw-min-w-32 tw-items-center">
-                <Checkbox
-                  v-model="form.isSystem"
-                  binary
-                  class="tw-mr-2"
-                  input-id="regulator"
-                  name="Регулировка"
-                />
-                <label
-                  class="tw-cursor-pointer tw-text-lg"
-                  for="regulator"
-                >
-                  Системное
-                </label>
-              </div>
-              <i
-                v-tooltip.top="{
-                  value: 'Доступно для редактирования только администратору',
-                  pt: {
-                    arrow: {
-                      style: {
-                        borderBottomColor: 'var(--p-primary-color)',
-                      },
-                    },
-                    text: '!bg-primary !text-primary-contrast !font-medium',
-                  },
-                }"
-                class="pi pi-question-circle tw-cursor-pointer"
-                style="font-size: 1.2rem"
+              <!-- <SchedulerCheckboxLabel
+                v-model="form.isSystem"
+                title="Системное"
+                tooltip="Доступно для редактирования только администратору"
               />
-            </div>
-            <div class="tw-mb-2 tw-flex tw-items-center">
-              <div class="tw-flex tw-min-w-32 tw-items-center">
-                <Checkbox
-                  v-model="form.isHide"
-                  binary
-                  class="tw-mr-2"
-                  input-id="regulator"
-                  name="Регулировка"
-                />
-                <label
-                  class="tw-cursor-pointer tw-text-lg"
-                  for="regulator"
-                >
-                  Скрытое
-                </label>
-              </div>
-              <i
-                v-tooltip.top="{
-                  value: 'Доступно для просмотра только администратору',
-                  pt: {
-                    arrow: {
-                      style: {
-                        borderBottomColor: 'var(--p-primary-color)',
-                      },
-                    },
-                    text: '!bg-primary !text-primary-contrast !font-medium',
-                  },
-                }"
-                class="pi pi-question-circle tw-cursor-pointer"
-                style="font-size: 1.2rem"
-              />
+              <SchedulerCheckboxLabel
+                v-model="form.isHide"
+                title="Активность"
+                tooltip="Доступно для просмотра только администратору"
+              /> -->
             </div>
             <Button
               label="Действия"
@@ -322,41 +222,7 @@ async function useDeleteRoom() {
         </Form>
       </TabPanel>
       <TabPanel value="events">
-        <DataTable
-          class="tw-mb-3"
-          :value="plans"
-        >
-          <Column
-            field="title"
-            header="Тип периода"
-          />
-          <Column
-            field="description"
-            header="Описание"
-          /><Column
-            field="actions"
-            header="Действия"
-            style="width: 150px;"
-          >
-            <template #body="{ data }">
-              <Button
-                aria-label="Cancel"
-                class="tw-mr-2"
-                icon="pi pi-pencil"
-                rounded
-                severity="info"
-                @click="dialogPeriod = true"
-              />
-              <Button
-                aria-label="Cancel"
-                icon="pi pi-trash"
-                rounded
-                severity="danger"
-              />
-            </template>
-          </Column>
-        </DataTable>
-        <SchedulerDialogPeriod v-model:dialog="dialogPeriod" />
+        <SchedulerFormPeriod v-model="plans" />
       </TabPanel>
     </TabPanels>
   </Tabs>

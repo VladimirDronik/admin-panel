@@ -12,7 +12,16 @@ const isToggleSwitch = computed(() => {
   return typeof vnode.type === 'object' && 'name' in vnode.type && vnode.type.name === 'ToggleSwitch';
 });
 
-withDefaults(defineProps<{
+const {
+  name = '',
+  title = '',
+  width = 100,
+  colomn = false,
+  required = false,
+  value = {},
+  tooltip = {},
+  leftLabel = false,
+} = defineProps<{
   name?: string,
   width?: number,
   title?: string,
@@ -22,16 +31,7 @@ withDefaults(defineProps<{
   tooltip?: any,
   leftLabel?: boolean,
 }
->(), {
-  name: '',
-  title: '',
-  width: 100,
-  colomn: false,
-  required: false,
-  value: {},
-  tooltip: {},
-  leftLabel: false,
-});
+>();
 </script>
 
 <template>

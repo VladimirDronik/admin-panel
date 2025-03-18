@@ -310,27 +310,19 @@ const isDeleteDisabled = computed(() => {
       <Tabs v-model:value="tabs">
         <TabList>
           <Tab value="features">
-            <p>
-              {{ t('devices.features') }}
-            </p>
+            {{ t('devices.features') }}
           </Tab>
           <Tab value="events">
-            <p>
-              {{ t('devices.events') }}
-            </p>
+            {{ t('devices.events') }}
           </Tab>
           <Tab
             v-if="selectedObject?.category === 'controller'"
             value="ports"
           >
-            <p>
-              {{ t('devices.ports') }}
-            </p>
+            {{ t('devices.ports') }}
           </Tab>
           <Tab value="four">
-            <p>
-              {{ t('devices.management') }}
-            </p>
+            {{ t('devices.management') }}
           </Tab>
         </TabList>
         <TabPanels>

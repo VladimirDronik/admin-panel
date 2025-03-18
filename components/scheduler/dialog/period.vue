@@ -13,13 +13,57 @@ const selectedDay = ref([]);
 
 const dates = [...Array(31)].map((_, i) => i + 1);
 
+const selectedDays = ref<number[]>([]);
+
 const minuteOptions = [
-  '1 минута',
-  '5 минут',
-  '10 минут',
-  '15 минут',
-  '30 минут',
-  '60 минут',
+  {
+    name: '1 секунда',
+    key: '1s',
+  },
+  {
+    name: '5 секунд',
+    key: '5s',
+  },
+  {
+    name: '10 секунд',
+    key: '10s',
+  },
+  {
+    name: '15 секунд',
+    key: '15s',
+  },
+  {
+    name: '30 секунд',
+    key: '30s',
+  },
+  {
+    name: '60 секунд',
+    key: '60s',
+  },
+  {
+    name: '1 минута',
+    key: '1m',
+  },
+  {
+    name: '5 минута',
+    key: '5m',
+  },
+  {
+    name: '10 минута',
+    key: '10m',
+  },
+  {
+    name: '15 минута',
+    key: '15m',
+  },
+  {
+    name: '30 минута',
+    key: '30m',
+  },
+  {
+    name: '60 минута',
+    key: '60m',
+  },
 ];
 
 const types = [
@@ -30,13 +74,13 @@ const types = [
 ];
 
 const days = [
-  { name: 'Пн', key: 'minute' },
-  { name: 'Вт', key: 'day' },
-  { name: 'Ср', key: 'month' },
-  { name: 'Чт', key: 'year' },
-  { name: 'Пт', key: 'year' },
-  { name: 'Сб', key: 'year' },
-  { name: 'Вс', key: 'year' },
+  { name: 'Пн', key: 'mon' },
+  { name: 'Вт', key: 'tue' },
+  { name: 'Ср', key: 'wed' },
+  { name: 'Чт', key: 'thu' },
+  { name: 'Пт', key: 'fri' },
+  { name: 'Сб', key: 'sut' },
+  { name: 'Вс', key: 'sun' },
 ];
 </script>
 
@@ -53,92 +97,87 @@ const days = [
       dismissable-mask
       :header="t('devices.addTitleDevice')"
       modal
-      :style="{ 'max-width': '1200px', width: '100%', margin: '0 20px' }"
+      :style="{ 'max-width': '900px', width: '100%', margin: '0 20px' }"
     >
       <Form>
-        <SharedUILabel
-          colomn
-          :title="'Тип'"
-        >
-          <div class="tw-flex tw-gap-2 tw-pt-2">
-            <div
-              v-for="type in types"
-              :key="type.key"
-              class="tw-flex tw-items-center tw-gap-2"
-            >
-              <RadioButton
-                v-model="selectedType"
-                :input-id="type.key"
-                name="dynamic"
-                :value="type.key"
-              />
-              <label :for="type.key">{{ type.name }}</label>
-            </div>
-          </div>
-        </SharedUILabel>
+        <!-- Period Select -->
+        <SelectButton
+          v-model="selectedType"
+          option-label="name"
+          option-value="key"
+          :options="types"
+        />
+        <!--  -->
+
         <div class="tw-pt-4">
-          <SharedUILabel v-if="selectedType === 'minute'">
+          <!-- Period Select -->
+          <SharedUILabel
+            v-if="selectedType === 'minute'"
+            :title="t('Длительность')"
+          >
             <FloatLabel
               class="w-full md:w-56"
               variant="in"
             >
               <Select
                 class="tw-w-full"
+                option-label="name"
+                option-value="code"
                 :options="minuteOptions"
               />
-              <label for="in_label">Длительность</label>
             </FloatLabel>
           </SharedUILabel>
+          <!--  -->
+
+          <!-- Week Select -->
           <div v-if="selectedType === 'day'">
-            <p>
-              Время
-            </p>
-            <DatePicker
-              id="datepicker-timeonly"
-              fluid
-              time-only
+            <FloatLabel
+              class="tw-mb-4"
+              variant="in"
+            >
+              <DatePicker
+                id="datepicker-timeonly"
+                fluid
+                time-only
+              />
+              <label for="in_label">{{ t('Длительность') }}</label>
+            </FloatLabel>
+            <SelectButton
+              v-model="selectedDay"
+              multiple
+              option-label="name"
+              option-value="key"
+              :options="days"
             />
-            <p class="tw-pt-4">
-              Дни Недели
-            </p>
-            <div class="tw-flex tw-gap-3">
-              <div
-                v-for="day of days"
-                :key="day.key"
-                class="tw-flex tw-items-center tw-gap-2"
-              >
-                <Checkbox
-                  v-model="selectedDay"
-                  :input-id="day.key"
-                  name="day"
-                  :value="day.key"
-                />
-                <label :for="day.key">{{ day.name }}</label>
-              </div>
-            </div>
           </div>
+          <!--  -->
+
+          <!-- Day Select -->
           <div v-if="selectedType === 'month'">
-            <p>
-              Даты Месяца
-            </p>
-            <MultiSelect
-              class="w-full md:w-80"
-              fluid
-              :max-selected-labels="3"
-              :options="dates"
-              placeholder="Даты"
-            />
+            <!-- <FloatLabel variant="in">
+              <MultiSelect
+                class="w-full md:w-80"
+                fluid
+                :options="dates"
+              />
+              <label for="in_label">{{ t('Дни') }}</label>
+            </FloatLabel> -->
+            <SharedUIDayOfMonthSelect v-model="selectedDays" />
           </div>
+          <!--  -->
+
+          <!-- Date Select -->
           <div v-if="selectedType === 'year'">
-            <p>
-              Даты
-            </p>
-            <DatePicker
-              class="tw-w-96"
-              :manual-input="false"
-              selection-mode="multiple"
-            />
+            <FloatLabel variant="in">
+              <DatePicker
+                fluid
+                :manual-input="false"
+                selection-mode="multiple"
+              />
+              <label for="in_label">{{ t('Даты') }}</label>
+            </FloatLabel>
           </div>
+          <!--  -->
         </div>
         <div class="tw-flex tw-justify-end tw-pt-3">
           <Button :label="'Добавить Период'" />

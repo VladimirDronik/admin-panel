@@ -9,15 +9,15 @@ const value = defineModel<string | null | undefined>({
   required: true,
 });
 
-withDefaults(defineProps<{
+const {
+  options = colors,
+} = defineProps<{
   options?: {
     name: string;
     code: string;
     color: string;
   }[]
-}>(), {
-  options: () => colors,
-});
+}>();
 
 </script>
 

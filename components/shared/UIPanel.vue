@@ -12,11 +12,9 @@ const isUpdate = defineModel<boolean>('isUpdate', {
   default: false,
 });
 
-const { isError } = withDefaults(defineProps<{
+const { isError = false } = defineProps<{
   isError?: boolean
-}>(), {
-  isError: false,
-});
+}>();
 </script>
 
 <template>

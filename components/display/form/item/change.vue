@@ -164,14 +164,10 @@ async function useDeleteItem() {
     <!-- Header -->
     <TabList>
       <Tab value="features">
-        <p class="tw-font-normal">
-          {{ t('devices.features') }}
-        </p>
+        {{ t('devices.features') }}
       </Tab>
       <Tab value="events">
-        <p class="tw-font-normal">
-          {{ t('devices.events') }}
-        </p>
+        {{ t('devices.events') }}
       </Tab>
     </TabList>
     <!--  -->

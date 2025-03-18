@@ -15,11 +15,11 @@ const emit = defineEmits<{
   (e: 'change'): void
 }>();
 
-const props = withDefaults(defineProps<{
+const {
+  type = 'items',
+} = defineProps<{
   type?: 'items' | 'sensors' | 'scenario'
-}>(), {
-  type: 'items',
-});
+}>();
 
 const dialog = defineModel<boolean>({
   default: false,

@@ -16,19 +16,19 @@ interface Header {
 const route = useRoute();
 
 // Declare Options
-const props = withDefaults(defineProps<{
+const {
+  total = 0,
+  perPage = 0,
+  items = undefined,
+  isClickable = false,
+  headers = undefined,
+} = defineProps<{
   total?: number,
   items?: any[],
   perPage?: number,
   isClickable?: boolean,
   headers?: Header[],
-}>(), {
-  total: 0,
-  perPage: 0,
-  items: undefined,
-  isClickable: false,
-  headers: undefined,
-});
+}>();
 
 const emit = defineEmits<{
   (e: 'update', params: any): void
@@ -75,7 +75,7 @@ const pagination = async () => {
       if (isArray(item.value)) [params.dateFrom, params.dateTo] = [moment(item.value[0]).valueOf(), moment(item.value[1]).valueOf()];
     } else if (item.value) params[item.key] = item.value;
   });
-  if (page.value > 1) params.offset = props.perPage * (page.value - 1);
+  if (page.value > 1) params.offset = perPage * (page.value - 1);
   await emit('update', params);
 
   isUpdate.value = false;
