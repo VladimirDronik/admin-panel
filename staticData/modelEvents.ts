@@ -231,9 +231,9 @@ export const deviceEventTypes: EventsObject = {
       actions: [],
     },
     {
-      code: 'object.regulator.on_stale',
-      name: 'on_stale',
-      description: 'Текущее значение не актуально',
+      code: 'object.regulator.on_failure',
+      name: 'on_failure',
+      description: 'Ошибка регулятора',
       actions: [],
     },
     {

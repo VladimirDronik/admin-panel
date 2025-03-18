@@ -115,6 +115,7 @@ export interface DeviceProps {
     last_update?: string;
     write_graph?: boolean;
     fast_config?: boolean;
+    additional_sensor_id?: number;
   }
 
 export interface DeviceChild {
