@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-const items = defineModel<any[]>();
+type PeriodType = 'minute' | 'day' | 'month' | 'year'
+const period = defineModel<{value: string, type: PeriodType}[]>({
+  required: true,
+});
+
+const { edit = false } = defineProps<{
+  edit?: boolean;
+}>();
 
 const dialogPeriod = ref(false);
 </script>
@@ -8,14 +15,14 @@ const dialogPeriod = ref(false);
   <div>
     <BaseTable
       class="tw-mb-3"
-      :value="items"
+      :items="period"
     >
       <Column
-        field="title"
-        header="Тип периода"
+        field="type"
+        header="Тип"
       />
       <Column
-        field="description"
+        field="value"
         header="Описание"
       />
       <Column
@@ -41,7 +48,11 @@ const dialogPeriod = ref(false);
         </template>
       </Column>
     </BaseTable>
-    <SchedulerDialogPeriod v-model:dialog="dialogPeriod" />
+    <SchedulerDialogPeriod
+      v-model:dialog="dialogPeriod"
+      v-model:period="period"
+      :edit
+    />
   </div>
 </template>
 

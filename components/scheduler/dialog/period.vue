@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { Form } from '@primevue/forms';
+import { minuteOptions, types, days } from './dataForPeriods';
 
 const { t } = useI18n();
 
@@ -7,81 +9,53 @@ const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
 
-const selectedType = ref('minute');
+type PeriodType = 'minute' | 'day' | 'month' | 'year'
 
+const period = defineModel<{value: string, type: PeriodType}[]>('period', {
+  required: true,
+});
+
+const { edit = false } = defineProps<{
+  edit?: boolean;
+}>();
+
+const selectedType = ref<PeriodType>('minute');
+
+const selectedPeriod = ref<string>();
 const selectedDay = ref([]);
-
-const dates = [...Array(31)].map((_, i) => i + 1);
-
 const selectedDays = ref<number[]>([]);
+const selectedDates = ref<Date[]>([]);
 
-const minuteOptions = [
-  {
-    name: '1 секунда',
-    key: '1s',
-  },
-  {
-    name: '5 секунд',
-    key: '5s',
-  },
-  {
-    name: '10 секунд',
-    key: '10s',
-  },
-  {
-    name: '15 секунд',
-    key: '15s',
-  },
-  {
-    name: '30 секунд',
-    key: '30s',
-  },
-  {
-    name: '60 секунд',
-    key: '60s',
-  },
-  {
-    name: '1 минута',
-    key: '1m',
-  },
-  {
-    name: '5 минута',
-    key: '5m',
-  },
-  {
-    name: '10 минута',
-    key: '10m',
-  },
-  {
-    name: '15 минута',
-    key: '15m',
-  },
-  {
-    name: '30 минута',
-    key: '30m',
-  },
-  {
-    name: '60 минута',
-    key: '60m',
-  },
-];
+const addPeriod = () => {
+  console.log(edit, 'yes');
+  if (edit) {
+    console.log('create');
+  } else {
+    switch (selectedType.value) {
+      case 'minute':
+        if (selectedPeriod.value) {
+          period.value.push({
+            value: selectedPeriod.value,
+            type: 'minute',
+          });
+        }
+        console.log(edit, period.value);
+        break;
+      // case 'day':
+      //   if (selectedPeriod.value) period.value.push(selectedDay.value);
+      //   break;
+      // case 'month':
+      //   if (selectedPeriod.value) period.value.push(selectedDays.value);
+      //   break;
+      // case 'year':
+      //   if (selectedPeriod.value) period.value.push(selectedDates.value);
+      //   break;
+      default:
+        break;
+    }
+  }
+};
 
-const types = [
-  { name: 'Ежеминутно', key: 'minute' },
-  { name: 'Ежедневно', key: 'day' },
-  { name: 'Ежемесячно', key: 'month' },
-  { name: 'Ежегодно', key: 'year' },
-];
-
-const days = [
-  { name: 'Пн', key: 'mon' },
-  { name: 'Вт', key: 'tue' },
-  { name: 'Ср', key: 'wed' },
-  { name: 'Чт', key: 'thu' },
-  { name: 'Пт', key: 'fri' },
-  { name: 'Сб', key: 'sut' },
-  { name: 'Вс', key: 'sun' },
-];
 </script>
 
 <template>
@@ -99,15 +73,14 @@ const days = [
       modal
       :style="{ 'max-width': '900px', width: '100%', margin: '0 20px' }"
     >
-      <Form>
-        <!-- Period Select -->
+      <Form @submit="({ valid }) => { if (valid) addPeriod() }">
         <SelectButton
           v-model="selectedType"
+          :allow-empty="false"
           option-label="name"
           option-value="key"
           :options="types"
         />
-        <!--  -->
 
         <div class="tw-pt-4">
           <!-- Period Select -->
@@ -115,17 +88,13 @@ const days = [
             v-if="selectedType === 'minute'"
             :title="t('Длительность')"
           >
-            <FloatLabel
-              class="w-full md:w-56"
-              variant="in"
-            >
-              <Select
-                class="tw-w-full"
-                option-label="name"
-                option-value="code"
-                :options="minuteOptions"
-              />
-            </FloatLabel>
+            <Select
+              v-model="selectedPeriod"
+              class="tw-w-full"
+              option-label="name"
+              option-value="key"
+              :options="minuteOptions"
+            />
           </SharedUILabel>
           <!--  -->
 
@@ -153,34 +122,33 @@ const days = [
           <!--  -->
 
           <!-- Day Select -->
-          <div v-if="selectedType === 'month'">
-            <!-- <FloatLabel variant="in">
-              <MultiSelect
-                class="w-full md:w-80"
-                fluid
-                :options="dates"
-              />
-              <label for="in_label">{{ t('Дни') }}</label>
-            </FloatLabel> -->
-            <SharedUIDayOfMonthSelect v-model="selectedDays" />
-          </div>
+          <SharedUIDayOfMonthSelect
+            v-if="selectedType === 'month'"
+            v-model="selectedDays"
+          />
           <!--  -->
 
           <!-- Date Select -->
           <div v-if="selectedType === 'year'">
             <FloatLabel variant="in">
               <DatePicker
+                v-model="selectedDates"
                 fluid
+                for="date"
                 :manual-input="false"
                 selection-mode="multiple"
+                variant="filled"
               />
-              <label for="in_label">{{ t('Даты') }}</label>
+              <label for="date">{{ t('Даты') }}</label>
             </FloatLabel>
           </div>
           <!--  -->
         </div>
         <div class="tw-flex tw-justify-end tw-pt-3">
-          <Button :label="'Добавить Период'" />
+          <Button
+            :label="'Добавить Период'"
+            type="submit"
+          />
         </div>
       </Form>
     </Dialog>

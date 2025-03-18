@@ -36,7 +36,7 @@ const targetType = ref('scheduler');
 
 const event = ref<Event>({
   code: '',
-  name: '',
+  name: 'Действия Задачи',
   description: '',
   actions: [],
   actionTypes: {

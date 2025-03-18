@@ -12,14 +12,18 @@ const toast = useToast();
 const step = ref('1');
 
 const form = ref<any | null | undefined>({
-  title: null,
+  description: '',
+  enabled: true,
+  name: '',
+  period: [],
 });
 
 const dialog = ref(false);
-const dialogPeriod = ref(false);
 
 const resolver = ref(zodResolver(
-  z.object({}),
+  z.object({
+    name: z.string().min(1),
+  }),
 ));
 
 const modelType = ref('scheduler');
@@ -27,7 +31,7 @@ const targetType = ref('scheduler');
 
 const event = ref<Event>({
   code: '',
-  name: '',
+  name: 'Действия Задачи',
   description: '',
   actions: [],
   actionTypes: {
@@ -46,7 +50,7 @@ const filterEvents = async (type: string) => {
 
 };
 
-const plans = ref([]);
+const period = ref([]);
 </script>
 
 <template>
@@ -77,11 +81,22 @@ const plans = ref([]);
               class="tw-mb-2"
               name="name"
               required
-              :title="t('room.name')"
-              :value="form.title"
+              :title="t('Название')"
+              :value="form.name"
             >
               <InputText
-                v-model="form.title"
+                v-model="form.name"
+                class="tw-w-full"
+              />
+            </SharedUILabel>
+            <SharedUILabel
+              class="tw-mb-2"
+              name="description"
+              :title="t('Описание')"
+              :value="form.description"
+            >
+              <InputText
+                v-model="form.description"
                 class="tw-w-full"
               />
             </SharedUILabel>
@@ -129,7 +144,7 @@ const plans = ref([]);
         v-slot="{ activateCallback }"
         value="2"
       >
-        <SchedulerFormPeriod v-model="plans" />
+        <SchedulerFormPeriod v-model="period" />
         <div class="tw-flex tw-justify-between tw-pt-2">
           <Button
             :label="t('goBack')"

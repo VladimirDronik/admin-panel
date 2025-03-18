@@ -7,7 +7,6 @@ import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
-const { updateData } = useUtils();
 
 // Declare Options
 const emit = defineEmits<{
