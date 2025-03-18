@@ -212,6 +212,13 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedLastUpdate = data.props.find((prop) => prop.code === 'last_update');
   const updatedPrice = data.props.find((prop) => prop.code === 'price');
   const updatedFastConfig = data.props.find((prop) => prop.code === 'fast_config');
+  const updatedMinSp = data.props.find((prop) => prop.code === 'min_sp');
+  const updatedTargetSp = data.props.find((prop) => prop.code === 'target_sp');
+  const updatedMaxSp = data.props.find((prop) => prop.code === 'max_sp');
+  const updatedBelowTolerance = data.props.find((prop) => prop.code === 'below_tolerance');
+  const updatedAboveTolerance = data.props.find((prop) => prop.code === 'above_tolerance');
+  const updatedComplexTolerance = data.props.find((prop) => prop.code === 'complex_tolerance');
+  const updatedFallbackSensorId = data.props.find((prop) => prop.code === 'fallback_sensor_value_id');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -349,6 +356,27 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   }
   if ('enabled' in initialForm) {
     initialForm.enabled = data.enabled;
+  }
+  if ('min_sp' in initialForm.props && updatedMinSp) {
+    initialForm.props.min_sp = Number(updatedMinSp.value);
+  }
+  if ('target_sp' in initialForm.props && updatedTargetSp) {
+    initialForm.props.target_sp = Number(updatedTargetSp.value);
+  }
+  if ('max_sp' in initialForm.props && updatedMaxSp) {
+    initialForm.props.max_sp = Number(updatedMaxSp.value);
+  }
+  if ('below_tolerance' in initialForm.props && updatedBelowTolerance) {
+    initialForm.props.below_tolerance = Number(updatedBelowTolerance.value);
+  }
+  if ('above_tolerance' in initialForm.props && updatedAboveTolerance) {
+    initialForm.props.above_tolerance = Number(updatedAboveTolerance.value);
+  }
+  if ('complex_tolerance' in initialForm.props && updatedComplexTolerance) {
+    initialForm.props.complex_tolerance = Number(updatedComplexTolerance.value);
+  }
+  if ('fallback_sensor_value_id' in initialForm.props && updatedFallbackSensorId) {
+    initialForm.props.fallback_sensor_value_id = Number(updatedFallbackSensorId.value);
   }
   return initialForm;
 };

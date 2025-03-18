@@ -133,18 +133,15 @@ const fetchMainSensorInfo = async () => {
 };
 
 const fetchAdditionalSensorInfo = async () => {
-  const fallbackId = dynamicForm.value.props.fallback_sensor_value_id;
-  if (!fallbackId) return;
+  const fallbackId = Number(dynamicForm.value.props.fallback_sensor_value_id);
+
+  if (!Number.isFinite(fallbackId) || fallbackId <= 0) {
+    additionalSensorChildrenOptions.value = [];
+    return;
+  }
 
   const parameter = await fetchObjectById(fallbackId);
   if (!parameter) return;
-
-  if (!additionalSensorChildrenOptions.value.find((opt) => opt.value === parameter.id)) {
-    additionalSensorChildrenOptions.value.push({
-      label: parameter.name,
-      value: parameter.id,
-    });
-  }
 
   const sensor = await fetchObjectById(parameter.parent_id);
   if (!sensor) return;
@@ -156,17 +153,26 @@ const fetchAdditionalSensorInfo = async () => {
       zone_id: sensor.zone_id,
     });
   }
-
   if (props.isEditing) {
-    dynamicForm.value.props.fallback_sensor_value_id = parameter.id;
+    dynamicForm.value.props.additional_sensor_id = sensor.id;
 
     if (Array.isArray(sensor.children)) {
       additionalSensorChildrenOptions.value = sensor.children.map((child: any) => ({
         label: child.name,
         value: child.id,
       }));
+
+      if (!additionalSensorChildrenOptions.value.find((opt) => opt.value === parameter.id)) {
+        additionalSensorChildrenOptions.value.push({
+          label: parameter.name,
+          value: parameter.id,
+        });
+      }
     } else {
-      additionalSensorChildrenOptions.value = [];
+      additionalSensorChildrenOptions.value = [{
+        label: parameter.name,
+        value: parameter.id,
+      }];
     }
   }
 };
@@ -180,15 +186,26 @@ const flatForm = computed(() => ({
   above_tolerance: dynamicForm.value.props.above_tolerance,
   complex_tolerance: dynamicForm.value.props.complex_tolerance,
 }));
-const schema = z.object({
+
+const baseSchema = z.object({
   type: z.enum(['complex', 'pid', 'simple']),
   min_sp: z.number().default(0),
   target_sp: z.number().default(0),
   max_sp: z.number().default(0),
-  below_tolerance: z.number().default(0),
-  above_tolerance: z.number().default(0),
-  complex_tolerance: z.number().default(0),
+  below_tolerance: z.number().min(0).default(0),
+  above_tolerance: z.number().min(0).default(0),
+  complex_tolerance: z.number().min(0).default(0),
 });
+
+const schema = baseSchema.refine(
+  (data) => data.target_sp >= data.min_sp && data.target_sp <= data.max_sp,
+  {
+    message: 'должен быть в диапазоне между min и max',
+    path: ['target_sp'],
+  },
+);
+
+const typeOptions = baseSchema.shape.type.options;
 
 const resolver = ref(zodResolver(schema));
 
@@ -202,7 +219,6 @@ watch(
   },
   { deep: true },
 );
-const typeOptions = schema.shape.type.options;
 
 watch(
   () => dynamicForm.value.parent_id,
@@ -339,6 +355,7 @@ onMounted(async () => {
         :width="300"
       >
         <Select
+          v-model="dynamicForm.props.additional_sensor_id"
           class="tw-w-full"
           option-label="label"
           option-value="value"
@@ -394,7 +411,7 @@ onMounted(async () => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_195.75px)] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="min_sp"
         required
         :title="`${t('devices.minSP')}`"
         :value="dynamicForm.props.min_sp"
@@ -403,7 +420,7 @@ onMounted(async () => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="target_sp"
         required
         :title="`${t('devices.targetSP')}`"
         :value="dynamicForm.props.target_sp"
@@ -412,7 +429,7 @@ onMounted(async () => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="max_sp"
         required
         :title="`${t('devices.maxSP')}`"
         :value="dynamicForm.props.max_sp"
@@ -429,7 +446,7 @@ onMounted(async () => {
     <div class="tw-mb-2 tw-grid tw-grid-cols-[repeat(auto-fill,_195.75px)] tw-gap-4">
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="below_tolerance"
         required
         :title="`${t('devices.below')}`"
         :value="dynamicForm.props.below_tolerance"
@@ -438,7 +455,7 @@ onMounted(async () => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="above_tolerance"
         required
         :title="`${t('devices.above')}`"
         :value="dynamicForm.props.above_tolerance"
@@ -447,7 +464,7 @@ onMounted(async () => {
       </SharedUILabel>
       <SharedUILabel
         class="tw-flex-col !tw-items-start"
-        name=""
+        name="complex_tolerance"
         required
         :title="`${t('devices.complex')}`"
         :value="dynamicForm.props.complex_tolerance"
