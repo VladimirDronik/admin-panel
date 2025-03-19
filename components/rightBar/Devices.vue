@@ -67,6 +67,34 @@ const propsModel = (props: ModelProps | undefined): ModelProps[] => {
   return result;
 };
 
+const isDeleteDisabled = computed(() => {
+  const type = selectedObject.value?.type;
+  const isChild = selectedObject.value?.isChild ?? false;
+
+  return type === 'server' || (type === 'bus' && isChild);
+});
+
+const orderedTabs = computed(() => {
+  const tabs = [];
+
+  if (selectedObject.value?.category === 'conditioner') {
+    tabs.push({ label: t('devices.management'), value: 'management' });
+  }
+
+  tabs.push({ label: t('devices.features'), value: 'features' });
+  tabs.push({ label: t('devices.events'), value: 'events' });
+
+  if (selectedObject.value?.category === 'controller') {
+    tabs.push({ label: t('devices.ports'), value: 'ports' });
+  }
+
+  if (selectedObject.value?.category !== 'conditioner') {
+    tabs.push({ label: t('devices.management'), value: 'management' });
+  }
+
+  return tabs;
+});
+
 const toggleEnabled = async (enableFlag: boolean) => {
   asideEditingForm.enabled = enableFlag;
   await api(`${backendApi}/objects/${asideEditingForm.id}/enable/${enableFlag}`, {
@@ -134,7 +162,14 @@ const changeDevice = async () => {
 watch(() => selectedObject.value?.id, () => {
   if (selectedObject.value?.category === 'controller') {
     apiPorts.value?.refresh();
-  } else if (tabs.value === 'ports') tabs.value = 'features';
+  } else if (tabs.value === 'ports') {
+    tabs.value = 'features';
+  }
+  if (selectedObject.value?.category === 'conditioner') {
+    tabs.value = 'management';
+  } else if (tabs.value === 'management') {
+    tabs.value = 'features';
+  }
 });
 
 watchEffect(() => {
@@ -216,13 +251,6 @@ onBeforeMount(async () => {
   //
 });
 
-const isDeleteDisabled = computed(() => {
-  const type = selectedObject.value?.type;
-  const isChild = selectedObject.value?.isChild ?? false;
-
-  return type === 'server' || (type === 'bus' && isChild);
-});
-
 </script>
 
 <template>
@@ -276,7 +304,7 @@ const isDeleteDisabled = computed(() => {
           @click="isOpen = false"
         />
       </div>
-      <div class="tw-mb-2 tw-flex tw-items-center tw-gap-4 tw-pl-4">
+      <div class="tw-mb-2 tw-flex tw-items-center tw-gap-4 tw-pl-3">
         <Tag
           class="!tw-rounded-lg"
           label
@@ -309,20 +337,12 @@ const isDeleteDisabled = computed(() => {
 
       <Tabs v-model:value="tabs">
         <TabList>
-          <Tab value="features">
-            {{ t('devices.features') }}
-          </Tab>
-          <Tab value="events">
-            {{ t('devices.events') }}
-          </Tab>
           <Tab
-            v-if="selectedObject?.category === 'controller'"
-            value="ports"
+            v-for="tab in orderedTabs"
+            :key="tab.value"
+            :value="tab.value"
           >
-            {{ t('devices.ports') }}
-          </Tab>
-          <Tab value="four">
-            {{ t('devices.management') }}
+            {{ tab.label }}
           </Tab>
         </TabList>
         <TabPanels>
@@ -375,7 +395,7 @@ const isDeleteDisabled = computed(() => {
             />
           </TabPanel>
           <TabPanel value="management">
-            Скоро...
+            <div id="management-fields" />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -384,9 +404,6 @@ const isDeleteDisabled = computed(() => {
 </template>
 
 <style scoped lang="scss">
-:deep(.p-tablist .p-tablist-content .p-tablist-tab-list) {
-  width: 96%;
-}
 
 :deep(.p-tablist .p-tablist-content span.p-tablist-active-bar) {
   height: 1.5px;

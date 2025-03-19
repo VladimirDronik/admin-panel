@@ -42,7 +42,10 @@ const name = defineModel<string>('name');
   </div>
 
   <!-- Дата обновления -->
-  <div class="text-primary-custom tw-my-4 tw-text-[12px]">
+  <div
+    v-if="props.lastUpdate"
+    class="text-primary-custom tw-my-4 tw-text-[12px]"
+  >
     {{ t('devices.dataUpdated') }}:
     <span>
       {{ props.lastUpdate }}
