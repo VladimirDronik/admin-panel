@@ -127,7 +127,7 @@ async function useDeleteScheduler() {
     execute: executeDeleteScheduler,
   } = await useAPI(paths.cronTask, {
     query: computed(() => ({
-      id: form.value?.id,
+      task_id: form.value?.id,
     })),
     success() {
       toast.add({
