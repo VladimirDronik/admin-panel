@@ -6,31 +6,30 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { useToast } from 'primevue/usetoast';
 import { useCheckAddressAvailability } from '~/composables/useCheck';
 import type { EditDeviceForm } from '~/components/device/form/form.types';
-import { units } from '~/staticData/updateIntervalOptions';
+import { useDeviceMethodExecutor } from '~/composables/useDeviceMethodExecutor';
 
 const { modbus, getModbus } = useModbus();
 getModbus();
 const { occupiedDeviceId, checking, checkAddressAvailability } = useCheckAddressAvailability();
-const toast = useToast();
 const dynamicForm = defineModel<EditDeviceForm>('dynamic-form', { required: true });
+const { toggleProp, setValueProp } = useDeviceMethodExecutor();
 
 const props = defineProps<{
   isEditing: boolean;
 }>();
 
 const { t } = useI18n();
-const storeRooms = useRoomsStore();
+const toast = useToast();
+
 const emit = defineEmits(['update:valid']);
 const addressApproved = ref(false);
 
 const flatForm = computed(() => ({
   parent_id: dynamicForm.value.parent_id,
-  address: dynamicForm.value.props.address,
 }));
 
 const schema = z.object({
   parent_id: z.number().min(1),
-  address: z.number().min(1).max(247),
 });
 
 const resolver = ref(zodResolver(schema));
@@ -243,6 +242,24 @@ const hasSoftFlow = computed(() => softFlowConditioners.has(dynamicForm.value?.t
 const hasExternalTemperature = computed(() => externalTemperatureConditioners.has(dynamicForm.value?.type));
 const hasDisplayBacklight = computed(() => displayBacklightConditioners.has(dynamicForm.value?.type));
 const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioners.has(dynamicForm.value?.type));
+
+const conditionerData = computed(() => ({
+  data: [
+    {
+      value: dynamicForm.value.props.internal_temperature ?? 0,
+      unit: '°C',
+      label: t('devices.internalTemperature'),
+    },
+    ...(hasExternalTemperature.value
+      ? [{
+        value: dynamicForm.value.props.external_temperature ?? 0,
+        unit: '°C',
+        label: t('devices.externalTemperature'),
+      }]
+      : []),
+  ],
+  lastUpdate: '',
+}));
 </script>
 
 <template>
@@ -252,102 +269,59 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
     :validate-on-blur="true"
     :validate-on-value-update="false"
   >
-    <SharedUILabel
+    <FormsSensorHeader
       v-if="props.isEditing"
-      class="tw-mb-2"
-      name="title"
-      required
-      :title="t('devices.title')"
-    >
-      <InputText
-        v-model="dynamicForm.name"
-        class="tw-w-3/4"
-        required
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      name="room"
-      :title="t('devices.room')"
-    >
-      <Select
-        v-model="dynamicForm.zone_id"
-        class="tw-w-3/4"
-        option-label="name"
-        option-value="code"
-        :options="storeRooms.getRoomsSelect"
-        :show-clear="true"
-      />
-    </SharedUILabel>
-
-    <Divider
-      v-if="props.isEditing"
-      class="tw-mt-0 tw-pb-3"
+      v-bind="{ ...conditionerData }"
+      v-model:name="dynamicForm.name"
+      v-model:numeric-value="dynamicForm.props.numericValue"
+      v-model:selected-unit="dynamicForm.props.selectedUnit"
+      v-model:zone-id="dynamicForm.zone_id"
     />
 
     <p class="tw-mb-4 tw-text-lg tw-font-semibold">
       {{ t('devices.placement') }}
     </p>
 
-    <SharedUILabel
-      class="tw-mb-2"
-      name="controller"
-      required
-      :title="t('devices.modbus')"
-      :value="dynamicForm.parent_id"
-    >
-      <Select
-        v-model="dynamicForm.parent_id"
-        class="tw-w-3/4"
-        option-label="name"
-        option-value="id"
-        :options="modbus"
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      class="tw-mb-2"
-      name="address"
-      required
-      :title="t('devices.address16')"
-    >
-      <InputGroup class="tw-w-3/4">
-        <InputNumber v-model="(dynamicForm.props.address as unknown as number)" />
-        <Button
-          :disabled="!dynamicForm.parent_id"
-          label="Проверить адрес"
-          :loading="checking"
-          @click="check"
-        />
-      </InputGroup>
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-4"
-      required
-      :title="t('devices.polling')"
-    >
-      <div class="p-inputgroup tw-w-2/4">
-        <InputNumber
-          v-model="dynamicForm.props.numericValue"
-          class="tw-w-1/2"
-          disabled
-        />
+    <div class="tw-mb-2 tw-flex tw-gap-4">
+      <SharedUILabel
+        class="tw-w-1/2"
+        name="controller"
+        required
+        :title="t('devices.modbus')"
+        :value="dynamicForm.parent_id"
+      >
         <Select
-          v-model="dynamicForm.props.selectedUnit"
-          class="tw-w-1/2"
-          disabled
-          option-label="label"
-          option-value="value"
-          :options="units"
+          v-model="dynamicForm.parent_id"
+          class="tw-w-full"
+          option-label="name"
+          option-value="id"
+          :options="modbus"
         />
-      </div>
-    </SharedUILabel>
+      </SharedUILabel>
 
-    <SharedUILabel
+      <SharedUILabel
+        class="tw-w-1/2"
+        name="address"
+        required
+        :title="t('devices.address16')"
+      >
+        <InputGroup class="tw-w-full">
+          <InputNumber
+            v-model="(dynamicForm.props.address as unknown as number)"
+            :max="247"
+            :min="1"
+          />
+          <Button
+            :disabled="!dynamicForm.parent_id"
+            label="Проверить адрес"
+            :loading="checking"
+            @click="check"
+          />
+        </InputGroup>
+      </SharedUILabel>
+    </div>
+
+    <!-- <SharedUILabel
       v-if="props.isEditing"
       class="tw-mb-2"
       required
@@ -358,286 +332,268 @@ const hasDisplayHighBrightness = computed(() => displayHighBrightnessConditioner
         v-model="dynamicForm.enabled"
         disabled
       />
-    </SharedUILabel>
+    </SharedUILabel> -->
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.powerStatus')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.power_status"
-        disabled
-      />
-    </SharedUILabel>
+    <Teleport to="#management-fields">
+      <div class="tw-mt-2">
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2 tw-ml-1"
+          :title="t('devices.powerStatus')"
+          :width="150"
+        >
+          <ToggleSwitch
+            v-model="dynamicForm.props.power_status"
+            @update:model-value="(value) => toggleProp(dynamicForm.id, 'power_status', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.operatingMode')"
-      :width="150"
-    >
-      <Select
-        v-model="dynamicForm.props.operating_mode"
-        class="tw-w-3/4"
-        disabled
-        option-label="name"
-        option-value="value"
-        :options="operatingModeOptions"
-      />
-    </SharedUILabel>
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2"
+          :title="t('devices.operatingMode')"
+          :width="150"
+        >
+          <Select
+            v-model="dynamicForm.props.operating_mode"
+            class="tw-w-full"
+            option-label="name"
+            option-value="value"
+            :options="operatingModeOptions"
+            @update:model-value="(value) => setValueProp(dynamicForm.id, 'operating_mode', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="`${t('devices.internalTemperature')}`"
-      :value="dynamicForm.props.internal_temperature"
-      :width="150"
-    >
-      <InputNumber
-        v-model="dynamicForm.props.internal_temperature"
-        class="tw-w-3/4"
-        disabled
-        suffix=" °C"
-      />
-    </SharedUILabel>
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2"
+          :title="`${t('devices.targetTemperature')}`"
+          :value="dynamicForm.props.target_temperature"
+          :width="150"
+        >
+          <InputNumber
+            v-model="dynamicForm.props.target_temperature"
+            class="tw-w-full"
+            :max="30"
+            :min="16"
+            suffix=" °C"
+            @update:model-value="(value) => setValueProp(dynamicForm.id, 'target_temperature', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasExternalTemperature"
-      class="tw-mb-2"
-      :title="`${t('devices.externalTemperature')}`"
-      :value="dynamicForm.props.external_temperature"
-      :width="150"
-    >
-      <InputNumber
-        v-model="dynamicForm.props.external_temperature"
-        class="tw-w-3/4"
-        disabled
-        suffix=" °C"
-      />
-    </SharedUILabel>
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2"
+          :title="t('devices.fanSpeed')"
+          :width="150"
+        >
+          <Select
+            v-model="dynamicForm.props.fan_speed"
+            class="tw-w-full"
+            option-label="name"
+            option-value="value"
+            :options="fanSpeedOptions"
+            @update:model-value="(value) => setValueProp(dynamicForm.id, 'fan_speed', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="`${t('devices.targetTemperature')}`"
-      :value="dynamicForm.props.target_temperature"
-      :width="150"
-    >
-      <InputNumber
-        v-model="dynamicForm.props.target_temperature"
-        class="tw-w-3/4"
-        disabled
-        suffix=" °C"
-      />
-    </SharedUILabel>
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2"
+          :title="t('devices.horizontalSlatsMode')"
+          :width="150"
+        >
+          <Select
+            v-model="dynamicForm.props.horizontal_slats_mode"
+            class="tw-w-full"
+            option-label="name"
+            option-value="value"
+            :options="horizontalSlatsOptions"
+            @update:model-value="(value) => setValueProp(dynamicForm.id, 'horizontal_slats_mode', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.fanSpeed')"
-      :width="150"
-    >
-      <Select
-        v-model="dynamicForm.props.fan_speed"
-        class="tw-w-3/4"
-        disabled
-        option-label="name"
-        option-value="value"
-        :options="fanSpeedOptions"
-      />
-    </SharedUILabel>
+        <SharedUILabel
+          v-if="props.isEditing"
+          class="tw-mb-2"
+          :title="t('devices.verticalSlatsMode')"
+          :width="150"
+        >
+          <Select
+            v-model="dynamicForm.props.vertical_slats_mode"
+            class="tw-w-full"
+            option-label="name"
+            option-value="value"
+            :options="verticalSlatsOptions"
+            @update:model-value="(value) => setValueProp(dynamicForm.id, 'vertical_slats_mode', value)"
+          />
+        </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.horizontalSlatsMode')"
-      :width="150"
-    >
-      <Select
-        v-model="dynamicForm.props.horizontal_slats_mode"
-        class="tw-w-3/4"
-        disabled
-        option-label="name"
-        option-value="value"
-        :options="horizontalSlatsOptions"
-      />
-    </SharedUILabel>
+        <Divider
+          v-if="props.isEditing"
+          class="tw-pb-3"
+        />
 
-    <SharedUILabel
-      v-if="props.isEditing"
-      class="tw-mb-2"
-      :title="t('devices.verticalSlatsMode')"
-      :width="150"
-    >
-      <Select
-        v-model="dynamicForm.props.vertical_slats_mode"
-        class="tw-w-3/4"
-        disabled
-        option-label="name"
-        option-value="value"
-        :options="verticalSlatsOptions"
-      />
-    </SharedUILabel>
+        <!-- Не для всех -->
+        <div class="tw-ml-1">
+          <SharedUILabel
+            v-if="props.isEditing && hasDisplayBacklight"
+            class="tw-mb-2"
+            :title="t('devices.displayBacklight')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.display_backlight"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'display_backlight', value)"
+            />
+          </SharedUILabel>
 
-    <!-- Не для всех -->
+          <SharedUILabel
+            v-if="props.isEditing && hasSilentMode"
+            class="tw-mb-2"
+            :title="t('devices.silentMode')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.silent_mode"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'silent_mode', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasDisplayBacklight"
-      class="tw-mb-2"
-      :title="t('devices.displayBacklight')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.display_backlight"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasEcoMode"
+            class="tw-mb-2"
+            :title="t('devices.ecoMode')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.eco_mode"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'eco_mode', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasSilentMode"
-      class="tw-mb-2"
-      :title="t('devices.silentMode')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.silent_mode"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasTurboMode"
+            class="tw-mb-2"
+            :title="t('devices.turboMode')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.turbo_mode"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'turbo_mode', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasEcoMode"
-      class="tw-mb-2"
-      :title="t('devices.ecoMode')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.eco_mode"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasSleepMode"
+            class="tw-mb-2"
+            :title="t('devices.sleepMode')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.sleep_mode"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'sleep_mode', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasTurboMode"
-      class="tw-mb-2"
-      :title="t('devices.turboMode')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.turbo_mode"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasIonization"
+            class="tw-mb-2"
+            :title="t('devices.ionization')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.ionization"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'ionization', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasSleepMode"
-      class="tw-mb-2"
-      :title="t('devices.sleepMode')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.sleep_mode"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasSelfCleaning"
+            class="tw-mb-2"
+            :title="t('devices.selfCleaning')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.self_cleaning"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'self_cleaning', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasIonization"
-      class="tw-mb-2"
-      :title="t('devices.ionization')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.ionization"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasAntiFungus"
+            class="tw-mb-2"
+            :title="t('devices.antiFungus')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.anti_fungus"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'anti_fungus', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasSelfCleaning"
-      class="tw-mb-2"
-      :title="t('devices.selfCleaning')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.self_cleaning"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasDisableDisplayOnPowerOff"
+            class="tw-mb-2"
+            :title="t('devices.disableDisplayOnPowerOff ')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.disable_display_on_power_off"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'disable_display_on_power_off', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasAntiFungus"
-      class="tw-mb-2"
-      :title="t('devices.antiFungus')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.anti_fungus"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasSounds"
+            class="tw-mb-2"
+            :title="t('devices.sounds')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.sounds"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'sounds', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasDisableDisplayOnPowerOff"
-      class="tw-mb-2"
-      :title="t('devices.disableDisplayOnPowerOff ')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.disable_display_on_power_off"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasOnDutyHeating"
+            class="tw-mb-2"
+            :title="t('devices.onDutyHeating')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.on_duty_heating"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'on_duty_heating', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasSounds"
-      class="tw-mb-2"
-      :title="t('devices.sounds')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.sounds"
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasSoftFlow"
+            class="tw-mb-2"
+            :title="t('devices.softFlow')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.soft_flow"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'soft_flow', value)"
+            />
+          </SharedUILabel>
 
-    <SharedUILabel
-      v-if="props.isEditing && hasOnDutyHeating"
-      class="tw-mb-2"
-      :title="t('devices.onDutyHeating')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.on_duty_heating"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing && hasSoftFlow"
-      class="tw-mb-2"
-      :title="t('devices.softFlow')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.soft_flow"
-        disabled
-      />
-    </SharedUILabel>
-
-    <SharedUILabel
-      v-if="props.isEditing && hasDisplayHighBrightness"
-      class="tw-mb-2"
-      :title="t('devices.displayHighBrightness')"
-      :width="150"
-    >
-      <ToggleSwitch
-        v-model="dynamicForm.props.display_high_brightness "
-        disabled
-      />
-    </SharedUILabel>
+          <SharedUILabel
+            v-if="props.isEditing && hasDisplayHighBrightness"
+            class="tw-mb-2"
+            :title="t('devices.displayHighBrightness')"
+            :width="150"
+          >
+            <ToggleSwitch
+              v-model="dynamicForm.props.display_high_brightness"
+              @update:model-value="(value) => toggleProp(dynamicForm.id, 'display_high_brightness', value)"
+            />
+          </SharedUILabel>
+        </div>
+      </div>
+    </Teleport>
   </Form>
 </template>
 

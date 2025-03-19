@@ -219,6 +219,26 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   const updatedAboveTolerance = data.props.find((prop) => prop.code === 'above_tolerance');
   const updatedComplexTolerance = data.props.find((prop) => prop.code === 'complex_tolerance');
   const updatedFallbackSensorId = data.props.find((prop) => prop.code === 'fallback_sensor_value_id');
+  const updatedInternalTemp = data.props.find((prop) => prop.code === 'internal_temperature');
+  const updatedExternalTemp = data.props.find((prop) => prop.code === 'external_temperature');
+  const updatedPowerStatus = data.props.find((prop) => prop.code === 'power_status');
+  const updatedOperatingMode = data.props.find((prop) => prop.code === 'operating_mode');
+  const updatedTargetTemperature = data.props.find((prop) => prop.code === 'target_temperature');
+  const updatedFanSpeed = data.props.find((prop) => prop.code === 'fan_speed');
+  const updatedHorizontalSlatsMode = data.props.find((prop) => prop.code === 'horizontal_slats_mode');
+  const updatedVerticalSlatsMode = data.props.find((prop) => prop.code === 'vertical_slats_mode');
+  const updatedDisplayBacklight = data.props.find((prop) => prop.code === 'display_backlight');
+  const updatedSilentMode = data.props.find((prop) => prop.code === 'silent_mode');
+  const updatedTurboMode = data.props.find((prop) => prop.code === 'turbo_mode');
+  const updatedSleepMode = data.props.find((prop) => prop.code === 'sleep_mode');
+  const updatedIonization = data.props.find((prop) => prop.code === 'ionization');
+  const updatedSelfCleaning = data.props.find((prop) => prop.code === 'self_cleaning');
+  const updatedAntiFungus = data.props.find((prop) => prop.code === 'anti_fungus');
+  const updatedDisableDisplayOnPowerOff = data.props.find((prop) => prop.code === 'disable_display_on_power_off');
+  const updatedSounds = data.props.find((prop) => prop.code === 'sounds');
+  const updatedOnDutyHeating = data.props.find((prop) => prop.code === 'on_duty_heating');
+  const updatedSoftFlow = data.props.find((prop) => prop.code === 'soft_flow');
+  const updatedDisplayHighBrightness = data.props.find((prop) => prop.code === 'display_high_brightness');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -378,5 +398,66 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
   if ('fallback_sensor_value_id' in initialForm.props && updatedFallbackSensorId) {
     initialForm.props.fallback_sensor_value_id = Number(updatedFallbackSensorId.value);
   }
+  if ('internal_temperature' in initialForm.props && updatedInternalTemp) {
+    initialForm.props.internal_temperature = Number(updatedInternalTemp.value);
+  }
+  if ('external_temperature' in initialForm.props && updatedExternalTemp) {
+    initialForm.props.external_temperature = Number(updatedExternalTemp.value);
+  }
+  if ('power_status' in initialForm.props && updatedPowerStatus) {
+    initialForm.props.power_status = Boolean(updatedPowerStatus.value);
+  }
+  if ('operating_mode' in initialForm.props && updatedOperatingMode) {
+    initialForm.props.operating_mode = String(updatedOperatingMode.value);
+  }
+  if ('target_temperature' in initialForm.props && updatedTargetTemperature) {
+    initialForm.props.target_temperature = Number(updatedTargetTemperature.value);
+  }
+  if ('fan_speed' in initialForm.props && updatedFanSpeed) {
+    initialForm.props.fan_speed = String(updatedFanSpeed.value);
+  }
+  if ('horizontal_slats_mode' in initialForm.props && updatedHorizontalSlatsMode) {
+    initialForm.props.horizontal_slats_mode = String(updatedHorizontalSlatsMode.value);
+  }
+  if ('vertical_slats_mode' in initialForm.props && updatedVerticalSlatsMode) {
+    initialForm.props.vertical_slats_mode = String(updatedVerticalSlatsMode.value);
+  }
+  if ('display_backlight' in initialForm.props && updatedDisplayBacklight) {
+    initialForm.props.display_backlight = Boolean(updatedDisplayBacklight.value);
+  }
+  if ('silent_mode' in initialForm.props && updatedSilentMode) {
+    initialForm.props.silent_mode = Boolean(updatedSilentMode.value);
+  }
+  if ('turbo_mode' in initialForm.props && updatedTurboMode) {
+    initialForm.props.turbo_mode = Boolean(updatedTurboMode.value);
+  }
+  if ('sleep_mode' in initialForm.props && updatedSleepMode) {
+    initialForm.props.sleep_mode = Boolean(updatedSleepMode.value);
+  }
+  if ('ionization' in initialForm.props && updatedIonization) {
+    initialForm.props.ionization = Boolean(updatedIonization.value);
+  }
+  if ('self_cleaning' in initialForm.props && updatedSelfCleaning) {
+    initialForm.props.self_cleaning = Boolean(updatedSelfCleaning.value);
+  }
+  if ('anti_fungus' in initialForm.props && updatedAntiFungus) {
+    initialForm.props.anti_fungus = Boolean(updatedAntiFungus.value);
+  }
+  if ('disable_display_on_power_off' in initialForm.props && updatedDisableDisplayOnPowerOff) {
+    initialForm.props.disable_display_on_power_off = Boolean(updatedDisableDisplayOnPowerOff.value);
+  }
+  if ('sounds' in initialForm.props && updatedSounds) {
+    initialForm.props.sounds = Boolean(updatedSounds.value);
+  }
+  if ('on_duty_heating' in initialForm.props && updatedOnDutyHeating) {
+    initialForm.props.on_duty_heating = Boolean(updatedOnDutyHeating.value);
+  }
+  if ('soft_flow' in initialForm.props && updatedSoftFlow) {
+    initialForm.props.soft_flow = Boolean(updatedSoftFlow.value);
+  }
+  if ('display_high_brightness' in initialForm.props && updatedDisplayHighBrightness) {
+    initialForm.props.display_high_brightness = Boolean(updatedDisplayHighBrightness.value);
+  }
+
   return initialForm;
 };
