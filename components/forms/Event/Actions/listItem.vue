@@ -38,10 +38,16 @@ const deleteItem = (id: number) => {
       >
         <div class="tw-mr-4 tw-flex tw-items-center tw-justify-between">
           <Tag
+            v-tooltip.top="{
+              value: getActionsTitle(eventItem.type, eventItem.args),
+              pt: {
+                text: '!tw-text-center',
+              },
+            }"
             class="tw-mr-3 !tw-w-32"
             :severity="getActionsColor(eventItem.type)"
           >
-            <p class="tw-font-normal">
+            <p class="tw-truncate tw-font-normal">
               {{ getActionsTitle(eventItem.type, eventItem.args) }}
             </p>
           </Tag>

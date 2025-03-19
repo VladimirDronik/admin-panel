@@ -3,15 +3,15 @@ import { useI18n } from 'vue-i18n';
 import { Form } from '@primevue/forms';
 import { minuteOptions, types, days } from './dataForPeriods';
 
+type PeriodType = 'periodicity' | 'day' | 'month' | 'year'
+
 const { t } = useI18n();
 
 const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
 
-type PeriodType = 'minute' | 'day' | 'month' | 'year'
-
-const period = defineModel<{value: string, type: PeriodType}[]>('period', {
+const period = defineModel<string[]>('period', {
   required: true,
 });
 
@@ -19,7 +19,7 @@ const { edit = false } = defineProps<{
   edit?: boolean;
 }>();
 
-const selectedType = ref<PeriodType>('minute');
+const selectedType = ref<PeriodType>('periodicity');
 
 const selectedPeriod = ref<string>();
 const selectedDay = ref([]);
@@ -27,19 +27,14 @@ const selectedDays = ref<number[]>([]);
 const selectedDates = ref<Date[]>([]);
 
 const addPeriod = () => {
-  console.log(edit, 'yes');
   if (edit) {
     console.log('create');
   } else {
     switch (selectedType.value) {
-      case 'minute':
+      case 'periodicity':
         if (selectedPeriod.value) {
-          period.value.push({
-            value: selectedPeriod.value,
-            type: 'minute',
-          });
+          period.value.push(selectedPeriod.value);
         }
-        console.log(edit, period.value);
         break;
       // case 'day':
       //   if (selectedPeriod.value) period.value.push(selectedDay.value);
@@ -51,8 +46,12 @@ const addPeriod = () => {
       //   if (selectedPeriod.value) period.value.push(selectedDates.value);
       //   break;
       default:
+        if (selectedPeriod.value) {
+          period.value.push(selectedPeriod.value);
+        }
         break;
     }
+    dialog.value = false;
   }
 };
 
@@ -85,7 +84,7 @@ const addPeriod = () => {
         <div class="tw-pt-4">
           <!-- Period Select -->
           <SharedUILabel
-            v-if="selectedType === 'minute'"
+            v-if="selectedType === 'periodicity'"
             :title="t('Длительность')"
           >
             <Select

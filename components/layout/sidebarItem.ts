@@ -33,22 +33,22 @@ const sidebarItem: Menu[] = [
     icon: IconDoor,
     to: '/rooms',
   },
-  {
-    title: 'pages.video',
-    icon: IconVideo,
-    to: '/video',
-  },
+  // {
+  //   title: 'pages.video',
+  //   icon: IconVideo,
+  //   to: '/video',
+  // },
   {
     title: 'pages.display',
     icon: IconResize,
     to: '/display',
   },
   { header: 'pages.settings' },
-  {
-    title: 'pages.networkSettings',
-    icon: IconPlug,
-    to: '/networks',
-  },
+  // {
+  //   title: 'pages.networkSettings',
+  //   icon: IconPlug,
+  //   to: '/networks',
+  // },
   {
     title: 'pages.scripts',
     icon: IconBrandTabler,
@@ -59,11 +59,11 @@ const sidebarItem: Menu[] = [
     icon: IconUsers,
     to: '/users',
   },
-  {
-    title: 'pages.parameters',
-    icon: IconSettings,
-    to: '/parameters',
-  },
+  // {
+  //   title: 'pages.parameters',
+  //   icon: IconSettings,
+  //   to: '/parameters',
+  // },
   {
     title: 'pages.scheduler',
     icon: IconCalendarWeek,

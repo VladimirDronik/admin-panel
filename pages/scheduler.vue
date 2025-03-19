@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
+import { periodInText } from '@/helpers/scheduler';
 // Types modules
 import type { Request } from '~/types/StoreTypes';
 import { requestSchedulerSchema, type SchedulerTypes, type RequestSchedulerTypes } from '~/types/SchedulerTypes';
@@ -48,6 +49,9 @@ const selectSchedule = (
   selectedSchedule.value = schedule;
 };
 
+// Methods
+const Periodfilter = (periods: string) => periods.split(';').map((item: string) => periodInText(item));
+
 </script>
 
 <template>
@@ -81,7 +85,33 @@ const selectSchedule = (
       <Column
         field="period"
         header="Расписание"
-      />
+      >
+        <template #body="{ data }">
+          <div v-if="Periodfilter(data.period).length < 4">
+            <p
+              v-for="period in Periodfilter(data.period)"
+              :key="period"
+              class="tw-mb-1"
+            >
+              {{ period }}
+            </p>
+          </div>
+          <div v-else>
+            <p
+              v-for="period in Periodfilter(data.period).slice(0, 2)"
+              :key="period"
+              class="tw-mb-1"
+            >
+              {{ period }}
+            </p>
+            <Chip
+              class="tw-py-1 tw-text-base"
+              :label="t(`+ Еще ${Periodfilter(data.period).length - 2}`)"
+              size="small"
+            />
+          </div>
+        </template>
+      </Column>
       <Column
         field="description"
         header="Описание"
@@ -94,9 +124,9 @@ const selectSchedule = (
           <div class="tw-flex tw-items-center">
             <div
               class="tw-mr-1 tw-size-3 tw-rounded-full"
-              :class="{ 'tw-bg-success': data.isActive, 'tw-bg-danger': !data.isActive }"
+              :class="{ 'tw-bg-success': data.enabled, 'tw-bg-danger': !data.enabled }"
             />
-            {{ data.isActive ? 'Активен' : 'Выключен' }}
+            {{ data.enabled ? 'Активен' : 'Выключен' }}
           </div>
         </template>
       </Column>
@@ -106,6 +136,7 @@ const selectSchedule = (
         v-model:form="selectedSchedule"
         v-model:is-show="isOpen"
         :variant
+        @update="refreshScheduler"
       />
     </template>
   </SharedUIPanel>

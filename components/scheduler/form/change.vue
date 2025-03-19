@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 // Types and Schemes modules
 import type { Event } from '@/types/ModelEventTypes';
+import type { Request } from '~/types/StoreTypes';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -15,7 +16,9 @@ const isOpen = defineModel<boolean>('isOpen', {
 const form = defineModel<{
   id: number,
   name: string,
+  description: string,
   enabled: boolean,
+  period: string,
 }>('form', {
   required: true,
 });
@@ -55,25 +58,54 @@ const filterEvents = async (type: string) => {
 
 };
 
-const plans = ref([]);
+const periods = ref<string[]>([]);
 
 const {
-  statusChangeRoom,
-  executeChangeRoom,
-} = await useChangeRoom();
+  statusChangeScheduler,
+  executeChangeScheduler,
+} = await useChangeScheduler();
 
 const {
-  statusDeleteRoom,
-  executeDeleteRoom,
-} = await useDeleteRoom();
+  statusDeleteScheduler,
+  executeDeleteScheduler,
+} = await useDeleteScheduler();
 
-async function useChangeRoom() {
+const {
+  data: dataSchedulerActions,
+  status: statusSchedulerActions,
+  refresh: refreshSchedulerActions,
+} = await useAPI<Request<any[]>>(
+  paths.cronActions,
+  {
+    query: computed(() => form.value.id),
+  },
+  { immediate: false },
+);
+
+watch(() => form.value.period, (newValue) => {
+  periods.value = newValue.split(';');
+}, { immediate: true });
+
+watch(() => periods.value.length, () => {
+  console.log('yes');
+  executeChangeScheduler();
+});
+
+watch(dataSchedulerActions, (newValue) => {
+  if (newValue?.response) event.value.actions = newValue?.response;
+}, { immediate: true });
+
+async function useChangeScheduler() {
   // Api
   const {
-    status: statusChangeRoom,
-    execute: executeChangeRoom,
-  } = await useAPI(paths.privateRoomsList, {
-    body: computed(() => form.value),
+    status: statusChangeScheduler,
+    execute: executeChangeScheduler,
+  } = await useAPI(paths.cronTask, {
+    body: computed(() => ({
+      ...form.value,
+      actions: event.value.actions,
+      period: periods.value.join(';'),
+    })),
     success() {
       toast.add({
         severity: 'success',
@@ -89,23 +121,23 @@ async function useChangeRoom() {
         life: 3000,
       });
     },
-    method: 'PATCH',
+    method: 'PUT',
     immediate: false,
     watch: false,
   });
 
   return {
-    statusChangeRoom,
-    executeChangeRoom,
+    statusChangeScheduler,
+    executeChangeScheduler,
   };
 }
 
-async function useDeleteRoom() {
+async function useDeleteScheduler() {
   // Api
   const {
-    status: statusDeleteRoom,
-    execute: executeDeleteRoom,
-  } = await useAPI(paths.privateRoom, {
+    status: statusDeleteScheduler,
+    execute: executeDeleteScheduler,
+  } = await useAPI(paths.cronTask, {
     query: computed(() => ({
       id: form.value?.id,
     })),
@@ -133,8 +165,8 @@ async function useDeleteRoom() {
   // Methods
 
   return {
-    statusDeleteRoom,
-    executeDeleteRoom,
+    statusDeleteScheduler,
+    executeDeleteScheduler,
   };
 }
 
@@ -158,7 +190,7 @@ async function useDeleteRoom() {
       <TabPanel value="features">
         <Form
           :resolver
-          @submit="({ valid }) => { if (valid) executeChangeRoom() }"
+          @submit="({ valid }) => { if (valid) executeChangeScheduler() }"
         >
           <div class="!tw-px-0 !tw-pt-1">
             <SharedUILabel
@@ -170,6 +202,17 @@ async function useDeleteRoom() {
             >
               <InputText
                 v-model="form.name"
+                class="tw-w-full"
+              />
+            </SharedUILabel>
+            <SharedUILabel
+              class="tw-mb-2"
+              name="description"
+              :title="t('Описание')"
+              :value="form.description"
+            >
+              <InputText
+                v-model="form.description"
                 class="tw-w-full"
               />
             </SharedUILabel>
@@ -208,21 +251,21 @@ async function useDeleteRoom() {
             <DialogDelete
               :id="form.id ?? -1"
               class="tw-mr-2"
-              :loading="statusDeleteRoom === 'pending'"
+              :loading="statusDeleteScheduler === 'pending'"
               :title="`Вы уверены, что хотите удалить «${form.name}»?`"
-              @delete="executeDeleteRoom()"
+              @delete="executeDeleteScheduler()"
             />
 
             <Button
               :label="t('save')"
-              :loading="statusChangeRoom === 'pending'"
+              :loading="statusChangeScheduler === 'pending'"
               type="submit"
             />
           </div>
         </Form>
       </TabPanel>
       <TabPanel value="events">
-        <SchedulerFormPeriod v-model="plans" />
+        <SchedulerFormPeriod v-model="periods" />
       </TabPanel>
     </TabPanels>
   </Tabs>

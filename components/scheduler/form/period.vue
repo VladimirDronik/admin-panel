@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-type PeriodType = 'minute' | 'day' | 'month' | 'year'
-const period = defineModel<{value: string, type: PeriodType}[]>({
+import { periodInText } from '@/helpers/scheduler';
+
+const period = defineModel<string[]>({
   required: true,
 });
 
@@ -20,15 +21,23 @@ const dialogPeriod = ref(false);
       <Column
         field="type"
         header="Тип"
-      />
+      >
+        <template #body="{ data }">
+          Переодично
+        </template>
+      </Column>
       <Column
         field="value"
         header="Описание"
-      />
+      >
+        <template #body="{ data }">
+          {{ periodInText(data) }}
+        </template>
+      </Column>
       <Column
         field="actions"
         header="Действия"
-        style="width: 150px;"
+        style="width: 110px;"
       >
         <template #body="{ data }">
           <Button

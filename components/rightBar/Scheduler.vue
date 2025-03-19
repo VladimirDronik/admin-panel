@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 // Builtin modules
 import { useI18n } from 'vue-i18n';
-// Types and Schemes modules
-import type { Event } from '@/types/ModelEventTypes';
-import type { Request } from '~/types/StoreTypes';
 
 // Composables
 const { t } = useI18n();
@@ -45,17 +42,6 @@ watch(schedule, () => {
   }
 });
 
-const {
-  data: dataSchedulerActions,
-  status: statusSchedulerActions,
-  refresh: refreshSchedulerActions,
-} = await useAPI<Request<any[]>>(
-  paths.cronActions,
-  {
-    query: computed(() => form.value.id),
-  },
-  { immediate: false },
-);
 </script>
 
 <template>
@@ -67,11 +53,13 @@ const {
     <SchedulerFormCreate
       v-if="variant === 'create'"
       :form
+      @update="emit('update')"
     />
     <SchedulerFormChange
       v-else-if="variant === 'edit'"
       v-model:form="form"
       :is-open
+      @update="emit('update')"
     />
   </LayoutRightbar>
 </template>

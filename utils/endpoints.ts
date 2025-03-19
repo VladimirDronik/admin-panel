@@ -31,5 +31,6 @@ export const paths = {
 
   // Scheduler
   cronTasks: `${backendApi}/cron/all-tasks`,
+  cronTask: `${backendApi}/cron/task`,
   cronActions: `${backendApi}/cron/actions`,
 };

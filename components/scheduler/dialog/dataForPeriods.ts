@@ -74,7 +74,7 @@ export const minuteOptions = [
 ];
 
 export const types = [
-  { name: 'Ежеминутно', key: 'minute' },
+  { name: 'Переодично', key: 'periodicity' },
   { name: 'Ежедневно', key: 'day' },
   { name: 'Ежемесячно', key: 'month' },
   { name: 'Ежегодно', key: 'year' },

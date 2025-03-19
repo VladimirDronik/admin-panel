@@ -28,14 +28,6 @@ const { title, tooltip } = defineProps<{
       v-if="tooltip"
       v-tooltip.top="{
         value: tooltip,
-        pt: {
-          arrow: {
-            style: {
-              borderBottomColor: 'var(--p-primary-color)',
-            },
-          },
-          text: '!bg-primary !text-primary-contrast !font-medium',
-        },
       }"
       class="pi pi-question-circle tw-cursor-pointer"
       style="font-size: 1.2rem"
