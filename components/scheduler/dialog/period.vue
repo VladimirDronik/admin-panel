@@ -7,6 +7,10 @@ type PeriodType = 'periodicity' | 'day' | 'month' | 'year'
 
 const { t } = useI18n();
 
+const emit = defineEmits<{
+  (e: 'change'): void
+}>();
+
 const dialog = defineModel<boolean>('dialog', {
   required: true,
 });
@@ -27,15 +31,15 @@ const selectedDays = ref<number[]>([]);
 const selectedDates = ref<Date[]>([]);
 
 const addPeriod = () => {
-  if (edit) {
-    console.log('create');
-  } else {
-    switch (selectedType.value) {
-      case 'periodicity':
-        if (selectedPeriod.value) {
-          period.value.push(selectedPeriod.value);
-        }
-        break;
+  // if (edit) {
+  //   console.log('create');
+  // } else {
+  switch (selectedType.value) {
+    case 'periodicity':
+      if (selectedPeriod.value) {
+        period.value.push(selectedPeriod.value);
+      }
+      break;
       // case 'day':
       //   if (selectedPeriod.value) period.value.push(selectedDay.value);
       //   break;
@@ -45,14 +49,15 @@ const addPeriod = () => {
       // case 'year':
       //   if (selectedPeriod.value) period.value.push(selectedDates.value);
       //   break;
-      default:
-        if (selectedPeriod.value) {
-          period.value.push(selectedPeriod.value);
-        }
-        break;
-    }
-    dialog.value = false;
+    default:
+      if (selectedPeriod.value) {
+        period.value.push(selectedPeriod.value);
+      }
+      break;
   }
+  emit('change');
+  dialog.value = false;
+  // }
 };
 
 </script>

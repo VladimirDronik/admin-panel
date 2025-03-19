@@ -9,6 +9,11 @@ import type { Event } from '@/types/ModelEventTypes';
 const { t } = useI18n();
 const toast = useToast();
 
+// Declare Options
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
 const step = ref('1');
 
 const form = ref<any | null | undefined>({
@@ -20,15 +25,15 @@ const form = ref<any | null | undefined>({
 
 const dialog = ref(false);
 
+const modelType = ref('scheduler');
+const targetType = ref('scheduler');
+
 const resolver = ref(zodResolver(
   z.object({
     name: z.string().min(1),
     description: z.string().min(1),
   }),
 ));
-
-const modelType = ref('scheduler');
-const targetType = ref('scheduler');
 
 const event = ref<Event>({
   code: '',
@@ -43,15 +48,35 @@ const event = ref<Event>({
   },
 });
 
-const updateEvents = () => {
-  filterEvents(modelType.value);
-};
-
-const filterEvents = async (type: string) => {
-
-};
-
-const period = ref([]);
+const {
+  status: statusCreateScheduler,
+  execute: executeCreateScheduler,
+  error,
+} = await useAPI(paths.cronTask, {
+  body: computed(() => ({
+    ...form.value,
+    actions: event.value.actions,
+    period: form.value.period.join(';'),
+  })),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Задача была успешно создана'),
+      life: 3000,
+    });
+    emit('update');
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Задача не была создана'),
+      life: 3000,
+    });
+  },
+  method: 'POST',
+  immediate: false,
+  watch: false,
+});
 </script>
 
 <template>
@@ -69,6 +94,7 @@ const period = ref([]);
     </StepList>
 
     <StepPanels>
+      {{ form }}
       <StepPanel
         v-slot="{ activateCallback }"
         value="1"
@@ -93,6 +119,7 @@ const period = ref([]);
             <SharedUILabel
               class="tw-mb-2"
               name="description"
+              required
               :title="t('Описание')"
               :value="form.description"
             >
@@ -129,7 +156,6 @@ const period = ref([]);
               :edit="false"
               :model-type="modelType"
               :target-type="targetType"
-              @update-actions="updateEvents"
             />
           </div>
           <div class="tw-flex tw-justify-end tw-pt-2">
@@ -145,13 +171,16 @@ const period = ref([]);
         v-slot="{ activateCallback }"
         value="2"
       >
-        <SchedulerFormPeriod v-model="period" />
+        <SchedulerFormPeriod v-model="form.period" />
         <div class="tw-flex tw-justify-between tw-pt-2">
           <Button
             :label="t('goBack')"
             @click="activateCallback('1')"
           />
-          <Button :label="t('save')" />
+          <Button
+            :label="t('save')"
+            @click="executeCreateScheduler()"
+          />
         </div>
       </StepPanel>
     </StepPanels>

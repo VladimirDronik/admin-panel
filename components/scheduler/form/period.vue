@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { periodInText } from '@/helpers/scheduler';
 
+const emit = defineEmits<{
+  (e: 'change'): void
+}>();
+
 const period = defineModel<string[]>({
   required: true,
 });
@@ -61,6 +65,7 @@ const dialogPeriod = ref(false);
       v-model:dialog="dialogPeriod"
       v-model:period="period"
       :edit
+      @change="emit('change')"
     />
   </div>
 </template>

@@ -10,9 +10,15 @@ import type { Request } from '~/types/StoreTypes';
 const { t } = useI18n();
 const toast = useToast();
 
+// Declare Options
+const emit = defineEmits<{
+  (e: 'update'): void
+}>();
+
 const isOpen = defineModel<boolean>('isOpen', {
   required: true,
 });
+
 const form = defineModel<{
   id: number,
   name: string,
@@ -22,11 +28,6 @@ const form = defineModel<{
 }>('form', {
   required: true,
 });
-
-// Declare Options
-const emit = defineEmits<{
-  (e: 'update'): void
-}>();
 
 const resolver = ref(zodResolver(
   z.object({}),
@@ -49,14 +50,6 @@ const event = ref<Event>({
     notification: 0,
   },
 });
-
-const updateEvents = () => {
-  filterEvents(modelType.value);
-};
-
-const filterEvents = async (type: string) => {
-
-};
 
 const periods = ref<string[]>([]);
 
@@ -85,11 +78,6 @@ const {
 watch(() => form.value.period, (newValue) => {
   periods.value = newValue.split(';');
 }, { immediate: true });
-
-watch(() => periods.value.length, () => {
-  console.log('yes');
-  executeChangeScheduler();
-});
 
 watch(dataSchedulerActions, (newValue) => {
   if (newValue?.response) event.value.actions = newValue?.response;
@@ -208,6 +196,7 @@ async function useDeleteScheduler() {
             <SharedUILabel
               class="tw-mb-2"
               name="description"
+              required
               :title="t('Описание')"
               :value="form.description"
             >
@@ -244,7 +233,6 @@ async function useDeleteScheduler() {
               :edit="true"
               :model-type="modelType"
               :target-type="targetType"
-              @update-actions="updateEvents"
             />
           </div>
           <div class="tw-flex tw-justify-end tw-pt-2">
@@ -265,7 +253,10 @@ async function useDeleteScheduler() {
         </Form>
       </TabPanel>
       <TabPanel value="events">
-        <SchedulerFormPeriod v-model="periods" />
+        <SchedulerFormPeriod
+          v-model="periods"
+          @change="executeChangeScheduler"
+        />
       </TabPanel>
     </TabPanels>
   </Tabs>
