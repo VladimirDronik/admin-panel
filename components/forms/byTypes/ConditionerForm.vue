@@ -335,6 +335,13 @@ const conditionerData = computed(() => ({
     </SharedUILabel> -->
 
     <Teleport to="#management-fields">
+      <FormsSensorHeader
+        v-if="props.isEditing"
+        compact
+        :data="conditionerData.data"
+        :last-update="conditionerData.lastUpdate"
+      />
+
       <div class="tw-mt-2">
         <SharedUILabel
           v-if="props.isEditing"
