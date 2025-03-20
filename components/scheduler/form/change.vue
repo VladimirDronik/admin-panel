@@ -53,15 +53,63 @@ const event = ref<Event>({
 
 const periods = ref<string[]>([]);
 
+// Api
 const {
-  statusChangeScheduler,
-  executeChangeScheduler,
-} = await useChangeScheduler();
+  status: statusChangeScheduler,
+  execute: executeChangeScheduler,
+} = await useAPI(paths.cronTask, {
+  body: computed(() => ({
+    ...form.value,
+    actions: event.value.actions,
+    period: periods.value.join(';'),
+  })),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Задача была успешно изменена'),
+      life: 3000,
+    });
+    emit('update');
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Задача не было изменена'),
+      life: 3000,
+    });
+  },
+  method: 'PUT',
+  immediate: false,
+  watch: false,
+});
 
 const {
-  statusDeleteScheduler,
-  executeDeleteScheduler,
-} = await useDeleteScheduler();
+  status: statusDeleteScheduler,
+  execute: executeDeleteScheduler,
+} = await useAPI(paths.cronTask, {
+  query: computed(() => ({
+    task_id: form.value?.id,
+  })),
+  success() {
+    toast.add({
+      severity: 'success',
+      summary: t('Задача была успешно удалена'),
+      life: 3000,
+    });
+    emit('update');
+    isOpen.value = false;
+  },
+  error() {
+    toast.add({
+      severity: 'error',
+      summary: t('Задача не была удалена'),
+      life: 3000,
+    });
+  },
+  method: 'DELETE',
+  immediate: false,
+  watch: false,
+});
 
 const {
   data: dataSchedulerActions,
@@ -82,81 +130,6 @@ watch(() => form.value.period, (newValue) => {
 watch(dataSchedulerActions, (newValue) => {
   if (newValue?.response) event.value.actions = newValue?.response;
 }, { immediate: true });
-
-async function useChangeScheduler() {
-  // Api
-  const {
-    status: statusChangeScheduler,
-    execute: executeChangeScheduler,
-  } = await useAPI(paths.cronTask, {
-    body: computed(() => ({
-      ...form.value,
-      actions: event.value.actions,
-      period: periods.value.join(';'),
-    })),
-    success() {
-      toast.add({
-        severity: 'success',
-        summary: t('Задача была успешно изменена'),
-        life: 3000,
-      });
-      emit('update');
-    },
-    error() {
-      toast.add({
-        severity: 'error',
-        summary: t('Задача не было изменена'),
-        life: 3000,
-      });
-    },
-    method: 'PUT',
-    immediate: false,
-    watch: false,
-  });
-
-  return {
-    statusChangeScheduler,
-    executeChangeScheduler,
-  };
-}
-
-async function useDeleteScheduler() {
-  // Api
-  const {
-    status: statusDeleteScheduler,
-    execute: executeDeleteScheduler,
-  } = await useAPI(paths.cronTask, {
-    query: computed(() => ({
-      task_id: form.value?.id,
-    })),
-    success() {
-      toast.add({
-        severity: 'success',
-        summary: t('Задача была успешно удалена'),
-        life: 3000,
-      });
-      emit('update');
-      isOpen.value = false;
-    },
-    error() {
-      toast.add({
-        severity: 'error',
-        summary: t('Задача не была удалена'),
-        life: 3000,
-      });
-    },
-    method: 'DELETE',
-    immediate: false,
-    watch: false,
-  });
-
-  // Methods
-
-  return {
-    statusDeleteScheduler,
-    executeDeleteScheduler,
-  };
-}
 
 </script>
 

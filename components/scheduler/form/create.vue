@@ -94,7 +94,6 @@ const {
     </StepList>
 
     <StepPanels>
-      {{ form }}
       <StepPanel
         v-slot="{ activateCallback }"
         value="1"
@@ -145,7 +144,7 @@ const {
                 tooltip="Доступно для просмотра только администратору"
               /> -->
             </div>
-            <Button
+            <!-- <Button
               label="Действия"
               @click="dialog = true"
             />
@@ -156,7 +155,7 @@ const {
               :edit="false"
               :model-type="modelType"
               :target-type="targetType"
-            />
+            /> -->
           </div>
           <div class="tw-flex tw-justify-end tw-pt-2">
             <div class="tw-flex tw-justify-end">
