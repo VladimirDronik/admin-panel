@@ -141,21 +141,23 @@ export const transformToDeviceEditFormPayload = (
 
 export const transformResponseToFormData = (data: GetCurrentDeviceResponse): EditDeviceForm | null => {
   if (!data.id) return null;
+
+  type UpdateItem<T = Record<string, unknown>> = {
+    key: keyof T;
+    value: T[keyof T];
+    cast: (v: unknown) => T[keyof T];
+    target: 'props' | 'root';
+    condition?: () => boolean;
+  };
+
   const address = data.props.find((prop) => prop.code === 'address');
   const updatedInterface = (data.props.find((prop) => prop.code === 'interface')?.value ?? DeviceInterface['1W']) as DeviceInterface;
   const updatedbusAddress = typeof address?.value === 'string' && address.value.includes(';') ? String(address.value).split(';')[1] ?? null : null;
   const ports = String(address?.value).split(';') ?? [null, null];
-  const updatedProtocol = data.props.find((prop) => prop.code === 'protocol');
-  const updatedPassword = data.props.find((prop) => prop.code === 'password');
-  const updatedID = data.props.find((prop) => prop.code === 'id');
-  const updatedMode = data.props.find((prop) => prop.code === 'mode');
   const updatedConnectionString = data.props.find((prop) => prop.code === 'connection_string');
-
   const connectionStringValue = updatedConnectionString?.value ? String(updatedConnectionString.value) : '';
-
   const parsedConnection = connectionStringValue.match(/^tcp:\/\/([\d.]+):(\d+)$/);
   const [ip, port] = parsedConnection?.slice(1) ?? [null, null];
-
   const rawConnectionString = parsedConnection ? null : connectionStringValue;
 
   const parseNumericValueWithUnit = (value: unknown): { numericValue: number; selectedUnit: string } => {
@@ -168,77 +170,20 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     };
   };
 
-  const updatedTimeout = data.props.find((prop) => prop.code === 'timeout')?.value;
-  const updatedPeriod = data.props.find((prop) => prop.code === 'period')?.value;
-  const updatedUpdateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
-
-  const { numericValue: timeoutNumericValue, selectedUnit: timeoutUnit } = parseNumericValueWithUnit(updatedTimeout);
-  const { numericValue: periodNumericValue, selectedUnit: periodUnit } = parseNumericValueWithUnit(updatedPeriod);
-  const { numericValue: updateIntervalNumericValue, selectedUnit: updateIntervalUnit } = parseNumericValueWithUnit(updatedUpdateInterval);
+  const timeout = data.props.find((prop) => prop.code === 'timeout')?.value;
+  const period = data.props.find((prop) => prop.code === 'period')?.value;
+  const updateInterval = data.props.find((prop) => prop.code === 'update_interval')?.value;
 
   let numericValue = 0;
   let selectedUnit = 's';
 
-  if (updatedPeriod !== undefined) {
-    numericValue = periodNumericValue;
-    selectedUnit = periodUnit;
-  } else if (updatedTimeout !== undefined) {
-    numericValue = timeoutNumericValue;
-    selectedUnit = timeoutUnit;
-  } else if (updatedUpdateInterval !== undefined) {
-    numericValue = updateIntervalNumericValue;
-    selectedUnit = updateIntervalUnit;
+  if (period !== undefined) {
+    ({ numericValue, selectedUnit } = parseNumericValueWithUnit(period));
+  } else if (timeout !== undefined) {
+    ({ numericValue, selectedUnit } = parseNumericValueWithUnit(timeout));
+  } else if (updateInterval !== undefined) {
+    ({ numericValue, selectedUnit } = parseNumericValueWithUnit(updateInterval));
   }
-
-  const updatedSpeed = data.props.find((prop) => prop.code === 'speed');
-  const updatedDataBits = data.props.find((prop) => prop.code === 'data_bits');
-  const updatedParity = data.props.find((prop) => prop.code === 'parity');
-  const updatedStopBits = data.props.find((prop) => prop.code === 'stop_bits');
-  const updatedTries = data.props.find((prop) => prop.code === 'tries');
-  const updatedServerID = data.props.find((prop) => prop.code === 'server_id');
-  const updatedEcoMode = data.props.find((prop) => prop.code === 'eco_mode');
-  const updatedGuardMode = data.props.find((prop) => prop.code === 'guard_mode');
-  const updatedNightMode = data.props.find((prop) => prop.code === 'night_mode');
-  const updatedHeatingMode = data.props.find((prop) => prop.code === 'heating_mode');
-  const updatedLightMode = data.props.find((prop) => prop.code === 'light_mode');
-  const updatedLogging = data.props.find((prop) => prop.code === 'logging');
-  const updatedStorageLogs = data.props.find((prop) => prop.code === 'storage_logs');
-  const updatedGraphDate = data.props.find((prop) => prop.code === 'graph_date');
-  const updatedTimeZone = data.props.find((prop) => prop.code === 'time_zone');
-  const updatedTotal = data.props.find((prop) => prop.code === 'total');
-  const updatedUnit = data.props.find((prop) => prop.code === 'unit');
-  const updatedMultiplier = data.props.find((prop) => prop.code === 'multiplier');
-  const updatedTypeParam = data.props.find((prop) => prop.code === 'type_param');
-  const updatedLastUpdate = data.props.find((prop) => prop.code === 'last_update');
-  const updatedPrice = data.props.find((prop) => prop.code === 'price');
-  const updatedFastConfig = data.props.find((prop) => prop.code === 'fast_config');
-  const updatedMinSp = data.props.find((prop) => prop.code === 'min_sp');
-  const updatedTargetSp = data.props.find((prop) => prop.code === 'target_sp');
-  const updatedMaxSp = data.props.find((prop) => prop.code === 'max_sp');
-  const updatedBelowTolerance = data.props.find((prop) => prop.code === 'below_tolerance');
-  const updatedAboveTolerance = data.props.find((prop) => prop.code === 'above_tolerance');
-  const updatedComplexTolerance = data.props.find((prop) => prop.code === 'complex_tolerance');
-  const updatedFallbackSensorId = data.props.find((prop) => prop.code === 'fallback_sensor_value_id');
-  const updatedInternalTemp = data.props.find((prop) => prop.code === 'internal_temperature');
-  const updatedExternalTemp = data.props.find((prop) => prop.code === 'external_temperature');
-  const updatedPowerStatus = data.props.find((prop) => prop.code === 'power_status');
-  const updatedOperatingMode = data.props.find((prop) => prop.code === 'operating_mode');
-  const updatedTargetTemperature = data.props.find((prop) => prop.code === 'target_temperature');
-  const updatedFanSpeed = data.props.find((prop) => prop.code === 'fan_speed');
-  const updatedHorizontalSlatsMode = data.props.find((prop) => prop.code === 'horizontal_slats_mode');
-  const updatedVerticalSlatsMode = data.props.find((prop) => prop.code === 'vertical_slats_mode');
-  const updatedDisplayBacklight = data.props.find((prop) => prop.code === 'display_backlight');
-  const updatedSilentMode = data.props.find((prop) => prop.code === 'silent_mode');
-  const updatedTurboMode = data.props.find((prop) => prop.code === 'turbo_mode');
-  const updatedSleepMode = data.props.find((prop) => prop.code === 'sleep_mode');
-  const updatedIonization = data.props.find((prop) => prop.code === 'ionization');
-  const updatedSelfCleaning = data.props.find((prop) => prop.code === 'self_cleaning');
-  const updatedAntiFungus = data.props.find((prop) => prop.code === 'anti_fungus');
-  const updatedDisableDisplayOnPowerOff = data.props.find((prop) => prop.code === 'disable_display_on_power_off');
-  const updatedSounds = data.props.find((prop) => prop.code === 'sounds');
-  const updatedOnDutyHeating = data.props.find((prop) => prop.code === 'on_duty_heating');
-  const updatedSoftFlow = data.props.find((prop) => prop.code === 'soft_flow');
-  const updatedDisplayHighBrightness = data.props.find((prop) => prop.code === 'display_high_brightness');
 
   const children = data.children?.reduce((childrenAcc, child) => {
     const key = child.type as DevicePropertyKey;
@@ -246,9 +191,8 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
     const propertyData = child.props.reduce((acc, prop) => {
       const key = prop.code as keyof DevicePropertyData;
       const value = prop.value as DevicePropertyData[keyof DevicePropertyData];
-      // @ts-expect-error ///
+      // @ts-expect-error
       acc[key] = value;
-
       return acc;
     }, {} as DevicePropertyData);
 
@@ -260,204 +204,100 @@ export const transformResponseToFormData = (data: GetCurrentDeviceResponse): Edi
 
   const initialForm = getInitialEditDeviceFormDataByTypes(data);
 
-  if (initialForm.props && 'address' in initialForm.props && address) {
-    initialForm.props.address = String(address.value);
-  }
-  if ('protocol' in initialForm.props && updatedProtocol) {
-    initialForm.props.protocol = updatedProtocol.value as Connection;
-  }
-  if ('password' in initialForm.props && updatedPassword) {
-    initialForm.props.password = String(updatedPassword.value);
-  }
-  if ('id' in initialForm.props && updatedID) {
-    initialForm.props.id = String(updatedID.value);
-  }
-  if ('id' in initialForm) {
-    initialForm.id = data.id;
-  }
-  if ('sdaPort' in initialForm) {
-    initialForm.sdaPort = Number(ports[0]);
-  }
-  if ('sclPort' in initialForm) {
-    initialForm.sclPort = Number(ports[1]);
-  }
-  if ('busAddress' in initialForm && updatedbusAddress !== null) {
-    initialForm.busAddress = Number(updatedbusAddress);
-  }
-  if ('interface' in initialForm.props) {
-    initialForm.props.interface = updatedInterface;
-  }
-  if ('status' in initialForm && data.status) {
-    initialForm.status = data.status;
-  }
-  if ('mode' in initialForm.props && updatedMode) {
-    initialForm.props.mode = String(updatedMode.value);
-  }
-  if ('ip' in initialForm.props) {
-    initialForm.props.ip = ip ?? rawConnectionString;
-  }
-  if ('port' in initialForm.props) {
-    initialForm.props.port = port ? Number(port) : null;
-  }
-  if ('numericValue' in initialForm.props) {
-    initialForm.props.numericValue = numericValue;
-  }
-  if ('selectedUnit' in initialForm.props) {
-    initialForm.props.selectedUnit = selectedUnit;
-  }
-  if ('speed' in initialForm.props && updatedSpeed) {
-    initialForm.props.speed = String(updatedSpeed.value);
-  }
-  if ('data_bits' in initialForm.props && updatedDataBits) {
-    initialForm.props.data_bits = Number(updatedDataBits.value);
-  }
-  if ('parity' in initialForm.props && updatedParity) {
-    initialForm.props.parity = String(updatedParity.value);
-  }
-  if ('stop_bits' in initialForm.props && updatedStopBits) {
-    initialForm.props.stop_bits = String(updatedStopBits.value);
-  }
-  if ('tries' in initialForm.props && updatedTries) {
-    initialForm.props.tries = Number(updatedTries.value);
-  }
-  if ('server_id' in initialForm.props && updatedServerID) {
-    initialForm.props.server_id = String(updatedServerID.value);
-  }
-  if ('eco_mode' in initialForm.props && updatedEcoMode) {
-    initialForm.props.eco_mode = Boolean(updatedEcoMode.value);
-  }
-  if ('guard_mode' in initialForm.props && updatedGuardMode) {
-    initialForm.props.guard_mode = Boolean(updatedGuardMode.value);
-  }
-  if ('night_mode' in initialForm.props && updatedNightMode) {
-    initialForm.props.night_mode = Boolean(updatedNightMode.value);
-  }
-  if ('heating_mode' in initialForm.props && updatedHeatingMode) {
-    initialForm.props.heating_mode = String(updatedHeatingMode.value);
-  }
-  if ('light_mode' in initialForm.props && updatedLightMode) {
-    initialForm.props.light_mode = String(updatedLightMode.value);
-  }
-  if ('logging' in initialForm.props && updatedLogging) {
-    initialForm.props.logging = String(updatedLogging.value);
-  }
-  if ('storage_logs' in initialForm.props && updatedStorageLogs) {
-    initialForm.props.storage_logs = Number(updatedStorageLogs.value);
-  }
-  if ('graph_date' in initialForm.props && updatedGraphDate) {
-    initialForm.props.graph_date = Number(updatedGraphDate.value);
-  }
-  if ('time_zone' in initialForm.props && updatedTimeZone) {
-    initialForm.props.time_zone = String(updatedTimeZone.value);
-  }
-  if (Object.keys(children).length > 0 && initialForm.children) {
-    initialForm.children = children;
-  }
-  if ('total' in initialForm.props && updatedTotal) {
-    initialForm.props.total = Number(updatedTotal.value);
-  }
-  if ('unit' in initialForm.props && updatedUnit) {
-    initialForm.props.unit = String(updatedUnit.value);
-  }
-  if ('multiplier' in initialForm.props && updatedMultiplier) {
-    initialForm.props.multiplier = Number(updatedMultiplier.value);
-  }
-  if ('type_param' in initialForm.props && updatedTypeParam) {
-    initialForm.props.type_param = String(updatedTypeParam.value);
-  }
-  if ('last_update' in initialForm.props && updatedLastUpdate) {
-    initialForm.props.last_update = String(updatedLastUpdate.value);
-  }
-  if ('price' in initialForm.props && updatedPrice) {
-    initialForm.props.price = Number(updatedPrice.value);
-  }
-  if ('fast_config' in initialForm.props && updatedFastConfig) {
-    initialForm.props.fast_config = Boolean(updatedFastConfig.value);
-  }
-  if ('enabled' in initialForm) {
-    initialForm.enabled = data.enabled;
-  }
-  if ('min_sp' in initialForm.props && updatedMinSp) {
-    initialForm.props.min_sp = Number(updatedMinSp.value);
-  }
-  if ('target_sp' in initialForm.props && updatedTargetSp) {
-    initialForm.props.target_sp = Number(updatedTargetSp.value);
-  }
-  if ('max_sp' in initialForm.props && updatedMaxSp) {
-    initialForm.props.max_sp = Number(updatedMaxSp.value);
-  }
-  if ('below_tolerance' in initialForm.props && updatedBelowTolerance) {
-    initialForm.props.below_tolerance = Number(updatedBelowTolerance.value);
-  }
-  if ('above_tolerance' in initialForm.props && updatedAboveTolerance) {
-    initialForm.props.above_tolerance = Number(updatedAboveTolerance.value);
-  }
-  if ('complex_tolerance' in initialForm.props && updatedComplexTolerance) {
-    initialForm.props.complex_tolerance = Number(updatedComplexTolerance.value);
-  }
-  if ('fallback_sensor_value_id' in initialForm.props && updatedFallbackSensorId) {
-    initialForm.props.fallback_sensor_value_id = Number(updatedFallbackSensorId.value);
-  }
-  if ('internal_temperature' in initialForm.props && updatedInternalTemp) {
-    initialForm.props.internal_temperature = Number(updatedInternalTemp.value);
-  }
-  if ('external_temperature' in initialForm.props && updatedExternalTemp) {
-    initialForm.props.external_temperature = Number(updatedExternalTemp.value);
-  }
-  if ('power_status' in initialForm.props && updatedPowerStatus) {
-    initialForm.props.power_status = Boolean(updatedPowerStatus.value);
-  }
-  if ('operating_mode' in initialForm.props && updatedOperatingMode) {
-    initialForm.props.operating_mode = String(updatedOperatingMode.value);
-  }
-  if ('target_temperature' in initialForm.props && updatedTargetTemperature) {
-    initialForm.props.target_temperature = Number(updatedTargetTemperature.value);
-  }
-  if ('fan_speed' in initialForm.props && updatedFanSpeed) {
-    initialForm.props.fan_speed = String(updatedFanSpeed.value);
-  }
-  if ('horizontal_slats_mode' in initialForm.props && updatedHorizontalSlatsMode) {
-    initialForm.props.horizontal_slats_mode = String(updatedHorizontalSlatsMode.value);
-  }
-  if ('vertical_slats_mode' in initialForm.props && updatedVerticalSlatsMode) {
-    initialForm.props.vertical_slats_mode = String(updatedVerticalSlatsMode.value);
-  }
-  if ('display_backlight' in initialForm.props && updatedDisplayBacklight) {
-    initialForm.props.display_backlight = Boolean(updatedDisplayBacklight.value);
-  }
-  if ('silent_mode' in initialForm.props && updatedSilentMode) {
-    initialForm.props.silent_mode = Boolean(updatedSilentMode.value);
-  }
-  if ('turbo_mode' in initialForm.props && updatedTurboMode) {
-    initialForm.props.turbo_mode = Boolean(updatedTurboMode.value);
-  }
-  if ('sleep_mode' in initialForm.props && updatedSleepMode) {
-    initialForm.props.sleep_mode = Boolean(updatedSleepMode.value);
-  }
-  if ('ionization' in initialForm.props && updatedIonization) {
-    initialForm.props.ionization = Boolean(updatedIonization.value);
-  }
-  if ('self_cleaning' in initialForm.props && updatedSelfCleaning) {
-    initialForm.props.self_cleaning = Boolean(updatedSelfCleaning.value);
-  }
-  if ('anti_fungus' in initialForm.props && updatedAntiFungus) {
-    initialForm.props.anti_fungus = Boolean(updatedAntiFungus.value);
-  }
-  if ('disable_display_on_power_off' in initialForm.props && updatedDisableDisplayOnPowerOff) {
-    initialForm.props.disable_display_on_power_off = Boolean(updatedDisableDisplayOnPowerOff.value);
-  }
-  if ('sounds' in initialForm.props && updatedSounds) {
-    initialForm.props.sounds = Boolean(updatedSounds.value);
-  }
-  if ('on_duty_heating' in initialForm.props && updatedOnDutyHeating) {
-    initialForm.props.on_duty_heating = Boolean(updatedOnDutyHeating.value);
-  }
-  if ('soft_flow' in initialForm.props && updatedSoftFlow) {
-    initialForm.props.soft_flow = Boolean(updatedSoftFlow.value);
-  }
-  if ('display_high_brightness' in initialForm.props && updatedDisplayHighBrightness) {
-    initialForm.props.display_high_brightness = Boolean(updatedDisplayHighBrightness.value);
-  }
+  const updates: UpdateItem[] = [
+    {
+      key: 'address', value: address?.value, cast: String, target: 'props',
+    },
+    {
+      key: 'protocol', value: data.props.find((p) => p.code === 'protocol')?.value, cast: String, target: 'props',
+    },
+    {
+      key: 'password', value: data.props.find((p) => p.code === 'password')?.value, cast: String, target: 'props',
+    },
+    {
+      key: 'id', value: data.props.find((p) => p.code === 'id')?.value, cast: String, target: 'props',
+    },
+    {
+      key: 'id', value: data.id, cast: String, target: 'root',
+    },
+    {
+      key: 'sdaPort', value: ports[0], cast: Number, target: 'root',
+    },
+    {
+      key: 'sclPort', value: ports[1], cast: Number, target: 'root',
+    },
+    {
+      key: 'busAddress', value: updatedbusAddress, cast: Number, target: 'root',
+    },
+    {
+      key: 'interface', value: updatedInterface, cast: String, target: 'props',
+    },
+    {
+      key: 'status', value: data.status, cast: String, target: 'root',
+    },
+    {
+      key: 'mode', value: data.props.find((p) => p.code === 'mode')?.value, cast: String, target: 'props',
+    },
+    {
+      key: 'ip', value: ip ?? rawConnectionString, cast: String, target: 'props',
+    },
+    {
+      key: 'port',
+      value: port ? Number(port) : null,
+      cast: (v) => v as number | null,
+      target: 'props',
+    },
+    {
+      key: 'numericValue', value: numericValue, cast: Number, target: 'props',
+    },
+    {
+      key: 'selectedUnit', value: selectedUnit, cast: String, target: 'props',
+    },
+    {
+      key: 'enabled', value: data.enabled, cast: Boolean, target: 'root',
+    },
+    {
+      key: 'children',
+      value: children,
+      cast: (v) => v as DeviceChildren,
+      target: 'root',
+    },
+  ];
+
+  const codes = [
+    'speed', 'data_bits', 'parity', 'stop_bits', 'tries', 'server_id', 'eco_mode', 'guard_mode', 'night_mode',
+    'heating_mode', 'light_mode', 'logging', 'storage_logs', 'graph_date', 'time_zone', 'total', 'unit',
+    'multiplier', 'type_param', 'last_update', 'price', 'fast_config', 'min_sp', 'target_sp', 'max_sp',
+    'below_tolerance', 'above_tolerance', 'complex_tolerance', 'fallback_sensor_value_id', 'internal_temperature',
+    'external_temperature', 'power_status', 'operating_mode', 'target_temperature', 'fan_speed',
+    'horizontal_slats_mode', 'vertical_slats_mode', 'display_backlight', 'silent_mode', 'turbo_mode', 'sleep_mode',
+    'ionization', 'self_cleaning', 'anti_fungus', 'disable_display_on_power_off', 'sounds', 'on_duty_heating',
+    'soft_flow', 'display_high_brightness',
+  ];
+
+  codes.forEach((code) => {
+    const prop = data.props.find((p) => p.code === code);
+    if (prop && initialForm.props && code in initialForm.props) {
+      // @ts-expect-error
+      initialForm.props[code] = prop.value;
+    }
+  });
+
+  updates.forEach(({
+    key, value, cast, target, condition,
+  }) => {
+    const targetObj = target === 'props' ? initialForm.props : initialForm;
+
+    if (
+      targetObj
+      && Object.prototype.hasOwnProperty.call(targetObj, key)
+      && value !== undefined
+      && value !== null
+      && (typeof condition === 'undefined' || condition())
+    ) {
+      (targetObj as Record<string, unknown>)[key] = cast(value);
+    }
+  });
 
   return initialForm;
 };
